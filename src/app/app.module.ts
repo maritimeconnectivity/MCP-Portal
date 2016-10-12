@@ -17,6 +17,9 @@ import { AppState, InteralStateType } from './app.service';
 import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
+import {AuthGuard} from "./authentication/services/auth-guard.service";
+import {LoginModule} from "./login/login.module";
+import {AuthService} from "./authentication/services/auth.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -46,11 +49,14 @@ type StoreType = {
     ReactiveFormsModule,
     NgaModule.forRoot(),
     PagesModule,
+    LoginModule,
     routing
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    AuthGuard,
+    AuthService
   ]
 })
 

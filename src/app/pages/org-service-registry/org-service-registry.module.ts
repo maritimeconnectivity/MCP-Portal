@@ -18,6 +18,5 @@ import { OrgSpecificationsComponent } from './components/org-specifications/org-
     OrgSpecificationsComponent
   ]
 })
-// TODO: org-service-registry
 export default class OrgServiceRegistryModule {
 }

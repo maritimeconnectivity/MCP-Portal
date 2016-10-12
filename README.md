@@ -1,6 +1,6 @@
 # Maritime Cloud Management Portal (Currently under development with no releasable code)
 
-This is the implementation of a management portal for managing the [Maritime Cloud](http://maritimecloud.net) core components - The [Identity Registry](https://github.com/MaritimeCloud/IdentityRegistry) and the Service Registry. It is currently under active development changes that are not backward compatible should be expected. It is under the Apache 2.0 License.
+This is the implementation of a management portal for managing the [Maritime Cloud](http://maritimecloud.net) core components - The [Identity Registry](https://github.com/MaritimeCloud/IdentityRegistry) and the Service Registry. It is currently under active development and changes that are not backward compatible should be expected. It is under the Apache 2.0 License.
 
 ### Demo
 

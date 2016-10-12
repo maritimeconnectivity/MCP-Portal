@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
-  selector: 'dashboard',
+  selector: 'my-organization',
   encapsulation: ViewEncapsulation.None,
   styles: [],
   template: require('./my-organization.html')

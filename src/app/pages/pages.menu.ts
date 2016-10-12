@@ -15,7 +15,7 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'org-service-registry',
+        path: 'sr',
         data: {
           menu: {
             title: 'Service Registry',
@@ -27,7 +27,7 @@ export const PAGES_MENU = [
         },
         children: [
           {
-            path: 'org-specifications',
+            path: 'specifications',
             data: {
               menu: {
                 title: 'Specifications',
@@ -37,7 +37,7 @@ export const PAGES_MENU = [
         ]
       },
       {
-        path: 'org-identity-registry',
+        path: 'ir',
         data: {
           menu: {
             title: 'Identity Registry',
@@ -49,7 +49,7 @@ export const PAGES_MENU = [
         },
         children: [
           {
-            path: 'org-devices',
+            path: 'devices',
             data: {
               menu: {
                 title: 'Devices',
@@ -57,7 +57,7 @@ export const PAGES_MENU = [
             }
           },
           {
-            path: 'org-services',
+            path: 'services',
             data: {
               menu: {
                 title: 'Services',

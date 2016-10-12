@@ -10,8 +10,8 @@ const routes: Routes = [
     path: '',
     component: OrgIdentityRegistryComponent,
     children: [
-      { path: 'org-devices', component: OrgDevicesComponent },
-      { path: 'org-services', component: OrgServicesComponent }
+      { path: 'devices', component: OrgDevicesComponent },
+      { path: 'services', component: OrgServicesComponent }
     ]
   }
 ];

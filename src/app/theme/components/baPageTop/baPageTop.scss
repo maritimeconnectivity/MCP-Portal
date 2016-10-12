@@ -9,7 +9,7 @@
   height: 66px;
   width: 100%;
   min-width: $resMin;
-  padding: 0 32px 0 40px;
+  padding: 0 18px 0 18px;
 
   .dropdown-toggle::after {
     display: none;
@@ -21,16 +21,32 @@
     background-color: rgba(black, 0.85)
   }
 }
+a.al-logout {
+  color: $sidebar-text;
+  display: block;
+  font-size: 18px;
+  font-family: $font-family;
+  white-space: nowrap;
+  float: right;
+  outline: none !important;
+  line-height: 60px;
+  cursor: pointer;
+
+  span {
+    color: $primary;
+  }
+}
 
 a.al-logo {
   color: $sidebar-text;
   display: block;
-  font-size: 24px;
+  font-size: 20px;
   font-family: $font-family;
   white-space: nowrap;
   float: left;
   outline: none !important;
   line-height: 60px;
+  cursor: pointer;
 
   span {
     color: $primary;
@@ -86,7 +102,7 @@ a.collapse-menu-link {
   color: $sidebar-text;
   padding: 0;
   float: left;
-  margin: 11px 0 0 25px;
+  margin: 11px 18px 0 0;
 
   &:hover {
     text-decoration: none;

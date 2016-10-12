@@ -9,17 +9,25 @@ import { bootloader } from '@angularclass/hmr';
  * our top level module that holds all of our components
  */
 import { AppModule } from './app';
+import {AuthService} from "./app/authentication/services/auth.service";
 
 /*
  * Bootstrap our Angular app with a top level NgModule
  */
 export function main(): Promise<any> {
-  return platformBrowserDynamic()
+  return AuthService.init()
+    .then(() => {
+      const platform = platformBrowserDynamic();
+      platform.bootstrapModule(AppModule);
+    })
+    .catch(err => console.error(err));
+  /*return platformBrowserDynamic()
     .bootstrapModule(AppModule)
     .then(decorateModuleRef)
-    .catch(err => console.error(err));
+    .catch(err => console.error(err));*/
 
 }
+
 
 
 bootloader(main);

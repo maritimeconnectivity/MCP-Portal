@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: OrgServiceRegistryComponent,
     children: [
-      { path: 'org-specifications', component: OrgSpecificationsComponent }
+      { path: 'specifications', component: OrgSpecificationsComponent }
     ]
   }
 ];
