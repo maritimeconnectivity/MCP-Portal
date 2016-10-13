@@ -9,7 +9,7 @@
   height: 66px;
   width: 100%;
   min-width: $resMin;
-  padding: 0 18px 0 18px;
+  padding: 0 32px 0 18px;
 
   .dropdown-toggle::after {
     display: none;
@@ -38,7 +38,7 @@ a.al-logout {
 }
 
 a.al-logo {
-  color: $sidebar-text;
+  color: $primary;
   display: block;
   font-size: 20px;
   font-family: $font-family;
@@ -48,8 +48,13 @@ a.al-logo {
   line-height: 60px;
   cursor: pointer;
 
-  span {
+  &:hover {
     color: $primary;
+  }
+
+  span {
+    font-size: 16px;
+    color: #aaa !important;
   }
 }
 

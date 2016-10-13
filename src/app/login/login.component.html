@@ -1,8 +1,15 @@
 <div class="auth-main">
   <div class="auth-block">
-  <div class="button-wrapper">
-    <button type="button" class="btn btn-default btn-auth" (click)="logIn()">Log in</button>
-  </div>
+    <div class="login-img-wrapper">
+      <img src="{{ ( 'maritime_cloud_fullcolor.svg' | baAppPicture ) }}" alt="" title=""/>
+    </div>
+    <h1>Maritime Cloud Management Portal</h1>
+    <div class="auth-sep"><span>A tool for managing the <a href="http://maritimecloud.net/" target="_blank">Maritime Cloud</a> Identity Registry and Service Registry</span></div>
+    <div class="animated fadeIn button-wrapper">
+      <button type="button" class="btn btn-primary btn-lg" (click)="logIn()">Log in</button>
+    </div>
+    <!-- <div class="auth-sep"><span><a href="/join">Join</a> my organization to the Maritime Cloud</span></div> -->
+    <div class="auth-sep"><span><b>Disclaimer</b>: This is currently a beta release and it should be expected to contain minor bugs.<BR/>
+    If you encounter any bugs please create an Issue at the <a href="https://github.com/MaritimeCloud/MaritimeCloudPortal/issues" target="_blank">GitHub project</a></span></div>
   </div>
 </div>
-
