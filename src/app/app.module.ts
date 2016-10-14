@@ -1,4 +1,4 @@
-import { NgModule, ApplicationRef } from '@angular/core';
+import {NgModule, ApplicationRef, ErrorHandler, Inject} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -19,7 +19,12 @@ import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 import {AuthGuard} from "./authentication/services/auth-guard.service";
 import {LoginModule} from "./login/login.module";
+import {MC_ERROR_HANDLER_PROVIDERS, MC_ERROR_HANDLER_OPTIONS} from "./shared/mc-error-handler";
+import {ErrorLoggingService} from "./shared/error-logging.service";
 import {AuthService} from "./authentication/services/auth.service";
+import {SimpleNotificationsModule} from "angular2-notifications";
+import {NotificationsService} from "angular2-notifications";
+import {MCNotificationsService} from "./shared/mc-notifications.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -32,6 +37,7 @@ type StoreType = {
   restoreInputValues: () => void,
   disposeOldHosts: () => void
 };
+
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
@@ -50,13 +56,26 @@ type StoreType = {
     NgaModule.forRoot(),
     PagesModule,
     LoginModule,
+    SimpleNotificationsModule,
     routing
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
     APP_PROVIDERS,
     AuthGuard,
-    AuthService
+    AuthService,
+    MCNotificationsService,
+    NotificationsService, // See usage: https://github.com/flauc/angular2-notifications/blob/master/docs/toastNotifications.md
+    ErrorLoggingService,
+    MC_ERROR_HANDLER_PROVIDERS,
+    // By default the custom ErrorHandler has rethrowError and unwrapError = false, but we set it here as an example on how to overwrite
+    {
+      provide: MC_ERROR_HANDLER_OPTIONS,
+      useValue: {
+        rethrowError: false,
+        unwrapError: false
+      }
+    }
   ]
 })
 

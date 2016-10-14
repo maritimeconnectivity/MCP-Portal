@@ -21,13 +21,6 @@ export function main(): Promise<any> {
       platform.bootstrapModule(AppModule);
     })
     .catch(err => console.error(err));
-  /*return platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .then(decorateModuleRef)
-    .catch(err => console.error(err));*/
-
 }
-
-
 
 bootloader(main);
