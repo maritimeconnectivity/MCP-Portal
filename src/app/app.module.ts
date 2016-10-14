@@ -25,6 +25,7 @@ import {AuthService} from "./authentication/services/auth.service";
 import {SimpleNotificationsModule} from "angular2-notifications";
 import {NotificationsService} from "angular2-notifications";
 import {MCNotificationsService} from "./shared/mc-notifications.service";
+import {IdentityRegistryApiModule} from "./backend-api/identity-registry/identity-registry-api.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -56,6 +57,7 @@ type StoreType = {
     NgaModule.forRoot(),
     PagesModule,
     LoginModule,
+    IdentityRegistryApiModule,
     SimpleNotificationsModule,
     routing
   ],

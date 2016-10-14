@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+// TODO: Rewrite this to proper Angular2 service. Atm. it's a Angular1 script quick-converted :(
 @Injectable()
 export class AuthService {
 
@@ -14,6 +15,11 @@ export class AuthService {
         .success((authenticated) => {
           if (authenticated) {
             AuthService.auth.loggedIn = true;
+            if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.org) {
+              AuthService.auth.orgShortName =  keycloakAuth.tokenParsed.org;
+            } else {
+              throw new Error('Keycloak token parse error');
+            }
           } else {
             AuthService.auth.loggedIn = false;
           }
@@ -25,6 +31,10 @@ export class AuthService {
           reject();
         });
     });
+  }
+
+  orgShortName(): string {
+    return AuthService.auth.orgShortName;
   }
 
   loginUrl(): string {
