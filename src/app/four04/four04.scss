@@ -1,0 +1,12 @@
+@import '../theme/sass/auth';
+
+.login-img-wrapper {
+  text-align: center;
+  margin-bottom: 19px;
+  margin-top: 5px;
+  img {
+    width: 100%;
+
+    max-width: 600px;
+  }
+}

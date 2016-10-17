@@ -27,6 +27,7 @@ import {NotificationsService} from "angular2-notifications";
 import {MCNotificationsService} from "./shared/mc-notifications.service";
 import {IdentityRegistryApiModule} from "./backend-api/identity-registry/identity-registry-api.module";
 import {RolesService} from "./backend-api/identity-registry/services/roles.service";
+import {Four04Module} from "./four04/four04.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -58,6 +59,7 @@ type StoreType = {
     NgaModule.forRoot(),
     PagesModule,
     LoginModule,
+    Four04Module,
     IdentityRegistryApiModule,
     SimpleNotificationsModule,
     routing
