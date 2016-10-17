@@ -15,9 +15,7 @@ export class LoginComponent implements OnInit {
   }
 
   logIn() {
-    console.log('Login called');
     this.authService.login();
-
   }
 
 }

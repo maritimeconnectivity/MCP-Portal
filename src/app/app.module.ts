@@ -26,6 +26,7 @@ import {SimpleNotificationsModule} from "angular2-notifications";
 import {NotificationsService} from "angular2-notifications";
 import {MCNotificationsService} from "./shared/mc-notifications.service";
 import {IdentityRegistryApiModule} from "./backend-api/identity-registry/identity-registry-api.module";
+import {RolesService} from "./backend-api/identity-registry/services/roles.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -66,6 +67,7 @@ type StoreType = {
     APP_PROVIDERS,
     AuthGuard,
     AuthService,
+    RolesService,
     MCNotificationsService,
     NotificationsService, // See usage: https://github.com/flauc/angular2-notifications/blob/master/docs/toastNotifications.md
     ErrorLoggingService,

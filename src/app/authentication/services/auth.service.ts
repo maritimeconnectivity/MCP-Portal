@@ -1,30 +1,83 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
+import {RolesService} from "../../backend-api/identity-registry/services/roles.service";
+import {MCNotificationsService, MCNotificationType} from "../../shared/mc-notifications.service";
+import {Role} from "../../backend-api/identity-registry/autogen/model/Role";
+import RoleNameEnum = Role.RoleNameEnum;
 
-// TODO: Rewrite this to proper Angular2 service. Atm. it's a Angular1 script quick-converted :(
+
+export enum AuthPermission {Member, Admin, SysAdmin}
+
+export interface AuthState {
+  loggedIn: boolean,
+  permission: AuthPermission,
+  orgShortName: string,
+  isAdmin(): boolean
+}
+
 @Injectable()
-export class AuthService {
+export class AuthService implements OnInit {
 
-  static auth: any = {};
+  private static staticAuth: any = {};
+
+  // We make a state-object to take advantage of Angulars build in "object-observer", so when a value in authState is changing, all views using the state-object will be updated
+  public authState: AuthState;
+
+  constructor(private rolesService: RolesService, private notificationService: MCNotificationsService) {
+    this.authState = this.createAuthState();
+    this.findPermissionRoles();
+  }
+
+  ngOnInit() {
+    console.log("OOOONINIT");
+  }
+  private findPermissionRoles() {
+    if (this.authState.loggedIn) {
+      this.rolesService.getMyRoles(this.authState.orgShortName).subscribe(
+        roles => {
+          for (let roleString of roles) {
+            if (roleString === RoleNameEnum[RoleNameEnum.ROLE_ORG_ADMIN]) {
+              this.authState.permission = AuthPermission.Admin;
+              break;
+            }
+          }
+        },
+        error => {
+          this.authState.permission = AuthPermission.Member;
+          this.notificationService.generateNotification({title:'Error', message:'Error trying to fetch user permissions', type:MCNotificationType.Error});
+        }
+      );
+    }
+  }
+  private createAuthState(): AuthState {
+    return {
+      loggedIn: AuthService.staticAuth.loggedIn,
+      permission: AuthPermission.Member,
+      orgShortName: AuthService.staticAuth.orgShortName,
+      isAdmin() {
+        return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
+      }
+    };
+  }
 
   static init(): Promise<any> {
     let keycloakAuth: any = new Keycloak('keycloak.json');
-    AuthService.auth.loggedIn = false;
+    AuthService.staticAuth.loggedIn = false;
 
     return new Promise((resolve, reject) => {
       keycloakAuth.init({ onLoad: 'check-sso' })
         .success((authenticated) => {
           if (authenticated) {
-            AuthService.auth.loggedIn = true;
+            AuthService.staticAuth.loggedIn = true;
             if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.org) {
-              AuthService.auth.orgShortName =  keycloakAuth.tokenParsed.org;
+              AuthService.staticAuth.orgShortName =  keycloakAuth.tokenParsed.org;
             } else {
               throw new Error('Keycloak token parse error');
             }
           } else {
-            AuthService.auth.loggedIn = false;
+            AuthService.staticAuth.loggedIn = false;
           }
-          AuthService.auth.authz = keycloakAuth;
-          AuthService.auth.logoutUrl = "/login";
+          AuthService.staticAuth.authz = keycloakAuth;
+          AuthService.staticAuth.logoutUrl = "/login";
           resolve();
         })
         .error(() => {
@@ -33,38 +86,27 @@ export class AuthService {
     });
   }
 
-  orgShortName(): string {
-    return AuthService.auth.orgShortName;
-  }
-
   loginUrl(): string {
     return "/login";
   }
 
-  isLoggedIn(): boolean {
-    return AuthService.auth.loggedIn;
-  }
-
   login() {
     console.log('*** LOGIN');
-    AuthService.auth.authz.login({redirectUri:  '/'});
+    AuthService.staticAuth.authz.login({redirectUri:  '/'});
   }
 
   logout() {
-    AuthService.auth.loggedIn = false;
-    AuthService.auth.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.auth.logoutUrl});
-    AuthService.auth.authz = null;
-
-
-    // window.location.href = KeycloakService.auth.logoutUrl;
+    this.authState.loggedIn = false;
+    AuthService.staticAuth.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuth.logoutUrl});
+    AuthService.staticAuth.authz = null;
   }
 
-  getToken(): Promise<string> {
+  static getToken(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      if (AuthService.auth.authz.token) {
-        AuthService.auth.authz.updateToken(5)
+      if (AuthService.staticAuth.authz.token) {
+        AuthService.staticAuth.authz.updateToken(5)
           .success(() => {
-            resolve(<string>AuthService.auth.authz.token);
+            resolve(<string>AuthService.staticAuth.authz.token);
           })
           .error(() => {
             // TODO: måske denne error skal kalde noget generelt error-ting, så jeg ikke skal gøre det hver gang jeg kalder getToken

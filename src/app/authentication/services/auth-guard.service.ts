@@ -11,18 +11,15 @@ export class AuthGuard implements CanActivate {
   }
 
   checkLogin(url: string): boolean {
-    if (this.authService.isLoggedIn()) {
+    if (this.authService.authState.loggedIn) {
       return true;
     }
 
     // Navigate to the login page
     this.router.navigate([this.authService.loginUrl()]);
-    console.log('AuthGuard#canActivate called');
     return false;
   }
 
-
   constructor(private router: Router, private authService: AuthService) {
-    console.log('AuthGuard#constructor called');
   }
 }

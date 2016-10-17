@@ -17,8 +17,7 @@ export class MyOrganization implements OnInit {
   }
 
   ngOnInit() {
-    let shortName = this.authService.orgShortName();
-    this.orgService.getOrganization(shortName).subscribe(
+    this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
       },

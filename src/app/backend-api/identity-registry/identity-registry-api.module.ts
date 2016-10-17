@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {OrganizationcontrollerApi} from "./autogen/api/OrganizationcontrollerApi";
 import {ApiHelperService} from "../shared/api-helper.service";
+import {RolecontrollerApi} from "./autogen/api/RolecontrollerApi";
 
 @NgModule({
   imports: [
@@ -10,8 +11,9 @@ import {ApiHelperService} from "../shared/api-helper.service";
   declarations: [
   ],
   providers: [
-    ApiHelperService,
-    OrganizationcontrollerApi
+
+    OrganizationcontrollerApi,
+    RolecontrollerApi
   ]
 })
 export class IdentityRegistryApiModule { }
