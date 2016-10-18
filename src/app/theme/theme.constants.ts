@@ -2,7 +2,8 @@ export const IMAGES_ROOT = 'assets/img/';
 
 export const layoutSizes = {
   resWidthCollapseSidebar: 1200,
-  resWidthHideSidebar: 500
+  resWidthHideSidebar: 500,
+  resWidthMinimum: 320
 };
 
 export const layoutPaths = {
