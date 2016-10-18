@@ -15,35 +15,13 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'sr',
-        data: {
-          menu: {
-            title: 'Service Registry',
-            icon: 'ion-social-buffer',
-            selected: false,
-            expanded: false,
-            order: 100,
-          }
-        },
-        children: [
-          {
-            path: 'specifications',
-            data: {
-              menu: {
-                title: 'Specifications',
-              }
-            }
-          }
-        ]
-      },
-      {
         path: 'ir',
         data: {
           menu: {
             title: 'Identity Registry',
             icon: 'ion-lock-combination',
             selected: false,
-            expanded: false,
+            expanded: true,
             order: 100,
           }
         },
@@ -61,6 +39,28 @@ export const PAGES_MENU = [
             data: {
               menu: {
                 title: 'Services',
+              }
+            }
+          }
+        ]
+      },
+      {
+        path: 'sr',
+        data: {
+          menu: {
+            title: 'Service Registry',
+            icon: 'ion-social-buffer',
+            selected: false,
+            expanded: true,
+            order: 100,
+          }
+        },
+        children: [
+          {
+            path: 'specifications',
+            data: {
+              menu: {
+                title: 'Specifications',
               }
             }
           }

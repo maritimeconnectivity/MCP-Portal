@@ -11,8 +11,8 @@ export class BaMenuService {
 
   public convertRoutesToMenus(routes:Routes):any[] {
     let items = this._convertArrayToItems(routes);
-    return this._skipEmpty(items);
-  }
+  return this._skipEmpty(items);
+}
 
   public getCurrentItem():any {
     return this._currentMenuItem;
@@ -107,7 +107,8 @@ export class BaMenuService {
   }
 
   protected _selectItem(object:any):any {
-    object.selected = object.url == ('#' + this._router.url);
+    let url = '#' + this._router.url;
+    object.selected = url.indexOf(object.url) > -1;
     return object;
   }
 }

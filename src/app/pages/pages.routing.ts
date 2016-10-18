@@ -7,10 +7,11 @@ const routes: Routes = [
     path: 'pages',
     component: Pages,
     canActivate: [AuthGuard],
+    data:{breadcrumb: 'Home'},
     children: [
       { path: '', redirectTo: 'my-organization', pathMatch: 'full' },
-      { path: 'my-organization', loadChildren: () => System.import('./my-organization/my-organization.module') },
-      { path: 'ir', loadChildren: () => System.import('./org-identity-registry/org-identity-registry.module.ts') },
+      { path: 'my-organization', loadChildren: () => System.import('./my-organization/my-organization.module')},
+      { path: 'ir', loadChildren: () => System.import('./org-identity-registry/org-identity-registry.module.ts')},
       { path: 'sr', loadChildren: () => System.import('./org-service-registry/org-service-registry.module.ts') }
     ]
   }
