@@ -4,6 +4,7 @@ import {MCNotificationsService, MCNotificationType} from "../../../../../shared/
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
+import {Router, ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'specification-list',
@@ -16,12 +17,14 @@ export class SpecificationListComponent implements OnInit {
   private specifications: Array<Specification>;
   private isLoading: boolean;
   private onCreate: Function;
-  constructor(private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+  private onGotoSpec: Function;
+  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
 
   ngOnInit() {
     this.onCreate = this.createSpecification.bind(this);
+    this.onGotoSpec = this.gotoSpecification.bind(this);
 
     this.isLoading = true;
     this.orgService.getMyOrganization().subscribe(
@@ -47,6 +50,10 @@ export class SpecificationListComponent implements OnInit {
 
   private createSpecification() {
 console.log('CREATE SPEC');
+  }
+
+  private gotoSpecification(specification: Specification) {
+    this.router.navigate([specification.id], {relativeTo: this.route })
   }
 
 }

@@ -12,6 +12,7 @@ import {layoutSizes} from "../../../../../theme/theme.constants";
 export class SpecificationsTableComponent {
   @Input() specifications: Array<Specification>;
   @Input() isLoading:boolean;
+  @Input() onClick:Function;
   private tableNameClass:string;
   constructor() {
     this.calculateNameClass();
@@ -27,5 +28,9 @@ export class SpecificationsTableComponent {
 
   private isWindowToSmall():boolean {
     return window.innerWidth <= layoutSizes.resWidthCollapseSidebar;
+  }
+
+  private clickedRow($event, item) {
+    this.onClick(item);
   }
 }
