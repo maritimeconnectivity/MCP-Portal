@@ -12,7 +12,7 @@ export class ApiHelperService {
       throw new Error('Parameter serviceApi not a proper service api');
     }
     return Observable.create(observer => {
-      serviceApi.defaultHeaders.set('Content-Type', 'application/json' );
+      serviceApi.defaultHeaders.set('Content-Type', 'application/json; charset=utf-8' );
       if (shouldAuthenticate) {
         AuthService.getToken()
           .then(token => {

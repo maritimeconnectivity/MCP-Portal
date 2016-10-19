@@ -1,5 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import {Router, ActivatedRoute} from "@angular/router";
+import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
+import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
+import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 
 @Component({
   selector: 'specification-list',
@@ -7,12 +11,31 @@ import {Router, ActivatedRoute} from "@angular/router";
   template: require('./specification-list.html'),
   styles: []
 })
-export class SpecificationListComponent {
-  constructor(private route: ActivatedRoute, private router: Router) {
+export class SpecificationListComponent implements OnInit {
+  private organization: Organization;
+  private specifications: Array<Specification>;
+  constructor(private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+    this.organization = {};
   }
 
-  generate() {
-    this.router.navigate(['1'], {relativeTo: this.route })
-    //
+  ngOnInit() {
+    this.orgService.getMyOrganization().subscribe(
+      organization => {
+        this.organization = organization;
+      },
+      err => {
+        this.notifications.generateNotification({title:'Error', message:'Error when trying to get organization', type:MCNotificationType.Error});
+      }
+    );
+
+    this.specificationsService.getSpecificationsForMyOrg().subscribe(
+      specifications => {
+        this.specifications = specifications;
+      },
+      err => {
+        this.notifications.generateNotification({title:'Error', message:'Error when trying to get specifications', type:MCNotificationType.Error});
+      }
+    );
   }
+
 }

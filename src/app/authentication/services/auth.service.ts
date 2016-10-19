@@ -28,7 +28,6 @@ export class AuthService implements OnInit {
   }
 
   ngOnInit() {
-    console.log("OOOONINIT");
   }
   private findPermissionRoles() {
     if (this.authState.loggedIn) {

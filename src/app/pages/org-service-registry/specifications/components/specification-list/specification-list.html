@@ -1,7 +1,11 @@
-<div class="row">
-  <div class="col-md-12">
-    Service Specifications created by
-    <a style="text-decoration: underline" (click)="generate()">Goto spec</a>
+<div class="widgets">
+  <div class="row">
+    <div class="col-lg-12">
+      <ba-card title="Specifications for {{organization.name}}" baCardClass="with-scroll table-panel">
+        <specifications-table [specifications]="specifications"></specifications-table>
+      </ba-card>
+    </div>
   </div>
 </div>
+
 

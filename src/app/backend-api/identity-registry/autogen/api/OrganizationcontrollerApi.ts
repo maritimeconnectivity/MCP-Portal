@@ -34,7 +34,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class OrganizationcontrollerApi {
-    protected basePath = 'https://api.maritimecloud.net:443/';
+    protected basePath = 'https://api.maritimecloud.net:443';
     public defaultHeaders : Headers = new Headers();
 
     constructor(protected http: Http, @Optional() basePath: string) {

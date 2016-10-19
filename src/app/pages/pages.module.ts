@@ -6,7 +6,8 @@ import { NgaModule } from '../theme/nga.module';
 
 import { Pages } from './pages.component';
 import {ServiceRegistryModule} from "../backend-api/service-registry/service-registry.module";
-import {OrganizationService} from "../backend-api/identity-registry/services/organizations.service";
+import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
+import {SpecificationsService} from "../backend-api/service-registry/services/specifications.service";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import {OrganizationService} from "../backend-api/identity-registry/services/org
   ],
   declarations: [Pages],
   providers: [
-    OrganizationService
+    OrganizationsService,
+    SpecificationsService
   ]
 })
 export class PagesModule {

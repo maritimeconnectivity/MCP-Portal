@@ -6,7 +6,6 @@
         border-bottom: 1px solid $border-light;
         white-space: nowrap;
         &:first-child {
-          text-align: center;
         }
         &:last-child {
           padding-right: 16px;
@@ -24,7 +23,7 @@
         line-height: 35px;
         border-top: 1px solid $border-light;
         &:first-child {
-          text-align: center;
+
         }
         &:last-child {
           padding-right: 16px !important;

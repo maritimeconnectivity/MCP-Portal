@@ -6,6 +6,7 @@ import {SpecificationsComponent} from "./specifications.component";
 import {SpecificationListComponent} from "./components/specification-list/specification-list.component";
 import {SpecificationDetailsComponent} from "./components/specification-details/specification-details.component";
 import {NgaModule} from "../../../theme/nga.module";
+import {SpecificationsTableComponent} from "./components/specifications-table/specifications-table.component";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {NgaModule} from "../../../theme/nga.module";
   declarations: [
     SpecificationsComponent,
     SpecificationDetailsComponent,
-    SpecificationListComponent
+    SpecificationListComponent,
+    SpecificationsTableComponent
   ]
 })
 export default class SpecificationsModule {

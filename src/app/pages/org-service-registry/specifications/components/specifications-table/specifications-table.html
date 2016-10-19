@@ -1,0 +1,24 @@
+<div *ngIf="specifications"  class="horizontal-scroll">
+  <table class="table table-hover">
+    <thead>
+      <tr class="black-muted-bg">
+        <th>Name</th>
+        <th>Version</th>
+        <th>Status</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let specification of specifications">
+        <td class="{{tableNameClass}}">{{specification.name | truncate:50}}</td>
+        <td class="nowrap">{{specification.version}}</td>
+        <td class="nowrap">{{specification.status}}</td>
+        <td class="table-description">{{'And  here is the longest description in the world that just goes on and on and onest description in the world that just goes on and on and onest description in the world that just goes on and on and onest description in the world that just goes on and on and onest description in the world that just goes on and on and on' | truncate:250}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<h5 *ngIf="!specifications">No specifications</h5>
+
+
+
