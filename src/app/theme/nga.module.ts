@@ -54,6 +54,7 @@ import {
   EqualPasswordsValidator
 } from './validators';
 import {FadingCircleComponent} from "./components/spinner/fading-circle";
+import {McCreateButton} from "./components/mcCreateButton/mcCreateButton.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -70,7 +71,8 @@ const NGA_COMPONENTS = [
   BaPageTop,
   BaPictureUploader,
   BaSidebar,
-  FadingCircleComponent
+  FadingCircleComponent,
+  McCreateButton
 ];
 
 const NGA_DIRECTIVES = [

@@ -4,6 +4,16 @@ $hover: 24;
   outline: none;
 }
 
+.btn-create-wrapper {
+  padding-bottom: 15px;
+}
+
+.button-wrapper {
+  margin-bottom: 24px;
+  margin-top: 24px;
+  text-align: center;
+}
+
 .btn {
   border-radius: 5px;
   transition: all 0.1s ease;

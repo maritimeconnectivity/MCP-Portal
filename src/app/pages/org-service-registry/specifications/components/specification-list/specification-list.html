@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-lg-12">
       <ba-card title="Specifications for {{organization.name}}" baCardClass="with-scroll table-panel">
+        <mc-create-button title="Register new Specification" [onClick]="onCreate" ></mc-create-button>
         <specifications-table [specifications]="specifications" [isLoading]="isLoading"></specifications-table>
       </ba-card>
     </div>

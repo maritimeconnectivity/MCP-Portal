@@ -14,12 +14,15 @@ import {Specification} from "../../../../../backend-api/service-registry/autogen
 export class SpecificationListComponent implements OnInit {
   private organization: Organization;
   private specifications: Array<Specification>;
-  private isLoading:boolean;
+  private isLoading: boolean;
+  private onCreate: Function;
   constructor(private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
 
   ngOnInit() {
+    this.onCreate = this.createSpecification.bind(this);
+
     this.isLoading = true;
     this.orgService.getMyOrganization().subscribe(
       organization => {
@@ -40,6 +43,10 @@ export class SpecificationListComponent implements OnInit {
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get specifications', type:MCNotificationType.Error});
       }
     );
+  }
+
+  private createSpecification() {
+console.log('CREATE SPEC');
   }
 
 }

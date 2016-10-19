@@ -1,4 +1,6 @@
 /*
+Inspired by https://github.com/WoltersKluwerPL/ng2-spin-kit
+
 The MIT License
 
 Copyright (c) 2016 Wolters Kluwer
