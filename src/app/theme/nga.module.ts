@@ -53,6 +53,7 @@ import {
   EmailValidator,
   EqualPasswordsValidator
 } from './validators';
+import {FadingCircleComponent} from "./components/spinner/fading-circle";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -68,7 +69,8 @@ const NGA_COMPONENTS = [
   BaMultiCheckbox,
   BaPageTop,
   BaPictureUploader,
-  BaSidebar
+  BaSidebar,
+  FadingCircleComponent
 ];
 
 const NGA_DIRECTIVES = [

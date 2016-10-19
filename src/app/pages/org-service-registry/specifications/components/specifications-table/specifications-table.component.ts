@@ -11,6 +11,7 @@ import {layoutSizes} from "../../../../../theme/theme.constants";
 })
 export class SpecificationsTableComponent {
   @Input() specifications: Array<Specification>;
+  @Input() isLoading:boolean;
   private tableNameClass:string;
   constructor() {
     this.calculateNameClass();

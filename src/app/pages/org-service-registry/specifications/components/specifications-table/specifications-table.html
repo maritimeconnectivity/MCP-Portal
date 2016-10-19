@@ -18,7 +18,8 @@
     </tbody>
   </table>
 </div>
-<h5 *ngIf="!specifications">No specifications</h5>
+<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+<h5 *ngIf="!specifications && !isLoading">No specifications</h5>
 
 
 
