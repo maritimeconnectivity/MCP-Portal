@@ -15,9 +15,9 @@ import {Router, ActivatedRoute} from "@angular/router";
 export class SpecificationListComponent implements OnInit {
   private organization: Organization;
   private specifications: Array<Specification>;
-  private isLoading: boolean;
-  private onCreate: Function;
-  private onGotoSpec: Function;
+  public isLoading: boolean;
+  public onCreate: Function;
+  public onGotoSpec: Function;
   constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
@@ -52,8 +52,8 @@ export class SpecificationListComponent implements OnInit {
     this.notifications.generateNotification({title:'Not implemented', message:'Register new Specification', type:MCNotificationType.Info});
   }
 
-  private gotoSpecification(specification: Specification) {
-    this.router.navigate([specification.specificationId], {relativeTo: this.route })
+  private gotoSpecification(index:number) {
+    this.router.navigate([this.specifications[index].specificationId], {relativeTo: this.route })
   }
 
 }

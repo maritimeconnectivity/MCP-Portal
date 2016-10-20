@@ -1,0 +1,17 @@
+<div *ngIf="!isLoading && hasRowData()">
+  <table class="table table-hover table-bordered {{tableClass}}">
+    <thead>
+      <tr class="black-muted-bg">
+        <th *ngFor="let header of tableHeaders" class="{{header.class}}" >{{header.title}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tableRow of tableRows; let i = index" (click)="clickedRow(i)" >
+        <td *ngFor="let cell of tableRow.cells" class="{{cell.class}}"><div [innerHTML]="cell.valueHtml | truncate:cell.truncateNumber"></div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+<h5 *ngIf="!hasRowData() && !isLoading">No data</h5>
+

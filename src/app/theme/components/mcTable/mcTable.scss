@@ -1,0 +1,14 @@
+.table-description {
+  min-width: 300px;
+}
+
+.mc-table {
+  td:first-child {
+    white-space: nowrap;
+  }
+}
+.mc-table-short {
+  td:first-child {
+    min-width: 200px;
+  }
+}

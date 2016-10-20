@@ -14,3 +14,4 @@ export * from './baCheckbox';
 export * from './baMultiCheckbox';
 export * from './mcCreateButton';
 export * from './mcLabelValueTable';
+export * from './mcTable';

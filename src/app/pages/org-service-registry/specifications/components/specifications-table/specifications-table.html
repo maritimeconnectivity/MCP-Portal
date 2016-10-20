@@ -1,25 +1,4 @@
-<div *ngIf="specifications">
-  <table class="table table-hover table-bordered">
-    <thead>
-      <tr class="black-muted-bg">
-        <th>Name</th>
-        <th class="nowrap align-center">Version</th>
-        <th class="nowrap">Status</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let specification of specifications" (click)="clickedRow($event, specification)" >
-        <td class="{{tableNameClass}}">{{specification.name | truncate:50}}</td>
-        <td class="nowrap" align-center>{{specification.version}}</td>
-        <td class="nowrap">{{specification.status}}</td>
-        <td class="table-description">{{specification.description | truncate:250}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
-<h5 *ngIf="!specifications && !isLoading">No specifications</h5>
+<mc-table [tableHeaders]="tableHeaders" [tableRows]="tableRows" [isLoading]="isLoading" [onRowClick]="onRowClick"></mc-table>
 
 
 
