@@ -55,6 +55,7 @@ import {
 } from './validators';
 import {FadingCircleComponent} from "./components/spinner/fading-circle";
 import {McCreateButton} from "./components/mcCreateButton/mcCreateButton.component";
+import {McLabelValueTable} from "./components/mcLabelValueTable/mcLabelValueTable.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -72,7 +73,8 @@ const NGA_COMPONENTS = [
   BaPictureUploader,
   BaSidebar,
   FadingCircleComponent,
-  McCreateButton
+  McCreateButton,
+  McLabelValueTable
 ];
 
 const NGA_DIRECTIVES = [

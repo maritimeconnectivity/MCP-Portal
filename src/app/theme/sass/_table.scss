@@ -1,3 +1,26 @@
+.table-label-value-small {
+  display: block;
+  td {
+    display: inline-block;
+  }
+  td:first-child {
+    opacity: 0.75;
+    padding-left: 0px !important;
+    min-width: 120px;
+  }
+  td:last-child {
+    padding-bottom: 8px;
+  }
+}
+.table-label-value {
+  td:first-child {
+    opacity: 0.75;
+    padding-left: 0px !important;
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+
 .table {
   margin-bottom: 0px;
   & > thead {

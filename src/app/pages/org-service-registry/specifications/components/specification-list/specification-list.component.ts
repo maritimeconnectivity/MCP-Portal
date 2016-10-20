@@ -53,7 +53,7 @@ console.log('CREATE SPEC');
   }
 
   private gotoSpecification(specification: Specification) {
-    this.router.navigate([specification.id], {relativeTo: this.route })
+    this.router.navigate([specification.specificationId], {relativeTo: this.route })
   }
 
 }

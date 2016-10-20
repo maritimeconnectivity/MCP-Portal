@@ -1,0 +1,12 @@
+<div *ngIf="labelValues">
+  <table class="table table-no-borders {{tableClass}}">
+    <tbody>
+      <tr *ngFor="let labelValue of labelValues">
+        <td>{{labelValue.label}} :</td>
+        <td><div [innerHTML]="labelValue.valueHtml"></div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+<h5 *ngIf="!labelValues && !isLoading">No data</h5>
