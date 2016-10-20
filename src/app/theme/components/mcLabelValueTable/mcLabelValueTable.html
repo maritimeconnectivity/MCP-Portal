@@ -3,7 +3,7 @@
     <tbody>
       <tr *ngFor="let labelValue of labelValues">
         <td>{{labelValue.label}} :</td>
-        <td><div [innerHTML]="labelValue.valueHtml"></div></td>
+        <td><div [innerHTML]="labelValue.valueHtml | sanitizeHtml"></div></td>
       </tr>
     </tbody>
   </table>
