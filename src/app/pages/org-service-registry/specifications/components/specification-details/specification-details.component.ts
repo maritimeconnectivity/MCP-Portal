@@ -30,7 +30,7 @@ export class SpecificationDetailsComponent {
 
   ngOnInit() {
     this.isLoading = true;
-    this.title = 'Loading';
+    this.title = 'Loading ...';
     let specificationId = this.route.snapshot.params['id'];
     this.specificationsService.getSpecification(specificationId).subscribe(
       specification => {
@@ -45,6 +45,14 @@ export class SpecificationDetailsComponent {
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get specification', type:MCNotificationType.Error});
       }
     );
+  }
+
+  public downloadXml() {
+    this.notifications.generateNotification({title:'Not implemented', message:'Downlad XML', type:MCNotificationType.Info});
+  }
+
+  public downloadDoc() {
+    this.notifications.generateNotification({title:'Not implemented', message:'Download Document', type:MCNotificationType.Info});
   }
 
   private generateLabelValues() {

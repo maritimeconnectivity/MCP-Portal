@@ -4,6 +4,19 @@ $hover: 24;
   outline: none;
 }
 
+ul.btn-list {
+  margin: 0 0 0 -18px;
+  padding: 0;
+  padding-top: 6px;
+  clear: both;
+  li {
+    margin: 0px 0 12px 18px;
+    padding: 0;
+    list-style: none;
+    float: left;
+  }
+}
+
 .btn-create-wrapper {
   padding-bottom: 15px;
 }

@@ -49,7 +49,7 @@ export class SpecificationListComponent implements OnInit {
   }
 
   private createSpecification() {
-console.log('CREATE SPEC');
+    this.notifications.generateNotification({title:'Not implemented', message:'Register new Specification', type:MCNotificationType.Info});
   }
 
   private gotoSpecification(specification: Specification) {
