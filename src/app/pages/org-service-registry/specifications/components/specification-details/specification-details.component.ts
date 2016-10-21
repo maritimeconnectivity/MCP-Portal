@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {ActivatedRoute, Router, Routes} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
@@ -25,7 +25,7 @@ export class SpecificationDetailsComponent {
   private isLoadingDesigns: boolean;
   public onGotoDesign: Function;
 
-  constructor(private route: ActivatedRoute, private navigationHelperService: NavigationHelperService,  private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService,  private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 

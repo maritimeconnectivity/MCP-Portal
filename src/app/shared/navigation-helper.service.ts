@@ -10,10 +10,18 @@ export class NavigationHelperService {
   constructor(private router: Router ) {
   }
 
-  public navigateToOrgDesign(designId):void {
+  public navigateToOrgDesign(designId:string):void {
     this.path = '/' + designId;
     let pagesMenu = PAGES_MENU;
     this.generatePath('designs', pagesMenu[0]);
+
+    this.router.navigate([this.path]);
+  }
+
+  public navigateToOrgSpecification(specificationId:string):void {
+    this.path = '/' + specificationId;
+    let pagesMenu = PAGES_MENU;
+    this.generatePath('specifications', pagesMenu[0]);
 
     this.router.navigate([this.path]);
   }

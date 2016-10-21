@@ -6,22 +6,20 @@ import {SpecificationsComponent} from "./specifications.component";
 import {SpecificationListComponent} from "./components/specification-list/specification-list.component";
 import {SpecificationDetailsComponent} from "./components/specification-details/specification-details.component";
 import {NgaModule} from "../../../theme/nga.module";
-import {SpecificationsTableComponent} from "./components/specifications-table/specifications-table.component";
-import DesignsModule from "../designs/designs.module";
+import {SharedModule} from "../../shared/shared.module";
 
 
 @NgModule({
   imports: [
     CommonModule,
     NgaModule,
-    DesignsModule,
+    SharedModule,
     routing
   ],
   declarations: [
     SpecificationsComponent,
     SpecificationDetailsComponent,
-    SpecificationListComponent,
-    SpecificationsTableComponent
+    SpecificationListComponent
   ]
 })
 export default class SpecificationsModule {

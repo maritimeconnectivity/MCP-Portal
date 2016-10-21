@@ -5,6 +5,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
+import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
+import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 
 @Component({
   selector: 'design-details',
@@ -13,19 +16,25 @@ import {DesignsService} from "../../../../../backend-api/service-registry/servic
   styles: []
 })
 export class DesignDetailsComponent {
-  private design: Design;
-  private title:string;
-  private labelValues:Array<LabelValueModel>;
-  private isLoading: boolean;
+  public design: Design;
+  public specifications: Array<Specification>;
+  public title:string;
+  public labelValues:Array<LabelValueModel>;
+  public isLoadingSpecifications: boolean;
+  public isLoadingDesign: boolean;
+  public onGotoSpec: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
   ngOnInit() {
-    this.isLoading = true;
+    this.onGotoSpec = this.gotoSpecification.bind(this);
+    this.isLoadingDesign = true;
+    this.isLoadingSpecifications = true;
     this.title = 'Loading ...';
     this.loadDesign();
+    this.loadSpecifications();
   }
 
   public downloadXml() {
@@ -43,7 +52,7 @@ export class DesignDetailsComponent {
         this.title = design.name;
         this.design = design;
         this.generateLabelValues();
-        this.isLoading = false;
+        this.isLoadingDesign = false;
       },
       err => {
         // TODO: make this as a general component
@@ -51,8 +60,23 @@ export class DesignDetailsComponent {
           this.router.navigate(['/error404'], {relativeTo: this.route })
         }
         this.title = '';
-        this.isLoading = false;
+        this.isLoadingDesign = false;
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get design', type:MCNotificationType.Error});
+      }
+    );
+  }
+
+  // TODO this should be deleted and taken directly from the design-model when service registry has proper data. from design.specifications
+
+  private loadSpecifications() {
+    this.specificationsService.getSpecificationsForMyOrg().subscribe(
+      specifications => {
+        this.specifications = specifications;
+        this.isLoadingSpecifications = false;
+      },
+      err => {
+        this.isLoadingSpecifications = false;
+        this.notifications.generateNotification({title:'Error', message:'Error when trying to get specifications', type:MCNotificationType.Error});
       }
     );
   }
@@ -67,5 +91,9 @@ export class DesignDetailsComponent {
       this.labelValues.push({label: 'Status', valueHtml: this.design.status});
       this.labelValues.push({label: 'Description', valueHtml: this.design.description});
     }
+  }
+
+  private gotoSpecification(index:number) {
+    this.navigationHelperService.navigateToOrgSpecification(this.specifications[index].specificationId);
   }
 }

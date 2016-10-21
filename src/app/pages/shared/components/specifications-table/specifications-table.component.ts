@@ -8,7 +8,7 @@ import {TableRow, TableHeader, TableCell} from "../../../../../theme/components/
   template: require('./specifications-table.html'),
   styles: []
 })
-export class SpecificationsTableComponent implements OnChanges{
+export class SpecificationsTableComponent implements OnChanges {
   @Input() specifications: Array<Specification>;
   @Input() isLoading: boolean;
   @Input() onRowClick: (index:number) => void;

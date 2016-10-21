@@ -29,7 +29,7 @@ export class SpecificationListComponent implements OnInit {
     this.isLoading = true;
 
     this.loadMyOrganization();
-    this.loadSpecification();
+    this.loadSpecifications();
   }
 
   private loadMyOrganization() {
@@ -43,7 +43,7 @@ export class SpecificationListComponent implements OnInit {
     );
   }
 
-  private loadSpecification() {
+  private loadSpecifications() {
     this.specificationsService.getSpecificationsForMyOrg().subscribe(
       specifications => {
         this.specifications = specifications;
