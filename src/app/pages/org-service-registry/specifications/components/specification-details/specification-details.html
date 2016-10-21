@@ -13,7 +13,8 @@
 
       <div class="separator"></div>
 
-      <h5>Technical Designs for specification</h5>
+      <h5>Designs for specification</h5>
+      <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate" ></mc-create-button>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
   </div>

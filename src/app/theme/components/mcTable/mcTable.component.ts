@@ -28,7 +28,7 @@ export class McTable {
   @Input() tableRows: Array<TableRow>;
   @Input() isLoading: boolean;
   @Input() onRowClick: (index:number) => void;
-  private tableClass:string;
+  public tableClass:string;
   constructor() {
     this.calculateTableClass();
   }

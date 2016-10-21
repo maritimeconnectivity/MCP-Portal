@@ -16,7 +16,7 @@ export interface LabelValueModel {
 export class McLabelValueTable {
   @Input() labelValues:Array<LabelValueModel>;
   @Input() isLoading:boolean;
-  private tableClass:string;
+  public tableClass:string;
   constructor() {
     this.calculateNameClass();
   }

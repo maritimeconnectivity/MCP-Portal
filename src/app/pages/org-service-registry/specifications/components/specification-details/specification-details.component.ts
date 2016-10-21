@@ -7,7 +7,6 @@ import {SpecificationsService} from "../../../../../backend-api/service-registry
 import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {LoadedRouterConfig} from "@angular/router/src/router_config_loader";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
@@ -17,12 +16,13 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
   styles: []
 })
 export class SpecificationDetailsComponent {
-  private specification: Specification;
-  private designs: Array<Design>;
-  private title:string;
-  private labelValues:Array<LabelValueModel>;
-  private isLoadingSpecification: boolean;
-  private isLoadingDesigns: boolean;
+  public specification: Specification;
+  public designs: Array<Design>;
+  public title:string;
+  public labelValues:Array<LabelValueModel>;
+  public isLoadingSpecification: boolean;
+  public isLoadingDesigns: boolean;
+  public onCreate: Function;
   public onGotoDesign: Function;
 
   constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService,  private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
@@ -30,6 +30,7 @@ export class SpecificationDetailsComponent {
   }
 
   ngOnInit() {
+    this.onCreate = this.createDesign.bind(this);
     this.onGotoDesign = this.gotoDesign.bind(this);
 
     this.isLoadingSpecification = true;
@@ -83,6 +84,10 @@ export class SpecificationDetailsComponent {
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get designs', type:MCNotificationType.Error});
       }
     );
+  }
+
+  private createDesign() {
+    this.notifications.generateNotification({title:'Not implemented', message:'Register new design', type:MCNotificationType.Info});
   }
 
   private generateLabelValues() {

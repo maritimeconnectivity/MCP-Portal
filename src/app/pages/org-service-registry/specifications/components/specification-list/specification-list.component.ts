@@ -13,8 +13,8 @@ import {Router, ActivatedRoute} from "@angular/router";
   styles: []
 })
 export class SpecificationListComponent implements OnInit {
-  private organization: Organization;
-  private specifications: Array<Specification>;
+  public organization: Organization;
+  public specifications: Array<Specification>;
   public isLoading: boolean;
   public onCreate: Function;
   public onGotoSpec: Function;

@@ -13,8 +13,8 @@ import {Design} from "../../../../../backend-api/service-registry/autogen/model/
   styles: []
 })
 export class DesignListComponent implements OnInit {
-  private organization: Organization;
-  private designs: Array<Design>;
+  public organization: Organization;
+  public designs: Array<Design>;
   public isLoading: boolean;
   public onCreate: Function;
   public onGotoDesign: Function;
