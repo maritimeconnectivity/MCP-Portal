@@ -1,15 +1,15 @@
 import {Component, ViewEncapsulation, Input, OnChanges} from '@angular/core';
-import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {TableRow, TableHeader, TableCell} from "../../../../../theme/components/mcTable/mcTable.component";
+import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 
 @Component({
-  selector: 'specifications-table',
+  selector: 'designs-table',
   encapsulation: ViewEncapsulation.None,
-  template: require('./specifications-table.html'),
+  template: require('./designs-table.html'),
   styles: []
 })
-export class SpecificationsTableComponent implements OnChanges{
-  @Input() specifications: Array<Specification>;
+export class DesignsTableComponent implements OnChanges{
+  @Input() designs: Array<Design>;
   @Input() isLoading: boolean;
   @Input() onRowClick: (index:number) => void;
   public tableHeaders: Array<TableHeader>;
@@ -19,7 +19,7 @@ export class SpecificationsTableComponent implements OnChanges{
   ngOnInit() {
   }
   ngOnChanges() {
-    if (this.specifications) {
+    if (this.designs) {
       this.generateHeadersAndRows();
     }
   }
@@ -36,22 +36,28 @@ export class SpecificationsTableComponent implements OnChanges{
     tableHeader = {title:'Status', class:'nowrap'};
     tableHeaders.push(tableHeader);
 
+    tableHeader = {title:'Transport', class:'nowrap'};
+    tableHeaders.push(tableHeader);
+
     tableHeader = {title:'Description', class:''};
     tableHeaders.push(tableHeader);
 
-    for (let specification of this.specifications) {
+    for (let design of this.designs) {
       var cells:Array<TableCell> = [];
 
-      var tableCell: TableCell = {valueHtml:specification.name, class:'', truncateNumber:50};
+      var tableCell: TableCell = {valueHtml:design.name, class:'', truncateNumber:50};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:specification.version, class:'nowrap align-center', truncateNumber:0};
+      tableCell = {valueHtml:design.version, class:'nowrap align-center', truncateNumber:0};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:specification.status, class:'nowrap', truncateNumber:0};
+      tableCell = {valueHtml:design.status, class:'nowrap', truncateNumber:0};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:specification.description, class:'table-description', truncateNumber:250};
+      tableCell = {valueHtml:design.transport, class:'nowrap', truncateNumber:0};
+      cells.push(tableCell);
+
+      tableCell = {valueHtml:design.description, class:'table-description', truncateNumber:250};
       cells.push(tableCell);
 
       let tableRow: TableRow = {cells: cells};
@@ -61,7 +67,4 @@ export class SpecificationsTableComponent implements OnChanges{
     this.tableHeaders = tableHeaders;
     this.tableRows = tableRows;
   }
-
-
-
 }

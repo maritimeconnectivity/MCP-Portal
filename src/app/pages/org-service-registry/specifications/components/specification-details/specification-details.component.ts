@@ -2,9 +2,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
-import {forEach} from "@angular/router/src/utils/collection";
 import {FileHelperService} from "../../../../../shared/file-helper.service";
 
 @Component({
@@ -18,14 +17,8 @@ export class SpecificationDetailsComponent {
   private title:string;
   private labelValues:Array<LabelValueModel>;
   private isLoading: boolean;
-  /*constructor() {
-    this.specification = {name: 'Try my name'};
-    var labelValue1: LabelValueModel = {label: 'First label', valueHtml: 'First label'};
-    var labelValue2: LabelValueModel = {label: 'First label a bit longer', valueHtml: "Just some text <i class='fa fa-amazon' aria-hidden='true'></i>"};
-    this.labelValues = [labelValue1, labelValue2];
-  }*/
 
-  constructor(private route: ActivatedRoute, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -41,6 +34,10 @@ export class SpecificationDetailsComponent {
         this.isLoading = false;
       },
       err => {
+        // TODO: make this as a general component
+        if (err.status == 404) {
+          this.router.navigate(['/error404'], {relativeTo: this.route })
+        }
         this.title = '';
         this.isLoading = false;
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get specification', type:MCNotificationType.Error});

@@ -8,6 +8,7 @@ import { Pages } from './pages.component';
 import {ServiceRegistryModule} from "../backend-api/service-registry/service-registry.module";
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 import {SpecificationsService} from "../backend-api/service-registry/services/specifications.service";
+import {DesignsService} from "../backend-api/service-registry/services/designs.service";
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import {SpecificationsService} from "../backend-api/service-registry/services/sp
   declarations: [Pages],
   providers: [
     OrganizationsService,
-    SpecificationsService
+    SpecificationsService,
+    DesignsService
   ]
 })
 export class PagesModule {

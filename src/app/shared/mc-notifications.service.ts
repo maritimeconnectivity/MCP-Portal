@@ -14,7 +14,7 @@ export interface NotificationModel {
 export class MCNotificationsService {
 
   constructor(private errorLogger: ErrorLoggingService) {}
-  
+
   private notificationObserver = new ReplaySubject<NotificationModel>();
 
   public notifications = this.notificationObserver.asObservable();

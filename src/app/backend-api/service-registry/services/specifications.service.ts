@@ -1,6 +1,4 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Organization} from "../autogen/model/Organization";
-import {OrganizationcontrollerApi} from "../autogen/api/OrganizationcontrollerApi";
 import {Observable} from "rxjs";
 import {ApiHelperService} from "../../shared/api-helper.service";
 import {AuthService} from "../../../authentication/services/auth.service";
@@ -76,7 +74,8 @@ export class SpecificationsService implements OnInit {
   }
 
   // TODO delete this again, when description is part of the json
-  private getDescription(specification:Specification):string{
+  private getDescription(specification:Specification):string {
+    // TODO get desrption from xml not
     return specification.comment;
   }
 }

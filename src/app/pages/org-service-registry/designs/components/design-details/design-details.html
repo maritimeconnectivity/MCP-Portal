@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-lg-12">
+    <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
+      <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+      <ul *ngIf="design" class="btn-list clearfix">
+        <li *ngIf="design.designAsDoc">
+          <button type="button" class="btn btn-primary btn-raised" (click)="downloadDoc()">Download document</button>
+        </li>
+        <li *ngIf="design.designAsXml">
+          <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
+        </li>
+      </ul>
+    </ba-card>
+  </div>
+</div>

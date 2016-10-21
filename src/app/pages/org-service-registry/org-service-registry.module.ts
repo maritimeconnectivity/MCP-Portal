@@ -5,6 +5,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { routing }       from './org-service-registry.routing';
 import { OrgServiceRegistryComponent } from './org-service-registry.component';
 import SpecificationsModule from "./specifications/specifications.module";
+import DesignsModule from "./designs/designs.module";
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import SpecificationsModule from "./specifications/specifications.module";
     CommonModule,
     NgaModule,
     SpecificationsModule,
+    DesignsModule,
     routing
   ],
   declarations: [
