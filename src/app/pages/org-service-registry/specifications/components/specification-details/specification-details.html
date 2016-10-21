@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-      <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+      <mc-label-value-table [isLoading]="isLoadingSpecification" [labelValues]="labelValues"></mc-label-value-table>
       <ul *ngIf="specification" class="btn-list clearfix">
         <li *ngIf="specification.specAsDoc">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadDoc()">Download document</button>
@@ -10,6 +10,10 @@
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
       </ul>
+
+      <div class="separator"></div>
+      <h5>Technical Designs for specification</h5>
+      <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
   </div>
 </div>

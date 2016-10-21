@@ -27,15 +27,11 @@ export class DesignListComponent implements OnInit {
     this.onGotoDesign = this.gotoDesign.bind(this);
 
     this.isLoading = true;
-    this.orgService.getMyOrganization().subscribe(
-      organization => {
-        this.organization = organization;
-      },
-      err => {
-        this.notifications.generateNotification({title:'Error', message:'Error when trying to get organization', type:MCNotificationType.Error});
-      }
-    );
+    this.loadMyOrganization();
+    this.loadDesign();
+  }
 
+  private loadDesign() {
     this.designsService.getDesignsForMyOrg().subscribe(
       designs => {
         this.designs = designs;
@@ -44,6 +40,17 @@ export class DesignListComponent implements OnInit {
       err => {
         this.isLoading = false;
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get designs', type:MCNotificationType.Error});
+      }
+    );
+  }
+
+  private loadMyOrganization() {
+    this.orgService.getMyOrganization().subscribe(
+      organization => {
+        this.organization = organization;
+      },
+      err => {
+        this.notifications.generateNotification({title:'Error', message:'Error when trying to get organization', type:MCNotificationType.Error});
       }
     );
   }

@@ -20,6 +20,9 @@ import {DesignDetailsComponent} from "./components/design-details/design-details
     DesignListComponent,
     DesignsTableComponent,
     DesignDetailsComponent
+  ],
+  exports: [
+    DesignsTableComponent
   ]
 })
 export default class DesignsModule {

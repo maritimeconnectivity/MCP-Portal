@@ -36,6 +36,26 @@ export class DesignsService implements OnInit {
     });
   }
 
+  public getDesignsForSpecification(specificationId:string, version?:string): Observable<Array<Design>> {
+    return Observable.create(observer => {
+      this.apiHelper.prepareService(this.designsApi, true).subscribe(res => {
+        // TODO for now just get all designs. Needs to be for this specification only though
+        this.designsApi.getAllDesignsUsingGET().subscribe(
+          designs => {
+            // TODO delete this again, when description is part of the json
+            for (let design of designs) {
+              design.description = this.getDescription(design);
+            }
+            observer.next(designs);
+          },
+          err => {
+            observer.error(err);
+          }
+        );
+      });
+    });
+  }
+
   public getDesign(designId:string, version?:string): Observable<Design> {
     var found = false;
     if (this.chosenDesign && this.chosenDesign.designId === designId) {

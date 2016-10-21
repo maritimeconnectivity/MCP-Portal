@@ -25,6 +25,18 @@ export class DesignDetailsComponent {
   ngOnInit() {
     this.isLoading = true;
     this.title = 'Loading ...';
+    this.loadDesign();
+  }
+
+  public downloadXml() {
+    this.fileHelperService.downloadXml(this.design.designAsXml);
+  }
+
+  public downloadDoc() {
+    this.fileHelperService.downloadDoc(this.design.designAsDoc);
+  }
+
+  private loadDesign() {
     let designId = this.route.snapshot.params['id'];
     this.designsService.getDesign(designId).subscribe(
       design => {
@@ -43,14 +55,6 @@ export class DesignDetailsComponent {
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get design', type:MCNotificationType.Error});
       }
     );
-  }
-
-  public downloadXml() {
-    this.fileHelperService.downloadXml(this.design.designAsXml);
-  }
-
-  public downloadDoc() {
-    this.fileHelperService.downloadDoc(this.design.designAsDoc);
   }
 
   private generateLabelValues() {

@@ -19,7 +19,8 @@ export class SpecificationsService implements OnInit {
     let shortName = this.authService.authState.orgShortName;
     return Observable.create(observer => {
       this.apiHelper.prepareService(this.specificationsApi, true).subscribe(res => {
-        // TODO for now just get all specifications. Needs to be for this org only though
+        // TODO for now just get all specifications. Needs to be for this org only though.
+        // TODO as soon as the data in service registry organisationId is updated, I need to filter out all data that not belongs to this org, because the portal is for now only for the organizations own data. other orgs data comes in face 2
         this.specificationsApi.getAllSpecificationsUsingGET().subscribe(
           specifications => {
             // TODO delete this again, when description is part of the json

@@ -27,6 +27,12 @@ export class SpecificationListComponent implements OnInit {
     this.onGotoSpec = this.gotoSpecification.bind(this);
 
     this.isLoading = true;
+
+    this.loadMyOrganization();
+    this.loadSpecification();
+  }
+
+  private loadMyOrganization() {
     this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
@@ -35,7 +41,9 @@ export class SpecificationListComponent implements OnInit {
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get organization', type:MCNotificationType.Error});
       }
     );
+  }
 
+  private loadSpecification() {
     this.specificationsService.getSpecificationsForMyOrg().subscribe(
       specifications => {
         this.specifications = specifications;

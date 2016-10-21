@@ -7,12 +7,14 @@ import {SpecificationListComponent} from "./components/specification-list/specif
 import {SpecificationDetailsComponent} from "./components/specification-details/specification-details.component";
 import {NgaModule} from "../../../theme/nga.module";
 import {SpecificationsTableComponent} from "./components/specifications-table/specifications-table.component";
+import DesignsModule from "../designs/designs.module";
 
 
 @NgModule({
   imports: [
     CommonModule,
     NgaModule,
+    DesignsModule,
     routing
   ],
   declarations: [

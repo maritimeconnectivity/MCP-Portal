@@ -4,7 +4,7 @@ import {DesignListComponent} from "./components/design-list/design-list.componen
 import {DesignDetailsComponent} from "./components/design-details/design-details.component";
 
 // noinspection TypeScriptValidateTypes
-const routes: Routes = [
+export const designRoutes: Routes = [
   {
     path: 'designs',
     component: DesignsComponent,
@@ -23,4 +23,4 @@ const routes: Routes = [
   }
 ];
 
-export const routing = RouterModule.forChild(routes);
+export const routing = RouterModule.forChild(designRoutes);
