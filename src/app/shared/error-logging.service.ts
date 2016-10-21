@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
-import {MCNotificationsService, MCNotificationType} from "./mc-notifications.service";
+import {NotificationsService} from "angular2-notifications";
 
 @Injectable()
 export class ErrorLoggingService {
 
-  constructor(private notificationService: MCNotificationsService ) {
+  constructor(private notificationService: NotificationsService ) {
 
   }
 
-  public logError( error: any ) : void {
+  public logError( error: any, showToUser:boolean ) : void {
     this.sendToConsole(error);
-    this.sendToUser(error);
+    if (showToUser) {
+      this.sendToUser(error);
+    }
   }
 
   private sendToConsole(error: any): void {
@@ -32,6 +34,6 @@ export class ErrorLoggingService {
     if (!message) {
       message = '';
     }
-    this.notificationService.generateNotification({title:'Error', message:'Unexpected error occurred:\n'+message, type:MCNotificationType.Error});
+    this.notificationService.error('Error', 'Unexpected error occurred:\n'+message);
   }
 }

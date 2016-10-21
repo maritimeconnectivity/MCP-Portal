@@ -32,8 +32,8 @@ export class MCErrorHandler implements ErrorHandler {
     // Send to the error-logging service.
     try {
       this.options.unwrapError
-        ? this.errorLoggingService.logError( this.findOriginalError( error ) )
-        : this.errorLoggingService.logError( error )
+        ? this.errorLoggingService.logError( this.findOriginalError( error ), true )
+        : this.errorLoggingService.logError( error, true )
       ;
     } catch ( loggingError ) {
       console.group( "ErrorHandler" );

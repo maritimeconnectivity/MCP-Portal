@@ -5,6 +5,7 @@ import {MCNotificationsService, MCNotificationType} from "../../../../../shared/
 import {ActivatedRoute} from "@angular/router";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {forEach} from "@angular/router/src/utils/collection";
+import {FileHelperService} from "../../../../../shared/file-helper.service";
 
 @Component({
   selector: 'specification-details',
@@ -24,7 +25,7 @@ export class SpecificationDetailsComponent {
     this.labelValues = [labelValue1, labelValue2];
   }*/
 
-  constructor(private route: ActivatedRoute, private notifications: MCNotificationsService, private specificationsService: SpecificationsService) {
+  constructor(private route: ActivatedRoute, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -48,11 +49,11 @@ export class SpecificationDetailsComponent {
   }
 
   public downloadXml() {
-    this.notifications.generateNotification({title:'Not implemented', message:'Downlad XML', type:MCNotificationType.Info});
+    this.fileHelperService.downloadXml(this.specification.specAsXml);
   }
 
   public downloadDoc() {
-    this.notifications.generateNotification({title:'Not implemented', message:'Download Document', type:MCNotificationType.Info});
+    this.fileHelperService.downloadDoc(this.specification.specAsDoc);
   }
 
   private generateLabelValues() {

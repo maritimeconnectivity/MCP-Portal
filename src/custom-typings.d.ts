@@ -40,6 +40,10 @@ declare var Chart:any;
 declare var Chartist:any;
 declare var Keycloak: any;
 
+declare module 'file-saver' {
+  var e: any;
+  export = e;
+}
 // support NodeJS modules without type definitions
 declare module '*';
 

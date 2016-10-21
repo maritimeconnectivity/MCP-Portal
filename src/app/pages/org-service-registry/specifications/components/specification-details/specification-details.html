@@ -3,10 +3,10 @@
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
       <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
       <ul *ngIf="specification" class="btn-list clearfix">
-        <li>
+        <li *ngIf="specification.specAsDoc">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadDoc()">Download document</button>
         </li>
-        <li>
+        <li *ngIf="specification.specAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
       </ul>
