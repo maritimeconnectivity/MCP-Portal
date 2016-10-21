@@ -56,6 +56,4 @@ export interface Design {
     version?: string;
 
     description?: string;
-
-    transport?: string;
 }

@@ -75,7 +75,18 @@ export class SpecificationsService implements OnInit {
 
   // TODO delete this again, when description is part of the json
   private getDescription(specification:Specification):string {
-    // TODO get desrption from xml not
-    return specification.comment;
+    try {
+      if (!specification || !specification.specAsXml) {
+        return '';
+      }
+      var parser = new DOMParser();
+      // TODO: this should change to non-base64 string with next service-registry update
+      let xmlString =  window.atob(specification.specAsXml.content.toString());
+      var xmlData = parser.parseFromString(xmlString, "application/xml");
+
+      return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
+    } catch ( error ) {
+      return '';
+    }
   }
 }

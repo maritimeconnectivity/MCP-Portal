@@ -25,7 +25,6 @@ export class DesignsService implements OnInit {
             // TODO delete this again, when description is part of the json
             for (let design of designs) {
               design.description = this.getDescription(design);
-              design.transport = this.getTransport(design);
             }
             observer.next(designs);
           },
@@ -63,7 +62,6 @@ export class DesignsService implements OnInit {
           design => {
             // TODO delete this again, when description is part of the json
             design.description = this.getDescription(design);
-            design.transport = this.getTransport(design);
             this.chosenDesign = design;
             observer.next(design);
           },
@@ -77,13 +75,18 @@ export class DesignsService implements OnInit {
 
   // TODO delete this again, when description is part of the json
   private getDescription(design:Design):string {
-    // TODO get desrption from xml not
-    return design.comment;
-  }
+    try {
+      if (!design || !design.designAsXml) {
+        return '';
+      }
+      var parser = new DOMParser();
+      // TODO: this should change to non-base64 string with next service-registry update
+      let xmlString =  window.atob(design.designAsXml.content.toString());
+      var xmlData = parser.parseFromString(xmlString, "application/xml");
 
-  // TODO delete this again, when transport is part of the json
-  private getTransport(design:Design):string {
-    // TODO get transport from xml not
-    return 'TBD';
+      return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
+    } catch ( error ) {
+      return '';
+    }
   }
 }

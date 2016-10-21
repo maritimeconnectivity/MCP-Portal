@@ -61,7 +61,6 @@ export class DesignDetailsComponent {
       this.labelValues.push({label: 'Name', valueHtml: this.design.name});
       this.labelValues.push({label: 'Version', valueHtml: this.design.version});
       this.labelValues.push({label: 'Status', valueHtml: this.design.status});
-      this.labelValues.push({label: 'Transport', valueHtml: this.design.transport});
       this.labelValues.push({label: 'Description', valueHtml: this.design.description});
     }
   }

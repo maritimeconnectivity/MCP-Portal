@@ -36,9 +36,6 @@ export class DesignsTableComponent implements OnChanges{
     tableHeader = {title:'Status', class:'nowrap'};
     tableHeaders.push(tableHeader);
 
-    tableHeader = {title:'Transport', class:'nowrap'};
-    tableHeaders.push(tableHeader);
-
     tableHeader = {title:'Description', class:''};
     tableHeaders.push(tableHeader);
 
@@ -52,9 +49,6 @@ export class DesignsTableComponent implements OnChanges{
       cells.push(tableCell);
 
       tableCell = {valueHtml:design.status, class:'nowrap', truncateNumber:0};
-      cells.push(tableCell);
-
-      tableCell = {valueHtml:design.transport, class:'nowrap', truncateNumber:0};
       cells.push(tableCell);
 
       tableCell = {valueHtml:design.description, class:'table-description', truncateNumber:250};
