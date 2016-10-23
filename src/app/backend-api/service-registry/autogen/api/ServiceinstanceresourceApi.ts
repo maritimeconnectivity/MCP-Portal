@@ -120,7 +120,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllInstancesUsingGET (page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any ) : Observable<Array<models.Instance>> {
-        const path = this.basePath + '/api/serviceInstancexx';
+        const path = this.basePath + '/api/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;

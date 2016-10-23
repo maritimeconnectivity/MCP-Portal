@@ -7,7 +7,7 @@ import {Specification} from "../autogen/model/Specification";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
-  public chosenSpecification: Specification;
+  private chosenSpecification: Specification;
   constructor(private apiHelper: ApiHelperService, private specificationsApi: ServicespecificationresourceApi, private authService: AuthService) {
   }
 

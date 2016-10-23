@@ -1,15 +1,15 @@
 import {Component, ViewEncapsulation, Input, OnChanges} from '@angular/core';
-import {Specification} from "../../../../backend-api/service-registry/autogen/model/Specification";
 import {TableHeader, TableRow, TableCell} from "../../../../theme/components/mcTable/mcTable.component";
+import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
 
 @Component({
-  selector: 'specifications-table',
+  selector: 'instances-table',
   encapsulation: ViewEncapsulation.None,
-  template: require('./specifications-table.html'),
+  template: require('./instances-table.html'),
   styles: []
 })
-export class SpecificationsTableComponent implements OnChanges {
-  @Input() specifications: Array<Specification>;
+export class InstancesTableComponent implements OnChanges {
+  @Input() instances: Array<Instance>;
   @Input() isLoading: boolean;
   @Input() onRowClick: (index:number) => void;
   public tableHeaders: Array<TableHeader>;
@@ -19,7 +19,7 @@ export class SpecificationsTableComponent implements OnChanges {
   ngOnInit() {
   }
   ngOnChanges() {
-    if (this.specifications) {
+    if (this.instances) {
       this.generateHeadersAndRows();
     }
   }
@@ -39,19 +39,19 @@ export class SpecificationsTableComponent implements OnChanges {
     tableHeader = {title:'Description', class:''};
     tableHeaders.push(tableHeader);
 
-    for (let specification of this.specifications) {
+    for (let instance of this.instances) {
       var cells:Array<TableCell> = [];
 
-      var tableCell: TableCell = {valueHtml:specification.name, class:'', truncateNumber:50};
+      var tableCell: TableCell = {valueHtml:instance.name, class:'', truncateNumber:50};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:specification.version, class:'nowrap align-center', truncateNumber:0};
+      tableCell = {valueHtml:instance.version, class:'nowrap align-center', truncateNumber:0};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:specification.status, class:'nowrap', truncateNumber:0};
+      tableCell = {valueHtml:instance.status, class:'nowrap', truncateNumber:0};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:specification.description, class:'table-description', truncateNumber:250};
+      tableCell = {valueHtml:instance.description, class:'table-description', truncateNumber:250};
       cells.push(tableCell);
 
       let tableRow: TableRow = {cells: cells};
@@ -61,7 +61,4 @@ export class SpecificationsTableComponent implements OnChanges {
     this.tableHeaders = tableHeaders;
     this.tableRows = tableRows;
   }
-
-
-
 }

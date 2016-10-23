@@ -8,6 +8,8 @@ import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
+import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
+import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 
 @Component({
   selector: 'specification-details',
@@ -18,23 +20,28 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 export class SpecificationDetailsComponent {
   public specification: Specification;
   public designs: Array<Design>;
+  public instances: Array<Instance>;
   public title:string;
   public labelValues:Array<LabelValueModel>;
   public isLoadingSpecification: boolean;
   public isLoadingDesigns: boolean;
+  public isLoadingInstances: boolean;
   public onCreate: Function;
   public onGotoDesign: Function;
+  public onGotoInstance: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService,  private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
   ngOnInit() {
     this.onCreate = this.createDesign.bind(this);
     this.onGotoDesign = this.gotoDesign.bind(this);
+    this.onGotoInstance = this.gotoInstance.bind(this);
 
     this.isLoadingSpecification = true;
     this.isLoadingDesigns = true;
+    this.isLoadingInstances = true;
     this.title = 'Loading ...';
     let specificationId = this.route.snapshot.params['id'];
     this.loadSpecification(specificationId);
@@ -60,15 +67,32 @@ export class SpecificationDetailsComponent {
         this.generateLabelValues();
         this.isLoadingSpecification = false;
         this.loadDesigns();
+        this.loadInstances();
       },
       err => {
         // TODO: make this as a general component
         if (err.status == 404) {
           this.router.navigate(['/error404'], {relativeTo: this.route })
         }
-        this.title = '';
+        this.title = 'Error while loading';
         this.isLoadingSpecification = false;
+        this.isLoadingDesigns = false;
+        this.isLoadingInstances = false;
         this.notifications.generateNotification({title:'Error', message:'Error when trying to get specification', type:MCNotificationType.Error});
+      }
+    );
+  }
+
+
+  private loadInstances() {
+    this.instancesService.getInstancesForSpecification(this.specification.specificationId, this.specification.version).subscribe(
+      instances => {
+        this.instances = instances;
+        this.isLoadingInstances = false;
+      },
+      err => {
+        this.isLoadingInstances = false;
+        this.notifications.generateNotification({title:'Error', message:'Error when trying to get instances', type:MCNotificationType.Error});
       }
     );
   }
@@ -100,5 +124,9 @@ export class SpecificationDetailsComponent {
       this.labelValues.push({label: 'Status', valueHtml: this.specification.status});
       this.labelValues.push({label: 'Description', valueHtml: this.specification.description});
     }
+  }
+
+  private gotoInstance(index:number) {
+    this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId);
   }
 }

@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation, Input, OnChanges} from '@angular/core';
-import {TableRow, TableHeader, TableCell} from "../../../../../theme/components/mcTable/mcTable.component";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
+import {Design} from "../../../../backend-api/service-registry/autogen/model/Design";
+import {TableHeader, TableRow, TableCell} from "../../../../theme/components/mcTable/mcTable.component";
 
 @Component({
   selector: 'designs-table',
@@ -8,7 +8,7 @@ import {Design} from "../../../../../backend-api/service-registry/autogen/model/
   template: require('./designs-table.html'),
   styles: []
 })
-export class DesignsTableComponent implements OnChanges{
+export class DesignsTableComponent implements OnChanges {
   @Input() designs: Array<Design>;
   @Input() isLoading: boolean;
   @Input() onRowClick: (index:number) => void;

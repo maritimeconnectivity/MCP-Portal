@@ -3,6 +3,7 @@ import { Routes, RouterModule }  from '@angular/router';
 import { OrgServiceRegistryComponent } from './org-service-registry.component';
 import {SpecificationsComponent} from "./specifications/specifications.component";
 import {DesignsComponent} from "./designs/designs.component";
+import {InstancesComponent} from "./instances/instances.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -11,8 +12,8 @@ const routes: Routes = [
     component: OrgServiceRegistryComponent,
     children: [
       { path: 'specifications', component: SpecificationsComponent },
-      { path: 'designs', component: DesignsComponent }/*,
-      { path: 'instances', component: InstancesComponent },*/
+      { path: 'designs', component: DesignsComponent },
+      { path: 'instances', component: InstancesComponent }
 
     ]
   }

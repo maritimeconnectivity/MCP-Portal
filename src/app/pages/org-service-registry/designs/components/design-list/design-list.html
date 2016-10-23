@@ -1,7 +1,6 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="Designs for {{organization.name}}" baCardClass="with-scroll table-panel">
-      <mc-create-button *ngIf="!isLoading" title="Register new Design" [onClick]="onCreate" ></mc-create-button>
       <designs-table [designs]="designs" [isLoading]="isLoading" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
   </div>

@@ -71,6 +71,14 @@ export const PAGES_MENU = [
                 title: 'Designs',
               }
             }
+          },
+          {
+            path: 'instances',
+            data: {
+              menu: {
+                title: 'Instances',
+              }
+            }
           }
         ]
       },

@@ -7,7 +7,7 @@ import {Design} from "../autogen/model/Design";
 
 @Injectable()
 export class DesignsService implements OnInit {
-  public chosenDesign: Design;
+  private chosenDesign: Design;
   constructor(private apiHelper: ApiHelperService, private designsApi: TechnicaldesignresourceApi, private authService: AuthService) {
   }
 

@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-lg-12">
+    <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
+      <mc-label-value-table [isLoading]="isLoadingInstance" [labelValues]="labelValues"></mc-label-value-table>
+      <ul *ngIf="instance" class="btn-list clearfix">
+        <li *ngIf="instance.instanceAsDoc">
+          <button type="button" class="btn btn-primary btn-raised" (click)="downloadDoc()">Download document</button>
+        </li>
+        <li *ngIf="instance.instanceAsXml">
+          <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
+        </li>
+      </ul>
+
+      <div class="separator"></div>
+
+      <h5>Designs for Instance</h5>
+      <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
+    </ba-card>
+  </div>
+</div>

@@ -9,6 +9,7 @@ import {ServiceRegistryModule} from "../backend-api/service-registry/service-reg
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 import {SpecificationsService} from "../backend-api/service-registry/services/specifications.service";
 import {DesignsService} from "../backend-api/service-registry/services/designs.service";
+import {InstancesService} from "../backend-api/service-registry/services/instances.service";
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import {DesignsService} from "../backend-api/service-registry/services/designs.s
   providers: [
     OrganizationsService,
     SpecificationsService,
-    DesignsService
+    DesignsService,
+    InstancesService
   ]
 })
 export class PagesModule {

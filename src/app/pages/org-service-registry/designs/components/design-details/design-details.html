@@ -15,6 +15,12 @@
 
       <h5>Specifications for Design</h5>
       <specifications-table [specifications]="specifications" [isLoading]="isLoadingSpecifications" [onRowClick]="onGotoSpec"></specifications-table>
+
+      <div class="separator-extra-margin"></div>
+
+      <h5>Instances for Design</h5>
+      <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
+      <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
     </ba-card>
   </div>
 </div>

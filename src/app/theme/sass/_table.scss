@@ -22,7 +22,7 @@
 }
 
 .table {
-  margin-bottom: 0px;
+  margin-bottom: 5px;
   & > thead {
     & > tr {
       & > th {
@@ -43,7 +43,7 @@
       }
       & > td {
         padding: 0px 8px;
-        line-height: 35px;
+        line-height: 30px;
         border-top: 1px solid $border-light;
         &:first-child {
 

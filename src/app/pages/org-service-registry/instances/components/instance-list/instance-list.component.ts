@@ -3,41 +3,41 @@ import {OrganizationsService} from "../../../../../backend-api/identity-registry
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {Router, ActivatedRoute} from "@angular/router";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
+import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
+import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 
 @Component({
-  selector: 'design-list',
+  selector: 'instance-list',
   encapsulation: ViewEncapsulation.None,
-  template: require('./design-list.html'),
+  template: require('./instance-list.html'),
   styles: []
 })
-export class DesignListComponent implements OnInit {
+export class InstanceListComponent implements OnInit {
   public organization: Organization;
-  public designs: Array<Design>;
+  public instances: Array<Instance>;
   public isLoading: boolean;
-  public onGotoDesign: Function;
-  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private designsService: DesignsService) {
+  public onGotoInstance: Function;
+  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private instancesService: InstancesService) {
     this.organization = {};
   }
 
   ngOnInit() {
-    this.onGotoDesign = this.gotoDesign.bind(this);
+    this.onGotoInstance = this.gotoInstance.bind(this);
 
     this.isLoading = true;
     this.loadMyOrganization();
-    this.loadDesigns();
+    this.loadInstances();
   }
 
-  private loadDesigns() {
-    this.designsService.getDesignsForMyOrg().subscribe(
-      designs => {
-        this.designs = designs;
+  private loadInstances() {
+    this.instancesService.getInstancesForMyOrg().subscribe(
+      instances => {
+        this.instances = instances;
         this.isLoading = false;
       },
       err => {
         this.isLoading = false;
-        this.notifications.generateNotification({title:'Error', message:'Error when trying to get designs', type:MCNotificationType.Error});
+        this.notifications.generateNotification({title:'Error', message:'Error when trying to get instances', type:MCNotificationType.Error});
       }
     );
   }
@@ -53,8 +53,8 @@ export class DesignListComponent implements OnInit {
     );
   }
 
-  private gotoDesign(index:number) {
-    this.router.navigate([this.designs[index].designId], {relativeTo: this.route })
+  private gotoInstance(index:number) {
+    this.router.navigate([this.instances[index].instanceId], {relativeTo: this.route })
   }
 
 }

@@ -16,6 +16,11 @@
       <h5>Designs for specification</h5>
       <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate" ></mc-create-button>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
+
+      <div class="separator-extra-margin"></div>
+
+      <h5>Instances for Specification</h5>
+      <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
     </ba-card>
   </div>
 </div>
