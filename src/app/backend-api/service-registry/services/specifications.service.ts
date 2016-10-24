@@ -16,7 +16,7 @@ export class SpecificationsService implements OnInit {
   }
 
   public getSpecificationsForMyOrg(): Observable<Array<Specification>> {
-    let shortName = this.authService.authState.orgShortName;
+    let orgMrn = this.authService.authState.orgMrn;
     return Observable.create(observer => {
       this.apiHelper.prepareService(this.specificationsApi, true).subscribe(res => {
         // TODO for now just get all specifications. Needs to be for this org only though.

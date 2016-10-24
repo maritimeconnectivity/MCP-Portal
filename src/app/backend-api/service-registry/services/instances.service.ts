@@ -16,7 +16,7 @@ export class InstancesService implements OnInit {
   }
 
   public getInstancesForMyOrg(): Observable<Array<Instance>> {
-    let shortName = this.authService.authState.orgShortName;
+    let orgMrn = this.authService.authState.orgMrn;
     return Observable.create(observer => {
       this.apiHelper.prepareService(this.instancesApi, true).subscribe(res => {
         // TODO for now just get all instances. Needs to be for this org only though

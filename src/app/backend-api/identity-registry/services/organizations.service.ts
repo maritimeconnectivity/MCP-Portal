@@ -20,10 +20,10 @@ export class OrganizationsService implements OnInit {
       return Observable.of(this.myOrganization);
     }
 
-    let shortName = this.authService.authState.orgShortName;
+    let orgMrn = this.authService.authState.orgMrn;
     return Observable.create(observer => {
       this.apiHelper.prepareService(this.organizationApi, true).subscribe(res => {
-        this.organizationApi.getOrganizationUsingGET(shortName).subscribe(
+        this.organizationApi.getOrganizationUsingGET(orgMrn).subscribe(
           organization => {
             this.myOrganization = organization;
             observer.next(organization);
@@ -36,10 +36,10 @@ export class OrganizationsService implements OnInit {
     })
   }
 
-  public getOrganization(shortName: string): Observable<Organization> {
+  public getOrganization(orgMrn: string): Observable<Organization> {
     return Observable.create(observer => {
       this.apiHelper.prepareService(this.organizationApi, true).subscribe(res => {
-        this.organizationApi.getOrganizationUsingGET(shortName).subscribe(
+        this.organizationApi.getOrganizationUsingGET(orgMrn).subscribe(
           organization => {
             observer.next(organization);
           },

@@ -11,10 +11,10 @@ export class RolesService implements OnInit {
   ngOnInit() {
   }
 
-  public getMyRoles(shortName): Observable<Array<string>> {
+  public getMyRoles(orgMrn:string): Observable<Array<string>> {
     return Observable.create(observer => {
       this.apiHelper.prepareService(this.rolesApi, true).subscribe(res => {
-        this.rolesApi.getMyRoleUsingGET(shortName).subscribe(
+        this.rolesApi.getMyRoleUsingGET(orgMrn).subscribe(
           roles => {
             observer.next(roles);
           },
