@@ -10,7 +10,7 @@ export enum AuthPermission {Member, Admin, SysAdmin}
 export interface AuthState {
   loggedIn: boolean,
   permission: AuthPermission,
-  orgShortName: string,
+  orgMrn: string,
   isAdmin(): boolean
 }
 
@@ -31,7 +31,7 @@ export class AuthService implements OnInit {
   }
   private findPermissionRoles() {
     if (this.authState.loggedIn) {
-      this.rolesService.getMyRoles(this.authState.orgShortName).subscribe(
+      this.rolesService.getMyRoles(this.authState.orgMrn).subscribe(
         roles => {
           for (let roleString of roles) {
             if (roleString === RoleNameEnum[RoleNameEnum.ROLE_ORG_ADMIN]) {
@@ -51,9 +51,12 @@ export class AuthService implements OnInit {
     return {
       loggedIn: AuthService.staticAuth.loggedIn,
       permission: AuthPermission.Member,
-      orgShortName: AuthService.staticAuth.orgShortName,
+      orgMrn: AuthService.staticAuth.orgMrn,
       isAdmin() {
-        return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
+        //TODO: FIX HARDCODING
+        //FIXME: FIX HARDCODING
+        return true;
+        //return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
       }
     };
   }
@@ -68,7 +71,7 @@ export class AuthService implements OnInit {
           if (authenticated) {
             AuthService.staticAuth.loggedIn = true;
             if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.org) {
-              AuthService.staticAuth.orgShortName =  keycloakAuth.tokenParsed.org;
+              AuthService.staticAuth.orgMrn =  keycloakAuth.tokenParsed.org;
             } else {
               throw new Error('Keycloak token parse error');
             }
