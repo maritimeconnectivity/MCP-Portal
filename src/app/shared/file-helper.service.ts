@@ -9,15 +9,21 @@ export class FileHelperService {
   constructor(private notificationService: MCNotificationsService ) {
 
   }
-
+/*
+  public createDoc(name:string, content:string, contentType:string): Doc {
+    let encodedContent
+    let doc: Doc = {name: name, filecontent:encodedContent, filecontentContentType: contentType};
+    return
+  }
+*/
   public downloadXml(xmlFile:Xml):void {
     if (!xmlFile) {
-      this.notificationService.generateNotification({title:'Error', message:'No file to download', type:MCNotificationType.Error});
+      this.notificationService.generateNotification('Error', 'No file to download', MCNotificationType.Error);
       return;
     }
     // TODO: I belive it is wrong that "content" is an array of strings. Please be wary of this may change in the future
     if (xmlFile.content.length > 1 && xmlFile.content.length < 10) {
-      this.notificationService.generateNotification({title:'Error', message:'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', type:MCNotificationType.Error});
+      this.notificationService.generateNotification('Error', 'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', MCNotificationType.Error);
       return;
     }
     let fileContent = xmlFile.content.toString();
@@ -30,12 +36,12 @@ export class FileHelperService {
 
   public downloadDoc(docFile:Doc):void {
     if (!docFile) {
-      this.notificationService.generateNotification({title:'Error', message:'No file to download', type:MCNotificationType.Error});
+      this.notificationService.generateNotification('Error', 'No file to download', MCNotificationType.Error);
       return;
     }
     // TODO: I belive it is wrong that "content" is an array of strings. Please be wary of this may change in the future
     if (docFile.filecontent.length > 1 && docFile.filecontent.length < 10) {
-      this.notificationService.generateNotification({title:'Error', message:'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', type:MCNotificationType.Error});
+      this.notificationService.generateNotification('Error', 'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', MCNotificationType.Error);
       return;
     }
     let fileContent = docFile.filecontent.toString();
@@ -75,7 +81,7 @@ export class FileHelperService {
   }
 
   private generateError(error:any):void {
-    this.notificationService.generateNotification({title:'Error', message:'Error when trying to download file', type:MCNotificationType.Error, originalError:error});
+    this.notificationService.generateNotification('Error', 'Error when trying to download file', MCNotificationType.Error, error);
   }
 
 }

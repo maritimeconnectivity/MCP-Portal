@@ -61,7 +61,4 @@ export class SpecificationsTableComponent implements OnChanges {
     this.tableHeaders = tableHeaders;
     this.tableRows = tableRows;
   }
-
-
-
 }

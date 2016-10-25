@@ -4,4 +4,12 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-6">
+    <ba-card title="File Uploader" baCardClass="with-scroll">
+      <mc-file-uploader [caption]="captionXml" [fileUploadType]="fileTypeXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
+      <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
+    </ba-card>
+  </div>
+</div>
 

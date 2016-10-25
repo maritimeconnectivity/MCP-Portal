@@ -42,7 +42,7 @@ export class AuthService implements OnInit {
         },
         error => {
           this.authState.permission = AuthPermission.Member;
-          this.notificationService.generateNotification({title:'Error', message:'Error trying to fetch user permissions', type:MCNotificationType.Error});
+          this.notificationService.generateNotification('Error', 'Error trying to fetch user permissions', MCNotificationType.Error);
         }
       );
     }
@@ -53,10 +53,7 @@ export class AuthService implements OnInit {
       permission: AuthPermission.Member,
       orgMrn: AuthService.staticAuth.orgMrn,
       isAdmin() {
-        //TODO: FIX HARDCODING
-        //FIXME: FIX HARDCODING
-        return true;
-        //return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
+        return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
       }
     };
   }

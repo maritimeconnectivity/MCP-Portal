@@ -37,7 +37,7 @@ export class DesignListComponent implements OnInit {
       },
       err => {
         this.isLoading = false;
-        this.notifications.generateNotification({title:'Error', message:'Error when trying to get designs', type:MCNotificationType.Error});
+        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error);
       }
     );
   }
@@ -48,7 +48,7 @@ export class DesignListComponent implements OnInit {
         this.organization = organization;
       },
       err => {
-        this.notifications.generateNotification({title:'Error', message:'Error when trying to get organization', type:MCNotificationType.Error});
+        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error);
       }
     );
   }
