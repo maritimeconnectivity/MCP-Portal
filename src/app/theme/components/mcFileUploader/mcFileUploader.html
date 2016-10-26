@@ -1,10 +1,24 @@
-<table class="table table-no-borders {{tableClass}}">
-  <tbody>
-    <tr>
-      <td>{{caption}} :</td>
-      <td><input type="file" accept="{{accept}}" id="filePicker" (change)="uploadFileListener($event)"></td>
-    </tr>
-  </tbody>
-</table>
-
-
+<!--
+<div class="file-uploader-wrapper" xmlns="http://www.w3.org/1999/html">
+  <h5>{{caption}}</h5>
+  <div class="input-group">
+    <label class="input-group-btn">
+      <span class="btn btn-primary">
+          Browse&hellip; <input type="file" accept="{{accept}}" id="filePicker" (change)="uploadFileListener($event)" style="display: none;">
+      </span>
+    </label>
+    <input type="text" class="form-control input-uploader" [ngClass]="{'has-error-input': requiredText && !hasChosenFile}" value="{{chosenFileValue}}" readonly>
+  </div>
+</div>
+-->
+<div class="form-group">
+  <label for="fileUpload">{{caption}}</label>
+  <div class="input-group">
+    <label class="input-group-btn">
+        <span class="btn btn-primary">
+            Browse&hellip; <input type="file" accept="{{accept}}" id="filePicker" (change)="uploadFileListener($event)" style="display: none;">
+        </span>
+    </label>
+    <input id="fileUpload" type="text" class="form-control input-uploader" [ngClass]="{'has-error-input': requiredText && !hasChosenFile}" value="{{chosenFileValue}}" readonly>
+  </div>
+</div>

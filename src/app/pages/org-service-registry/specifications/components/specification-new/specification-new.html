@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-lg-12">
+    <ba-card title="Register new Specification for {{organization.name}}" baCardClass="with-scroll table-panel">
+      <form>
+        <mc-file-uploader [caption]="captionXml" [fileUploadType]="fileTypeXml" [requiredText]="requiredTextXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
+        <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
+        <ul class="btn-list clearfix">
+          <li>
+            <button [disabled]="!isFormValid" type="button" class="btn btn-danger btn-raised" (click)="register()">Register Specification</button>
+          </li>
+          <li>
+            <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
+          </li>
+        </ul>
+      </form>
+    </ba-card>
+  </div>
+</div>

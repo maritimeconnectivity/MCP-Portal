@@ -5,6 +5,7 @@ import {Organization} from "../../../../../backend-api/identity-registry/autogen
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {Router, ActivatedRoute} from "@angular/router";
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'specification-list',
@@ -18,7 +19,7 @@ export class SpecificationListComponent implements OnInit {
   public isLoading: boolean;
   public onCreate: Function;
   public onGotoSpec: Function;
-  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+  constructor(private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
 
@@ -57,7 +58,7 @@ export class SpecificationListComponent implements OnInit {
   }
 
   private createSpecification() {
-    this.notifications.generateNotification('Not implemented', 'Register new Specification', MCNotificationType.Info);
+    this.navigationService.navigateToCreateSpecification();
   }
 
   private gotoSpecification(index:number) {

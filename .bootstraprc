@@ -90,7 +90,7 @@ styles:
 
   # Components w/ JavaScript
   modal: true
-  tooltip: true
+  tooltip: false
   popover: true
   carousel: true
 
@@ -111,5 +111,5 @@ scripts:
   popover: true
   scrollspy: true
   tab: true
-  tooltip: true
+  tooltip: false
   util: true

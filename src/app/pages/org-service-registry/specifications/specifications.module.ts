@@ -7,6 +7,7 @@ import {SpecificationListComponent} from "./components/specification-list/specif
 import {SpecificationDetailsComponent} from "./components/specification-details/specification-details.component";
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
+import {SpecificationNewComponent} from "./components/specification-new/specification-new.component";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {SharedModule} from "../../shared/shared.module";
   declarations: [
     SpecificationsComponent,
     SpecificationDetailsComponent,
-    SpecificationListComponent
+    SpecificationListComponent,
+    SpecificationNewComponent
   ]
 })
 export default class SpecificationsModule {

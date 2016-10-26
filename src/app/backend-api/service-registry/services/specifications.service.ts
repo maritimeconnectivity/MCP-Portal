@@ -15,6 +15,24 @@ export class SpecificationsService implements OnInit {
 
   }
 
+  public createSpecification(specification:Specification):Observable<Specification>{
+    return Observable.create(observer => {
+      this.apiHelper.prepareService(this.specificationsApi, true).subscribe(res => {
+
+        this.specificationsApi.createSpecificationUsingPOST(specification).subscribe(
+          specificationCreated => {
+            // TODO delete this again, when description is part of the json
+
+            observer.next(specificationCreated);
+          },
+          err => {
+            observer.error(err);
+          }
+        );
+      });
+    });
+  }
+
   public getSpecificationsForMyOrg(): Observable<Array<Specification>> {
     let orgMrn = this.authService.authState.orgMrn;
     return Observable.create(observer => {

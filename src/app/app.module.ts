@@ -30,6 +30,7 @@ import {RolesService} from "./backend-api/identity-registry/services/roles.servi
 import {Four04Module} from "./four04/four04.module";
 import {FileHelperService} from "./shared/file-helper.service";
 import {NavigationHelperService} from "./shared/navigation-helper.service";
+import {XmlParserService} from "./shared/xml-parser.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -76,6 +77,7 @@ type StoreType = {
     NotificationsService, // See usage: https://github.com/flauc/angular2-notifications/blob/master/docs/toastNotifications.md
     ErrorLoggingService,
     FileHelperService,
+    XmlParserService,
     NavigationHelperService,
     MC_ERROR_HANDLER_PROVIDERS,
     // By default the custom ErrorHandler has rethrowError and unwrapError = false, but we set it here as an example on how to overwrite

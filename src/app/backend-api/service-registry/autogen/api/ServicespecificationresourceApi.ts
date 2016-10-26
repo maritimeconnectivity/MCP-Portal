@@ -35,7 +35,7 @@ import 'rxjs/Rx';
 @Injectable()
 export class ServicespecificationresourceApi {
     protected basePath2 = 'http://195.34.146.186:8080/';
-  protected basePath = 'https://sr.maritimecloud.net:8443/';
+  protected basePath = 'https://sr.maritimecloud.net:8443';
     public defaultHeaders : Headers = new Headers();
 
     constructor(protected http: Http, @Optional() basePath: string) {

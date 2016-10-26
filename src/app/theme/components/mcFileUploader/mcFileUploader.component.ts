@@ -8,7 +8,7 @@ export enum FileUploadType {Doc, Xml}
 
 @Component({
   selector: 'mc-file-uploader',
-  styles: [],
+  styles: [require('./mcFileUploader.scss')],
   template: require('./mcFileUploader.html')
 })
 export class McFileUploader {
@@ -16,6 +16,8 @@ export class McFileUploader {
   @Input() caption:string = '';
 
   @Input() fileUploadType:FileUploadType = FileUploadType.Doc;
+
+  @Input() requiredText:string;
 
   @Output() onUpload: EventEmitter<any> = new EventEmitter();
 
@@ -25,12 +27,17 @@ export class McFileUploader {
 
   public accept:string = '';
 
+  public chosenFileValue:string = '';
+
+  public hasChosenFile = false;
+
   constructor(private notificationService: MCNotificationsService) {
     this.calculateNameClass();
   }
 
   public ngOnInit():void {
     this.accept = (this.fileUploadType === FileUploadType.Xml ? '.xml' : '');
+    this.chosenFileValue = this.requiredText;
   }
 
   public uploadFileListener($event) {
@@ -38,6 +45,8 @@ export class McFileUploader {
 
     if (files.length) {
       let file:File = files[0];
+      this.chosenFileValue = file.name;
+      this.hasChosenFile = true;
 
       switch (this.fileUploadType) {
         case FileUploadType.Doc: {
@@ -49,6 +58,10 @@ export class McFileUploader {
           break;
         }
       }
+    } else {
+      this.chosenFileValue = this.requiredText;
+      this.hasChosenFile = false;
+      this.onUpload.emit(null);
     }
   }
 
@@ -58,7 +71,6 @@ export class McFileUploader {
       let data = btoa(fileReader.result);
       // TODO: content should not be Array with next update
       let docFile: Doc = {filecontent: [data], filecontentContentType:file.type, name: file.name};
-      console.log("DDD FILE: ", docFile);
       this.onUpload.emit(docFile);
     }
     fileReader.readAsBinaryString(file);
@@ -70,7 +82,6 @@ export class McFileUploader {
       let data = fileReader.result;
       // TODO: content should not be Array with next update
       let xmlFile: Xml = {content: [data], contentContentType:file.type, name: file.name};
-      console.log("XXX FILE: ", xmlFile);
       this.onUpload.emit(xmlFile);
     }
     fileReader.readAsText(file);
