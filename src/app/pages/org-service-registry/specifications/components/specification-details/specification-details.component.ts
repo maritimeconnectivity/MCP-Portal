@@ -10,6 +10,7 @@ import {DesignsService} from "../../../../../backend-api/service-registry/servic
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
+import {ViewModelService} from "../../../../shared/services/view-model.service";
 
 @Component({
   selector: 'specification-details',
@@ -30,7 +31,7 @@ export class SpecificationDetailsComponent {
   public onGotoDesign: Function;
   public onGotoInstance: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -64,7 +65,7 @@ export class SpecificationDetailsComponent {
       specification => {
         this.title = specification.name;
         this.specification = specification;
-        this.generateLabelValues();
+        this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification);
         this.isLoadingSpecification = false;
         this.loadDesigns();
         this.loadInstances();
@@ -72,7 +73,7 @@ export class SpecificationDetailsComponent {
       err => {
         // TODO: make this as a general component
         if (err.status == 404) {
-          this.router.navigate(['/error404'], {relativeTo: this.route })
+          this.router.navigate(['/error404'], {relativeTo: this.route, replaceUrl: true })
         }
         this.title = 'Error while loading';
         this.isLoadingSpecification = false;
@@ -111,19 +112,7 @@ export class SpecificationDetailsComponent {
   }
 
   private createDesign() {
-    this.notifications.generateNotification('Not implemented', 'Register new design', MCNotificationType.Info);
-  }
-
-  private generateLabelValues() {
-    this.labelValues = undefined;
-    if (this.specification) {
-      this.labelValues = [];
-      this.labelValues.push({label: 'ID', valueHtml: this.specification.specificationId});
-      this.labelValues.push({label: 'Name', valueHtml: this.specification.name});
-      this.labelValues.push({label: 'Version', valueHtml: this.specification.version});
-      this.labelValues.push({label: 'Status', valueHtml: this.specification.status});
-      this.labelValues.push({label: 'Description', valueHtml: this.specification.description});
-    }
+    this.navigationHelperService.navigateToCreateDesign(this.specification.specificationId, this.specification.version);
   }
 
   private gotoInstance(index:number) {

@@ -4,6 +4,7 @@ import {DesignsTableComponent} from "./components/designs-table/designs-table.co
 import {SpecificationsTableComponent} from "./components/specifications-table/specifications-table.component";
 import {NgaModule} from "../../theme/nga.module";
 import {InstancesTableComponent} from "./components/instances-table/instances-table.component";
+import {ViewModelService} from "./services/view-model.service";
 
 
 @NgModule({
@@ -20,6 +21,9 @@ import {InstancesTableComponent} from "./components/instances-table/instances-ta
     DesignsTableComponent,
     InstancesTableComponent,
     SpecificationsTableComponent
+  ],
+  providers: [
+    ViewModelService
   ]
 })
 export class SharedModule {

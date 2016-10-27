@@ -10,6 +10,7 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
+import {ViewModelService} from "../../../../shared/services/view-model.service";
 
 @Component({
   selector: 'design-details',
@@ -30,7 +31,7 @@ export class DesignDetailsComponent {
   public onGotoSpec: Function;
   public onGotoInstance: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -60,14 +61,14 @@ export class DesignDetailsComponent {
       design => {
         this.title = design.name;
         this.design = design;
-        this.generateLabelValues();
+        this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
         this.isLoadingDesign = false;
         this.loadInstances();
       },
       err => {
         // TODO: make this as a general component
         if (err.status == 404) {
-          this.router.navigate(['/error404'], {relativeTo: this.route })
+          this.router.navigate(['/error404'], {relativeTo: this.route, replaceUrl: true })
         }
         this.title = 'Error while loading';
         this.isLoadingDesign = false;
@@ -103,18 +104,6 @@ export class DesignDetailsComponent {
         this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error);
       }
     );
-  }
-
-  private generateLabelValues() {
-    this.labelValues = undefined;
-    if (this.design) {
-      this.labelValues = [];
-      this.labelValues.push({label: 'ID', valueHtml: this.design.designId});
-      this.labelValues.push({label: 'Name', valueHtml: this.design.name});
-      this.labelValues.push({label: 'Version', valueHtml: this.design.version});
-      this.labelValues.push({label: 'Status', valueHtml: this.design.status});
-      this.labelValues.push({label: 'Description', valueHtml: this.design.description});
-    }
   }
 
   private createInstance() {

@@ -7,6 +7,7 @@ import {DesignsComponent} from "./designs.component";
 import {DesignListComponent} from "./components/design-list/design-list.component";
 import {DesignDetailsComponent} from "./components/design-details/design-details.component";
 import {SharedModule} from "../../shared/shared.module";
+import {DesignNewComponent} from "./components/design-new/design-new.component";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {SharedModule} from "../../shared/shared.module";
   declarations: [
     DesignsComponent,
     DesignListComponent,
-    DesignDetailsComponent
+    DesignDetailsComponent,
+    DesignNewComponent
   ]
 })
 export default class DesignsModule {

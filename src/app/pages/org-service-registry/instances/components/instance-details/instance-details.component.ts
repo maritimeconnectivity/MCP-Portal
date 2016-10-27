@@ -8,6 +8,7 @@ import {Instance} from "../../../../../backend-api/service-registry/autogen/mode
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
+import {ViewModelService} from "../../../../shared/services/view-model.service";
 
 @Component({
   selector: 'instance-details',
@@ -24,7 +25,7 @@ export class InstanceDetailsComponent {
   public isLoadingInstance: boolean;
   public onGotoDesign: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -51,13 +52,13 @@ export class InstanceDetailsComponent {
       instance => {
         this.title = instance.name;
         this.instance = instance;
-        this.generateLabelValues();
+        this.labelValues = this.viewModelService.generateLabelValuesForInstance(instance);
         this.isLoadingInstance = false;
       },
       err => {
         // TODO: make this as a general component
         if (err.status == 404) {
-          this.router.navigate(['/error404'], {relativeTo: this.route })
+          this.router.navigate(['/error404'], {relativeTo: this.route, replaceUrl: true })
         }
         this.title = 'Error while loading';
         this.isLoadingInstance = false;
@@ -79,18 +80,6 @@ export class InstanceDetailsComponent {
         this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error);
       }
     );
-  }
-
-  private generateLabelValues() {
-    this.labelValues = undefined;
-    if (this.instance) {
-      this.labelValues = [];
-      this.labelValues.push({label: 'ID', valueHtml: this.instance.instanceId});
-      this.labelValues.push({label: 'Name', valueHtml: this.instance.name});
-      this.labelValues.push({label: 'Version', valueHtml: this.instance.version});
-      this.labelValues.push({label: 'Status', valueHtml: this.instance.status});
-      this.labelValues.push({label: 'Description', valueHtml: this.instance.description});
-    }
   }
 
   private gotoDesign(index:number) {

@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {PAGES_MENU} from "../pages/pages.menu";
-import {Router, Route} from "@angular/router";
+import {Router, Route, ActivatedRoute} from "@angular/router";
 
 //TODO: I cannot for the love of #¤&#¤ find a way to get the url of a component and navigate to the url. Thus this helper class :-( But hey I then had to make a recursive function and who doesn't love that :-)
 
@@ -10,7 +10,7 @@ export class NavigationHelperService {
   private pathBeforeCreateSpecification:string;
   private pathBeforeCreateDesign:string;
   private pathBeforeCreateInstance:string;
-  constructor(private router: Router) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
   }
 
   public cancelCreateSpecification() {
@@ -37,13 +37,12 @@ export class NavigationHelperService {
     }
   }
 
-  public navigateToCreateDesign() {
+  public navigateToCreateDesign(specificationId:string, specificationVersion:string) {
     this.pathBeforeCreateDesign = this.router.url
     this.path = '/register';
     let pagesMenu = PAGES_MENU;
     this.generatePath('designs', pagesMenu[0]);
-
-    this.router.navigate([this.path]);
+    this.router.navigate([this.path], { queryParams: { specificationId: specificationId, specificationVersion: specificationVersion }, preserveQueryParams: false});
   }
   public cancelCreateInstance() {
     if (this.pathBeforeCreateInstance) {

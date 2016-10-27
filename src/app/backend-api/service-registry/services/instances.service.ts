@@ -14,6 +14,10 @@ export class InstancesService implements OnInit {
 
   }
 
+  public createInstance(instance:Instance):Observable<Instance>{
+    return this.instancesApi.createInstanceUsingPOST(instance);
+  }
+
   public getInstancesForMyOrg(): Observable<Array<Instance>> {
     let orgMrn = this.authService.authState.orgMrn;
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe

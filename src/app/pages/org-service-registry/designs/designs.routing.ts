@@ -2,6 +2,7 @@ import { Routes, RouterModule }  from '@angular/router';
 import {DesignsComponent} from "./designs.component";
 import {DesignListComponent} from "./components/design-list/design-list.component";
 import {DesignDetailsComponent} from "./components/design-details/design-details.component";
+import {DesignNewComponent} from "./components/design-new/design-new.component";
 
 // noinspection TypeScriptValidateTypes
 export const designRoutes: Routes = [
@@ -13,6 +14,11 @@ export const designRoutes: Routes = [
       {
         path: '',
         component: DesignListComponent
+      },
+      {
+        path: 'register',
+        component: DesignNewComponent,
+        data:{breadcrumb: 'Register'}
       },
       {
         path: ':id',
