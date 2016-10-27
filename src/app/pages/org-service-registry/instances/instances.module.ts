@@ -7,6 +7,7 @@ import {SharedModule} from "../../shared/shared.module";
 import {InstancesComponent} from "./instances.component";
 import {InstanceListComponent} from "./components/instance-list/instance-list.component";
 import {InstanceDetailsComponent} from "./components/instance-details/instance-details.component";
+import {InstanceNewComponent} from "./components/instance-new/instance-new.component";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {InstanceDetailsComponent} from "./components/instance-details/instance-d
   declarations: [
     InstancesComponent,
     InstanceListComponent,
-    InstanceDetailsComponent
+    InstanceDetailsComponent,
+    InstanceNewComponent
   ]
 })
 export default class InstancesModule {

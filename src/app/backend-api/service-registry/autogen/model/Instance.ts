@@ -59,5 +59,7 @@ export interface Instance {
 
     version?: string;
 
+    organisationId?: string;
+
     description?: string;
 }

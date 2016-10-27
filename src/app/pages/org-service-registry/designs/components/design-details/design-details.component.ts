@@ -107,7 +107,7 @@ export class DesignDetailsComponent {
   }
 
   private createInstance() {
-    this.notifications.generateNotification('Not implemented', 'Register new instance', MCNotificationType.Info);
+    this.navigationHelperService.navigateToCreateSInstance(this.design.designId, this.design.version);
   }
 
   private gotoSpecification(index:number) {

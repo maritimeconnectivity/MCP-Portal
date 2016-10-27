@@ -15,50 +15,53 @@ export class NavigationHelperService {
 
   public cancelCreateSpecification() {
     if (this.pathBeforeCreateSpecification) {
-      this.router.navigate([this.pathBeforeCreateSpecification]);
+      this.router.navigateByUrl(this.pathBeforeCreateSpecification);
     } else {
       this.navigateToOrgSpecification('');
     }
   }
 
+  public cancelCreateDesign() {
+    if (this.pathBeforeCreateDesign) {
+      this.router.navigateByUrl(this.pathBeforeCreateDesign);
+    } else {
+      this.navigateToOrgDesign('');
+    }
+  }
+
+  public cancelCreateInstance() {
+    if (this.pathBeforeCreateInstance) {
+      this.router.navigateByUrl(this.pathBeforeCreateInstance);
+    } else {
+      this.navigateToOrgInstance('');
+    }
+  }
+
   public navigateToCreateSpecification() {
-    this.pathBeforeCreateSpecification = this.router.url
+    this.pathBeforeCreateSpecification = this.router.url;
     this.path = '/register';
     let pagesMenu = PAGES_MENU;
     this.generatePath('specifications', pagesMenu[0]);
 
     this.router.navigate([this.path]);
   }
-  public cancelCreateDesign() {
-    if (this.pathBeforeCreateDesign) {
-      this.router.navigate([this.pathBeforeCreateDesign]);
-    } else {
-      this.navigateToOrgDesign('');
-    }
-  }
 
   public navigateToCreateDesign(specificationId:string, specificationVersion:string) {
-    this.pathBeforeCreateDesign = this.router.url
+    this.pathBeforeCreateDesign = this.router.url;
     this.path = '/register';
     let pagesMenu = PAGES_MENU;
     this.generatePath('designs', pagesMenu[0]);
+
     this.router.navigate([this.path], { queryParams: { specificationId: specificationId, specificationVersion: specificationVersion }, preserveQueryParams: false});
   }
-  public cancelCreateInstance() {
-    if (this.pathBeforeCreateInstance) {
-      this.router.navigate([this.pathBeforeCreateInstance]);
-    } else {
-      this.navigateToOrgInstance('');
-    }
-  }
 
-  public navigateToCreateSInstance() {
-    this.pathBeforeCreateInstance = this.router.url
+  public navigateToCreateSInstance(designId:string, designVersion:string) {
+    this.pathBeforeCreateInstance = this.router.url;
     this.path = '/register';
     let pagesMenu = PAGES_MENU;
     this.generatePath('instances', pagesMenu[0]);
 
-    this.router.navigate([this.path]);
+    this.router.navigate([this.path], { queryParams: { designId: designId, designVersion: designVersion }, preserveQueryParams: false});
   }
 
   public navigateToOrgDesign(designId:string):void {
