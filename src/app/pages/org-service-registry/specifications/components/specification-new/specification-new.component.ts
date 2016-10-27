@@ -68,8 +68,6 @@ export class SpecificationNewComponent implements OnInit {
       specification.status = this.xmlParserService.getValueFromField('status', this.xml);
       specification.organisationId = this.organization.mrn;
       specification.version = this.xmlParserService.getValueFromField('version', this.xml);
-      //specification.specAsXml.content = [JSON.stringify(specification.specAsXml.content.toString())];
-      console.log("AAA: ", specification);
       specification.specAsXml.contentContentType = 'application/xml';
 
       this.createSpecification(specification);

@@ -3,7 +3,10 @@
     <tbody>
       <tr *ngFor="let labelValue of labelValues">
         <td>{{labelValue.label}} :</td>
-        <td><div [innerHTML]="labelValue.valueHtml | sanitizeHtml"></div></td>
+        <td>
+          <div *ngIf="!labelValue.linkFunction" [innerHTML]="labelValue.valueHtml | sanitizeHtml"></div>
+          <a *ngIf="labelValue.linkFunction" class="learn-more" (click)="labelValue.linkFunction(labelValue.linkValue)">{{labelValue.valueHtml}}</a>
+        </td>
       </tr>
     </tbody>
   </table>

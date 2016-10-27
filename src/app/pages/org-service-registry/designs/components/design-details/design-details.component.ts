@@ -24,7 +24,6 @@ export class DesignDetailsComponent {
   public instances: Array<Instance>;
   public title:string;
   public labelValues:Array<LabelValueModel>;
-  public isLoadingSpecifications: boolean;
   public isLoadingInstances: boolean;
   public isLoadingDesign: boolean;
   public onCreate: Function;
@@ -40,11 +39,9 @@ export class DesignDetailsComponent {
     this.onGotoSpec = this.gotoSpecification.bind(this);
     this.onGotoInstance = this.gotoInstance.bind(this);
     this.isLoadingDesign = true;
-    this.isLoadingSpecifications = true;
     this.isLoadingInstances = true;
     this.title = 'Loading ...';
     this.loadDesign();
-    this.loadSpecifications();
   }
 
   public downloadXml() {
@@ -61,8 +58,7 @@ export class DesignDetailsComponent {
       design => {
         this.title = design.name;
         this.design = design;
-        this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
-        this.isLoadingDesign = false;
+        this.loadSpecifications();
         this.loadInstances();
       },
       err => {
@@ -97,21 +93,34 @@ export class DesignDetailsComponent {
     this.specificationsService.getSpecificationsForMyOrg().subscribe(
       specifications => {
         this.specifications = specifications;
-        this.isLoadingSpecifications = false;
+        this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
+        this.generateLabelValuesForSpecification();
+        this.isLoadingDesign = false;
       },
       err => {
-        this.isLoadingSpecifications = false;
+        this.isLoadingDesign = false;
         this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error);
       }
     );
+  }
+
+  private generateLabelValuesForSpecification() {
+    if (this.specifications && this.specifications.length > 0) {
+      let plur = (this.specifications.length > 1 ? 's' : '');
+      var label = 'Implemented specification' + plur;
+      this.specifications.forEach((specification) => {
+        this.labelValues.push({label: label, valueHtml: specification.name + " - " + specification.version, linkFunction: this.onGotoSpec, linkValue: specification.specificationId});
+        label = "";
+      });
+    }
   }
 
   private createInstance() {
     this.navigationHelperService.navigateToCreateSInstance(this.design.designId, this.design.version);
   }
 
-  private gotoSpecification(index:number) {
-    this.navigationHelperService.navigateToOrgSpecification(this.specifications[index].specificationId);
+  private gotoSpecification(specificationId:string) {
+    this.navigationHelperService.navigateToOrgSpecification(specificationId);
   }
 
   private gotoInstance(index:number) {

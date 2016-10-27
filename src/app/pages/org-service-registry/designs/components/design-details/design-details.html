@@ -10,17 +10,11 @@
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
       </ul>
-
       <div class="separator"></div>
 
-      <h5>This Design implements the following Specifications</h5>
-      <specifications-table [specifications]="specifications" [isLoading]="isLoadingSpecifications" [onRowClick]="onGotoSpec"></specifications-table>
-
-      <div class="separator-extra-margin"></div>
-
-      <h5>The following Instances implements this Design</h5>
-      <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
+      <h5>Instances that implements this Design</h5>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
+      <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
     </ba-card>
   </div>
 </div>

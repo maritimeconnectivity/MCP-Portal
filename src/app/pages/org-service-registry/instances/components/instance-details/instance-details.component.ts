@@ -32,10 +32,8 @@ export class InstanceDetailsComponent {
   ngOnInit() {
     this.onGotoDesign = this.gotoDesign.bind(this);
     this.isLoadingInstance = true;
-    this.isLoadingDesigns = true;
     this.title = 'Loading ...';
     this.loadInstance();
-    this.loadDesigns();
   }
 
   public downloadXml() {
@@ -52,8 +50,7 @@ export class InstanceDetailsComponent {
       instance => {
         this.title = instance.name;
         this.instance = instance;
-        this.labelValues = this.viewModelService.generateLabelValuesForInstance(instance);
-        this.isLoadingInstance = false;
+        this.loadDesigns();
       },
       err => {
         // TODO: make this as a general component
@@ -73,16 +70,29 @@ export class InstanceDetailsComponent {
     this.designsService.getDesignsForMyOrg().subscribe(
       designs => {
         this.designs = designs;
-        this.isLoadingDesigns = false;
+        this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance);
+        this.generateLabelValuesForDesigns();
+        this.isLoadingInstance = false;
       },
       err => {
-        this.isLoadingDesigns = false;
+        this.isLoadingInstance = false;
         this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error);
       }
     );
   }
 
-  private gotoDesign(index:number) {
-    this.navigationHelperService.navigateToOrgDesign(this.designs[index].designId);
+  private generateLabelValuesForDesigns() {
+    if (this.designs && this.designs.length > 0) {
+      let plur = (this.designs.length > 1 ? 's' : '');
+      var label = 'Implemented design' + plur;
+      this.designs.forEach((design) => {
+        this.labelValues.push({label: label, valueHtml: design.name + " - " + design.version, linkFunction: this.onGotoDesign, linkValue: design.designId});
+        label = "";
+      });
+    }
+  }
+
+  private gotoDesign(designId:string) {
+    this.navigationHelperService.navigateToOrgDesign(designId);
   }
 }

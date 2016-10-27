@@ -14,6 +14,8 @@ import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable
 import {ViewModelService} from "../../../../shared/services/view-model.service";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
+import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
+import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 
 @Component({
   selector: 'instance-new',
@@ -36,7 +38,7 @@ export class InstanceNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: ViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService) {
+  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: ViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
     this.organization = {};
   }
 
@@ -85,13 +87,32 @@ export class InstanceNewComponent implements OnInit {
 
   private createInstance(instance:Instance) {
     this.instancesService.createInstance(instance).subscribe(
-      instance => {
-        this.navigationService.navigateToOrgInstance(instance.instanceId);
+      instanceCreated => {
+        this.createIdService(instanceCreated);
       },
       err => {
         this.notifications.generateNotification('Error', 'Error when trying to create instance', MCNotificationType.Error, err);
       }
     );
+  }
+
+  private createIdService(instance:Instance) {
+    // TODO mere snak nødvendigt før det er på plads
+    this.navigationService.navigateToOrgInstance(instance.instanceId);
+    /*
+    let idService:Service = {};
+
+    this.idServicesService.createIdService(idService).subscribe(
+      service => {
+      },
+      err => {
+        this.notifications.generateNotification('Error', 'Error when trying to create service instance in Identity Registry', MCNotificationType.Error, err);
+      },
+      () => {
+        this.navigationService.navigateToOrgInstance(instance.instanceId);
+      }
+    );
+    */
   }
 
   private loadMyOrganization() {

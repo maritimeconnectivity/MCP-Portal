@@ -10,6 +10,7 @@ import {OrganizationsService} from "../backend-api/identity-registry/services/or
 import {SpecificationsService} from "../backend-api/service-registry/services/specifications.service";
 import {DesignsService} from "../backend-api/service-registry/services/designs.service";
 import {InstancesService} from "../backend-api/service-registry/services/instances.service";
+import {IdServicesService} from "../backend-api/identity-registry/services/id-services.service";
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {InstancesService} from "../backend-api/service-registry/services/instanc
   declarations: [Pages],
   providers: [
     OrganizationsService,
+    IdServicesService,
     SpecificationsService,
     DesignsService,
     InstancesService

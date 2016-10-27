@@ -5,6 +5,8 @@ import {HostListener} from "@angular/core/src/metadata/directives";
 export interface LabelValueModel {
   label:string;
   valueHtml:string;
+  linkFunction?:Function;
+  linkValue?:string;
 }
 
 @Component({
