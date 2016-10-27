@@ -1,6 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {ApiHelperService} from "../../shared/api-helper.service";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {TechnicaldesignresourceApi} from "../autogen/api/TechnicaldesignresourceApi";
 import {Design} from "../autogen/model/Design";
@@ -8,7 +7,7 @@ import {Design} from "../autogen/model/Design";
 @Injectable()
 export class DesignsService implements OnInit {
   private chosenDesign: Design;
-  constructor(private apiHelper: ApiHelperService, private designsApi: TechnicaldesignresourceApi, private authService: AuthService) {
+  constructor(private designsApi: TechnicaldesignresourceApi, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -17,42 +16,40 @@ export class DesignsService implements OnInit {
 
   public getDesignsForMyOrg(): Observable<Array<Design>> {
     let orgMrn = this.authService.authState.orgMrn;
+    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.designsApi, true).subscribe(res => {
-        // TODO for now just get all designs. Needs to be for this org only though
-        this.designsApi.getAllDesignsUsingGET().subscribe(
-          designs => {
-            // TODO delete this again, when description is part of the json
-            for (let design of designs) {
-              design.description = this.getDescription(design);
-            }
-            observer.next(designs);
-          },
-          err => {
-            observer.error(err);
+      // TODO for now just get all designs. Needs to be for this org only though
+      this.designsApi.getAllDesignsUsingGET().subscribe(
+        designs => {
+          // TODO delete this again, when description is part of the json
+          for (let design of designs) {
+            design.description = this.getDescription(design);
           }
-        );
-      });
+          observer.next(designs);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
   public getDesignsForSpecification(specificationId:string, version?:string): Observable<Array<Design>> {
+    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.designsApi, true).subscribe(res => {
-        // TODO for now just get all designs. Needs to be for this specification only though
-        this.designsApi.getAllDesignsUsingGET().subscribe(
-          designs => {
-            // TODO delete this again, when description is part of the json
-            for (let design of designs) {
-              design.description = this.getDescription(design);
-            }
-            observer.next(designs);
-          },
-          err => {
-            observer.error(err);
+      // TODO for now just get all designs. Needs to be for this specification only though
+      this.designsApi.getAllDesignsUsingGET().subscribe(
+        designs => {
+          // TODO delete this again, when description is part of the json
+          for (let design of designs) {
+            design.description = this.getDescription(design);
           }
-        );
-      });
+          observer.next(designs);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
@@ -76,20 +73,19 @@ export class DesignsService implements OnInit {
       version = '1';
     }
 
+    // We create a new observable because we need to save the response for simple caching
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.designsApi, true).subscribe(res => {
-        this.designsApi.getDesignUsingGET(designId,version).subscribe(
-          design => {
-            // TODO delete this again, when description is part of the json
-            design.description = this.getDescription(design);
-            this.chosenDesign = design;
-            observer.next(design);
-          },
-          err => {
-            observer.error(err);
-          }
-        );
-      });
+      this.designsApi.getDesignUsingGET(designId,version).subscribe(
+        design => {
+          // TODO delete this again, when description is part of the json
+          design.description = this.getDescription(design);
+          this.chosenDesign = design;
+          observer.next(design);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
@@ -102,7 +98,7 @@ export class DesignsService implements OnInit {
       var parser = new DOMParser();
       // TODO: this should change to non-base64 string with next service-registry update
       let xmlString =  window.atob(design.designAsXml.content.toString());
-      var xmlData = parser.parseFromString(xmlString, "application/xml");
+      var xmlData = parser.parseFromString(xmlString, design.designAsXml.contentContentType);
 
       return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
     } catch ( error ) {

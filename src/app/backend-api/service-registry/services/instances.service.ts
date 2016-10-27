@@ -1,6 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {ApiHelperService} from "../../shared/api-helper.service";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {ServiceinstanceresourceApi} from "../autogen/api/ServiceinstanceresourceApi";
 import {Instance} from "../autogen/model/Instance";
@@ -8,7 +7,7 @@ import {Instance} from "../autogen/model/Instance";
 @Injectable()
 export class InstancesService implements OnInit {
   private chosenInstance: Instance;
-  constructor(private apiHelper: ApiHelperService, private instancesApi: ServiceinstanceresourceApi, private authService: AuthService) {
+  constructor(private instancesApi: ServiceinstanceresourceApi, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -17,62 +16,59 @@ export class InstancesService implements OnInit {
 
   public getInstancesForMyOrg(): Observable<Array<Instance>> {
     let orgMrn = this.authService.authState.orgMrn;
+    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.instancesApi, true).subscribe(res => {
-        // TODO for now just get all instances. Needs to be for this org only though
-        this.instancesApi.getAllInstancesUsingGET().subscribe(
-          instances => {
-            // TODO delete this again, when description is part of the json
-            for (let instance of instances) {
-              instance.description = this.getDescription(instance);
-            }
-            observer.next(instances);
-          },
-          err => {
-            observer.error(err);
+      // TODO for now just get all instances. Needs to be for this org only though
+      this.instancesApi.getAllInstancesUsingGET().subscribe(
+        instances => {
+          // TODO delete this again, when description is part of the json
+          for (let instance of instances) {
+            instance.description = this.getDescription(instance);
           }
-        );
-      });
+          observer.next(instances);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
   public getInstancesForDesign(designId:string, version?:string): Observable<Array<Instance>> {
+    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.instancesApi, true).subscribe(res => {
-        // TODO for now just get all instances. Needs to be for this design only though
-        this.instancesApi.getAllInstancesUsingGET().subscribe(
-          instances => {
-            // TODO delete this again, when description is part of the json
-            for (let instance of instances) {
-              instance.description = this.getDescription(instance);
-            }
-            observer.next(instances);
-          },
-          err => {
-            observer.error(err);
+      // TODO for now just get all instances. Needs to be for this design only though
+      this.instancesApi.getAllInstancesUsingGET().subscribe(
+        instances => {
+          // TODO delete this again, when description is part of the json
+          for (let instance of instances) {
+            instance.description = this.getDescription(instance);
           }
-        );
-      });
+          observer.next(instances);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
   public getInstancesForSpecification(specificationId:string, version?:string): Observable<Array<Instance>> {
+    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.instancesApi, true).subscribe(res => {
-        // TODO for now just get all instances. Needs to be for this specification only though
-        this.instancesApi.getAllInstancesUsingGET().subscribe(
-          instances => {
-            // TODO delete this again, when description is part of the json
-            for (let instance of instances) {
-              instance.description = this.getDescription(instance);
-            }
-            observer.next(instances);
-          },
-          err => {
-            observer.error(err);
+      // TODO for now just get all instances. Needs to be for this specification only though
+      this.instancesApi.getAllInstancesUsingGET().subscribe(
+        instances => {
+          // TODO delete this again, when description is part of the json
+          for (let instance of instances) {
+            instance.description = this.getDescription(instance);
           }
-        );
-      });
+          observer.next(instances);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
@@ -96,20 +92,19 @@ export class InstancesService implements OnInit {
       version = '1';
     }
 
+    // We create a new observable because we need to save the response for simple caching
     return Observable.create(observer => {
-      this.apiHelper.prepareService(this.instancesApi, true).subscribe(res => {
-        this.instancesApi.getInstanceUsingGET(instanceId,version).subscribe(
-          instance => {
-            // TODO delete this again, when description is part of the json
-            instance.description = this.getDescription(instance);
-            this.chosenInstance = instance;
-            observer.next(instance);
-          },
-          err => {
-            observer.error(err);
-          }
-        );
-      });
+      this.instancesApi.getInstanceUsingGET(instanceId,version).subscribe(
+        instance => {
+          // TODO delete this again, when description is part of the json
+          instance.description = this.getDescription(instance);
+          this.chosenInstance = instance;
+          observer.next(instance);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
     });
   }
 
@@ -122,7 +117,7 @@ export class InstancesService implements OnInit {
       var parser = new DOMParser();
       // TODO: this should change to non-base64 string with next service-registry update
       let xmlString =  window.atob(instance.instanceAsXml.content.toString());
-      var xmlData = parser.parseFromString(xmlString, "application/xml");
+      var xmlData = parser.parseFromString(xmlString, instance.instanceAsXml.contentContentType);
 
       return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
     } catch ( error ) {

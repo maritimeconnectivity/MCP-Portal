@@ -16,7 +16,6 @@ export interface AuthState {
 
 @Injectable()
 export class AuthService implements OnInit {
-
   private static staticAuth: any = {};
 
   // We make a state-object to take advantage of Angulars build in "object-observer", so when a value in authState is changing, all views using the state-object will be updated
@@ -24,6 +23,7 @@ export class AuthService implements OnInit {
 
   constructor(private rolesService: RolesService, private notificationService: MCNotificationsService) {
     this.authState = this.createAuthState();
+    AuthService.staticAuth.notificationService = notificationService;
     this.findPermissionRoles();
   }
 
@@ -100,19 +100,34 @@ export class AuthService implements OnInit {
     AuthService.staticAuth.authz = null;
   }
 
-  static getToken(): Promise<string> {
+  static refreshToken(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       if (AuthService.staticAuth.authz.token) {
-        AuthService.staticAuth.authz.updateToken(5)
+        AuthService.staticAuth.authz.updateToken(30)
           .success(() => {
             resolve(<string>AuthService.staticAuth.authz.token);
           })
           .error(() => {
-            // TODO: måske denne error skal kalde noget generelt error-ting, så jeg ikke skal gøre det hver gang jeg kalder getToken
-            reject('Failed to refresh token');
+            AuthService.handle401();
           });
       }
     });
+  }
+  static getToken(): string {
+    try {
+      if (AuthService.staticAuth.authz.token && !AuthService.staticAuth.authz.isTokenExpired(30)) {
+        return AuthService.staticAuth.authz.token;
+      } else {
+        AuthService.handle401();
+      }
+    } catch ( error ) {
+      AuthService.handle401();
+    }
+  }
+  private static handle401() {
+    AuthService.staticAuth.loggedIn = false;
+    AuthService.staticAuth.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuth.logoutUrl + '?reason=401'});
+    AuthService.staticAuth.authz = null;
   }
 
 }
