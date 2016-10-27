@@ -14,20 +14,41 @@ export class McHttpService extends Http {
     super(backend, defaultOptions);
   }
 
-
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    return super.request(url, this.prepareService(options));
+    return this.prepareService(options).flatMap(optionsMap => { return this.intercept(super.request(url, optionsMap))});
   }
-  public prepareService(options?: RequestOptionsArgs): RequestOptionsArgs {
-    AuthService.refreshToken();
-    options.headers.set('Content-Type', 'application/json; charset=utf-8' );
-    if (McHttpService.shouldAuthenticate) {
-      options.headers.set('Authorization', 'Bearer ' + AuthService.getToken());
-    } else {
-      McHttpService.shouldAuthenticate = true;
-      options.headers.delete('Authorization');
-    }
-    return options;
+
+  // Setting the http headers and if needed refreshes the access token
+  private prepareService(options?: RequestOptionsArgs): Observable<RequestOptionsArgs> {
+    return Observable.create(observer => {
+      options.headers.set('Content-Type', 'application/json; charset=utf-8' );
+      if (McHttpService.shouldAuthenticate) {
+        AuthService.getToken()
+          .then(token => {
+            options.headers.set('Authorization', 'Bearer ' + token);
+            observer.next(options);
+          })
+          .catch(error => {
+            AuthService.handle401();
+          });
+      } else {
+        McHttpService.shouldAuthenticate = true;
+        options.headers.delete('Authorization');
+        observer.next(options);
+      }
+    });
+  }
+
+  // Intercepts errors from the http call
+  private intercept(observable: Observable<Response>): Observable<Response> {
+    return observable.catch((err, source) => {
+      if (err.status  == 401 ) {
+        AuthService.handle401();
+        return Observable.empty();
+      } else {
+        return Observable.throw(err);
+      }
+    });
   }
 
 }

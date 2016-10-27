@@ -90,7 +90,6 @@ export class AuthService implements OnInit {
   }
 
   login() {
-    console.log('*** LOGIN');
     AuthService.staticAuth.authz.login({redirectUri:  '/'});
   }
 
@@ -100,31 +99,21 @@ export class AuthService implements OnInit {
     AuthService.staticAuth.authz = null;
   }
 
-  static refreshToken(): Promise<string> {
+  static getToken(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       if (AuthService.staticAuth.authz.token) {
         AuthService.staticAuth.authz.updateToken(30)
           .success(() => {
             resolve(<string>AuthService.staticAuth.authz.token);
           })
-          .error(() => {
+          .error((error) => {
             AuthService.handle401();
           });
       }
     });
   }
-  static getToken(): string {
-    try {
-      if (AuthService.staticAuth.authz.token && !AuthService.staticAuth.authz.isTokenExpired(30)) {
-        return AuthService.staticAuth.authz.token;
-      } else {
-        AuthService.handle401();
-      }
-    } catch ( error ) {
-      AuthService.handle401();
-    }
-  }
-  private static handle401() {
+
+  public static handle401() {
     AuthService.staticAuth.loggedIn = false;
     AuthService.staticAuth.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuth.logoutUrl + '?reason=401'});
     AuthService.staticAuth.authz = null;
