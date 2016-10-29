@@ -11,6 +11,7 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'specification-details',
@@ -31,7 +32,7 @@ export class SpecificationDetailsComponent {
   public onGotoDesign: Function;
   public onGotoInstance: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -45,7 +46,8 @@ export class SpecificationDetailsComponent {
     this.isLoadingInstances = true;
     this.title = 'Loading ...';
     let specificationId = this.route.snapshot.params['id'];
-    this.loadSpecification(specificationId);
+    let version = this.route.snapshot.queryParams['specificationVersion'];
+    this.loadSpecification(specificationId, version);
   }
 
   public downloadXml() {
@@ -56,12 +58,23 @@ export class SpecificationDetailsComponent {
     this.fileHelperService.downloadDoc(this.specification.specAsDoc);
   }
 
-  private gotoDesign(index:number) {
-    this.navigationHelperService.navigateToOrgDesign(this.designs[index].designId);
+  public delete() {
+    this.specificationsService.deleteSpecification(this.specification).subscribe(
+      () => {
+        this.navigationHelperService.navigateToOrgSpecification('', '');
+      },
+      err => {
+        this.notifications.generateNotification('Error', 'Error when trying to delete specification', MCNotificationType.Error, err);
+      }
+    );
   }
 
-  private loadSpecification(specificationId:string) {
-    this.specificationsService.getSpecification(specificationId).subscribe(
+  private gotoDesign(index:number) {
+    this.navigationHelperService.navigateToOrgDesign(this.designs[index].designId, this.designs[index].version);
+  }
+
+  private loadSpecification(specificationId:string, version:string) {
+    this.specificationsService.getSpecification(specificationId, version).subscribe(
       specification => {
         this.title = specification.name;
         this.specification = specification;
@@ -82,6 +95,11 @@ export class SpecificationDetailsComponent {
         this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error);
       }
     );
+  }
+
+  public isAdmin():boolean {
+    // TODO ;-)
+    return this.authService.authState.user === 'rmj';
   }
 
 
@@ -116,6 +134,6 @@ export class SpecificationDetailsComponent {
   }
 
   private gotoInstance(index:number) {
-    this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId);
+    this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
 }

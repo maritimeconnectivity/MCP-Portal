@@ -1,4 +1,5 @@
 export * from './DocresourceApi';
+export * from './ElasticsearchindexresourceApi';
 export * from './ServiceinstanceresourceApi';
 export * from './ServicespecificationresourceApi';
 export * from './SpecificationtemplateresourceApi';

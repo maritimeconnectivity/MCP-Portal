@@ -54,7 +54,7 @@ export class DesignListComponent implements OnInit {
   }
 
   private gotoDesign(index:number) {
-    this.router.navigate([this.designs[index].designId], {relativeTo: this.route })
+    this.router.navigate([this.designs[index].designId], {queryParams: { designVersion: this.designs[index].version}, relativeTo: this.route })
   }
 
 }

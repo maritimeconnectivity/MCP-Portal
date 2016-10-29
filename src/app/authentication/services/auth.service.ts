@@ -11,6 +11,7 @@ export interface AuthState {
   loggedIn: boolean,
   permission: AuthPermission,
   orgMrn: string,
+  user: string,
   isAdmin(): boolean
 }
 
@@ -52,6 +53,7 @@ export class AuthService implements OnInit {
       loggedIn: AuthService.staticAuth.loggedIn,
       permission: AuthPermission.Member,
       orgMrn: AuthService.staticAuth.orgMrn,
+      user: AuthService.staticAuth.user,
       isAdmin() {
         return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
       }
@@ -72,6 +74,13 @@ export class AuthService implements OnInit {
             } else {
               throw new Error('Keycloak token parse error');
             }
+            console.log("TOKENPARSED: ", keycloakAuth.tokenParsed);
+            if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.preferred_username) {
+              AuthService.staticAuth.user =  keycloakAuth.tokenParsed.preferred_username;
+            } else {
+              throw new Error('Keycloak token parse error');
+            }
+
           } else {
             AuthService.staticAuth.loggedIn = false;
           }

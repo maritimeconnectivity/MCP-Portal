@@ -7,7 +7,7 @@
           <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
           <ul class="btn-list clearfix">
             <li>
-              <button [disabled]="!isFormValid" type="button" class="btn btn-danger btn-raised" (click)="register()">Register Specification</button>
+              <mc-loading-button [class]="registerButtonClass" [disabled]="!isFormValid" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="onRegister" ></mc-loading-button>
             </li>
             <li>
               <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
@@ -16,7 +16,7 @@
         </form>
       </div>
       <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
-      <h5 *ngIf="!organization.mrn && !isLoading">No data</h5>
+      <div class="no-data" *ngIf="!organization.mrn && !isLoading">No data</div>
     </ba-card>
   </div>
 </div>

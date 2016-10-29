@@ -16,3 +16,4 @@ export * from './mcCreateButton';
 export * from './mcLabelValueTable';
 export * from './mcTable';
 export * from './mcFileUploader';
+export * from './mcLoadingButton';

@@ -34,6 +34,11 @@ export class InstanceNewComponent implements OnInit {
   public isFormValid = false;
   public isLoading = true;
 
+  public isRegistering = false;
+  public registerTitle = "Register Instance";
+  public registerButtonClass = "btn btn-danger btn-raised";
+  public onRegister: Function;
+
   private design:Design;
   private xml:Xml;
   private doc:Doc;
@@ -43,6 +48,8 @@ export class InstanceNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.onRegister = this.register.bind(this);
+    this.isRegistering = false;
     this.isLoading = true;
     this.loadMyOrganization();
     this.loadDesign();
@@ -67,6 +74,7 @@ export class InstanceNewComponent implements OnInit {
   }
 
   public register() {
+    this.isRegistering = true;
     try {
       var instance:Instance = {};
       instance.instanceAsXml = this.xml;
@@ -76,11 +84,12 @@ export class InstanceNewComponent implements OnInit {
       instance.instanceId = this.xmlParserService.getValueFromField('id', this.xml);
       instance.status = this.xmlParserService.getValueFromField('status', this.xml);
       instance.keywords = this.xmlParserService.getValueFromField('keywords', this.xml);
-      instance.organisationId = this.organization.mrn;
+      instance.organizationId = this.organization.mrn;
       instance.version = this.xmlParserService.getValueFromField('version', this.xml);
       instance.designs = [this.design];
       this.createInstance(instance);
     } catch ( error ) {
+      this.isRegistering = false;
       this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error);
     }
   }
@@ -89,8 +98,10 @@ export class InstanceNewComponent implements OnInit {
     this.instancesService.createInstance(instance).subscribe(
       instanceCreated => {
         this.createIdService(instanceCreated);
+        this.isRegistering = false;
       },
       err => {
+        this.isRegistering = false;
         this.notifications.generateNotification('Error', 'Error when trying to create instance', MCNotificationType.Error, err);
       }
     );
@@ -98,7 +109,7 @@ export class InstanceNewComponent implements OnInit {
 
   private createIdService(instance:Instance) {
     // TODO mere snak nødvendigt før det er på plads
-    this.navigationService.navigateToOrgInstance(instance.instanceId);
+    this.navigationService.navigateToOrgInstance(instance.instanceId, instance.version);
     /*
     let idService:Service = {};
 

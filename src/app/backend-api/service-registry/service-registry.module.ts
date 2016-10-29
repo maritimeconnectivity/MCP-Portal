@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import {ServicespecificationresourceApi} from "./autogen/api/ServicespecificationresourceApi";
 import {ServiceinstanceresourceApi} from "./autogen/api/ServiceinstanceresourceApi";
 import {TechnicaldesignresourceApi} from "./autogen/api/TechnicaldesignresourceApi";
+import {XmlresourceApi} from "./autogen/api/XmlresourceApi";
+import {DocresourceApi} from "./autogen/api/DocresourceApi";
 
 @NgModule({
   imports: [
@@ -14,7 +16,9 @@ import {TechnicaldesignresourceApi} from "./autogen/api/TechnicaldesignresourceA
   providers: [
     ServicespecificationresourceApi,
     ServiceinstanceresourceApi,
-    TechnicaldesignresourceApi
+    TechnicaldesignresourceApi,
+    XmlresourceApi,
+    DocresourceApi
   ]
 })
 export class ServiceRegistryModule { }

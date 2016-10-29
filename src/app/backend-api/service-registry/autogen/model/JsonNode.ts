@@ -25,47 +25,62 @@
 'use strict';
 import * as models from './models';
 
-/**
- * Holds a description of an service instance.An instance can be compatible to one or morespecification templates.It has at least a technical representation of thedescriptiion in form of an XML and a filled out templateas e.g. word document.
- */
-export interface Instance {
+export interface JsonNode {
+    
 
+    array?: boolean;
 
-    comment?: string;
+    bigDecimal?: boolean;
 
-    designs?: Array<models.Design>;
+    bigInteger?: boolean;
 
-    docs?: Array<models.Doc>;
+    binary?: boolean;
 
-    endpointType?: string;
+    boolean?: boolean;
 
-    endpointUri?: string;
+    containerNode?: boolean;
 
-    geometry?: models.JsonNode;
+    double?: boolean;
 
-    geometryContentType?: string;
+    float?: boolean;
 
-    id?: number;
+    floatingPointNumber?: boolean;
 
-    implementedSpecificationVersion?: models.SpecificationTemplate;
+    int?: boolean;
 
-    instanceAsDoc?: models.Doc;
+    integralNumber?: boolean;
 
-    instanceAsXml?: models.Xml;
+    long?: boolean;
 
-    instanceId?: string;
+    missingNode?: boolean;
 
-    keywords?: string;
+    nodeType?: JsonNode.NodeTypeEnum;
 
-    name?: string;
+    null?: boolean;
 
-    organizationId?: string;
+    number?: boolean;
 
-    status?: string;
+    object?: boolean;
 
-    unlocode?: string;
+    pojo?: boolean;
 
-    version?: string;
+    short?: boolean;
 
-    description?: string;
+    textual?: boolean;
+
+    valueNode?: boolean;
+}
+export namespace JsonNode {
+
+    export enum NodeTypeEnum { 
+        ARRAY = <any> 'ARRAY',
+        BINARY = <any> 'BINARY',
+        BOOLEAN = <any> 'BOOLEAN',
+        MISSING = <any> 'MISSING',
+        NULL = <any> 'NULL',
+        NUMBER = <any> 'NUMBER',
+        OBJECT = <any> 'OBJECT',
+        POJO = <any> 'POJO',
+        STRING = <any> 'STRING',
+    }
 }

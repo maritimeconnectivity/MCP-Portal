@@ -32,6 +32,11 @@ export class DesignNewComponent implements OnInit {
   public isFormValid = false;
   public isLoading = true;
 
+  public isRegistering = false;
+  public registerTitle = "Register Design";
+  public registerButtonClass = "btn btn-danger btn-raised";
+  public onRegister: Function;
+
   private specification:Specification;
   private xml:Xml;
   private doc:Doc;
@@ -41,6 +46,8 @@ export class DesignNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.onRegister = this.register.bind(this);
+    this.isRegistering = false;
     this.isLoading = true;
     this.loadMyOrganization();
     this.loadSpecification();
@@ -65,6 +72,7 @@ export class DesignNewComponent implements OnInit {
   }
 
   public register() {
+    this.isRegistering = true;
     try {
       var design:Design = {};
       design.designAsXml = this.xml;
@@ -73,11 +81,12 @@ export class DesignNewComponent implements OnInit {
       design.description = this.xmlParserService.getValueFromField('description', this.xml);
       design.designId = this.xmlParserService.getValueFromField('id', this.xml);
       design.status = this.xmlParserService.getValueFromField('status', this.xml);
-      design.organisationId = this.organization.mrn;
+      design.organizationId = this.organization.mrn;
       design.version = this.xmlParserService.getValueFromField('version', this.xml);
       design.specifications = [this.specification];
       this.createDesign(design);
     } catch ( error ) {
+      this.isRegistering = false;
       this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error);
     }
   }
@@ -85,9 +94,11 @@ export class DesignNewComponent implements OnInit {
   private createDesign(design:Design) {
     this.designsService.createDesign(design).subscribe(
       design => {
-        this.navigationService.navigateToOrgDesign(design.designId);
+        this.navigationService.navigateToOrgDesign(design.designId, design.version);
+        this.isRegistering = false;
       },
       err => {
+        this.isRegistering = false;
         this.notifications.generateNotification('Error', 'Error when trying to create design', MCNotificationType.Error, err);
       }
     );

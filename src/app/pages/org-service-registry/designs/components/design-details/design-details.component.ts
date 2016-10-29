@@ -11,6 +11,7 @@ import {SpecificationsService} from "../../../../../backend-api/service-registry
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'design-details',
@@ -30,7 +31,7 @@ export class DesignDetailsComponent {
   public onGotoSpec: Function;
   public onGotoInstance: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -54,7 +55,8 @@ export class DesignDetailsComponent {
 
   private loadDesign() {
     let designId = this.route.snapshot.params['id'];
-    this.designsService.getDesign(designId).subscribe(
+    let version = this.route.snapshot.queryParams['designVersion'];
+    this.designsService.getDesign(designId, version).subscribe(
       design => {
         this.title = design.name;
         this.design = design;
@@ -87,10 +89,27 @@ export class DesignDetailsComponent {
     );
   }
 
+  public delete() {
+    this.designsService.deleteDesign(this.design).subscribe(
+      () => {
+        this.navigationHelperService.navigateToOrgDesign('', '');
+      },
+      err => {
+        this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
+      }
+    );
+  }
+
+  public isAdmin():boolean {
+    // TODO ;-)
+    return this.authService.authState.user === 'rmj';
+  }
+
+
   // TODO this should be deleted and taken directly from the design-model when service registry has proper data. from design.specifications
 
   private loadSpecifications() {
-    this.specificationsService.getSpecificationsForMyOrg().subscribe(
+    this.specificationsService.getSpecificationsForDesign(this.design).subscribe(
       specifications => {
         this.specifications = specifications;
         this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
@@ -109,7 +128,7 @@ export class DesignDetailsComponent {
       let plur = (this.specifications.length > 1 ? 's' : '');
       var label = 'Implemented specification' + plur;
       this.specifications.forEach((specification) => {
-        this.labelValues.push({label: label, valueHtml: specification.name + " - " + specification.version, linkFunction: this.onGotoSpec, linkValue: specification.specificationId});
+        this.labelValues.push({label: label, valueHtml: specification.name + " - " + specification.version, linkFunction: this.onGotoSpec, linkValue: [specification.specificationId,specification.version]});
         label = "";
       });
     }
@@ -119,11 +138,15 @@ export class DesignDetailsComponent {
     this.navigationHelperService.navigateToCreateSInstance(this.design.designId, this.design.version);
   }
 
-  private gotoSpecification(specificationId:string) {
-    this.navigationHelperService.navigateToOrgSpecification(specificationId);
+  private gotoSpecification(linkValue: any) {
+    try {
+      this.navigationHelperService.navigateToOrgSpecification(linkValue[0], linkValue[1]);
+    } catch ( error ) {
+      this.notifications.generateNotification('Error', 'Error when trying to go to specification', MCNotificationType.Error, error);
+    }
   }
 
   private gotoInstance(index:number) {
-    this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId);
+    this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
 }

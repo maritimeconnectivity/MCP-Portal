@@ -62,7 +62,7 @@ export class SpecificationListComponent implements OnInit {
   }
 
   private gotoSpecification(index:number) {
-    this.router.navigate([this.specifications[index].specificationId], {relativeTo: this.route })
+    this.router.navigate([this.specifications[index].specificationId], {queryParams: { specificationVersion: this.specifications[index].version}, relativeTo: this.route })
   }
 
 }

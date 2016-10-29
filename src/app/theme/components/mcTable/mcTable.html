@@ -13,5 +13,5 @@
   </table>
 </div>
 <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
-<h5 *ngIf="!hasRowData() && !isLoading">No data</h5>
+<div class="no-data" *ngIf="!hasRowData() && !isLoading">No data</div>
 

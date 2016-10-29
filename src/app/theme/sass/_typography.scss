@@ -3,6 +3,10 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   margin-top: 0;
 }
+.no-data {
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
 
 h1.color, h2.color, h3.color, h4.color, h5.color, h6.color {
   color: $danger;

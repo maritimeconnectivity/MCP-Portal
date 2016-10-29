@@ -9,6 +9,7 @@ import {InstancesService} from "../../../../../backend-api/service-registry/serv
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
 import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'instance-details',
@@ -25,7 +26,7 @@ export class InstanceDetailsComponent {
   public isLoadingInstance: boolean;
   public onGotoDesign: Function;
 
-  constructor(private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 
@@ -44,9 +45,26 @@ export class InstanceDetailsComponent {
     this.fileHelperService.downloadDoc(this.instance.instanceAsDoc);
   }
 
+  public delete() {
+    this.instancesService.deleteInstance(this.instance).subscribe(
+      () => {
+        this.navigationHelperService.navigateToOrgInstance('', '');
+      },
+      err => {
+        this.notifications.generateNotification('Error', 'Error when trying to delete instance', MCNotificationType.Error, err);
+      }
+    );
+  }
+
+  public isAdmin():boolean {
+    // TODO :
+    return this.authService.authState.user === 'rmj';
+  }
+
   private loadInstance() {
     let instanceId = this.route.snapshot.params['id'];
-    this.instancesService.getInstance(instanceId).subscribe(
+    let version = this.route.snapshot.queryParams['instanceVersion'];
+    this.instancesService.getInstance(instanceId, version).subscribe(
       instance => {
         this.title = instance.name;
         this.instance = instance;
@@ -65,9 +83,8 @@ export class InstanceDetailsComponent {
   }
 
   // TODO this should be deleted and taken directly from the instance-model when service registry has proper data. from instance.designs
-
   private loadDesigns() {
-    this.designsService.getDesignsForMyOrg().subscribe(
+    this.designsService.getDesignsForInstance(this.instance).subscribe(
       designs => {
         this.designs = designs;
         this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance);
@@ -86,13 +103,18 @@ export class InstanceDetailsComponent {
       let plur = (this.designs.length > 1 ? 's' : '');
       var label = 'Implemented design' + plur;
       this.designs.forEach((design) => {
-        this.labelValues.push({label: label, valueHtml: design.name + " - " + design.version, linkFunction: this.onGotoDesign, linkValue: design.designId});
+        this.labelValues.push({label: label, valueHtml: design.name + " - " + design.version, linkFunction: this.onGotoDesign, linkValue: [design.designId, design.version]});
         label = "";
       });
     }
   }
 
-  private gotoDesign(designId:string) {
-    this.navigationHelperService.navigateToOrgDesign(designId);
+  private gotoDesign(linkValue:any
+  ) {
+    try {
+      this.navigationHelperService.navigateToOrgDesign(linkValue[0], linkValue[1]);
+    } catch ( error ) {
+      this.notifications.generateNotification('Error', 'Error when trying to go to design', MCNotificationType.Error, error);
+    }
   }
 }

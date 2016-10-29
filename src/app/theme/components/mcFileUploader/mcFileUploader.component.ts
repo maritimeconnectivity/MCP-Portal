@@ -70,7 +70,7 @@ export class McFileUploader {
     fileReader.onload = (fileRef) => {
       let data = btoa(fileReader.result);
       // TODO: content should not be Array with next update
-      let docFile: Doc = {filecontent: [data], filecontentContentType:file.type, name: file.name};
+      let docFile: Doc = {filecontent: data, filecontentContentType:file.type, mimetype:file.type, name: file.name};
       this.onUpload.emit(docFile);
     }
     fileReader.readAsBinaryString(file);
@@ -80,8 +80,7 @@ export class McFileUploader {
     let fileReader:FileReader = new FileReader();
     fileReader.onload = (fileRef) => {
       let data = fileReader.result;
-      // TODO: content should not be Array with next update
-      let xmlFile: Xml = {content: [data], contentContentType:file.type, name: file.name};
+      let xmlFile: Xml = {content: data, contentContentType:file.type, name: file.name};
       this.onUpload.emit(xmlFile);
     }
     fileReader.readAsText(file);

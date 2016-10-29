@@ -48,6 +48,7 @@ export class ViewModelService implements OnInit {
       labelValues.push({label: 'Version', valueHtml: instance.version});
       labelValues.push({label: 'Status', valueHtml: instance.status});
       labelValues.push({label: 'Description', valueHtml: instance.description});
+      labelValues.push({label: 'Service endpoint', valueHtml: instance.endpointUri});
     }
     return labelValues;
   }

@@ -54,7 +54,7 @@ export class InstanceListComponent implements OnInit {
   }
 
   private gotoInstance(index:number) {
-    this.router.navigate([this.instances[index].instanceId], {relativeTo: this.route })
+    this.router.navigate([this.instances[index].instanceId], {queryParams: { instanceVersion: this.instances[index].version}, relativeTo: this.route })
   }
 
 }

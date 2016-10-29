@@ -9,7 +9,7 @@ import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {XmlParserService} from "../../../../../shared/xml-parser.service";
-import {isNullOrUndefined} from "util";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'specification-new',
@@ -27,6 +27,11 @@ export class SpecificationNewComponent implements OnInit {
   public isFormValid = false;
   public isLoading = true;
 
+  public isRegistering = false;
+  public registerTitle = "Register Specification";
+  public registerButtonClass = "btn btn-danger btn-raised";
+  public onRegister: Function;
+
   private xml:Xml;
   private doc:Doc;
 
@@ -35,6 +40,8 @@ export class SpecificationNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.onRegister = this.register.bind(this);
+    this.isRegistering = false;
     this.loadMyOrganization();
     this.calculateFormValid();
   }
@@ -57,21 +64,21 @@ export class SpecificationNewComponent implements OnInit {
     this.navigationService.cancelCreateSpecification();
   }
   public register() {
+    this.isRegistering = true;
     try {
       var specification:Specification = {};
-      specification.specAsXml = this.xml;
+      specification.specAsXml = _.cloneDeep(this.xml);
       specification.specAsDoc = this.doc;
       specification.name = this.xmlParserService.getValueFromField('name', this.xml);
       specification.description = this.xmlParserService.getValueFromField('description', this.xml);
       specification.specificationId = this.xmlParserService.getValueFromField('id', this.xml);
       specification.keywords = this.xmlParserService.getValueFromField('keywords', this.xml);
       specification.status = this.xmlParserService.getValueFromField('status', this.xml);
-      specification.organisationId = this.organization.mrn;
+      specification.organizationId = this.organization.mrn;
       specification.version = this.xmlParserService.getValueFromField('version', this.xml);
-      specification.specAsXml.contentContentType = 'application/xml';
-
       this.createSpecification(specification);
     } catch ( error ) {
+      this.isRegistering = false;
       this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error);
     }
   }
@@ -79,9 +86,11 @@ export class SpecificationNewComponent implements OnInit {
   private createSpecification(specification:Specification) {
     this.specificationsService.createSpecification(specification).subscribe(
       specification => {
-        this.navigationService.navigateToOrgSpecification(specification.specificationId);
+        this.isRegistering = false;
+        this.navigationService.navigateToOrgSpecification(specification.specificationId, specification.version);
       },
       err => {
+        this.isRegistering = false;
         this.notifications.generateNotification('Error', 'Error when trying to create specification', MCNotificationType.Error, err);
       }
     );

@@ -9,29 +9,23 @@ export class FileHelperService {
   constructor(private notificationService: MCNotificationsService ) {
 
   }
-/*
-  public createDoc(name:string, content:string, contentType:string): Doc {
-    let encodedContent
-    let doc: Doc = {name: name, filecontent:encodedContent, filecontentContentType: contentType};
-    return
-  }
-*/
+
   public downloadXml(xmlFile:Xml):void {
     if (!xmlFile) {
       this.notificationService.generateNotification('Error', 'No file to download', MCNotificationType.Error);
       return;
     }
-    // TODO: I belive it is wrong that "content" is an array of strings. Please be wary of this may change in the future
-    if (xmlFile.content.length > 1 && xmlFile.content.length < 10) {
+    // FIXME DID IT WORK: I belive it is wrong that "content" is an array of strings. Please be wary of this may change in the future
+    /*if (xmlFile.content.length > 1 && xmlFile.content.length < 10) {
       this.notificationService.generateNotification('Error', 'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', MCNotificationType.Error);
       return;
-    }
-    let fileContent = xmlFile.content.toString();
+    }*/
+    let fileContent = xmlFile.content;
 
     let fileName = xmlFile.name;
     let fileType = xmlFile.contentContentType;
-    // TODO: this should change to non-base64 string with next service-registry update
-    this.downloadBase64File(fileContent, fileType, fileName);
+    // FIXME DID IT WORK: this should change to non-base64 string with next service-registry update
+    this.downloadFile(fileContent, fileType, fileName);
   }
 
   public downloadDoc(docFile:Doc):void {

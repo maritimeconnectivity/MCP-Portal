@@ -9,6 +9,9 @@
         <li *ngIf="specification.specAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
+        <li *ngIf="isAdmin()">
+          <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
+        </li>
       </ul>
 
       <div class="separator"></div>
@@ -17,10 +20,12 @@
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
       <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
 
+      <!-- Doesn't work atm.
       <div class="separator"></div>
 
       <h5>Instances that implements this Specification</h5>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
+      -->
     </ba-card>
   </div>
 </div>

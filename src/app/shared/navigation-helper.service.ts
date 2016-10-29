@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {PAGES_MENU} from "../pages/pages.menu";
 import {Router, Route, ActivatedRoute} from "@angular/router";
 
-//TODO: I cannot for the love of #¤&#¤ find a way to get the url of a component and navigate to the url. Thus this helper class :-( But hey I then had to make a recursive function and who doesn't love that :-)
+//TODO: I cannot for the life of me find a way to get the url of a component and navigate to the url. Thus this helper class :-( But hey I then had to make a recursive function and who doesn't love that :-)
 
 @Injectable()
 export class NavigationHelperService {
@@ -17,7 +17,7 @@ export class NavigationHelperService {
     if (this.pathBeforeCreateSpecification) {
       this.router.navigateByUrl(this.pathBeforeCreateSpecification);
     } else {
-      this.navigateToOrgSpecification('');
+      this.navigateToOrgSpecification('', '');
     }
   }
 
@@ -25,7 +25,7 @@ export class NavigationHelperService {
     if (this.pathBeforeCreateDesign) {
       this.router.navigateByUrl(this.pathBeforeCreateDesign);
     } else {
-      this.navigateToOrgDesign('');
+      this.navigateToOrgDesign('', '');
     }
   }
 
@@ -33,7 +33,7 @@ export class NavigationHelperService {
     if (this.pathBeforeCreateInstance) {
       this.router.navigateByUrl(this.pathBeforeCreateInstance);
     } else {
-      this.navigateToOrgInstance('');
+      this.navigateToOrgInstance('', '');
     }
   }
 
@@ -61,31 +61,31 @@ export class NavigationHelperService {
     let pagesMenu = PAGES_MENU;
     this.generatePath('instances', pagesMenu[0]);
 
-    this.router.navigate([this.path], { queryParams: { designId: designId, designVersion: designVersion }, preserveQueryParams: false});
+    this.router.navigate([this.path], {queryParams: {designId: designId, designVersion: designVersion}, preserveQueryParams: false});
   }
 
-  public navigateToOrgDesign(designId:string):void {
+  public navigateToOrgDesign(designId:string, version:string):void {
     this.path = '/' + designId;
     let pagesMenu = PAGES_MENU;
     this.generatePath('designs', pagesMenu[0]);
 
-    this.router.navigate([this.path]);
+    this.router.navigate([this.path], {queryParams: {designVersion: version}});
   }
 
-  public navigateToOrgSpecification(specificationId:string):void {
+  public navigateToOrgSpecification(specificationId:string, version:string):void {
     this.path = '/' + specificationId;
     let pagesMenu = PAGES_MENU;
     this.generatePath('specifications', pagesMenu[0]);
 
-    this.router.navigate([this.path]);
+    this.router.navigate([this.path], {queryParams: {specificationVersion: version}});
   }
 
-  public navigateToOrgInstance(instanceId:string):void {
+  public navigateToOrgInstance(instanceId:string, version:string):void {
     this.path = '/' + instanceId;
     let pagesMenu = PAGES_MENU;
     this.generatePath('instances', pagesMenu[0]);
 
-    this.router.navigate([this.path]);
+    this.router.navigate([this.path], {queryParams: {instanceVersion: version}});
   }
 
   private generatePath(nameOfElement:string, route: Route):boolean {

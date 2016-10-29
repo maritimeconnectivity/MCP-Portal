@@ -8,7 +8,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
   encapsulation: ViewEncapsulation.None
 })
 export class McCreateButton {
-  @Input() title:String;
+  @Input() title:string;
   @Input() onClick:Function;
   constructor(private authService: AuthService) {
   }
