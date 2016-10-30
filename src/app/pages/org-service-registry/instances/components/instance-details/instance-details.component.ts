@@ -8,7 +8,7 @@ import {Instance} from "../../../../../backend-api/service-registry/autogen/mode
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
@@ -26,7 +26,7 @@ export class InstanceDetailsComponent {
   public isLoadingInstance: boolean;
   public onGotoDesign: Function;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 

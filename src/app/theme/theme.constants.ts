@@ -6,6 +6,8 @@ export const layoutSizes = {
   resWidthMinimum: 320
 };
 
+export const DATE_FORMAT = 'mediumDate';
+
 export const layoutPaths = {
   images: {
     root: IMAGES_ROOT,

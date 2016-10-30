@@ -22,6 +22,9 @@ import {MCNotificationsService, NotificationModel, MCNotificationType} from "./s
     </main>
   `
 })
+
+// TODO: Remove the tooltips. All elements is getting a tooltip with CARD-TITLE
+
 export class App {
   isMenuCollapsed: boolean = false;
   public options = {

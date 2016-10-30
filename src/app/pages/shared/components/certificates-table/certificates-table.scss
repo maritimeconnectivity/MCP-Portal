@@ -1,0 +1,23 @@
+.table-buttons {
+  width: 100%;
+  button {
+    margin: 5px !important;
+  }
+}
+
+.certificate-table {
+  td {
+    vertical-align: middle;
+  }
+  td:first-child {
+    white-space: nowrap;
+  }
+}
+.certificate-table-short {
+  td {
+    vertical-align: middle;
+  }
+  td:first-child {
+    min-width: 200px;
+  }
+}

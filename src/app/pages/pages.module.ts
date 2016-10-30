@@ -11,6 +11,10 @@ import {SpecificationsService} from "../backend-api/service-registry/services/sp
 import {DesignsService} from "../backend-api/service-registry/services/designs.service";
 import {InstancesService} from "../backend-api/service-registry/services/instances.service";
 import {IdServicesService} from "../backend-api/identity-registry/services/id-services.service";
+import {CertificatesService} from "../backend-api/identity-registry/services/certificates.service";
+import {DevicesService} from "../backend-api/identity-registry/services/devices.service";
+import {UsersService} from "../backend-api/identity-registry/services/users.service";
+import {VesselsService} from "../backend-api/identity-registry/services/vessels.service";
 
 @NgModule({
   imports: [
@@ -25,7 +29,11 @@ import {IdServicesService} from "../backend-api/identity-registry/services/id-se
     IdServicesService,
     SpecificationsService,
     DesignsService,
-    InstancesService
+    InstancesService,
+    CertificatesService,
+    DevicesService,
+    UsersService,
+    VesselsService
   ]
 })
 export class PagesModule {

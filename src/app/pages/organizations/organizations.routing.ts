@@ -1,13 +1,12 @@
 import { Routes, RouterModule }  from '@angular/router';
-
-import { MyOrganization } from './my-organization.component';
+import {OrganizationsComponent} from "./organizations.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
   {
     path: '',
-    component: MyOrganization,
-    data:{breadcrumb: 'My Organization'},
+    component: OrganizationsComponent,
+    data:{breadcrumb: 'Organizations'},
     children: [
     ]
   }

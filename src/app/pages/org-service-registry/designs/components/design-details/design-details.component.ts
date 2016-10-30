@@ -10,8 +10,8 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
-import {ViewModelService} from "../../../../shared/services/view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 
 @Component({
   selector: 'design-details',
@@ -31,7 +31,7 @@ export class DesignDetailsComponent {
   public onGotoSpec: Function;
   public onGotoInstance: Function;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 

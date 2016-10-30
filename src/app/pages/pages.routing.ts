@@ -10,7 +10,8 @@ const routes: Routes = [
     data:{breadcrumb: 'Home'},
     children: [
       { path: '', redirectTo: 'my-organization', pathMatch: 'full' },
-      { path: 'my-organization', loadChildren: () => System.import('./my-organization/my-organization.module')},
+      { path: 'my-organization', loadChildren: () => System.import('./organizations/components/my-organization/my-organization.module')},
+      { path: 'organizations', loadChildren: () => System.import('./organizations/organizations.module.ts')},
       { path: 'ir', loadChildren: () => System.import('./org-identity-registry/org-identity-registry.module.ts')},
       { path: 'sr', loadChildren: () => System.import('./org-service-registry/org-service-registry.module.ts') }
     ]

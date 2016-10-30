@@ -13,7 +13,19 @@ export const PAGES_MENU = [
             order: 0
           }
         }
-      },
+      },/*
+      {
+        path: 'organizations',
+        data: {
+          menu: {
+            title: 'Organizations',
+            icon: 'ion-ios-people',
+            selected: false,
+            expanded: false,
+            order: 1
+          }
+        }
+      },*/
       {
         path: 'ir',
         data: {

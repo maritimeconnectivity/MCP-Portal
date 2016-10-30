@@ -3,6 +3,7 @@ import {Organization} from "../autogen/model/Organization";
 import {OrganizationcontrollerApi} from "../autogen/api/OrganizationcontrollerApi";
 import {Observable} from "rxjs";
 import {AuthService} from "../../../authentication/services/auth.service";
+import {PemCertificate} from "../autogen/model/PemCertificate";
 
 @Injectable()
 export class OrganizationsService implements OnInit {
@@ -12,6 +13,21 @@ export class OrganizationsService implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  public issueNewCertificate() : Observable<PemCertificate> {
+    return Observable.create(observer => {
+      let orgMrn = this.authService.authState.orgMrn;
+      this.organizationApi.newOrgCertUsingGET(orgMrn).subscribe(
+        pemCertificate => {
+          this.myOrganization = null; // We need to reload the org now we have a new certificate
+          observer.next(pemCertificate);
+        },
+        err => {
+          observer.error(err);
+        }
+      );
+    });
   }
 
   public getMyOrganization(): Observable<Organization> {

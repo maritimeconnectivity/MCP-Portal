@@ -1,11 +1,11 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Specification} from "../../../backend-api/service-registry/autogen/model/Specification";
-import {LabelValueModel} from "../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {Design} from "../../../backend-api/service-registry/autogen/model/Design";
-import {Instance} from "../../../backend-api/service-registry/autogen/model/Instance";
+import {Specification} from "../../../../backend-api/service-registry/autogen/model/Specification";
+import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import {Design} from "../../../../backend-api/service-registry/autogen/model/Design";
+import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
 
 @Injectable()
-export class ViewModelService implements OnInit {
+export class SrViewModelService implements OnInit {
   constructor() {
   }
 

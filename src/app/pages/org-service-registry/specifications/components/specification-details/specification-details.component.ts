@@ -10,7 +10,7 @@ import {DesignsService} from "../../../../../backend-api/service-registry/servic
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
-import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
@@ -32,7 +32,7 @@ export class SpecificationDetailsComponent {
   public onGotoDesign: Function;
   public onGotoInstance: Function;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: ViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
   }
 

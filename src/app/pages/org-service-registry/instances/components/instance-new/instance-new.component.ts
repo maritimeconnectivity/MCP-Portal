@@ -11,7 +11,7 @@ import {DesignsService} from "../../../../../backend-api/service-registry/servic
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {ActivatedRoute} from "@angular/router";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
@@ -43,7 +43,7 @@ export class InstanceNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: ViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
+  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
     this.organization = {};
   }
 

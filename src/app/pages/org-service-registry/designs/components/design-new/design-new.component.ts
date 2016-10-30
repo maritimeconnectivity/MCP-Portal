@@ -13,7 +13,7 @@ import {Specification} from "../../../../../backend-api/service-registry/autogen
 import {ActivatedRoute} from "@angular/router";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {ViewModelService} from "../../../../shared/services/view-model.service";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 
 @Component({
   selector: 'design-new',
@@ -41,7 +41,7 @@ export class DesignNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: ViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
 
