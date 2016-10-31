@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import {NotificationsService} from "angular2-notifications/lib/notifications.service";
+//import {NotificationsService} from "angular2-notifications/lib/notifications.service";
 
 @Injectable()
 export class ErrorLoggingService {
 
-  constructor(private notificationService: NotificationsService ) {
+  constructor(/*private notificationService: NotificationsService*/ ) {
 
   }
 
@@ -34,6 +34,6 @@ export class ErrorLoggingService {
     if (!message) {
       message = '';
     }
-    this.notificationService.error('Error', 'Unexpected error occurred:\n'+message);
+   // this.notificationService.error('Error', 'Unexpected error occurred:\n'+message);
   }
 }

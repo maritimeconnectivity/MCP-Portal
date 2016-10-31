@@ -30,8 +30,6 @@ import {FileHelperService} from "./shared/file-helper.service";
 import {NavigationHelperService} from "./shared/navigation-helper.service";
 import {XmlParserService} from "./shared/xml-parser.service";
 import {McHttpService} from "./backend-api/shared/mc-http.service";
-import {NotificationsService} from "angular2-notifications/lib/notifications.service";
-import {SimpleNotificationsModule} from "angular2-notifications/lib/simple-notifications.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -65,7 +63,7 @@ type StoreType = {
     LoginModule,
     Four04Module,
     IdentityRegistryApiModule,
-    SimpleNotificationsModule,
+   // SimpleNotificationsModule,
     routing
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
@@ -75,7 +73,7 @@ type StoreType = {
     AuthService,
     RolesService,
     MCNotificationsService,
-    NotificationsService, // See usage: https://github.com/flauc/angular2-notifications/blob/master/docs/toastNotifications.md
+    //NotificationsService, // See usage: https://github.com/flauc/angular2-notifications/blob/master/docs/toastNotifications.md
     ErrorLoggingService,
     FileHelperService,
     XmlParserService,
