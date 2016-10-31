@@ -22,8 +22,6 @@ import {LoginModule} from "./login/login.module";
 import {MC_ERROR_HANDLER_PROVIDERS, MC_ERROR_HANDLER_OPTIONS} from "./shared/mc-error-handler";
 import {ErrorLoggingService} from "./shared/error-logging.service";
 import {AuthService} from "./authentication/services/auth.service";
-import {SimpleNotificationsModule} from "angular2-notifications";
-import {NotificationsService} from "angular2-notifications";
 import {MCNotificationsService} from "./shared/mc-notifications.service";
 import {IdentityRegistryApiModule} from "./backend-api/identity-registry/identity-registry-api.module";
 import {RolesService} from "./backend-api/identity-registry/services/roles.service";
@@ -32,6 +30,8 @@ import {FileHelperService} from "./shared/file-helper.service";
 import {NavigationHelperService} from "./shared/navigation-helper.service";
 import {XmlParserService} from "./shared/xml-parser.service";
 import {McHttpService} from "./backend-api/shared/mc-http.service";
+import {NotificationsService} from "angular2-notifications/lib/notifications.service";
+import {SimpleNotificationsModule} from "angular2-notifications/lib/simple-notifications.module";
 
 // Application wide providers
 const APP_PROVIDERS = [

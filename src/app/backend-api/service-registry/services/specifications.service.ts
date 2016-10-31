@@ -19,6 +19,7 @@ export class SpecificationsService implements OnInit {
   }
 
   public deleteSpecification(specification:Specification) : Observable<{}> {
+    this.chosenSpecification = null;
     return this.specificationsApi.deleteSpecificationUsingDELETE(specification.specificationId, specification.version);
   }
 

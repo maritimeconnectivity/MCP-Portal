@@ -18,6 +18,7 @@ export class InstancesService implements OnInit {
   }
 
   public deleteInstance(instance:Instance) : Observable<{}> {
+    this.chosenInstance = null;
     return this.instancesApi.deleteInstanceUsingDELETE(instance.instanceId, instance.version);
   }
 

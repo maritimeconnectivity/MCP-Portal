@@ -19,6 +19,7 @@ export class DesignsService implements OnInit {
   }
 
   public deleteDesign(design:Design) : Observable<{}> {
+    this.chosenDesign = null;
     return this.designsApi.deleteDesignUsingDELETE(design.designId, design.version);
   }
 

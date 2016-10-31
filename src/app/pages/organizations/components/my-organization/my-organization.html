@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col-lg-12">
-    <ba-card title="{{organization.name}}" baCardClass="with-scroll table-panel">
+    <ba-card title="{{titleName}}" baCardClass="with-scroll table-panel">
       <organization-details-table [isLoading]="isLoading" [organization]="organization"></organization-details-table>
     </ba-card>
 
-    <ba-card title="Certificates for {{organization.name}}" baCardClass="with-scroll table-panel">
-      <certificates-table [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="certificateTitle" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
-    </ba-card>
+    <div *ngIf="organization">
+      <ba-card title="Certificates for {{organization.name}}" baCardClass="with-scroll table-panel">
+        <certificates-table [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="certificateTitle" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
+      </ba-card>
+    </div>
   </div>
 </div>
-
-

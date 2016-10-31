@@ -13,13 +13,13 @@ import {CertificateEntityType} from "../../../shared/services/certificate-helper
 })
 export class MyOrganization implements OnInit {
   private organization: Organization;
-  public isLoading: boolean;
+  public isLoading = true;
   public entityType: CertificateEntityType;
   public certificateTitle: string;
+  public titleName:string;
 
 
   constructor(private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService) {
-    this.organization = {};
     this.entityType = CertificateEntityType.Organization;
   }
 
@@ -28,6 +28,7 @@ export class MyOrganization implements OnInit {
     this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
+        this.titleName = organization.name;
         this.certificateTitle = organization.name;
         this.isLoading = false;
       },

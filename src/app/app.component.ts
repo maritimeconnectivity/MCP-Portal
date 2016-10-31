@@ -3,8 +3,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { GlobalState } from './global.state';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
 import { layoutPaths } from './theme/theme.constants';
-import {NotificationsService} from "angular2-notifications";
 import {MCNotificationsService, NotificationModel, MCNotificationType} from "./shared/mc-notifications.service";
+import {NotificationsService} from "angular2-notifications/lib/notifications.service";
 
 /*
  * App Component
