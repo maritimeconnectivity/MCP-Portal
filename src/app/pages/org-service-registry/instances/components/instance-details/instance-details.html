@@ -2,7 +2,7 @@
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
       <mc-label-value-table [isLoading]="isLoadingInstance" [labelValues]="labelValues"></mc-label-value-table>
-      <ul *ngIf="instance" class="btn-list clearfix">
+      <ul *ngIf="instance && !isLoadingInstance" class="btn-list clearfix">
         <li *ngIf="instance.instanceAsDoc">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadDoc()">Download document</button>
         </li>
