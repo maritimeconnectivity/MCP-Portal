@@ -61,7 +61,7 @@ export class AuthService implements OnInit {
   }
 
   static init(): Promise<any> {
-    let keycloakAuth: any = new Keycloak('assets/keycloak.json');
+    let keycloakAuth: any = new Keycloak('/assets/keycloak.json');
     AuthService.staticAuth.loggedIn = false;
 
     return new Promise((resolve, reject) => {
