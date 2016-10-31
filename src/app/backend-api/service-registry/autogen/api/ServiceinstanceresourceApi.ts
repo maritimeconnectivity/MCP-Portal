@@ -82,7 +82,7 @@ export class ServiceinstanceresourceApi {
      * @param version version
      */
     public deleteInstanceUsingDELETE (id: string, version: string, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/api/serviceInstance/{id}/{version}'
+        const path = this.basePath + '/api/serviceInstance/{id}/{version}/'
             .replace('{' + 'id' + '}', String(id))
             .replace('{' + 'version' + '}', String(version));
 
@@ -202,7 +202,7 @@ export class ServiceinstanceresourceApi {
      * @param version version
      */
     public getInstanceUsingGET (id: string, version: string, extraHttpRequestParams?: any ) : Observable<models.Instance> {
-        const path = this.basePath + '/api/serviceInstance/{id}/{version}'
+        const path = this.basePath + '/api/serviceInstance/{id}/{version}/'
             .replace('{' + 'id' + '}', String(id))
             .replace('{' + 'version' + '}', String(version));
 

@@ -82,7 +82,7 @@ export class TechnicaldesignresourceApi {
      * @param version version
      */
     public deleteDesignUsingDELETE (id: string, version: string, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/api/technicalDesign/{id}/{version}'
+        const path = this.basePath + '/api/technicalDesign/{id}/{version}/'
             .replace('{' + 'id' + '}', String(id))
             .replace('{' + 'version' + '}', String(version));
 
@@ -202,7 +202,7 @@ export class TechnicaldesignresourceApi {
      * @param version version
      */
     public getDesignUsingGET (id: string, version: string, extraHttpRequestParams?: any ) : Observable<models.Design> {
-        const path = this.basePath + '/api/technicalDesign/{id}/{version}'
+        const path = this.basePath + '/api/technicalDesign/{id}/{version}/'
             .replace('{' + 'id' + '}', String(id))
             .replace('{' + 'version' + '}', String(version));
 

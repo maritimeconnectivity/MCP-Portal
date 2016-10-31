@@ -82,7 +82,7 @@ export class ServicespecificationresourceApi {
      * @param version version
      */
     public deleteSpecificationUsingDELETE (id: string, version: string, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/api/serviceSpecification/{id}/{version}'
+        const path = this.basePath + '/api/serviceSpecification/{id}/{version}/'
             .replace('{' + 'id' + '}', String(id))
             .replace('{' + 'version' + '}', String(version));
 
@@ -202,7 +202,7 @@ export class ServicespecificationresourceApi {
      * @param version version
      */
     public getSpecificationUsingGET (id: string, version: string, extraHttpRequestParams?: any ) : Observable<models.Specification> {
-        const path = this.basePath + '/api/serviceSpecification/{id}/{version}'
+        const path = this.basePath + '/api/serviceSpecification/{id}/{version}/'
             .replace('{' + 'id' + '}', String(id))
             .replace('{' + 'version' + '}', String(version));
 
