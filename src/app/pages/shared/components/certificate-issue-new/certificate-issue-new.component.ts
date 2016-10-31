@@ -43,7 +43,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public zipAndDownload() {
-    this.notificationService.generateNotification('Not Implemented', 'Download comming soon', MCNotificationType.Info);
+    this.notificationService.generateNotification('Not Implemented', 'Download coming soon', MCNotificationType.Info);
   }
 
   public issueNew() {

@@ -61,7 +61,7 @@ export class AuthService implements OnInit {
   }
 
   static init(): Promise<any> {
-    let keycloakAuth: any = new Keycloak('/assets/keycloak.json');
+    let keycloakAuth: any = new Keycloak('assets/keycloak.json');
     AuthService.staticAuth.loggedIn = false;
 
     return new Promise((resolve, reject) => {
@@ -104,7 +104,8 @@ export class AuthService implements OnInit {
 
   logout() {
     this.authState.loggedIn = false;
-    AuthService.staticAuth.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuth.logoutUrl});
+    console.log("DDDD: " + window.location);
+    AuthService.staticAuth.authz.logout();
     AuthService.staticAuth.authz = null;
   }
 

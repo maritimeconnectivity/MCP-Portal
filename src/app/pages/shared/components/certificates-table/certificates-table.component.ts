@@ -79,11 +79,11 @@ export class CertificatesTableComponent implements OnChanges{
   }
 
   public revoke(certificate:Certificate) {
-    this.notificationService.generateNotification('Not Implemented', 'Revoke comming soon', MCNotificationType.Info);
+    this.notificationService.generateNotification('Not Implemented', 'Revoke coming soon', MCNotificationType.Info);
   }
 
   public download(certificate:Certificate) {
-    this.notificationService.generateNotification('Not Implemented', 'Download comming soon', MCNotificationType.Info);
+    this.notificationService.generateNotification('Not Implemented', 'Download coming soon', MCNotificationType.Info);
   }
 
   @HostListener('window:resize')

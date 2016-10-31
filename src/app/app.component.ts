@@ -4,6 +4,7 @@ import { GlobalState } from './global.state';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
 import { layoutPaths } from './theme/theme.constants';
 import {MCNotificationsService, NotificationModel, MCNotificationType} from "./shared/mc-notifications.service";
+import {NotificationsService} from "angular2-notifications";
 
 /*
  * App Component
@@ -14,7 +15,7 @@ import {MCNotificationsService, NotificationModel, MCNotificationType} from "./s
   encapsulation: ViewEncapsulation.None,
   styles: [require('normalize.css'), require('./app.scss')],
   template: `
-    <!--<simple-notifications [options]="options"></simple-notifications>-->
+    <simple-notifications [options]="options"></simple-notifications>
     <main [ngClass]="{'menu-collapsed': isMenuCollapsed}" baThemeRun>
       <div class="additional-bg"></div>
       <router-outlet></router-outlet>
@@ -33,8 +34,8 @@ export class App {
   constructor(private _state: GlobalState,
               private _imageLoader: BaImageLoaderService,
               private _spinner: BaThemeSpinner,
-              private mcNotificationService: MCNotificationsService/*,
-              private notificationService: NotificationsService*/) {
+              private mcNotificationService: MCNotificationsService,
+              private notificationService: NotificationsService) {
 
     this._loadImages();
 
@@ -57,7 +58,7 @@ export class App {
   }
 
   private generateNotification(notificationModel: NotificationModel) {
-   /* switch (notificationModel.type) {
+    switch (notificationModel.type) {
       case MCNotificationType.Error: {
         this.notificationService.error(notificationModel.title, notificationModel.message);
         break;
@@ -74,6 +75,6 @@ export class App {
         this.notificationService.success(notificationModel.title, notificationModel.message);
         break;
       }
-    }*/
+    }
   }
 }
