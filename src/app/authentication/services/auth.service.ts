@@ -43,7 +43,7 @@ export class AuthService implements OnInit {
         },
         error => {
           this.authState.permission = AuthPermission.Member;
-          this.notificationService.generateNotification('Error', 'Error trying to fetch user permissions', MCNotificationType.Error);
+          this.notificationService.generateNotification('Error', 'Error trying to fetch user permissions', MCNotificationType.Error, error);
         }
       );
     }

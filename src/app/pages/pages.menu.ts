@@ -39,18 +39,10 @@ export const PAGES_MENU = [
         },
         children: [
           {
-            path: 'devices',
+            path: 'vessels',
             data: {
               menu: {
-                title: 'Devices',
-              }
-            }
-          },
-          {
-            path: 'services',
-            data: {
-              menu: {
-                title: 'Services',
+                title: 'Vessels',
               }
             }
           }

@@ -31,7 +31,10 @@ import { Component, Input, OnDestroy } from "@angular/core";
   styles: [`
     .fading-circle-spinner {
       position: relative;
-      margin: 0px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-left: auto;
+    	margin-right: auto;
       width: 30px;
       height: 30px;
     }

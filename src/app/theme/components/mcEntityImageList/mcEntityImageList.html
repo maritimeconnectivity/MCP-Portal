@@ -1,0 +1,10 @@
+<div *ngIf="!isLoading && hasData()" class="row">
+    <div *ngFor="let entityModel of entityImageList" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <a (click)="clickedEntity(entityModel)">
+            <mc-entity-image [entityImage]="entityModel"></mc-entity-image>
+        </a>
+    </div>
+</div>
+<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+<div class="no-data" *ngIf="!hasData() && !isLoading">No data</div>
+

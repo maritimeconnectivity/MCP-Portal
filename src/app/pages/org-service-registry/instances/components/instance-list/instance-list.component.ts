@@ -37,7 +37,7 @@ export class InstanceListComponent implements OnInit {
       },
       err => {
         this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
       }
     );
   }
@@ -48,7 +48,7 @@ export class InstanceListComponent implements OnInit {
         this.organization = organization;
       },
       err => {
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
       }
     );
   }

@@ -61,6 +61,8 @@ import {McTable} from "./components/mcTable/mcTable.component";
 import {McFileUploader} from "./components/mcFileUploader/mcFileUploader.component";
 import {McLoadingButton} from "./components/mcLoadingButton/mcLoadingButton.component";
 import {FadingCircleSmallComponent} from "./components/spinner/fading-circle-small";
+import {McEntityImageList} from "./components/mcEntityImageList/mcEntityImageList.component";
+import {McEntityImage} from "./components/mcEntityImage/mcEntityImage.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -83,7 +85,9 @@ const NGA_COMPONENTS = [
   McLabelValueTable,
   McTable,
   McFileUploader,
-  McLoadingButton
+  McLoadingButton,
+	McEntityImageList,
+	McEntityImage
 ];
 
 const NGA_DIRECTIVES = [

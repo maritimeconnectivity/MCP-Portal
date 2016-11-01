@@ -1,0 +1,6 @@
+<div class="entity-image-container">
+    <div><img class="entity-image {{entityImage.imageClass}}" src="{{entityImage.imageSource}}"/></div>
+    <h5 class="entity-image-name">{{entityImage.title}}</h5>
+    <div *ngIf="entityImage.htmlContent" class="entity-image-content" [innerHTML]="entityImage.htmlContent | sanitizeHtml"></div>
+</div>
+

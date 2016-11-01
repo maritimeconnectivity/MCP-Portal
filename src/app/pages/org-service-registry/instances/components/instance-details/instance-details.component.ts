@@ -77,7 +77,7 @@ export class InstanceDetailsComponent {
         }
         this.title = 'Error while loading';
         this.isLoadingInstance = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instance', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get instance', MCNotificationType.Error, err);
       }
     );
   }
@@ -93,7 +93,7 @@ export class InstanceDetailsComponent {
       },
       err => {
         this.isLoadingInstance = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error, err);
       }
     );
   }

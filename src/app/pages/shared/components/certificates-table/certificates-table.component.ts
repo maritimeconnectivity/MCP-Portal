@@ -40,6 +40,10 @@ export class CertificatesTableComponent implements OnChanges{
     }
   }
 
+  public hasData():boolean {
+	  return this.certificateViewModels && this.certificateViewModels.length > 0;
+  }
+
   private sortCertificates() {
     // We are sorting with longest due date on top
     this.certificateViewModels.sort((obj1: CertificateViewModel, obj2: CertificateViewModel) => {

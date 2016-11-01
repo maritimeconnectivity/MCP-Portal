@@ -79,7 +79,7 @@ export class SpecificationNewComponent implements OnInit {
       this.createSpecification(specification);
     } catch ( error ) {
       this.isRegistering = false;
-      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error);
+      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
     }
   }
 

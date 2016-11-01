@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
@@ -6,14 +6,15 @@ import {Vessel} from "../autogen/model/Vessel";
 import {VesselcontrollerApi} from "../autogen/api/VesselcontrollerApi";
 
 @Injectable()
-export class VesselsService implements OnInit {
+export class VesselsService {
   private chosenVessel: Vessel;
   constructor(private vesselApi: VesselcontrollerApi, private authService: AuthService) {
   }
 
-  ngOnInit() {
-
-  }
+	public getVessels(): Observable<Array<Vessel>> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn);
+	}
 
   public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {
     return Observable.create(observer => {

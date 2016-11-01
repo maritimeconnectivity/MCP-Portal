@@ -71,7 +71,7 @@ export class DesignDetailsComponent {
         this.title = 'Error while loading';
         this.isLoadingDesign = false;
         this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get design', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get design', MCNotificationType.Error, err);
       }
     );
   }
@@ -84,7 +84,7 @@ export class DesignDetailsComponent {
       },
       err => {
         this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
       }
     );
   }
@@ -118,7 +118,7 @@ export class DesignDetailsComponent {
       },
       err => {
         this.isLoadingDesign = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error, err);
       }
     );
   }
@@ -135,7 +135,7 @@ export class DesignDetailsComponent {
   }
 
   private createInstance() {
-    this.navigationHelperService.navigateToCreateSInstance(this.design.designId, this.design.version);
+    this.navigationHelperService.navigateToCreateInstance(this.design.designId, this.design.version);
   }
 
   private gotoSpecification(linkValue: any) {

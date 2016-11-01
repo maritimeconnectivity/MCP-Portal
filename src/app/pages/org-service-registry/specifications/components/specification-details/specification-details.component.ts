@@ -92,7 +92,7 @@ export class SpecificationDetailsComponent {
         this.isLoadingSpecification = false;
         this.isLoadingDesigns = false;
         this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error, err);
       }
     );
   }
@@ -111,7 +111,7 @@ export class SpecificationDetailsComponent {
       },
       err => {
         this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
       }
     );
   }
@@ -124,7 +124,7 @@ export class SpecificationDetailsComponent {
       },
       err => {
         this.isLoadingDesigns = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error, err);
       }
     );
   }

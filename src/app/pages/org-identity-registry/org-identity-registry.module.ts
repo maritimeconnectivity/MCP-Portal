@@ -4,20 +4,18 @@ import { NgaModule } from '../../theme/nga.module';
 
 import { routing }       from './org-identity-registry.routing';
 import { OrgIdentityRegistryComponent } from './org-identity-registry.component';
-import { OrgDevicesComponent } from './components/org-devices/org-devices.component';
-import {OrgServicesComponent} from "./components/org-services/org-services.component";
+import VesselsModule from "./vessels/vessels.module";
 
 
 @NgModule({
   imports: [
     CommonModule,
     NgaModule,
+	  VesselsModule,
     routing
   ],
   declarations: [
-    OrgIdentityRegistryComponent,
-    OrgDevicesComponent,
-    OrgServicesComponent
+    OrgIdentityRegistryComponent
   ]
 })
 export default class OrgIdentityRegistryModule {

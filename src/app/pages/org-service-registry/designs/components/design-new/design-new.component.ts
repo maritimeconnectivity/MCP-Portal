@@ -87,7 +87,7 @@ export class DesignNewComponent implements OnInit {
       this.createDesign(design);
     } catch ( error ) {
       this.isRegistering = false;
-      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error);
+      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
     }
   }
 
@@ -111,7 +111,7 @@ export class DesignNewComponent implements OnInit {
         this.calculateFormValid();
       },
       err => {
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
       }
     );
   }
@@ -128,7 +128,7 @@ export class DesignNewComponent implements OnInit {
       },
       err => {
         this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error, err);
       }
     );
   }

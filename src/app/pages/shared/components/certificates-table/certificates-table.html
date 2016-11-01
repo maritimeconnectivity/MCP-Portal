@@ -1,4 +1,4 @@
-<div *ngIf="!isLoading && certificateViewModels">
+<div *ngIf="!isLoading && hasData()">
   <table class="table table-bordered {{tableClass}}">
     <thead>
       <tr class="black-muted-bg">
@@ -25,7 +25,7 @@
   </table>
 </div>
 <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
-<div class="no-data" *ngIf="!certificateViewModels && !isLoading">No data</div>
+<div class="no-data" *ngIf="!hasData() && !isLoading">No data</div>
 <div *ngIf="!isLoading">
   <mc-create-button [title]="newCertificateTitle" [onClick]="onIssueCertificate"></mc-create-button>
 </div>

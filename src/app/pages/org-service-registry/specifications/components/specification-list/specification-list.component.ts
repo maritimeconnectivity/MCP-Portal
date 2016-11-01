@@ -39,7 +39,7 @@ export class SpecificationListComponent implements OnInit {
         this.organization = organization;
       },
       err => {
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
       }
     );
   }
@@ -52,7 +52,7 @@ export class SpecificationListComponent implements OnInit {
       },
       err => {
         this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error, err);
       }
     );
   }

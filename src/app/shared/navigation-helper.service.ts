@@ -112,7 +112,7 @@ export class NavigationHelperService {
     this.router.navigate([this.path], { queryParams: { specificationId: specificationId, specificationVersion: specificationVersion }, preserveQueryParams: false});
   }
 
-  public navigateToCreateSInstance(designId:string, designVersion:string) {
+  public navigateToCreateInstance(designId:string, designVersion:string) {
     this.pathBeforeCreateInstance = this.router.url;
     this.path = '/register';
     let pagesMenu = PAGES_MENU;

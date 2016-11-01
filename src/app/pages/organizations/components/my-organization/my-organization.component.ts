@@ -34,7 +34,7 @@ export class MyOrganization implements OnInit {
       },
       err => {
         this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error);
+        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
       }
     );
   }
