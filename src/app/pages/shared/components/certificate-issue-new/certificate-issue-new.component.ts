@@ -7,6 +7,7 @@ import {AuthService} from "../../../../authentication/services/auth.service";
 import {CertificatesService} from "../../../../backend-api/identity-registry/services/certificates.service";
 import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
 import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import {FileHelperService} from "../../../../shared/file-helper.service";
 
 
 @Component({
@@ -24,7 +25,7 @@ export class CertificateIssueNewComponent implements OnInit {
 
   public labelValues:Array<LabelValueModel>;
 
-  constructor(private certificateService: CertificatesService, private route:ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
+  constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService, private route:ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
   }
 
   ngOnInit() {
@@ -43,7 +44,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public zipAndDownload() {
-    this.notificationService.generateNotification('Not Implemented', 'Download coming soon', MCNotificationType.Info);
+    this.fileHelper.downloadPemCertificate(this.pemCertificate, this.entityTitle);
   }
 
   public issueNew() {

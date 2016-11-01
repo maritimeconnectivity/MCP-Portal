@@ -1,8 +1,10 @@
 import {Injectable} from "@angular/core";
 import {MCNotificationsService, MCNotificationType} from "./mc-notifications.service";
 import * as fileSaver  from "file-saver";
+import * as JSZip  from "jszip";
 import {Xml} from "../backend-api/service-registry/autogen/model/Xml";
 import {Doc} from "../backend-api/service-registry/autogen/model/Doc";
+import {PemCertificate} from "../backend-api/identity-registry/autogen/model/PemCertificate";
 
 @Injectable()
 export class FileHelperService {
@@ -10,21 +12,34 @@ export class FileHelperService {
 
   }
 
+  public downloadPemCertificate(pemCertificate:PemCertificate, entityName:string) {
+    try {
+      let nameNoSpaces = entityName.split(' ').join('_');
+      let zip = new JSZip();
+      zip.file("Certificate_" + nameNoSpaces + ".pem", this.replaceNewLines(pemCertificate.certificate));
+      if (pemCertificate.privateKey) {
+        zip.file("PrivateKey_" + nameNoSpaces + ".pem", this.replaceNewLines(pemCertificate.privateKey));
+      }
+      if (pemCertificate.publicKey) {
+        zip.file("PublicKey_" + nameNoSpaces + ".pem", this.replaceNewLines(pemCertificate.publicKey));
+      }
+      zip.generateAsync({type:"blob"}).then(function (content) {
+        fileSaver.saveAs(content, "Certificate_" + nameNoSpaces + ".zip");
+      });
+    } catch ( error ) {
+      this.generateError(error);
+    }
+  }
+
   public downloadXml(xmlFile:Xml):void {
     if (!xmlFile) {
       this.notificationService.generateNotification('Error', 'No file to download', MCNotificationType.Error);
       return;
     }
-    // FIXME DID IT WORK: I belive it is wrong that "content" is an array of strings. Please be wary of this may change in the future
-    /*if (xmlFile.content.length > 1 && xmlFile.content.length < 10) {
-      this.notificationService.generateNotification('Error', 'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', MCNotificationType.Error);
-      return;
-    }*/
     let fileContent = xmlFile.content;
 
     let fileName = xmlFile.name;
     let fileType = xmlFile.contentContentType;
-    // FIXME DID IT WORK: this should change to non-base64 string with next service-registry update
     this.downloadFile(fileContent, fileType, fileName);
   }
 
@@ -76,6 +91,14 @@ export class FileHelperService {
 
   private generateError(error:any):void {
     this.notificationService.generateNotification('Error', 'Error when trying to download file', MCNotificationType.Error, error);
+  }
+
+  private replaceNewLines(stringToReplace:string) {
+    var replaceString = "\n";
+    if (navigator.appVersion.indexOf("Win")!=-1){
+      replaceString = "\r\n";
+    }
+    return (!stringToReplace) ? '' : stringToReplace.replace(/(\r\n|\n|\r)/gm, "").replace(/(\\n)/gm, replaceString);
   }
 
 }

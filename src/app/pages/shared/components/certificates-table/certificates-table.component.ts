@@ -6,6 +6,8 @@ import {AuthService} from "../../../../authentication/services/auth.service";
 import {CertificateViewModel} from "../view-models/CertificateViewModel";
 import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
 import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
+import {FileHelperService} from "../../../../shared/file-helper.service";
+import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
 
 @Component({
   selector: 'certificates-table',
@@ -26,7 +28,7 @@ export class CertificatesTableComponent implements OnChanges{
   public tableClass:string;
   public onIssueCertificate: Function;
 
-  constructor(private navigationHelper: NavigationHelperService, private authService:AuthService, private certificateHelperService: CertificateHelperService, private notificationService: MCNotificationsService) {
+  constructor(private fileHelper: FileHelperService, private navigationHelper: NavigationHelperService, private authService:AuthService, private certificateHelperService: CertificateHelperService, private notificationService: MCNotificationsService) {
     this.calculateTableClass();
     this.onIssueCertificate = this.issueCertificate.bind(this);
   }
@@ -34,9 +36,7 @@ export class CertificatesTableComponent implements OnChanges{
   ngOnChanges() {
     if (this.certificates) {
       this.certificateViewModels = this.certificateHelperService.convertCertificatesToViewModels(this.certificates);
-      console.log("before ", this.certificateViewModels);
       this.sortCertificates();
-      console.log("after ", this.certificateViewModels);
     }
   }
 
@@ -83,7 +83,8 @@ export class CertificatesTableComponent implements OnChanges{
   }
 
   public download(certificate:Certificate) {
-    this.notificationService.generateNotification('Not Implemented', 'Download coming soon', MCNotificationType.Info);
+    let pemCertificate:PemCertificate = {certificate:certificate.certificate};
+    this.fileHelper.downloadPemCertificate(pemCertificate, this.certificateTitle);
   }
 
   @HostListener('window:resize')

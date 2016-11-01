@@ -44,6 +44,8 @@ declare module 'file-saver' {
   var e: any;
   export = e;
 }
+
+
 // support NodeJS modules without type definitions
 declare module '*';
 
