@@ -5,6 +5,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { routing }       from './org-identity-registry.routing';
 import { OrgIdentityRegistryComponent } from './org-identity-registry.component';
 import VesselsModule from "./vessels/vessels.module";
+import DevicesModule from "./devices/devices.module";
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import VesselsModule from "./vessels/vessels.module";
     CommonModule,
     NgaModule,
 	  VesselsModule,
+	  DevicesModule,
     routing
   ],
   declarations: [

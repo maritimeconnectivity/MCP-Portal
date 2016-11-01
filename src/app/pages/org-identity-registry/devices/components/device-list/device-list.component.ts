@@ -3,29 +3,29 @@ import {MCNotificationType, MCNotificationsService} from "../../../../../shared/
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Router, ActivatedRoute} from "@angular/router";
-import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
-import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
 import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
+import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
 
 @Component({
-  selector: 'vessel-list',
+  selector: 'device-list',
   encapsulation: ViewEncapsulation.None,
-  template: require('./vessel-list.html'),
+  template: require('./device-list.html'),
   styles: []
 })
-export class VesselListComponent implements OnInit {
-	private vessels:Array<Vessel>;
+export class DeviceListComponent implements OnInit {
+	private devices:Array<Device>;
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
   public isLoading: boolean;
-  constructor(private router:Router, private route:ActivatedRoute, private vesselsService: VesselsService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private router:Router, private route:ActivatedRoute, private devicesService: DevicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
     this.organization = {};
   }
 
   ngOnInit() {
     this.isLoading = true;
     this.loadMyOrganization();
-	  this.loadVessels();
+	  this.loadDevices();
   }
 
 	private loadMyOrganization() {
@@ -39,16 +39,16 @@ export class VesselListComponent implements OnInit {
 		);
 	}
 
-	private loadVessels() {
-		this.vesselsService.getVessels().subscribe(
-			vessels => {
-				this.vessels = vessels;
+	private loadDevices() {
+		this.devicesService.getDevices().subscribe(
+			devices => {
+				this.devices = devices;
 				this.isLoading = false;
 				this.generateEntityImageList();
 			},
 			err => {
 				this.isLoading = false;
-				this.notifications.generateNotification('Error', 'Error when trying to get vessels', MCNotificationType.Error, err);
+				this.notifications.generateNotification('Error', 'Error when trying to get devices', MCNotificationType.Error, err);
 			}
 		);
 	}
@@ -59,11 +59,11 @@ export class VesselListComponent implements OnInit {
 
   private generateEntityImageList() {
 	  this.entityImageList = undefined
-	  if (this.vessels) {
+	  if (this.devices) {
 		  this.entityImageList = [];
-		  let imageSrc = 'assets/img/no_ship.png';
-		  this.vessels.forEach(vessel => {
-			    this.entityImageList.push({imageSource:imageSrc, entityId:vessel.mrn, title:vessel.name});
+		  let imageSrc = 'assets/img/no_device.svg';
+		  this.devices.forEach(device => {
+			    this.entityImageList.push({imageSource:imageSrc, entityId:device.mrn, title:device.name});
 			  }
 		  );
 	  }

@@ -2,6 +2,7 @@ import { Routes, RouterModule }  from '@angular/router';
 
 import { OrgIdentityRegistryComponent } from './org-identity-registry.component';
 import {VesselsComponent} from "./vessels/vessels.component";
+import {DevicesComponent} from "./devices/devices.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -9,7 +10,8 @@ const routes: Routes = [
     path: '',
     component: OrgIdentityRegistryComponent,
     children: [
-      { path: 'vessels', component: VesselsComponent }
+	    { path: 'devices', component: DevicesComponent },
+	    { path: 'vessels', component: VesselsComponent }
     ]
   }
 ];

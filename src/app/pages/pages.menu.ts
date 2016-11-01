@@ -38,14 +38,22 @@ export const PAGES_MENU = [
           }
         },
         children: [
-          {
-            path: 'vessels',
-            data: {
-              menu: {
-                title: 'Vessels',
-              }
-            }
-          }
+	        {
+		        path: 'devices',
+		        data: {
+			        menu: {
+				        title: 'Devices',
+			        }
+		        }
+	        },
+	        {
+		        path: 'vessels',
+		        data: {
+			        menu: {
+				        title: 'Vessels',
+			        }
+		        }
+	        }
         ]
       },
       {

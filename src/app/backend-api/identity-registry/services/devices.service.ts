@@ -15,6 +15,11 @@ export class DevicesService implements OnInit {
 
   }
 
+	public getDevices(): Observable<Array<Device>> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn);
+	}
+
   public issueNewCertificate(deviceMrn:string) : Observable<PemCertificate> {
     return Observable.create(observer => {
       let orgMrn = this.authService.authState.orgMrn;
