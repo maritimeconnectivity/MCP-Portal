@@ -48,7 +48,7 @@ export class VesselViewModel {
 		return attributeViewModel;
 	}
 
-	private getTextForVesselAttributeNameEnum(vesselAttributeEnum:AttributeNameEnum):string {
+	private getTextForVesselAttributeNameEnum(vesselAttributeEnum:any):string {
 		var text = '';
 		switch (vesselAttributeEnum) {
 			case AttributeNameEnum.ais_class: {
@@ -77,6 +77,9 @@ export class VesselViewModel {
 			}
 			default : {
 				text = AttributeNameEnum[vesselAttributeEnum];
+				if (!text) {
+					text = vesselAttributeEnum;
+				}
 			}
 		}
 		return text;
