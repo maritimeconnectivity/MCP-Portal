@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{cardTitle}}" baCardClass="with-scroll table-panel">
-      <mc-create-button *ngIf="!isLoading" title="Register new Specification" [onClick]="onCreate" ></mc-create-button>
       <specifications-table [specifications]="specifications" [isLoading]="isLoading" [onRowClick]="onGotoSpec"></specifications-table>
+      <mc-create-button *ngIf="!isLoading" title="Register new Specification" [onClick]="onCreate" ></mc-create-button>
     </ba-card>
   </div>
 </div>

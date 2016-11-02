@@ -1,0 +1,10 @@
+<div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': formControlModel.validator && formControlModel.formGroup.controls[formControlModel.elementId].invalid, 'has-success': formControlModel.validator && formControlModel.formGroup.controls[formControlModel.elementId].valid}" class="form-group mc-form-group has-feedback">
+  <label class="mc-form-label">{{formControlModel.labelName | undefined}}
+    <input pattern="{{pattern}}" readonly="{{formControlModel.isDisabled}}" type="{{formControlModel.inputType}}" [ngClass]="{'mc-form-control-error': formControlModel.validator && formControlModel.formGroup.controls[formControlModel.elementId].invalid, 'mc-form-control-success': formControlModel.validator && formControlModel.formGroup.controls[formControlModel.elementId].valid}" class="form-control mc-form-control" formControlName="{{formControlModel.elementId}}" placeholder="{{formControlModel.placeholder}}">
+
+  </label>
+  <i *ngIf="formControlModel.validator" [ngClass]="{'ion-android-cancel': formControlModel.formGroup.controls[formControlModel.elementId].invalid, 'ion-checkmark-circled': formControlModel.formGroup.controls[formControlModel.elementId].valid}" class="form-control-feedback" aria-hidden="true"></i>
+  <div [hidden]="!formControlModel.errorText || formControlModel.formGroup.controls[formControlModel.elementId].valid || formControlModel.formGroup.controls[formControlModel.elementId].pristine" class="mc-form-error">
+    {{formControlModel.errorText | undefined}}
+  </div>
+</div>

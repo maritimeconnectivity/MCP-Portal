@@ -32,6 +32,7 @@ import {XmlParserService} from "./shared/xml-parser.service";
 import {McHttpService} from "./backend-api/shared/mc-http.service";
 import {NotificationsService} from "angular2-notifications";
 import {SimpleNotificationsModule} from "angular2-notifications";
+import {MrnHelperService} from "./shared/mrn-helper.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -80,6 +81,7 @@ type StoreType = {
     FileHelperService,
     XmlParserService,
     NavigationHelperService,
+	  MrnHelperService,
     MC_ERROR_HANDLER_PROVIDERS,
     // By default the custom ErrorHandler has rethrowError and unwrapError = false, but we set it here as an example on how to overwrite
     {

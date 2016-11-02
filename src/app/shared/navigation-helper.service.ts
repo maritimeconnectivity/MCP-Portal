@@ -109,6 +109,13 @@ export class NavigationHelperService {
       this.navigateToOrgInstance('', '');
     }
   }
+	public navigateToVessel(vesselMrn:string):void {
+		this.path = '/' + vesselMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('vessels', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
 
   public navigateToCreateSpecification() {
     this.pathBeforeCreateSpecification = this.router.url;

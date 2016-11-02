@@ -34,7 +34,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class VesselcontrollerApi {
-    protected basePath = 'https://api.maritimecloud.net/';
+    protected basePath = 'https://api.maritimecloud.net';
     public defaultHeaders : Headers = new Headers();
 
     constructor(protected http: Http, @Optional() basePath: string) {

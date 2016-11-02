@@ -17,8 +17,38 @@ export class VesselsService {
 	}
 
 	public getVessel(vesselMrn:string): Observable<Vessel> {
-		let orgMrn = this.authService.authState.orgMrn;
-		return this.vesselApi.getVesselUsingGET(orgMrn, vesselMrn);
+		if (this.chosenVessel && this.chosenVessel.mrn === vesselMrn) {
+			return Observable.of(this.chosenVessel);
+		}
+
+		return Observable.create(observer => {
+			let orgMrn = this.authService.authState.orgMrn;
+			this.vesselApi.getVesselUsingGET(orgMrn, vesselMrn).subscribe(
+				vessel => {
+					this.chosenVessel = vessel;
+					observer.next(vessel);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
+	public createVessel(vessel:Vessel) :Observable<Vessel>{
+		return Observable.create(observer => {
+			let orgMrn = this.authService.authState.orgMrn;
+
+			this.vesselApi.createVesselUsingPOST(orgMrn, vessel).subscribe(
+				vessel => {
+					this.chosenVessel = vessel;
+					observer.next(vessel);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
 	}
 
   public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {

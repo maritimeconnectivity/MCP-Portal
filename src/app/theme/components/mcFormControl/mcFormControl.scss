@@ -1,0 +1,32 @@
+@import '../../sass/conf/conf';
+
+.mc-form-label {
+  width: 100%;
+}
+.mc-form-control {
+  margin-top: 5px;
+}
+.mc-form-control:read-only {
+  cursor: not-allowed;
+  color: rgba($default, 0.7);
+}
+.mc-form-control-success {
+  border: 1px solid $success !important;
+  &:focus {
+    border: 1px solid $success-light !important;
+  }
+}
+.mc-form-control-error {
+  border: 1px solid $danger !important;
+  &:focus {
+    border: 1px solid $danger-light !important;
+  }
+}
+.mc-form-group {
+  max-width: 450px;
+  margin-bottom: 0.5rem !important;
+}
+.mc-form-error {
+  color: $danger;
+}
+

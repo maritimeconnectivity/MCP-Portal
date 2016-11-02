@@ -4,7 +4,7 @@ import {VesselsService} from "../../../../../backend-api/identity-registry/servi
 import {ActivatedRoute} from "@angular/router";
 import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {VesselViewModel} from "../../../devices/view-models/VesselViewModel";
+import {VesselViewModel} from "../../view-models/VesselViewModel";
 import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
 
 @Component({
