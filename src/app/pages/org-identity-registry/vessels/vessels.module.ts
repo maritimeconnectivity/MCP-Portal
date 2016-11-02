@@ -7,6 +7,7 @@ import {VesselListComponent} from "./components/vessel-list/vessel-list.componen
 import {VesselDetailsComponent} from "./components/vessel-details/vessel-details.component";
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
+import {VesselNewComponent} from "./components/vessel-new/vessel-new.component";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {SharedModule} from "../../shared/shared.module";
   declarations: [
     VesselsComponent,
     VesselDetailsComponent,
-    VesselListComponent
+    VesselListComponent,
+	  VesselNewComponent
   ]
 })
 export default class VesselsModule {

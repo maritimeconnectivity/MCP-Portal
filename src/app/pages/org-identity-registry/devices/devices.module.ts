@@ -7,6 +7,7 @@ import {DeviceListComponent} from "./components/device-list/device-list.componen
 import {DeviceDetailsComponent} from "./components/device-details/device-details.component";
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
+import {DeviceNewComponent} from "./components/device-new/device-new.component";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {SharedModule} from "../../shared/shared.module";
   declarations: [
     DevicesComponent,
     DeviceDetailsComponent,
-    DeviceListComponent
+    DeviceListComponent,
+	  DeviceNewComponent
   ]
 })
 export default class DevicesModule {

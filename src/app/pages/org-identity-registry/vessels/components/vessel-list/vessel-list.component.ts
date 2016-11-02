@@ -6,6 +6,7 @@ import {Router, ActivatedRoute} from "@angular/router";
 import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
 import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
 import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'vessel-list',
@@ -14,11 +15,12 @@ import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mc
   styles: []
 })
 export class VesselListComponent implements OnInit {
+	private KEY_NEW = 'KEY_NEW_VESSEL';
 	private vessels:Array<Vessel>;
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
   public isLoading: boolean;
-  constructor(private router:Router, private route:ActivatedRoute, private vesselsService: VesselsService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private vesselsService: VesselsService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
     this.organization = {};
   }
 
@@ -54,18 +56,28 @@ export class VesselListComponent implements OnInit {
 	}
 
   public gotoDetails(entityModel:EntityImageModel) {
-	  this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+	  if (entityModel.entityId === this.KEY_NEW) {
+		  this.gotoCreate();
+	  } else {
+	    this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+	  }
+  }
+
+  public gotoCreate() {
+	  this.router.navigate(['register'], {relativeTo: this.route})
   }
 
   private generateEntityImageList() {
-	  this.entityImageList = undefined
+	  this.entityImageList = [];
 	  if (this.vessels) {
-		  this.entityImageList = [];
 		  let imageSrc = 'assets/img/no_ship.png';
 		  this.vessels.forEach(vessel => {
 			    this.entityImageList.push({imageSource:imageSrc, entityId:vessel.mrn, title:vessel.name});
 			  }
 		  );
+	  }
+	  if (this.authService.authState.isAdmin()) {
+		  this.entityImageList.push({imageSource:'', entityId:this.KEY_NEW, title:'Register new Vessel', isAdd:true});
 	  }
   }
 

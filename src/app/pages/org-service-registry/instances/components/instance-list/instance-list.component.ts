@@ -17,11 +17,13 @@ export class InstanceListComponent implements OnInit {
   public instances: Array<Instance>;
   public isLoading: boolean;
   public onGotoInstance: Function;
+	public cardTitle:string;
   constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private instancesService: InstancesService) {
     this.organization = {};
   }
 
   ngOnInit() {
+	  this.cardTitle = 'Loading ...';
     this.onGotoInstance = this.gotoInstance.bind(this);
 
     this.isLoading = true;
@@ -46,6 +48,8 @@ export class InstanceListComponent implements OnInit {
     this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
+	      //this.cardTitle = 'Instances for ' + organization.name;
+	      this.cardTitle = 'All Instances';
       },
       err => {
         this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);

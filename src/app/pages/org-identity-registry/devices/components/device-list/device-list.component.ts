@@ -6,6 +6,7 @@ import {Router, ActivatedRoute} from "@angular/router";
 import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
 import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
 import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'device-list',
@@ -14,11 +15,12 @@ import {DevicesService} from "../../../../../backend-api/identity-registry/servi
   styles: []
 })
 export class DeviceListComponent implements OnInit {
+	private KEY_NEW = 'KEY_NEW_DEVICE';
 	private devices:Array<Device>;
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
   public isLoading: boolean;
-  constructor(private router:Router, private route:ActivatedRoute, private devicesService: DevicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private devicesService: DevicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
     this.organization = {};
   }
 
@@ -53,19 +55,29 @@ export class DeviceListComponent implements OnInit {
 		);
 	}
 
-  public gotoDetails(entityModel:EntityImageModel) {
-	  this.router.navigate([entityModel.entityId], {relativeTo: this.route});
-  }
+	public gotoDetails(entityModel:EntityImageModel) {
+		if (entityModel.entityId === this.KEY_NEW) {
+			this.gotoCreate();
+		} else {
+			this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+		}
+	}
+
+	public gotoCreate() {
+		this.router.navigate(['register'], {relativeTo: this.route})
+	}
 
   private generateEntityImageList() {
-	  this.entityImageList = undefined
+	  this.entityImageList = [];
 	  if (this.devices) {
-		  this.entityImageList = [];
 		  let imageSrc = 'assets/img/no_device.svg';
 		  this.devices.forEach(device => {
 			    this.entityImageList.push({imageSource:imageSrc, entityId:device.mrn, title:device.name});
 			  }
 		  );
+	  }
+	  if (this.authService.authState.isAdmin()) {
+		  this.entityImageList.push({imageSource:'', entityId:this.KEY_NEW, title:'Register new Device', isAdd:true});
 	  }
   }
 

@@ -70,6 +70,22 @@ export class NavigationHelperService {
     this.router.navigateByUrl('/');
   }
 
+	public cancelCreateVessel() {
+		this.path = '/';
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('vessels', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
+	public cancelCreateDevice() {
+		this.path = '/';
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('devices', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
   public cancelCreateSpecification() {
     if (this.pathBeforeCreateSpecification) {
       this.router.navigateByUrl(this.pathBeforeCreateSpecification);

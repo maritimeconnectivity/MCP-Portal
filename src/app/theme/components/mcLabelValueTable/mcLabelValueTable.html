@@ -4,8 +4,8 @@
       <tr *ngFor="let labelValue of labelValues">
         <td>{{labelValue.label}} :</td>
         <td>
-          <div *ngIf="!labelValue.linkFunction" [innerHTML]="labelValue.valueHtml | sanitizeHtml"></div>
-          <a *ngIf="labelValue.linkFunction" class="learn-more" (click)="labelValue.linkFunction(labelValue.linkValue)">{{labelValue.valueHtml}}</a>
+          <div *ngIf="!labelValue.linkFunction" [innerHTML]="labelValue.valueHtml | undefined | sanitizeHtml"></div>
+          <a *ngIf="labelValue.linkFunction" class="learn-more" (click)="labelValue.linkFunction(labelValue.linkValue)">{{labelValue.valueHtml | undefined}}</a>
         </td>
       </tr>
     </tbody>

@@ -17,11 +17,13 @@ export class DesignListComponent implements OnInit {
   public designs: Array<Design>;
   public isLoading: boolean;
   public onGotoDesign: Function;
+	public cardTitle:string;
   constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private designsService: DesignsService) {
     this.organization = {};
   }
 
   ngOnInit() {
+	  this.cardTitle = 'Loading ...';
     this.onGotoDesign = this.gotoDesign.bind(this);
 
     this.isLoading = true;
@@ -46,6 +48,8 @@ export class DesignListComponent implements OnInit {
     this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
+	      //this.cardTitle = 'Designs for ' + organization.name;
+	      this.cardTitle = 'All Designs';
       },
       err => {
         this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);

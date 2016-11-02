@@ -7,7 +7,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let tableRow of tableRows; let i = index" (click)="clickedRow(i)" >
-        <td *ngFor="let cell of tableRow.cells" class="{{cell.class}}"><div [innerHTML]="cell.valueHtml | truncate:cell.truncateNumber | sanitizeHtml"></div></td>
+        <td *ngFor="let cell of tableRow.cells" class="{{cell.class}}"><div [innerHTML]="cell.valueHtml | undefined | truncate:cell.truncateNumber | sanitizeHtml"></div></td>
       </tr>
     </tbody>
   </table>

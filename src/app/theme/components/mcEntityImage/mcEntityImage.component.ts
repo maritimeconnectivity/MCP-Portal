@@ -6,6 +6,7 @@ export interface EntityImageModel {
 	entityId:string;
 	title:string;
 	htmlContent?:string;
+	isAdd?:boolean;
 }
 
 @Component({
@@ -16,6 +17,18 @@ export interface EntityImageModel {
 })
 export class McEntityImage {
   @Input() entityImage:EntityImageModel;
+	public imageClass:string;
+	public imageDivClass:string;
   constructor() {
   }
+
+	ngOnInit() {
+		this.imageClass = 'entity-image';
+		this.imageDivClass = '';
+		if (this.entityImage.isAdd) {
+			this.imageClass = 'entity-image-add';
+			this.imageDivClass = 'entity-image';
+			this.entityImage.imageSource = 'assets/img/add.png';
+		}
+	}
 }

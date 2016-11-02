@@ -19,11 +19,13 @@ export class SpecificationListComponent implements OnInit {
   public isLoading: boolean;
   public onCreate: Function;
   public onGotoSpec: Function;
+	public cardTitle:string;
   constructor(private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
 
   ngOnInit() {
+	  this.cardTitle = 'Loading ...';
     this.onCreate = this.createSpecification.bind(this);
     this.onGotoSpec = this.gotoSpecification.bind(this);
 
@@ -37,6 +39,9 @@ export class SpecificationListComponent implements OnInit {
     this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
+	      // TODO: change when filtering on organization
+	      //this.cardTitle = 'Specifications for ' + organization.name;
+	      this.cardTitle = 'All Specifications';
       },
       err => {
         this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
