@@ -19,7 +19,7 @@ export class DeviceNewComponent implements OnInit {
   public isLoading = true;
 
   public isRegistering = false;
-  public registerTitle = "Register Vessel";
+  public registerTitle = "Register Device";
   public registerButtonClass = "btn btn-danger btn-raised";
   public onRegister: Function;
 

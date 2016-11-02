@@ -2,12 +2,12 @@
   <div class="col-lg-12">
     <ba-card title="Issue new certificate" baCardClass="with-scroll table-panel">
       <!-- Before issue -->
-      <div *ngIf="entityType && !pemCertificate && !isLoading">
+      <div *ngIf="entityType != null && !pemCertificate && !isLoading">
         <h5>Issuing a new certificate for:</h5>
         <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
-        <ul *ngIf="entityType" class="btn-list clearfix">
+        <ul *ngIf="entityType != null" class="btn-list clearfix">
           <li>
-            <button type="button" class="btn btn-primary btn-raised" (click)="issueNew()">Issue Certificate</button>
+            <button type="button" class="btn btn-danger btn-raised" (click)="issueNew()">Issue Certificate</button>
           </li>
           <li>
             <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
@@ -20,7 +20,7 @@
       <!-- After issue and success -->
       <div *ngIf="pemCertificate">
         Certificate issued with success
-        <ul *ngIf="entityType" class="btn-list clearfix">
+        <ul *ngIf="entityType != null" class="btn-list clearfix">
           <li>
             <button type="button" class="btn btn-primary btn-raised" (click)="zipAndDownload()">Download certificate</button>
           </li>

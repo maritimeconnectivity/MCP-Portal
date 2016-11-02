@@ -33,7 +33,7 @@ export class CertificateIssueNewComponent implements OnInit {
     let entityType = this.route.snapshot.queryParams[queryKeys.ENTITY_TYPE];
     let entityMrn = this.route.snapshot.queryParams[queryKeys.ENTITY_MRN];
     let entityTitle= this.route.snapshot.queryParams[queryKeys.ENTITY_TITLE];
-    if (!entityType || !entityMrn || !entityTitle) {
+    if (entityType == null || !entityMrn || !entityTitle) {
       this.notificationService.generateNotification("Error", "Unresolved state when trying to issue new certificate", MCNotificationType.Error);
       this.navigationHelper.takeMeHome();
     }

@@ -3,6 +3,7 @@ import {DevicesComponent} from "./devices.component";
 import {DeviceListComponent} from "./components/device-list/device-list.component";
 import {DeviceDetailsComponent} from "./components/device-details/device-details.component";
 import {DeviceNewComponent} from "./components/device-new/device-new.component";
+import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -15,6 +16,13 @@ const routes: Routes = [
         path: '',
         component: DeviceListComponent
       },
+	    {
+		    path: 'issuecert',
+		    component: CertificateIssueNewComponent,
+		    data:{breadcrumb: 'New Certificate'},
+		    children: [
+		    ]
+	    },
 	    {
 		    path: 'register',
 		    component: DeviceNewComponent,

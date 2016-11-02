@@ -19,7 +19,7 @@ export class CertificatesService implements OnInit {
   }
 
   public issueNewCertificate(entityType: CertificateEntityType, entityMrn) : Observable<PemCertificate> {
-    if (!entityType || !entityMrn) { // We lost our state data somehow???
+    if (entityType == null || !entityMrn) { // We lost our state data somehow???
       throw new Error('Internal state lost');
     }
     return Observable.create(observer => {
