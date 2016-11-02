@@ -199,7 +199,6 @@ var DesignListComponent = (function () {
         this.organization = {};
     }
     DesignListComponent.prototype.ngOnInit = function () {
-        this.cardTitle = 'Loading ...';
         this.onGotoDesign = this.gotoDesign.bind(this);
         this.isLoading = true;
         this.loadMyOrganization();
@@ -219,8 +218,6 @@ var DesignListComponent = (function () {
         var _this = this;
         this.orgService.getMyOrganization().subscribe(function (organization) {
             _this.organization = organization;
-            //this.cardTitle = 'Designs for ' + organization.name;
-            _this.cardTitle = 'All Designs';
         }, function (err) {
             _this.notifications.generateNotification('Error', 'Error when trying to get organization', mc_notifications_service_1.MCNotificationType.Error, err);
         });
@@ -248,7 +245,7 @@ exports.DesignListComponent = DesignListComponent;
 /***/ "./src/app/pages/org-service-registry/designs/components/design-list/design-list.html":
 /***/ function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"{{cardTitle}}\" baCardClass=\"with-scroll table-panel\">\r\n      <designs-table [designs]=\"designs\" [isLoading]=\"isLoading\" [onRowClick]=\"onGotoDesign\"></designs-table>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"Designs for {{organization.name}}\" baCardClass=\"with-scroll table-panel\">\r\n      <designs-table [designs]=\"designs\" [isLoading]=\"isLoading\" [onRowClick]=\"onGotoDesign\"></designs-table>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
 
 /***/ },
 
@@ -635,7 +632,6 @@ var InstanceListComponent = (function () {
         this.organization = {};
     }
     InstanceListComponent.prototype.ngOnInit = function () {
-        this.cardTitle = 'Loading ...';
         this.onGotoInstance = this.gotoInstance.bind(this);
         this.isLoading = true;
         this.loadMyOrganization();
@@ -655,8 +651,6 @@ var InstanceListComponent = (function () {
         var _this = this;
         this.orgService.getMyOrganization().subscribe(function (organization) {
             _this.organization = organization;
-            //this.cardTitle = 'Instances for ' + organization.name;
-            _this.cardTitle = 'All Instances';
         }, function (err) {
             _this.notifications.generateNotification('Error', 'Error when trying to get organization', mc_notifications_service_1.MCNotificationType.Error, err);
         });
@@ -684,7 +678,7 @@ exports.InstanceListComponent = InstanceListComponent;
 /***/ "./src/app/pages/org-service-registry/instances/components/instance-list/instance-list.html":
 /***/ function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"{{cardTitle}}\" baCardClass=\"with-scroll table-panel\">\r\n      <instances-table [instances]=\"instances\" [isLoading]=\"isLoading\" [onRowClick]=\"onGotoInstance\"></instances-table>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"Instances for {{organization.name}}\" baCardClass=\"with-scroll table-panel\">\r\n      <instances-table [instances]=\"instances\" [isLoading]=\"isLoading\" [onRowClick]=\"onGotoInstance\"></instances-table>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
 
 /***/ },
 
@@ -1251,7 +1245,6 @@ var SpecificationListComponent = (function () {
         this.organization = {};
     }
     SpecificationListComponent.prototype.ngOnInit = function () {
-        this.cardTitle = 'Loading ...';
         this.onCreate = this.createSpecification.bind(this);
         this.onGotoSpec = this.gotoSpecification.bind(this);
         this.isLoading = true;
@@ -1262,9 +1255,6 @@ var SpecificationListComponent = (function () {
         var _this = this;
         this.orgService.getMyOrganization().subscribe(function (organization) {
             _this.organization = organization;
-            // TODO: change when filtering on organization
-            //this.cardTitle = 'Specifications for ' + organization.name;
-            _this.cardTitle = 'All Specifications';
         }, function (err) {
             _this.notifications.generateNotification('Error', 'Error when trying to get organization', mc_notifications_service_1.MCNotificationType.Error, err);
         });
@@ -1305,7 +1295,7 @@ exports.SpecificationListComponent = SpecificationListComponent;
 /***/ "./src/app/pages/org-service-registry/specifications/components/specification-list/specification-list.html":
 /***/ function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"{{cardTitle}}\" baCardClass=\"with-scroll table-panel\">\r\n      <specifications-table [specifications]=\"specifications\" [isLoading]=\"isLoading\" [onRowClick]=\"onGotoSpec\"></specifications-table>\r\n      <mc-create-button *ngIf=\"!isLoading\" title=\"Register new Specification\" [onClick]=\"onCreate\" ></mc-create-button>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"Specifications for {{organization.name}}\" baCardClass=\"with-scroll table-panel\">\r\n      <mc-create-button *ngIf=\"!isLoading\" title=\"Register new Specification\" [onClick]=\"onCreate\" ></mc-create-button>\r\n      <specifications-table [specifications]=\"specifications\" [isLoading]=\"isLoading\" [onRowClick]=\"onGotoSpec\"></specifications-table>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
 
 /***/ },
 
@@ -1554,7 +1544,7 @@ var CertificateIssueNewComponent = (function () {
         var entityType = this.route.snapshot.queryParams[navigation_helper_service_1.queryKeys.ENTITY_TYPE];
         var entityMrn = this.route.snapshot.queryParams[navigation_helper_service_1.queryKeys.ENTITY_MRN];
         var entityTitle = this.route.snapshot.queryParams[navigation_helper_service_1.queryKeys.ENTITY_TITLE];
-        if (entityType == null || !entityMrn || !entityTitle) {
+        if (!entityType || !entityMrn || !entityTitle) {
             this.notificationService.generateNotification("Error", "Unresolved state when trying to issue new certificate", mc_notifications_service_1.MCNotificationType.Error);
             this.navigationHelper.takeMeHome();
         }
@@ -1605,7 +1595,7 @@ exports.CertificateIssueNewComponent = CertificateIssueNewComponent;
 /***/ "./src/app/pages/shared/components/certificate-issue-new/certificate-issue-new.html":
 /***/ function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"Issue new certificate\" baCardClass=\"with-scroll table-panel\">\r\n      <!-- Before issue -->\r\n      <div *ngIf=\"entityType != null && !pemCertificate && !isLoading\">\r\n        <h5>Issuing a new certificate for:</h5>\r\n        <mc-label-value-table [isLoading]=\"isLoading\" [labelValues]=\"labelValues\"></mc-label-value-table>\r\n        <ul *ngIf=\"entityType != null\" class=\"btn-list clearfix\">\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-danger btn-raised\" (click)=\"issueNew()\">Issue Certificate</button>\r\n          </li>\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-default btn-raised\" (click)=\"cancel()\">Cancel</button>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n\r\n      <sk-fading-circle [isRunning]=\"isLoading\" ></sk-fading-circle>\r\n\r\n      <!-- After issue and success -->\r\n      <div *ngIf=\"pemCertificate\">\r\n        Certificate issued with success\r\n        <ul *ngIf=\"entityType != null\" class=\"btn-list clearfix\">\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-primary btn-raised\" (click)=\"zipAndDownload()\">Download certificate</button>\r\n          </li>\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-default btn-raised\" (click)=\"cancel()\">OK</button>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"row\">\r\n  <div class=\"col-lg-12\">\r\n    <ba-card title=\"Issue new certificate\" baCardClass=\"with-scroll table-panel\">\r\n      <!-- Before issue -->\r\n      <div *ngIf=\"entityType && !pemCertificate && !isLoading\">\r\n        <h5>Issuing a new certificate for:</h5>\r\n        <mc-label-value-table [isLoading]=\"isLoading\" [labelValues]=\"labelValues\"></mc-label-value-table>\r\n        <ul *ngIf=\"entityType\" class=\"btn-list clearfix\">\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-primary btn-raised\" (click)=\"issueNew()\">Issue Certificate</button>\r\n          </li>\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-default btn-raised\" (click)=\"cancel()\">Cancel</button>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n\r\n      <sk-fading-circle [isRunning]=\"isLoading\" ></sk-fading-circle>\r\n\r\n      <!-- After issue and success -->\r\n      <div *ngIf=\"pemCertificate\">\r\n        Certificate issued with success\r\n        <ul *ngIf=\"entityType\" class=\"btn-list clearfix\">\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-primary btn-raised\" (click)=\"zipAndDownload()\">Download certificate</button>\r\n          </li>\r\n          <li>\r\n            <button type=\"button\" class=\"btn btn-default btn-raised\" (click)=\"cancel()\">OK</button>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n    </ba-card>\r\n  </div>\r\n</div>\r\n"
 
 /***/ },
 

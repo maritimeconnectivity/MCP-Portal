@@ -1,5 +1,6 @@
 {
   "realm": "MaritimeCloud",
+  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqCe/X2/jdB89RKYlZsL1Jp/Mu4m8SEHak5kKfZET14er2a7w/9TifAHjveMc07tcGmh8enAJNZfAxvOAvwYm5Qp+cU0uHfnoFueSXRS7lyu1lY9cyLtDPIcmN2AwnJShm7ZJJaBLj1v5l7ib9WdyeAKKR7CYWV/yp1qBB9H01/o8rl4hUMlgHw/wrTHBGUIe6p4g+KC1HG8m4RL3pJXoFvHe+A2EXLpj8AOcr4Hi64qJQdVuSwn9ZU8bKNrHJYlhPehR46SD4sXpaY0AVJziOMbfLZsuxxR7LiNQmnTVc4XjztedEtaeFO5mcgw4MkrVZk7AEuzXP2ovqSTR+ku/zwIDAQAB",
   "auth-server-url": "https://maritimeid.maritimecloud.net/auth",
   "ssl-required": "none",
   "resource": "MaritimeCloudPortal_Test",
