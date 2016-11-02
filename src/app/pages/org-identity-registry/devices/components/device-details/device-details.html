@@ -1,7 +1,13 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-      Details
+      <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
     </ba-card>
+
+    <div *ngIf="device">
+      <ba-card title="Certificates for {{title}}" baCardClass="with-scroll table-panel">
+        <certificates-table [entityMrn]="device.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="device.certificates"></certificates-table>
+      </ba-card>
+    </div>
   </div>
 </div>

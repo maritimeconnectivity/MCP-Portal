@@ -74,7 +74,6 @@ export class AuthService implements OnInit {
             } else {
               throw new Error('Keycloak token parse error');
             }
-            console.log("TOKENPARSED: ", keycloakAuth.tokenParsed);
             if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.preferred_username) {
               AuthService.staticAuth.user =  keycloakAuth.tokenParsed.preferred_username;
             } else {
@@ -104,7 +103,6 @@ export class AuthService implements OnInit {
 
   logout() {
     this.authState.loggedIn = false;
-    console.log("DDDD: " + window.location);
     AuthService.staticAuth.authz.logout();
     AuthService.staticAuth.authz = null;
   }

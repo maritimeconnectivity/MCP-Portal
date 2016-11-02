@@ -15,6 +15,11 @@ export class DevicesService implements OnInit {
 
   }
 
+	public getDevice(deviceMrn:string): Observable<Device> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.deviceApi.getDeviceUsingGET(orgMrn, deviceMrn);
+	}
+
 	public getDevices(): Observable<Array<Device>> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn);

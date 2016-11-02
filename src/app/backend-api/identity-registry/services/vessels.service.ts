@@ -16,6 +16,11 @@ export class VesselsService {
 		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn);
 	}
 
+	public getVessel(vesselMrn:string): Observable<Vessel> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.getVesselUsingGET(orgMrn, vesselMrn);
+	}
+
   public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {
     return Observable.create(observer => {
       let orgMrn = this.authService.authState.orgMrn;

@@ -3,7 +3,7 @@ import {Certificate} from "../../../../backend-api/identity-registry/autogen/mod
 import {CertificateEntityType, CertificateHelperService} from "../../services/certificate-helper.service";
 import {layoutSizes, DATE_FORMAT} from "../../../../theme/theme.constants";
 import {AuthService} from "../../../../authentication/services/auth.service";
-import {CertificateViewModel} from "../view-models/CertificateViewModel";
+import {CertificateViewModel} from "../../view-models/CertificateViewModel";
 import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
 import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
 import {FileHelperService} from "../../../../shared/file-helper.service";

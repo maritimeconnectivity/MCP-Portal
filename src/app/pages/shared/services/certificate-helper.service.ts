@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Certificate} from "../../../backend-api/identity-registry/autogen/model/Certificate";
-import {CertificateViewModel} from "../components/view-models/CertificateViewModel";
+import {CertificateViewModel} from "../view-models/CertificateViewModel";
 import {CertificateRevocation} from "../../../backend-api/identity-registry/autogen/model/CertificateRevocation";
 import RevokationReasonEnum = CertificateRevocation.RevokationReasonEnum;
 
