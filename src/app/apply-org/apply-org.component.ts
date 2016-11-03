@@ -96,11 +96,10 @@ export class ApplyOrgComponent implements OnInit {
 	}
 
 	private generateMRN(idValue:string) {
-		if (idValue) {
-			let valueNoSpaces = idValue.split(' ').join('').toLowerCase();
-			this.mrn = this.mrnMask + valueNoSpaces;
-			this.registerForm.patchValue({mrn: this.mrn});
-		}
+		var mrn = (idValue?idValue:'');
+		let valueNoSpaces = mrn.split(' ').join('').toLowerCase();
+		this.mrn = this.mrnMask + valueNoSpaces;
+		this.registerForm.patchValue({mrn: this.mrn});
 	}
 
 	private generateForm() {
