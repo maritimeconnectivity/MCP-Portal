@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ErrorLoggingService} from "./error-logging.service";
 
 export enum MCNotificationType {Success, Error, Info, Alert}

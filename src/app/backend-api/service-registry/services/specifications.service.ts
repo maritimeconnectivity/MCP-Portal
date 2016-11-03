@@ -1,5 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Observable, Observer} from "rxjs";
+import {Observable} from "rxjs/Observable";
+import {Observer} from "rxjs/Observer";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {ServicespecificationresourceApi} from "../autogen/api/ServicespecificationresourceApi";
 import {Specification} from "../autogen/model/Specification";

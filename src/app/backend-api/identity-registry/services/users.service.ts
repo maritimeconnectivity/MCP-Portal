@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {User} from "../autogen/model/User";

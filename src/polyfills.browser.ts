@@ -31,6 +31,13 @@ import 'zone.js/dist/zone';
 // Typescript emit helpers polyfill
 import 'ts-helpers';
 
+
+import 'jquery';
+import 'bootstrap-loader';
+import 'font-awesome-sass-loader';
+import 'lodash';
+
+
 if ('production' === ENV) {
   // Production
 

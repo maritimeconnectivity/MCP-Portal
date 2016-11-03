@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable} from "rxjs/Observable";
 import {RolecontrollerApi} from "../autogen/api/RolecontrollerApi";
 
 @Injectable()

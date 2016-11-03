@@ -1,5 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Observable, Observer} from "rxjs";
+import {Observable} from "rxjs/Observable";
+import {Observer} from "rxjs/Observer";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {TechnicaldesignresourceApi} from "../autogen/api/TechnicaldesignresourceApi";
 import {Design} from "../autogen/model/Design";
@@ -7,6 +8,7 @@ import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
 import {XmlParserService} from "../../../shared/xml-parser.service";
 import {Instance} from "../autogen/model/Instance";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
+
 
 @Injectable()
 export class DesignsService implements OnInit {
