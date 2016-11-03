@@ -27,13 +27,11 @@ export class VesselNewComponent implements OnInit {
 	private mrnPatternError:string;
 
   public organization: Organization;
-  public isLoading = true;
 
+	// McForm params
+  public isLoading = true;
   public isRegistering = false;
   public registerTitle = "Register Vessel";
-  public registerButtonClass = "btn btn-danger btn-raised";//TODO den skal bare væk sammen med buttons
-  public onRegister: Function;
-
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
@@ -46,7 +44,6 @@ export class VesselNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onRegister = this.register.bind(this);
     this.isRegistering = false;
     this.isLoading = true;
     this.loadMyOrganization();

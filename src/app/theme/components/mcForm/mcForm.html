@@ -1,0 +1,16 @@
+<div *ngIf="!isLoading">
+  <form [formGroup]="formGroup">
+    <div *ngFor="let formControlModel of formControlModels">
+      <mc-form-control [formControlModel]="formControlModel"></mc-form-control>
+    </div>
+    <ul class="btn-list clearfix">
+      <li>
+        <mc-loading-button [class]="'btn btn-danger btn-raised'" [disabled]="formGroup.invalid" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="registerFunc" ></mc-loading-button>
+      </li>
+      <li>
+        <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
+      </li>
+    </ul>
+  </form>
+</div>
+<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>

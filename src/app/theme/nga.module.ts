@@ -65,6 +65,7 @@ import {FadingCircleSmallComponent} from "./components/spinner/fading-circle-sma
 import {McEntityImageList} from "./components/mcEntityImageList/mcEntityImageList.component";
 import {McEntityImage} from "./components/mcEntityImage/mcEntityImage.component";
 import {McFormControl} from "./components/mcFormControl/mcFormControl.component";
+import {McForm} from "./components/mcForm/mcForm.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -90,7 +91,8 @@ const NGA_COMPONENTS = [
   McLoadingButton,
 	McEntityImageList,
 	McEntityImage,
-	McFormControl
+	McFormControl,
+	McForm
 ];
 
 const NGA_DIRECTIVES = [
