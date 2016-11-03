@@ -33,6 +33,7 @@ import {McHttpService} from "./backend-api/shared/mc-http.service";
 import {NotificationsService} from "angular2-notifications";
 import {SimpleNotificationsModule} from "angular2-notifications";
 import {MrnHelperService} from "./shared/mrn-helper.service";
+import {ApplyOrgModule} from "./apply-org/apply-org.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -64,6 +65,7 @@ type StoreType = {
     NgaModule.forRoot(),
     PagesModule,
     LoginModule,
+	  ApplyOrgModule,
     Four04Module,
     IdentityRegistryApiModule,
     SimpleNotificationsModule,

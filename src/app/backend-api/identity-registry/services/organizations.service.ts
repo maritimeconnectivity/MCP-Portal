@@ -15,6 +15,10 @@ export class OrganizationsService implements OnInit {
 
   }
 
+  public applyOrganization(organization:Organization): Observable<Organization>{
+	  return this.organizationApi.applyOrganizationUsingPOST(organization);
+  }
+
   public issueNewCertificate() : Observable<PemCertificate> {
     return Observable.create(observer => {
       let orgMrn = this.authService.authState.orgMrn;

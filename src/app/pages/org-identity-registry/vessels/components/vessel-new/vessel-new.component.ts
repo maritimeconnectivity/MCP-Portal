@@ -21,13 +21,12 @@ import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
   styles: []
 })
 export class VesselNewComponent implements OnInit {
+  public organization: Organization;
+
 	private mrn: string;
 	private mrnMask:string;
 	private mrnPattern:string;
 	private mrnPatternError:string;
-
-  public organization: Organization;
-
 	// McForm params
   public isLoading = true;
   public isRegistering = false;
@@ -99,9 +98,11 @@ export class VesselNewComponent implements OnInit {
   }
 
 	private generateMRN(idValue:string) {
-		let valueNoSpaces = idValue.split(' ').join('').toLowerCase();
-		this.mrn = this.mrnMask + valueNoSpaces;
-		this.registerForm.patchValue({mrn: this.mrn});
+		if (idValue) {
+			let valueNoSpaces = idValue.split(' ').join('').toLowerCase();
+			this.mrn = this.mrnMask + valueNoSpaces;
+			this.registerForm.patchValue({mrn: this.mrn});
+		}
 	}
 
   private generateForm() {
@@ -113,7 +114,7 @@ export class VesselNewComponent implements OnInit {
 	  this.registerForm.addControl(formControlModel.elementId, formControl);
 	  this.formControlModels.push(formControlModel);
 
-	  formControlModel = {formGroup: this.registerForm, elementId: 'vesselId', inputType: 'text', labelName: 'Vessel ID', placeholder: 'Vessel ID is required', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+	  formControlModel = {formGroup: this.registerForm, elementId: 'vesselId', inputType: 'text', labelName: 'Vessel ID', placeholder: 'Enter Vessel ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
 	  formControl = new FormControl('', formControlModel.validator);
 	  formControl.valueChanges.subscribe(param => this.generateMRN(param));
 	  this.registerForm.addControl(formControlModel.elementId, formControl);

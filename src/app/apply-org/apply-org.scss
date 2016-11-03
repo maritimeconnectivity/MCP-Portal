@@ -1,0 +1,17 @@
+@import '../theme/sass/auth';
+
+.apply-big {
+  display: flex !important;
+}
+
+.apply-small {
+  display: block !important;
+}
+
+.apply-big-width {
+  min-width: 500px;
+}
+
+.apply-wrapper {
+  max-width: 500px;
+}
