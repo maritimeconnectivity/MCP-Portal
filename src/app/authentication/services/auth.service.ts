@@ -5,14 +5,19 @@ import {Role} from "../../backend-api/identity-registry/autogen/model/Role";
 import RoleNameEnum = Role.RoleNameEnum;
 
 
-export enum AuthPermission {Member, Admin, SysAdmin}
+export enum AuthPermission {
+	Member    = 1 << 0,
+	Admin     = 1 << 1,
+	SiteAdmin = 1 << 2
+}
 
 export interface AuthState {
   loggedIn: boolean,
-  permission: AuthPermission,
+  permission: any,
   orgMrn: string,
   user: string,
-  isAdmin(): boolean
+	isAdmin(): boolean,
+	isSiteAdmin(): boolean
 }
 
 @Injectable()
@@ -35,10 +40,12 @@ export class AuthService implements OnInit {
       this.rolesService.getMyRoles(this.authState.orgMrn).subscribe(
         roles => {
           for (let roleString of roles) {
-            if (roleString === RoleNameEnum[RoleNameEnum.ROLE_ORG_ADMIN]) {
-              this.authState.permission = AuthPermission.Admin;
-              break;
-            }
+	          if (roleString === RoleNameEnum[RoleNameEnum.ROLE_ORG_ADMIN]) {
+		          this.authState.permission = this.authState.permission | AuthPermission.Admin;
+	          }
+	          if (roleString === RoleNameEnum[RoleNameEnum.ROLE_SITE_ADMIN]) {
+		          this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
+	          }
           }
         },
         error => {
@@ -54,9 +61,12 @@ export class AuthService implements OnInit {
       permission: AuthPermission.Member,
       orgMrn: AuthService.staticAuth.orgMrn,
       user: AuthService.staticAuth.user,
-      isAdmin() {
-        return this.permission === AuthPermission.Admin || this.permission === AuthPermission.SysAdmin;
-      }
+	    isAdmin() {
+		    return (this.permission & AuthPermission.Admin || this.permission & AuthPermission.SiteAdmin) > 0;
+	    },
+	    isSiteAdmin() {
+		    return (this.permission & AuthPermission.SiteAdmin) > 0;
+	    }
     };
   }
 
