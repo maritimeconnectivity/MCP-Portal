@@ -20,7 +20,7 @@ import {VesselsService} from "../backend-api/identity-registry/services/vessels.
   imports: [
     CommonModule,
     NgaModule,
-    ServiceRegistryModule, // Importing this in the pages module, because Service Registry should ONLY be used when logged in, and when we are logged in, we are in the pages module
+    ServiceRegistryModule,
     routing
   ],
   declarations: [Pages],

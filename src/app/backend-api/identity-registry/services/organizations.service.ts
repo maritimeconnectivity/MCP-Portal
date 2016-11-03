@@ -7,13 +7,60 @@ import {PemCertificate} from "../autogen/model/PemCertificate";
 
 @Injectable()
 export class OrganizationsService implements OnInit {
-  private myOrganization: Organization;
+	private myOrganization: Organization;
+	private unapprovedOrganizations: Array<Organization>;
   constructor(private organizationApi: OrganizationcontrollerApi, private authService: AuthService) {
   }
 
   ngOnInit() {
 
   }
+
+	public getUnapprovedOrganization(orgMrn:string) : Observable<Organization> {
+		if (this.unapprovedOrganizations) {
+			this.unapprovedOrganizations.forEach(organization => {
+				if (organization.mrn === orgMrn) {
+					return Observable.of(organization);
+				}
+			});
+		}
+		// Should never come to this
+		return Observable.create(observer => {
+			this.organizationApi.getUnapprovedOrganizationsUsingGET().subscribe(
+				organizations => {
+					this.unapprovedOrganizations = organizations;
+					var forundOrganization = null;
+					this.unapprovedOrganizations.forEach(organization => {
+						if (organization.mrn === orgMrn) {
+							forundOrganization = organization;
+						}
+					});
+					if (forundOrganization) {
+						observer.next(forundOrganization);
+					} else {
+						observer.error(new Error("Unknown error occured"));
+					}
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
+	public getUnapprovedOrganizations () : Observable<Array<Organization>> {
+		return Observable.create(observer => {
+			this.organizationApi.getUnapprovedOrganizationsUsingGET().subscribe(
+				organizations => {
+					this.unapprovedOrganizations = organizations;
+					observer.next(organizations);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   public applyOrganization(organization:Organization): Observable<Organization>{
 	  return this.organizationApi.applyOrganizationUsingPOST(organization);

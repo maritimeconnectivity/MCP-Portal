@@ -1,10 +1,19 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import {MENU, SITE_ADMIN_SUB_MENU} from "../app.menu";
+import {Route} from "@angular/router";
+import * as _ from 'lodash';
+import {AuthService} from "../authentication/services/auth.service";
 @Component({
   selector: 'pages',
   encapsulation: ViewEncapsulation.None,
   styles: [],
   template: `
-    <ba-sidebar></ba-sidebar>
+		<div *ngIf="!showSiteAdminMenu">
+    	<ba-sidebar [menuRoutes]="routes"></ba-sidebar>
+    </div>
+		<div *ngIf="showSiteAdminMenu">
+    	<ba-sidebar [menuRoutes]="routes"></ba-sidebar>
+    </div>
     <ba-page-top></ba-page-top>
     <div class="al-main">
       <div class="al-content">
@@ -21,10 +30,53 @@ import {Component, ViewEncapsulation} from '@angular/core';
     `
 })
 export class Pages {
+	public routes = _.cloneDeep(MENU);
+	public showSiteAdminMenu = false;
 
-  constructor() {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit() {
+	  if (this.authService.authState.rolesLoaded) {
+		  this.generateSiteAdminMenu();
+	  } else {
+		  this.authService.rolesLoaded.subscribe((mode)=> {
+			  this.generateSiteAdminMenu();
+		  });
+	  }
   }
+
+  private generateSiteAdminMenu() {
+	  if (this.authService.authState.isSiteAdmin()) {
+		  this.addRouteToMenuPath(SITE_ADMIN_SUB_MENU, 0, 'pages', this.routes[0]);
+		  this.showSiteAdminMenu = true;
+	  } else {
+		  this.showSiteAdminMenu = false;
+	  }
+  }
+
+	private addRouteToMenuPath(routeToAdd:Route, childPosition:number, nameOfParent:string, menuRoute: Route):boolean {
+		if (menuRoute.path === nameOfParent) {
+			if (!menuRoute.children || menuRoute.children.length == 0) {
+				menuRoute.children = [routeToAdd];
+			} else if (menuRoute.children.length == childPosition) {
+				menuRoute.children.push(routeToAdd);
+			} else {
+				menuRoute.children.splice(childPosition, 0, routeToAdd);
+			}
+			return true;
+		}
+		if (menuRoute.children && menuRoute.children.length > 0) {
+			var found = false;
+			menuRoute.children.forEach(routeChild => {
+				if (this.addRouteToMenuPath(routeToAdd, childPosition, nameOfParent, routeChild)) {
+					found = true;
+				}
+			});
+			if (found) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

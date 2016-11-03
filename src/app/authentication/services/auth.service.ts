@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable, OnInit, EventEmitter} from '@angular/core';
 import {RolesService} from "../../backend-api/identity-registry/services/roles.service";
 import {MCNotificationsService, MCNotificationType} from "../../shared/mc-notifications.service";
 import {Role} from "../../backend-api/identity-registry/autogen/model/Role";
@@ -15,7 +15,7 @@ export interface AuthState {
   loggedIn: boolean,
   permission: any,
   orgMrn: string,
-  user: string,
+  rolesLoaded: boolean,
 	isAdmin(): boolean,
 	isSiteAdmin(): boolean
 }
@@ -23,6 +23,8 @@ export interface AuthState {
 @Injectable()
 export class AuthService implements OnInit {
   private static staticAuth: any = {};
+
+	public rolesLoaded: EventEmitter<any> = new EventEmitter<any>();
 
   // We make a state-object to take advantage of Angulars build in "object-observer", so when a value in authState is changing, all views using the state-object will be updated
   public authState: AuthState;
@@ -47,10 +49,14 @@ export class AuthService implements OnInit {
 		          this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
 	          }
           }
+          this.authState.rolesLoaded = true;
+          this.rolesLoaded.emit('');
         },
         error => {
           this.authState.permission = AuthPermission.Member;
           this.notificationService.generateNotification('Error', 'Error trying to fetch user permissions', MCNotificationType.Error, error);
+	        this.authState.rolesLoaded = true;
+	        this.rolesLoaded.emit('');
         }
       );
     }
@@ -60,7 +66,7 @@ export class AuthService implements OnInit {
       loggedIn: AuthService.staticAuth.loggedIn,
       permission: AuthPermission.Member,
       orgMrn: AuthService.staticAuth.orgMrn,
-      user: AuthService.staticAuth.user,
+      rolesLoaded: false,
 	    isAdmin() {
 		    return (this.permission & AuthPermission.Admin || this.permission & AuthPermission.SiteAdmin) > 0;
 	    },

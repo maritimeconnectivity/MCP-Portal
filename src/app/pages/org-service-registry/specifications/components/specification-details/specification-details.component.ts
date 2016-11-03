@@ -98,8 +98,8 @@ export class SpecificationDetailsComponent {
   }
 
   public isAdmin():boolean {
-    // TODO ;-)
-    return this.authService.authState.user === 'rmj';
+	  // TODO should this  all admins?
+	  return this.authService.authState.isSiteAdmin();
   }
 
 

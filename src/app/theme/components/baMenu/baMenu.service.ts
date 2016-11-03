@@ -10,8 +10,8 @@ export class BaMenuService {
   }
 
   public convertRoutesToMenus(routes:Routes):any[] {
-    let items = this._convertArrayToItems(routes);
-  return this._skipEmpty(items);
+	  let items = this._convertArrayToItems(routes);
+    return this._skipEmpty(items);
 }
 
   public getCurrentItem():any {

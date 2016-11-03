@@ -1,8 +1,8 @@
-import {Component, ElementRef, HostListener, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, HostListener, ViewEncapsulation, Input} from '@angular/core';
 import {GlobalState} from '../../../global.state';
 import {layoutSizes} from '../../../theme';
-import {MENU} from '../../../../app/app.menu';
 import * as _ from 'lodash';
+import {Routes} from "@angular/router";
 
 @Component({
   selector: 'ba-sidebar',
@@ -13,7 +13,8 @@ import * as _ from 'lodash';
 export class BaSidebar {
 
   // here we declare which routes we want to use as a menu in our sidebar
-  public routes = _.cloneDeep(MENU); // we're creating a deep copy since we are going to change that object
+	@Input() menuRoutes: Routes;
+  public routes:Routes;
 
   public menuHeight:number;
   public isMenuCollapsed:boolean = false;
@@ -28,6 +29,7 @@ export class BaSidebar {
   }
 
   public ngOnInit():void {
+	  this.routes = _.cloneDeep(this.menuRoutes); // we're creating a deep copy since we are going to change that object
     if (this._shouldMenuCollapse()) {
       this.menuCollapse();
     }
