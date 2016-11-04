@@ -3,6 +3,7 @@ import {MENU, SITE_ADMIN_SUB_MENU} from "../app.menu";
 import {Route} from "@angular/router";
 import * as _ from 'lodash';
 import {AuthService} from "../authentication/services/auth.service";
+import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 @Component({
   selector: 'pages',
   encapsulation: ViewEncapsulation.None,
@@ -14,7 +15,7 @@ import {AuthService} from "../authentication/services/auth.service";
 		<div *ngIf="showSiteAdminMenu">
     	<ba-sidebar [menuRoutes]="routes"></ba-sidebar>
     </div>
-    <ba-page-top></ba-page-top>
+    <ba-page-top [organizationName]="organizationName"></ba-page-top>
     <div class="al-main">
       <div class="al-content">
         <ba-content-top></ba-content-top>
@@ -32,18 +33,32 @@ import {AuthService} from "../authentication/services/auth.service";
 export class Pages {
 	public routes = _.cloneDeep(MENU);
 	public showSiteAdminMenu = false;
+	public organizationName = "";
 
-  constructor(private authService: AuthService) {
+  constructor(private orgService: OrganizationsService, private authService: AuthService) {
   }
 
   ngOnInit() {
 	  if (this.authService.authState.rolesLoaded) {
 		  this.generateSiteAdminMenu();
+		  this.loadOrganization();
 	  } else {
 		  this.authService.rolesLoaded.subscribe((mode)=> {
 			  this.generateSiteAdminMenu();
+			  this.loadOrganization();
 		  });
 	  }
+  }
+
+  private loadOrganization() {
+	  this.orgService.getMyOrganization().subscribe(
+		  organization => {
+			  this.organizationName = organization.name;
+		  },
+		  err => {
+
+		  }
+	  );
   }
 
   private generateSiteAdminMenu() {

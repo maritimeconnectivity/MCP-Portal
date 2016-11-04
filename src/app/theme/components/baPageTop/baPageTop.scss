@@ -1,5 +1,27 @@
 @import '../../sass/conf/conf';
-@import '../../components/baMsgCenter/baMsgCenter';
+@mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
+  $responsive-unitless: $responsive / ($responsive - $responsive + 1);
+  $dimension: if(unit($responsive) == 'vh', 'height', 'width');
+  $min-breakpoint: $min / $responsive-unitless * 100;
+
+  @media (max-#{$dimension}: #{$min-breakpoint}) {
+    font-size: $min;
+  }
+
+  @if $max {
+    $max-breakpoint: $max / $responsive-unitless * 100;
+
+    @media (min-#{$dimension}: #{$max-breakpoint}) {
+      font-size: $max;
+    }
+  }
+
+  @if $fallback {
+    font-size: $fallback;
+  }
+
+  font-size: $responsive;
+}
 
 .page-top {
   background-color: $sidebar;
@@ -13,6 +35,24 @@
 
   .dropdown-toggle::after {
     display: none;
+  }
+}
+.org-name-wrapper {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  right: 120px;
+  white-space: nowrap;
+  @include responsive-font(1.2vw, 12px, 14px, 14px);
+  font-size: 1vw;
+  top: 0;
+  height: 66px;
+  line-height: 66px;
+  color: #aaa;
+  span.org-name {
+    @include responsive-font(1.7vw, 14px, 18px, 18px);
+    color: #ffffff;
+    font-weight: 300;
   }
 }
 
@@ -29,7 +69,7 @@ a.al-logout {
   white-space: nowrap;
   float: right;
   outline: none !important;
-  line-height: 60px;
+  line-height: 66px;
   cursor: pointer;
 
   span {
@@ -40,12 +80,12 @@ a.al-logout {
 a.al-logo {
   color: $primary;
   display: block;
-  font-size: 20px;
+  @include responsive-font(1.7vw, 14px, 20px, 20px);
   font-family: $font-family;
   white-space: nowrap;
   float: left;
   outline: none !important;
-  line-height: 60px;
+  line-height: 66px;
   cursor: pointer;
 
   &:hover {
@@ -53,7 +93,7 @@ a.al-logo {
   }
 
   span {
-    font-size: 16px;
+    @include responsive-font(1.2vw, 12px, 16px, 16px);
     color: #aaa !important;
   }
 }
@@ -107,7 +147,7 @@ a.collapse-menu-link {
   color: $sidebar-text;
   padding: 0;
   float: left;
-  margin: 11px 18px 0 0;
+  margin: 15px 18px 0 0;
 
   &:hover {
     text-decoration: none;
@@ -178,6 +218,9 @@ a.collapse-menu-link {
 @media screen and (max-width: $resXS) {
   .page-top {
     padding: 0 20px;
+  }
+  .org-name-wrapper {
+    display: none;
   }
 }
 
