@@ -1,5 +1,5 @@
 import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
+import {CommonModule, DatePipe}  from '@angular/common';
 
 import { routing }       from './pages.routing';
 import { NgaModule } from '../theme/nga.module';
@@ -33,7 +33,8 @@ import {VesselsService} from "../backend-api/identity-registry/services/vessels.
     CertificatesService,
     DevicesService,
     UsersService,
-    VesselsService
+    VesselsService,
+	  DatePipe
   ]
 })
 export class PagesModule {

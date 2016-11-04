@@ -8,6 +8,11 @@ import {NavigationHelperService} from "../../../../shared/navigation-helper.serv
 import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
 import {FileHelperService} from "../../../../shared/file-helper.service";
 import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
+import {
+	TableHeader, TableRow, TableCell,
+	TableCellActionButtons, TableActionButton
+} from "../../../../theme/components/mcTable/mcTable.component";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'certificates-table',
@@ -22,28 +27,84 @@ export class CertificatesTableComponent implements OnChanges{
   @Input() isLoading: boolean;
   @Input() certificateTitle: string;
 
+	public tableHeaders: Array<TableHeader>;
+	public tableRows: Array<TableRow>;
   public newCertificateTitle = "Issue new Certificate";
   public certificateViewModels: Array<CertificateViewModel>;
-  public dateFormat = DATE_FORMAT;
   public tableClass:string;
   public onIssueCertificate: Function;
 
-  constructor(private fileHelper: FileHelperService, private navigationHelper: NavigationHelperService, private authService:AuthService, private certificateHelperService: CertificateHelperService, private notificationService: MCNotificationsService) {
-    this.calculateTableClass();
+	public onDownload:Function;
+
+  constructor(private datePipe: DatePipe, private fileHelper: FileHelperService, private navigationHelper: NavigationHelperService, private authService:AuthService, private certificateHelperService: CertificateHelperService, private notificationService: MCNotificationsService) {
     this.onIssueCertificate = this.issueCertificate.bind(this);
   }
+
+	ngOnInit() {
+		if (!this.authService.authState.rolesLoaded) {
+			this.authService.rolesLoaded.subscribe((mode)=> {
+				this.generateHeadersAndRows();
+			});
+		}
+	}
 
   ngOnChanges() {
     if (this.certificates) {
       this.certificateViewModels = this.certificateHelperService.convertCertificatesToViewModels(this.certificates);
       this.sortCertificates();
+	    this.generateHeadersAndRows();
     }
   }
+	private generateHeadersAndRows() {
+		var tableHeaders: Array<TableHeader> = [];
+		var tableRows: Array<TableRow> = [];
 
-  public hasData():boolean {
-	  return this.certificateViewModels && this.certificateViewModels.length > 0;
-  }
+		var tableHeader: TableHeader = {title:'Certificate', class:''};
+		tableHeaders.push(tableHeader);
 
+		tableHeader = {title:'Valid from', class:'nowrap'};
+		tableHeaders.push(tableHeader);
+
+		tableHeader = {title:'Valid to', class:'nowrap'};
+		tableHeaders.push(tableHeader);
+
+		tableHeader = {title:'', class:'table-buttons'};
+		tableHeaders.push(tableHeader);
+
+		for (let certificate of this.certificateViewModels) {
+			var cells:Array<TableCell> = [];
+
+			var tableCell: TableCell = {valueHtml:'Certificate for ' + this.certificateTitle, class:'', truncateNumber:50};
+			cells.push(tableCell);
+
+			tableCell = {valueHtml:this.datePipe.transform(certificate.start, DATE_FORMAT), class:'nowrap', truncateNumber:0};
+			cells.push(tableCell);
+
+			tableCell = {valueHtml:this.datePipe.transform(certificate.end, DATE_FORMAT), class:'nowrap', truncateNumber:0};
+			cells.push(tableCell);
+
+			if (certificate.revoked) {
+				tableCell = {valueHtml:'Revoked (' + certificate.revokeReasonText + ')', class:'red-text', truncateNumber:50};
+				cells.push(tableCell);
+			} else {
+				let actionButtons:Array<TableActionButton> = [];
+				let actionButton:TableActionButton = {buttonClass: 'btn btn-primary btn-raised btn-sm', name: 'Download certificate', onClick:() => {this.download(certificate)}};
+				actionButtons.push(actionButton);
+				if (this.isAdmin()) {
+					actionButton = {buttonClass: 'btn btn-danger btn-raised btn-sm', name: 'Revoke certificate', onClick:() => {this.revoke(certificate)}};
+					actionButtons.push(actionButton);
+				}
+				let tableCellActionButtons: TableCellActionButtons = {valueHtml:'', class:'table-buttons', truncateNumber:0, actionButtons:actionButtons};
+				cells.push(tableCellActionButtons);
+			}
+
+			let tableRow: TableRow = {cells: cells};
+			tableRows.push(tableRow);
+		}
+
+		this.tableHeaders = tableHeaders;
+		this.tableRows = tableRows;
+	}
   private sortCertificates() {
     // We are sorting with longest due date on top
     this.certificateViewModels.sort((obj1: CertificateViewModel, obj2: CertificateViewModel) => {
@@ -89,18 +150,5 @@ export class CertificatesTableComponent implements OnChanges{
   public download(certificate:Certificate) {
     let pemCertificate:PemCertificate = {certificate:certificate.certificate};
     this.fileHelper.downloadPemCertificate(pemCertificate, this.certificateTitle);
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize():void {
-    this.calculateTableClass();
-  }
-
-  private calculateTableClass():void {
-    this.tableClass = (this.isWindowToSmall()?'certificate-table-short':'certificate-table');
-  }
-
-  private isWindowToSmall():boolean {
-    return window.innerWidth <= layoutSizes.resWidthCollapseSidebar;
   }
 }

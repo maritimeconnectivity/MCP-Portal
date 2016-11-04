@@ -55,8 +55,6 @@ export class BaPageTop {
 
   // Hmmm. probably this can be done in css, but I don't know how
   private resizeContent():void {
-	  console.log(this.loggedIn);
-	  console.log(this.orgNameWrapper);
 	  this.doMinimumResize();
 	  // If anything fails, just ignore
 	  try {

@@ -1,31 +1,4 @@
-<div *ngIf="!isLoading && hasData()">
-  <table class="table table-bordered {{tableClass}}">
-    <thead>
-      <tr class="black-muted-bg">
-        <th class="">Certificate</th>
-        <th class="nowrap">Valid from</th>
-        <th class="nowrap">Valid to</th>
-        <th class="table-buttons"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let certificate of certificateViewModels; let i = index">
-        <td class="">{{'Certificate for ' + certificateTitle | truncate:50}}</td>
-        <td class="nowrap">{{certificate.start | date:dateFormat}}</td>
-        <td class="nowrap">{{certificate.end | date:dateFormat}}</td>
-        <td *ngIf="!certificate.revoked" class="table-buttons">
-          <button type="button" class="btn btn-primary btn-raised btn-sm" (click)="download(certificate)">Download certificate</button>
-          <button type="button" *ngIf="isAdmin()" class="btn btn-danger btn-raised btn-sm" (click)="revoke(certificate)">Revoke certificate</button>
-        </td>
-        <td *ngIf="certificate.revoked" class="table-buttons">
-          <span class="red-text">Revoked ({{certificate.revokeReasonText}})</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
-<div class="no-data" *ngIf="!hasData() && !isLoading">No data</div>
+<mc-table [tableHeaders]="tableHeaders" [tableRows]="tableRows" [isLoading]="isLoading"></mc-table>
 <div *ngIf="!isLoading">
   <mc-create-button [title]="newCertificateTitle" [onClick]="onIssueCertificate"></mc-create-button>
 </div>

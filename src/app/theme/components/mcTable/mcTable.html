@@ -7,7 +7,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let tableRow of tableRows; let i = index" (click)="clickedRow(i)" >
-        <td *ngFor="let cell of tableRow.cells" class="{{cell.class}}"><div [innerHTML]="cell.valueHtml | undefined | truncate:cell.truncateNumber | sanitizeHtml"></div></td>
+        <td *ngFor="let cell of tableRow.cells" class="{{cell.class}}">
+          <div *ngIf="!cell.actionButtons" [innerHTML]="cell.valueHtml | undefined | truncate:cell.truncateNumber | sanitizeHtml"></div>
+          <div *ngIf="cell.actionButtons">
+            <button *ngFor="let actionButton of cell.actionButtons" type="button" class="{{actionButton.buttonClass}}" (click)="clickedButton(actionButton)">{{actionButton.name}}</button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -13,6 +13,16 @@ export interface TableCell {
   truncateNumber:number; // 0=no truncate
 }
 
+export interface TableActionButton {
+	buttonClass:string;
+	onClick:Function;
+	name:string;
+}
+
+export interface TableCellActionButtons extends TableCell {
+	actionButtons:Array<TableActionButton>;
+}
+
 export interface TableRow {
   cells:Array<TableCell>;
 }
@@ -27,7 +37,7 @@ export class McTable {
   @Input() tableHeaders: Array<TableHeader>;
   @Input() tableRows: Array<TableRow>;
   @Input() isLoading: boolean;
-  @Input() onRowClick: (index:number) => void;
+  @Input() onRowClick?: (index:number) => void;
   public tableClass:string;
   constructor() {
     this.calculateTableClass();
@@ -53,5 +63,12 @@ export class McTable {
     if (this.onRowClick) {
       this.onRowClick(index);
     }
+  }
+
+  public clickedButton(button:TableActionButton){
+	  if (button.onClick) {
+		  button.onClick()
+	  }
+
   }
 }

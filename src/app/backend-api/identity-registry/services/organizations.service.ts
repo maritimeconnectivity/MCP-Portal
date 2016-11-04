@@ -16,6 +16,18 @@ export class OrganizationsService implements OnInit {
 
   }
 
+	public approveOrganization(orgMrn:string):Observable<Organization> {
+		return this.organizationApi.approveOrganizationUsingGET(orgMrn);
+	}
+
+	public deleteOrganization(orgMrn:string):Observable<any> {
+		// TODO: for now this organization is crucial to the Maritime Cloud, and cannot be deleted
+		if (orgMrn === 'urn:mrn:mcl:org:dma') {
+			throw Error('You cannot delete this organization');
+		}
+		return this.organizationApi.deleteOrgUsingDELETE(orgMrn);
+	}
+
 	public getUnapprovedOrganization(orgMrn:string) : Observable<Organization> {
 		if (this.unapprovedOrganizations) {
 			this.unapprovedOrganizations.forEach(organization => {
@@ -81,6 +93,7 @@ export class OrganizationsService implements OnInit {
     });
   }
 
+  // TODO: explore the possibilities with returning cahced responses. Currently there is 2 calls to myOrg before result is ready. I'm sure there is something in Observable to fix this
   public getMyOrganization(): Observable<Organization> {
     if (this.myOrganization) {
       return Observable.of(this.myOrganization);

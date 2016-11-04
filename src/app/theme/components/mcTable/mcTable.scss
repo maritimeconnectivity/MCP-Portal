@@ -3,12 +3,24 @@
 }
 
 .mc-table {
+  td {
+    vertical-align: middle;
+  }
   td:first-child {
     white-space: nowrap;
   }
 }
 .mc-table-short {
+  td {
+    vertical-align: middle;
+  }
   td:first-child {
     min-width: 200px;
+  }
+}
+.table-buttons {
+  width: 100%;
+  button {
+    margin: 5px !important;
   }
 }
