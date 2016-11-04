@@ -1,0 +1,26 @@
+<div bsModal #confirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="mc-modal modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="cancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">{{title}}</h4>
+      </div>
+      <div class="modal-body">
+        {{description}}
+      </div>
+      <div class="modal-buttons-wrapper">
+        <ul class="btn-list modal-button-list clearfix">
+          <li>
+            <button type="button" class="{{okClass}}" (click)="ok()">{{okTitle}}</button>
+          </li>
+          <li *ngIf="cancelTitle">
+            <button type="button" class="{{cancelClass}}" (click)="cancel()">{{cancelTitle}}</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+

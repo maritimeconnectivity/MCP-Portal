@@ -1,0 +1,28 @@
+@import '../../sass/conf/conf';
+
+.mc-modal {
+  color: #000 !important;
+}
+.btn-default {
+  color: #000 !important;
+  border-color: rgba(#000, 0.5) !important;
+}
+
+.modal-button-list {
+  margin-bottom: 0px !important;
+  margin-top: 0px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: table !important;
+  li {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    margin: 0px !important;
+  }
+}
+
+.modal-buttons-wrapper {
+  border-top: 1px solid #e5e5e5;
+  margin-bottom: 15px;
+  padding-top: 6px;
+}

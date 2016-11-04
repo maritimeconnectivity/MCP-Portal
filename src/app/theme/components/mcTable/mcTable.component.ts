@@ -59,8 +59,8 @@ export class McTable {
     return this.tableRows && this.tableRows.length > 0;
   }
 
-  public clickedRow(index) {
-    if (this.onRowClick) {
+  public clickedCell(index, cell:any) {
+    if (this.onRowClick && !cell.actionButtons) {
       this.onRowClick(index);
     }
   }

@@ -21,3 +21,4 @@ export * from './mcEntityImageList';
 export * from './mcEntityImage';
 export * from './mcFormControl';
 export * from './mcForm';
+export * from './mcModal';
