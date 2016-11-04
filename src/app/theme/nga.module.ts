@@ -66,6 +66,9 @@ import {McEntityImageList} from "./components/mcEntityImageList/mcEntityImageLis
 import {McEntityImage} from "./components/mcEntityImage/mcEntityImage.component";
 import {McFormControl} from "./components/mcFormControl/mcFormControl.component";
 import {McForm} from "./components/mcForm/mcForm.component";
+import {McModal} from "./components/mcModal/mcModal.component";
+import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import {UrlValidator} from "./validators/url.validator";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -92,7 +95,8 @@ const NGA_COMPONENTS = [
 	McEntityImageList,
 	McEntityImage,
 	McFormControl,
-	McForm
+	McForm,
+	McModal
 ];
 
 const NGA_DIRECTIVES = [
@@ -119,7 +123,8 @@ const NGA_SERVICES = [
 
 const NGA_VALIDATORS = [
   EmailValidator,
-  EqualPasswordsValidator
+  EqualPasswordsValidator,
+	UrlValidator
 ];
 
 @NgModule({
@@ -133,6 +138,7 @@ const NGA_VALIDATORS = [
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+	  ModalModule,
   ],
   exports: [
     ...NGA_PIPES,

@@ -11,12 +11,15 @@ import {layoutSizes} from "../theme/theme.constants";
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 import {McHttpService} from "../backend-api/shared/mc-http.service";
 import {NavigationHelperService} from "../shared/navigation-helper.service";
+import {UrlValidator} from "../theme/validators/url.validator";
+import {EqualPasswordsValidator} from "../theme/validators/equalPasswords.validator";
 
 @Component({
   selector: 'apply-org',
   styles: [require('./apply-org.scss')],
   templateUrl: 'apply-org.component.html'
 })
+
 export class ApplyOrgComponent implements OnInit {
 	public class:string;
 	public classWidth:string;
@@ -74,7 +77,7 @@ export class ApplyOrgComponent implements OnInit {
 		organization.name = this.registerForm.value.name;
 		organization.address = this.registerForm.value.address;
 		organization.country = this.registerForm.value.country;
-		organization.email = this.registerForm.value.email;
+		organization.email = this.registerForm.value.emails.email;
 		organization.mrn = this.mrn;
 		organization.url = this.registerForm.value.url;
 		this.applyOrganization(organization);
@@ -85,7 +88,7 @@ export class ApplyOrgComponent implements OnInit {
 		this.organizationsService.applyOrganization(organization).subscribe(
 			organization => {
 				this.isRegistering = false;
-				this.notificationService.generateNotification('Apply', 'You have successfully applied for the Maritime Cloud. An email will be send with confirmation.', MCNotificationType.Info);
+				this.notificationService.generateNotification('Apply', 'You have successfully applied to join the Maritime Cloud. An email will be send with confirmation.', MCNotificationType.Info);
 				this.navigationHelper.takeMeHome();
 			},
 			err => {
@@ -127,19 +130,35 @@ export class ApplyOrgComponent implements OnInit {
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'country', inputType: 'text', labelName: 'Country', placeholder: 'Contry is required', validator:Validators.required};
+		formControlModel = {formGroup: this.registerForm, elementId: 'country', inputType: 'text', labelName: 'Country', placeholder: 'Country is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'email', inputType: 'text', labelName: 'Email', placeholder: 'Email is required', validator:Validators.compose([Validators.required, EmailValidator.validate]), errorText:'Email not valid'};
+		this.generateEmailGroup();
+
+		formControlModel = {formGroup: this.registerForm, elementId: 'url', inputType: 'text', labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid'};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+	}
+
+	// TODO put as generel
+	private generateEmailGroup() {
+		let emails = this.formBuilder.group({});
+		this.registerForm.addControl('emails', emails);
+
+		let formControlModel:McFormControlModel = {formGroup: emails, elementId: 'email', inputType: 'text', labelName: 'Email', placeholder: 'Email is required', validator:Validators.compose([Validators.required, EmailValidator.validate]), errorText:'Email not valid'};
+		let formControlEmail = new FormControl('', formControlModel.validator);
+		emails.addControl(formControlModel.elementId, formControlEmail);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'url', inputType: 'text', labelName: 'URL to homepage', placeholder: ''};
-		formControl = new FormControl('', formControlModel.validator);
-		this.registerForm.addControl(formControlModel.elementId, formControl);
+
+		formControlModel = {formGroup: emails, elementId: 'emailConfirm', inputType: 'text', labelName: 'Confirm email', placeholder: '', validator:Validators.required, errorText:'Emails not identical', requireGroupValid:true};
+		let formControlEmail2 = new FormControl('');
+		emails.addControl(formControlModel.elementId, formControlEmail2);
 		this.formControlModels.push(formControlModel);
+
+		emails.setValidators(Validators.compose([Validators.required, EqualPasswordsValidator.validate(formControlEmail, formControlEmail2)]));
 	}
 }

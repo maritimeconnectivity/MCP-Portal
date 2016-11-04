@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation, Input} from '@angular/core';
-import {FormGroup, ValidatorFn} from "@angular/forms";
+import {FormGroup, ValidatorFn, AbstractControl} from "@angular/forms";
 
 export interface McFormControlModel {
 	labelName: string;
@@ -11,6 +11,7 @@ export interface McFormControlModel {
 	errorText?: string;
 	pattern?: string;
 	isDisabled?:boolean;
+	requireGroupValid?:boolean;
 }
 
 @Component({
@@ -29,5 +30,13 @@ export class McFormControl {
 
 	ngOnInit() {
 		this.pattern = (this.formControlModel.pattern?this.formControlModel.pattern:'.*');
+	}
+
+	public isValid():boolean {
+		let isGroupValid = true;
+		if (this.formControlModel.requireGroupValid) {
+			isGroupValid = this.formControlModel.formGroup.valid;
+		}
+		return !this.formControlModel.validator || (this.formControlModel.formGroup.controls[this.formControlModel.elementId].valid && isGroupValid);
 	}
 }
