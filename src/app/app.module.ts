@@ -35,7 +35,6 @@ import {SimpleNotificationsModule} from "angular2-notifications";
 import {MrnHelperService} from "./shared/mrn-helper.service";
 import {ApplyOrgModule} from "./apply-org/apply-org.module";
 import {SiteAdminAuthGuard} from "./authentication/services/site-admin-guard.service";
-
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,

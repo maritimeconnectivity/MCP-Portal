@@ -15,7 +15,7 @@ export class McHttpService extends Http {
   }
 
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    return this.prepareService(options).flatMap(optionsMap => { return this.intercept(super.request(url, optionsMap))});
+    return this.prepareService(options).flatMap(optionsMap => { return this.interceptError(super.request(url, optionsMap))}).flatMap(response => { return this.interceptResponse(response)});
   }
 
   // Setting the http headers and if needed refreshes the access token
@@ -40,7 +40,7 @@ export class McHttpService extends Http {
   }
 
   // Intercepts errors from the http call
-  private intercept(observable: Observable<Response>): Observable<Response> {
+  private interceptError(observable: Observable<Response>): Observable<Response> {
     return observable.catch((err, source) => {
       if (err.status  == 401 ) {
         AuthService.handle401();
@@ -50,5 +50,17 @@ export class McHttpService extends Http {
       }
     });
   }
+
+	private interceptResponse(response: Response): Observable<Response> {
+		return Observable.create(observer => {
+			// If we have to response text the subsequent calls in the auto-generated code will fail, because they just do a response.toJson()
+			if (!response.text() || response.text().length == 0) {
+				if (response.status >= 200 && response.status < 300) {
+					response.status = 204;
+				}
+			}
+			observer.next(response);
+		});
+	}
 
 }
