@@ -31,6 +31,8 @@ export class SpecificationDetailsComponent {
   public onCreate: Function;
   public onGotoDesign: Function;
   public onGotoInstance: Function;
+	public showModal:boolean = false;
+	public modalDescription:string;
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
@@ -56,17 +58,6 @@ export class SpecificationDetailsComponent {
 
   public downloadDoc() {
     this.fileHelperService.downloadDoc(this.specification.specAsDoc);
-  }
-
-  public delete() {
-    this.specificationsService.deleteSpecification(this.specification).subscribe(
-      () => {
-        this.navigationHelperService.navigateToOrgSpecification('', '');
-      },
-      err => {
-        this.notifications.generateNotification('Error', 'Error when trying to delete specification', MCNotificationType.Error, err);
-      }
-    );
   }
 
   private gotoDesign(index:number) {
@@ -96,12 +87,6 @@ export class SpecificationDetailsComponent {
       }
     );
   }
-
-  public isAdmin():boolean {
-	  // TODO should this  all admins?
-	  return this.authService.authState.isSiteAdmin();
-  }
-
 
   private loadInstances() {
     this.instancesService.getInstancesForSpecification(this.specification.specificationId, this.specification.version).subscribe(
@@ -136,4 +121,37 @@ export class SpecificationDetailsComponent {
   private gotoInstance(index:number) {
     this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
+
+	private isAdmin():boolean {
+		return this.authService.authState.isAdmin();
+	}
+
+	public shouldDisplayDelete():boolean {
+		return this.isAdmin() && !this.isLoadingDesigns && !this.hasDesigns();
+	}
+
+	private hasDesigns():boolean {
+		return this.designs && this.designs.length > 0;
+	}
+
+	private delete() {
+		this.modalDescription = 'Do you want to delete the specification?';
+		this.showModal = true;
+	}
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public deleteForSure() {
+		this.isLoadingSpecification = true;
+		this.showModal = false;
+		this.specificationsService.deleteSpecification(this.specification).subscribe(
+			() => {
+				this.navigationHelperService.navigateToOrgSpecification('', '');
+			},
+			err => {
+				this.notifications.generateNotification('Error', 'Error when trying to delete specification', MCNotificationType.Error, err);
+			}
+		);
+	}
 }

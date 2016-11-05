@@ -25,6 +25,8 @@ export class InstanceDetailsComponent {
   public isLoadingDesigns: boolean;
   public isLoadingInstance: boolean;
   public onGotoDesign: Function;
+	public showModal:boolean = false;
+	public modalDescription:string;
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
@@ -43,22 +45,6 @@ export class InstanceDetailsComponent {
 
   public downloadDoc() {
     this.fileHelperService.downloadDoc(this.instance.instanceAsDoc);
-  }
-
-  public delete() {
-    this.instancesService.deleteInstance(this.instance).subscribe(
-      () => {
-        this.navigationHelperService.navigateToOrgInstance('', '');
-      },
-      err => {
-        this.notifications.generateNotification('Error', 'Error when trying to delete instance', MCNotificationType.Error, err);
-      }
-    );
-  }
-
-  public isAdmin():boolean {
-	  // TODO should this  all admins?
-	  return this.authService.authState.isSiteAdmin();
   }
 
   private loadInstance() {
@@ -114,7 +100,35 @@ export class InstanceDetailsComponent {
     try {
       this.navigationHelperService.navigateToOrgDesign(linkValue[0], linkValue[1]);
     } catch ( error ) {
-      this.notifications.generateNotification('Error', 'Error when trying to go to design', MCNotificationType.Error, error);
+      this.notifications.generateNotification('Error', 'Error when trying to go to instance', MCNotificationType.Error, error);
     }
   }
+	private isAdmin():boolean {
+		return this.authService.authState.isAdmin();
+	}
+
+	public shouldDisplayDelete():boolean {
+		return this.isAdmin();
+	}
+
+	private delete() {
+		this.modalDescription = 'Do you want to delete the design?';
+		this.showModal = true;
+	}
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public deleteForSure() {
+		this.isLoadingInstance = true;
+		this.showModal = false;
+		this.instancesService.deleteInstance(this.instance).subscribe(
+			() => {
+				this.navigationHelperService.navigateToOrgInstance('', '');
+			},
+			err => {
+				this.notifications.generateNotification('Error', 'Error when trying to delete instance', MCNotificationType.Error, err);
+			}
+		);
+	}
 }

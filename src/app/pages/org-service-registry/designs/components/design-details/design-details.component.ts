@@ -30,6 +30,8 @@ export class DesignDetailsComponent {
   public onCreate: Function;
   public onGotoSpec: Function;
   public onGotoInstance: Function;
+	public showModal:boolean = false;
+	public modalDescription:string;
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
 
@@ -89,23 +91,6 @@ export class DesignDetailsComponent {
     );
   }
 
-  public delete() {
-    this.designsService.deleteDesign(this.design).subscribe(
-      () => {
-        this.navigationHelperService.navigateToOrgDesign('', '');
-      },
-      err => {
-        this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
-      }
-    );
-  }
-
-  public isAdmin():boolean {
-    // TODO should this  all admins?
-    return this.authService.authState.isSiteAdmin();
-  }
-
-
   // TODO this should be deleted and taken directly from the design-model when service registry has proper data. from design.specifications
 
   private loadSpecifications() {
@@ -149,4 +134,38 @@ export class DesignDetailsComponent {
   private gotoInstance(index:number) {
     this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
+
+
+	private isAdmin():boolean {
+		return this.authService.authState.isAdmin();
+	}
+
+	public shouldDisplayDelete():boolean {
+		return this.isAdmin() && !this.isLoadingInstances && !this.hasInstances();
+	}
+
+	private hasInstances():boolean {
+		return this.instances && this.instances.length > 0;
+	}
+
+	private delete() {
+		this.modalDescription = 'Do you want to delete the design?';
+		this.showModal = true;
+	}
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public deleteForSure() {
+		this.isLoadingDesign = true;
+		this.showModal = false;
+		this.designsService.deleteDesign(this.design).subscribe(
+			() => {
+				this.navigationHelperService.navigateToOrgDesign('', '');
+			},
+			err => {
+				this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
+			}
+		);
+	}
 }

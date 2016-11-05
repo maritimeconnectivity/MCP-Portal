@@ -9,7 +9,7 @@
         <li *ngIf="design.designAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
-        <li *ngIf="isAdmin()">
+        <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Design</button>
         </li>
       </ul>
@@ -21,3 +21,4 @@
     </ba-card>
   </div>
 </div>
+<mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete organization'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>
