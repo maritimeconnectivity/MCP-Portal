@@ -23,11 +23,15 @@
   margin-top: 10px;
   margin-bottom: 0px;
   width: 100%;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .entity-image-content {
   color: rgba($default-text, 0.75);
   margin-top: 5px;
   width: 100%;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

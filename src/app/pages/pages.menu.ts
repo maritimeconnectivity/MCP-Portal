@@ -13,7 +13,7 @@ export const PAGES_MENU = [
             order: 0
           }
         }
-      },/*
+      },
       {
         path: 'organizations',
         data: {
@@ -25,7 +25,7 @@ export const PAGES_MENU = [
             order: 1
           }
         }
-      },*/
+      },
       {
         path: 'ir',
         data: {

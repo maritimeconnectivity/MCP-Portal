@@ -121,4 +121,8 @@ export class OrganizationsService implements OnInit {
   public getOrganization(orgMrn: string): Observable<Organization> {
     return this.organizationApi.getOrganizationUsingGET(orgMrn);
   }
+
+	public getAllOrganizations () : Observable<Array<Organization>> {
+		return this.organizationApi.getOrganizationUsingGET2();
+	}
 }
