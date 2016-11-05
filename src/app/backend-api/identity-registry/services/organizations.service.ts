@@ -29,26 +29,30 @@ export class OrganizationsService implements OnInit {
 	}
 
 	public getUnapprovedOrganization(orgMrn:string) : Observable<Organization> {
+		var foundOrganization:Organization;
 		if (this.unapprovedOrganizations) {
 			this.unapprovedOrganizations.forEach(organization => {
 				if (organization.mrn === orgMrn) {
-					return Observable.of(organization);
+					foundOrganization = organization;
 				}
 			});
+		}
+		if (foundOrganization) {
+			return Observable.of(foundOrganization);
 		}
 		// Should never come to this
 		return Observable.create(observer => {
 			this.organizationApi.getUnapprovedOrganizationsUsingGET().subscribe(
 				organizations => {
 					this.unapprovedOrganizations = organizations;
-					var forundOrganization = null;
+					var foundOrganization = null;
 					this.unapprovedOrganizations.forEach(organization => {
 						if (organization.mrn === orgMrn) {
-							forundOrganization = organization;
+							foundOrganization = organization;
 						}
 					});
-					if (forundOrganization) {
-						observer.next(forundOrganization);
+					if (foundOrganization) {
+						observer.next(foundOrganization);
 					} else {
 						observer.error(new Error("Unknown error occured"));
 					}

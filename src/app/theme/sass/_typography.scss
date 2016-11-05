@@ -170,6 +170,16 @@ h5 {
 
 }
 
+.important-notice {
+  font-weight: $font-normal;
+  margin-top: 20px;
+  color: $default-text;
+  line-height: 14px;
+  font-size: 14px;
+  padding-left: 11px;
+  border-left: 4px solid $warning-bg;
+}
+
 .lists-widget {
 
   font-weight: $font-normal;

@@ -13,10 +13,10 @@
       <div class="modal-buttons-wrapper">
         <ul class="btn-list modal-button-list clearfix">
           <li>
-            <button type="button" class="{{okClass}}" (click)="ok()">{{okTitle}}</button>
+            <button type="button" class="mc-modal-button {{okClass}}" (click)="ok()">{{okTitle}}</button>
           </li>
           <li *ngIf="cancelTitle">
-            <button type="button" class="{{cancelClass}}" (click)="cancel()">{{cancelTitle}}</button>
+            <button type="button" class="mc-modal-button {{cancelClass}}" (click)="cancel()">{{cancelTitle}}</button>
           </li>
         </ul>
       </div>

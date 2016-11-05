@@ -14,6 +14,9 @@ export class UsersService implements OnInit {
   ngOnInit() {
 
   }
+	public createUser(orgMrn: string, user: User) : Observable<User> {
+		return this.userApi.createUserUsingPOST(orgMrn, user);
+	}
 
   public issueNewCertificate(userMrn:string) : Observable<PemCertificate> {
     return Observable.create(observer => {

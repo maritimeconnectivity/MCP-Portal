@@ -8,10 +8,13 @@ export class MrnHelperService {
 	constructor(private authService: AuthService) {
 	}
 
-	private orgShortName():string {
-		let orgMrn = this.authService.authState.orgMrn;
+	private orgShortNameFromMrn(orgMrn:string){
 		var orgSplit = orgMrn.split(':');
 		return orgSplit[orgSplit.length-1];
+	}
+
+	private orgShortName():string {
+		return this.orgShortNameFromMrn(this.authService.authState.orgMrn);
 	}
 
 	public mrnPattern():string {
@@ -20,7 +23,6 @@ export class MrnHelperService {
 	public mrnPatternError():string {
 		return 'It should contain at least 3 characters and only a-z and 0-9';
 	}
-
 
 	public mrnMaskForVessel():string {
 		return this.mrnPreFix + 'vessel:' + this.orgShortName() + ':';
@@ -32,6 +34,10 @@ export class MrnHelperService {
 
 	public mrnMaskForOrganization():string {
 		return this.mrnPreFix + 'org:';
+	}
+
+	public mrnMaskForUserOfOrg(orgMrn:string):string {
+		return this.mrnPreFix + 'user:' + this.orgShortNameFromMrn(orgMrn) + ':';
 	}
 
 	public mrnMaskForUser():string {

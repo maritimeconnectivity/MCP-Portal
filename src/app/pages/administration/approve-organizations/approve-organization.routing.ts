@@ -14,11 +14,11 @@ const routes: Routes = [
         path: '',
         component: ApproveListComponent
       },
-      {
-        path: ':id',
-        component: ApproveDetailsComponent,
-        data:{breadcrumb: 'Details'}
-      }
+	    {
+		    path: ':id',
+		    component: ApproveDetailsComponent,
+		    data:{breadcrumb: 'Details'}
+	    }
     ]
   }
 ];

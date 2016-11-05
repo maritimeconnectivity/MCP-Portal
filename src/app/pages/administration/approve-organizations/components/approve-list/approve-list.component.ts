@@ -29,7 +29,7 @@ export class ApproveListComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-	  this.onGotoDetails = this.gotoInstance.bind(this);
+	  this.onGotoDetails = this.gotoDetails.bind(this);
     this.loadOrganizations();
   }
 
@@ -47,8 +47,8 @@ export class ApproveListComponent implements OnInit {
 		);
 	}
 
-	private gotoInstance(index:number) {
-		this.router.navigate([this.organizations[index].mrn], {relativeTo: this.route });
+	private gotoDetails(index:number) {
+		this.approve(this.organizations[index]);
 	}
 
 	private generateHeadersAndRows() {
@@ -99,7 +99,7 @@ export class ApproveListComponent implements OnInit {
 	}
 
 	private approve(organization:Organization) {
-		console.log("Approve: ", organization);
+		this.router.navigate([organization.mrn], {relativeTo: this.route });
 	}
 
 	private organizationToDelete:Organization;
@@ -112,7 +112,7 @@ export class ApproveListComponent implements OnInit {
 		this.showModal = false;
 	}
 
-	private deleteForSure(organization:Organization) {
+	private deleteForSure() {
 		this.isLoading = true;
 		this.showModal = false;
 		this.orgService.deleteOrganization(this.organizationToDelete.mrn).subscribe(

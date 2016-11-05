@@ -95,7 +95,12 @@ export class AuthService implements OnInit {
             } else {
               throw new Error('Keycloak token parse error');
             }
-
+	          keycloakAuth.onAuthLogout = function() {
+		          console.log("USER LOGGED OUT");
+	          };
+	          keycloakAuth.onTokenExpired = function() {
+		          console.log("TOKEN EXPIRED LOGGED OUT");
+	          };
           } else {
             AuthService.staticAuth.loggedIn = false;
           }
