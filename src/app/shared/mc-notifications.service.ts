@@ -20,9 +20,15 @@ export class MCNotificationsService {
   public notifications = this.notificationObserver.asObservable();
 
   public generateNotification(title:string, message:string, type: MCNotificationType, originalError?:any) {
-    this.notificationObserver.next({title:title, message:message, type:type});
     if (originalError) {
       this.errorLogger.logError(originalError, false);
+	    try {
+		    let extraMessage = "\n\nError was: " + originalError.json().error + ",\n" + originalError.json().message;
+		    message += extraMessage;
+	    } catch (err) {
+
+	    }
     }
+	  this.notificationObserver.next({title:title, message:message, type:type});
   }
 }
