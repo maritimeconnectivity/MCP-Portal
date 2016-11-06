@@ -14,6 +14,17 @@ export class UsersService implements OnInit {
   ngOnInit() {
 
   }
+
+	public getUser(userMrn:string): Observable<User> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.userApi.getUserUsingGET(orgMrn, userMrn);
+	}
+
+	public getUsers(): Observable<Array<User>> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.userApi.getOrganizationUsersUsingGET(orgMrn);
+	}
+
 	public createUser(orgMrn: string, user: User) : Observable<User> {
 		return this.userApi.createUserUsingPOST(orgMrn, user);
 	}

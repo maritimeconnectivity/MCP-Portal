@@ -47,6 +47,14 @@ export const PAGES_MENU = [
 		        }
 	        },
 	        {
+		        path: 'users',
+		        data: {
+			        menu: {
+				        title: 'Users',
+			        }
+		        }
+	        },
+	        {
 		        path: 'vessels',
 		        data: {
 			        menu: {

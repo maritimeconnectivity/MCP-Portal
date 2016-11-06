@@ -25,10 +25,10 @@ export class DeviceDetailsComponent {
 
 	ngOnInit() {
 		this.entityType = CertificateEntityType.Device;
-		this.loadVessel();
+		this.loadDevice();
 	}
 
-	private loadVessel() {
+	private loadDevice() {
 		this.isLoading = true;
 		let mrn = this.route.snapshot.params['id'];
 		this.devicesService.getDevice(mrn).subscribe(

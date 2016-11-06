@@ -6,6 +6,7 @@ import { routing }       from './org-identity-registry.routing';
 import { OrgIdentityRegistryComponent } from './org-identity-registry.component';
 import VesselsModule from "./vessels/vessels.module";
 import DevicesModule from "./devices/devices.module";
+import UsersModule from "./users/users.module";
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import DevicesModule from "./devices/devices.module";
     NgaModule,
 	  VesselsModule,
 	  DevicesModule,
+	  UsersModule,
     routing
   ],
   declarations: [
