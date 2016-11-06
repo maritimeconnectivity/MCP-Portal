@@ -7,6 +7,7 @@ import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model
 import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
 import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'vessel-list',
@@ -70,15 +71,20 @@ export class VesselListComponent implements OnInit {
   private generateEntityImageList() {
 	  this.entityImageList = [];
 	  if (this.vessels) {
-		  let imageSrc = 'assets/img/no_ship.png';
 		  this.vessels.forEach(vessel => {
-			    this.entityImageList.push({imageSource:imageSrc, entityId:vessel.mrn, title:vessel.name});
+			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(vessel), entityId:vessel.mrn, title:vessel.name});
 			  }
 		  );
 	  }
 	  if (this.authService.authState.isAdmin()) {
-		  this.entityImageList.push({imageSource:'', entityId:this.KEY_NEW, title:'Register new Vessel', isAdd:true});
+		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Vessel', isAdd:true});
 	  }
   }
 
+	private createImgObservable(vessel:Vessel):Observable<string> {
+		let imageSrc = 'assets/img/no_ship.png';
+		return Observable.create(observer => {
+			observer.next(imageSrc);
+		});
+	}
 }

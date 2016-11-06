@@ -41,7 +41,8 @@ import {
   BaKameleonPicturePipe,
   BaProfilePicturePipe,
   TruncatePipe,
-  SanitizeHtmlPipe,
+	SanitizeHtmlPipe,
+	SanitizeUrlPipe,
 	UndefinedPipe
 } from './pipes';
 
@@ -111,7 +112,8 @@ const NGA_PIPES = [
   BaKameleonPicturePipe,
   BaProfilePicturePipe,
   TruncatePipe,
-  SanitizeHtmlPipe,
+	SanitizeHtmlPipe,
+	SanitizeUrlPipe,
 	UndefinedPipe
 ];
 

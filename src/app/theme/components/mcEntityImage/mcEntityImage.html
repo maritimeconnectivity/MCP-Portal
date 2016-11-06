@@ -1,5 +1,8 @@
 <div class="entity-image-container">
-    <div class="{{imageDivClass}}"><img class="{{imageClass}} {{entityImage.imageClass}}" src="{{entityImage.imageSource}}"/></div>
+    <div class="logo-image-div">
+      <img class="logo-image {{imageClass}} {{entityImage.imageClass}}" [attr.src]="imageSource | sanitizeUrl" *ngIf="imageSource"/>
+      <div class="logo-image"><sk-fading-circle [isRunning]="!imageSource" ></sk-fading-circle></div>
+    </div>
     <h5 class="entity-image-name">{{entityImage.title | undefined}}</h5>
     <div *ngIf="entityImage.htmlContent" class="entity-image-content" [innerHTML]="entityImage.htmlContent | undefined | sanitizeHtml"></div>
 </div>

@@ -7,6 +7,7 @@ import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mc
 import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
 import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'device-list',
@@ -70,15 +71,20 @@ export class DeviceListComponent implements OnInit {
   private generateEntityImageList() {
 	  this.entityImageList = [];
 	  if (this.devices) {
-		  let imageSrc = 'assets/img/no_device.svg';
 		  this.devices.forEach(device => {
-			    this.entityImageList.push({imageSource:imageSrc, entityId:device.mrn, title:device.name});
+			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(device), entityId:device.mrn, title:device.name});
 			  }
 		  );
 	  }
 	  if (this.authService.authState.isAdmin()) {
-		  this.entityImageList.push({imageSource:'', entityId:this.KEY_NEW, title:'Register new Device', isAdd:true});
+		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Device', isAdd:true});
 	  }
   }
 
+	private createImgObservable(device:Device):Observable<string> {
+		let imageSrc = 'assets/img/no_device.svg';
+		return Observable.create(observer => {
+			observer.next(imageSrc);
+		});
+	}
 }

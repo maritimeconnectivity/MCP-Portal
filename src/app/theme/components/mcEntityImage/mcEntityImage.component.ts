@@ -1,7 +1,8 @@
 import {Component, ViewEncapsulation, Input, Output, EventEmitter} from '@angular/core';
+import {Observable} from "rxjs";
 
 export interface EntityImageModel {
-	imageSource:string;
+	imageSourceObservable:Observable<string>;
 	imageClass?:string;
 	entityId:string;
 	title:string;
@@ -18,17 +19,23 @@ export interface EntityImageModel {
 export class McEntityImage {
   @Input() entityImage:EntityImageModel;
 	public imageClass:string;
-	public imageDivClass:string;
+	public imageSource:string;
   constructor() {
   }
 
 	ngOnInit() {
-		this.imageClass = 'entity-image';
-		this.imageDivClass = '';
+		this.imageClass = '';
 		if (this.entityImage.isAdd) {
 			this.imageClass = 'entity-image-add';
-			this.imageDivClass = 'entity-image';
-			this.entityImage.imageSource = 'assets/img/add.png';
+			this.imageSource = 'assets/img/add.png';
+		} else {
+			this.entityImage.imageSourceObservable.subscribe(
+				source => {
+					this.imageSource = source;
+				},
+				err => {
+				}
+			);
 		}
 	}
 }

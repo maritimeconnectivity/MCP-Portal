@@ -11,13 +11,11 @@
     opacity: 0.6;
   }
 }
+
 .entity-image-add {
-  height: 80px;
-  margin-top: 30px;
+  max-height: 80px !important;
 }
-.entity-image {
-  height: 140px;
-}
+
 .entity-image-name {
   color: $default-text;
   margin-top: 10px;

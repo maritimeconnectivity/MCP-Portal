@@ -15,6 +15,7 @@ import {CertificatesService} from "../backend-api/identity-registry/services/cer
 import {DevicesService} from "../backend-api/identity-registry/services/devices.service";
 import {UsersService} from "../backend-api/identity-registry/services/users.service";
 import {VesselsService} from "../backend-api/identity-registry/services/vessels.service";
+import {LogoService} from "../backend-api/identity-registry/services/logo.service";
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import {VesselsService} from "../backend-api/identity-registry/services/vessels.
     DevicesService,
     UsersService,
     VesselsService,
+	  LogoService,
 	  DatePipe
   ]
 })

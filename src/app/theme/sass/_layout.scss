@@ -27,6 +27,29 @@ main {
   }
 }
 
+.logo-image-no-center {
+  max-width:100%;
+  max-height: 140px;
+  width: auto;
+  height: auto;
+}
+
+.logo-image-div {
+  vertical-align: middle;
+  height: 140px;
+  position: relative
+}
+.logo-image {
+  max-width:100%;
+  max-height:100%;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   html {
     overflow: hidden;

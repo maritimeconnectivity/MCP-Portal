@@ -6,6 +6,7 @@ import {ServicecontrollerApi} from "./autogen/api/ServicecontrollerApi";
 import {DevicecontrollerApi} from "./autogen/api/DevicecontrollerApi";
 import {UsercontrollerApi} from "./autogen/api/UsercontrollerApi";
 import {VesselcontrollerApi} from "./autogen/api/VesselcontrollerApi";
+import {LogocontrollerApi} from "./autogen/api/LogocontrollerApi";
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import {VesselcontrollerApi} from "./autogen/api/VesselcontrollerApi";
     DevicecontrollerApi,
     ServicecontrollerApi,
     UsercontrollerApi,
-    VesselcontrollerApi
+    VesselcontrollerApi,
+	  LogocontrollerApi
   ]
 })
 export class IdentityRegistryApiModule { }

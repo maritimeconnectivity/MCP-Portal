@@ -114,6 +114,10 @@ export class AuthService implements OnInit {
     });
   }
 
+  isMyOrg(orgMrn:string){
+	  return this.authState.orgMrn === orgMrn;
+  }
+
   loginUrl(): string {
     return "/login";
   }

@@ -5,6 +5,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
 import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
 import {AuthService} from "../../../../authentication/services/auth.service";
+import {Observable} from "rxjs";
+import {LogoService} from "../../../../backend-api/identity-registry/services/logo.service";
 
 @Component({
   selector: 'organization-list',
@@ -16,7 +18,7 @@ export class OrganizationListComponent {
 	private organizations:Array<Organization>;
 	public entityImageList: Array<EntityImageModel>;
   public isLoading: boolean;
-  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private logoService: LogoService, private authService: AuthService, private router:Router, private route:ActivatedRoute, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
   }
 
   ngOnInit() {
@@ -53,16 +55,28 @@ export class OrganizationListComponent {
   private generateEntityImageList() {
 	  this.entityImageList = [];
 	  if (this.organizations) {
-		  let imageSrc = 'assets/img/no_organization.png';
 		  this.organizations.forEach(organization => {
 			    var htmlContent = '&nbsp;';
 			    if (organization.email) {
 				    htmlContent = "<a href='mailto:" + organization.email + "'>" + organization.email + "</a>";
 			    }
-			    this.entityImageList.push({imageSource:imageSrc, entityId:organization.mrn, title:organization.name, htmlContent:htmlContent});
+			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(organization), entityId:organization.mrn, title:organization.name, htmlContent:htmlContent});
 			  }
 		  );
 	  }
+  }
+  private createImgObservable(organization:Organization):Observable<string> {
+	  let imageSrc = 'assets/img/no_organization.png';
+	  return Observable.create(observer => {
+		  this.logoService.getLogoForOrganization(organization.mrn).subscribe(
+			  logo => {
+				  observer.next(URL.createObjectURL(new Blob([logo])));
+			  },
+			  err => {
+				  observer.next(imageSrc);
+			  }
+		  );
+	  });
   }
 
 }

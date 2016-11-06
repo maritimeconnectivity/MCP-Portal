@@ -1,1 +1,2 @@
-<mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+<img style="margin-bottom: 10px;" class="logo-image-no-center" [attr.src]="logo | sanitizeUrl" *ngIf="logo">
+<mc-label-value-table [isLoading]="isLoadingOrgAndLogo" [labelValues]="labelValues"></mc-label-value-table>

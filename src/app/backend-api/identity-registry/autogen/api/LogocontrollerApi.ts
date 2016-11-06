@@ -1,3 +1,4 @@
+// NOTE: be carefull when autogenerating. This file is changed manually
 /**
  * Maritime Cloud Identity Registry API
  * Maritime Cloud Identity Registry API can be used for managing entities in the Maritime Cloud.
@@ -22,13 +23,14 @@
  * limitations under the License.
  */
 
-import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams} from '@angular/http';
+import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams, ResponseContentType} from '@angular/http';
 import {Injectable, Optional} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 /* tslint:disable:no-unused-variable member-ordering */
 
 'use strict';
+// NOTE: be carefull when autogenerating. This file is changed manually
 
 @Injectable()
 export class LogocontrollerApi {
@@ -283,13 +285,14 @@ export class LogocontrollerApi {
             headers: headerParams,
             search: queryParameters
         };
-
+        // NOTE: be carefull when autogenerating. This file is changed manually
+				requestOptions.responseType = ResponseContentType.Blob;
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-                    return response.json();
+	                return response.blob();
                 }
             });
     }
