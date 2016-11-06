@@ -34,7 +34,7 @@ export class VesselDetailsComponent {
   }
 
   public isAdmin() {
-	  return this.authService.authState.isAdmin;
+	  return this.authService.authState.isAdmin();
   }
 
 	private loadVessel() {
