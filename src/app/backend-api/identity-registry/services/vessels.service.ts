@@ -7,7 +7,6 @@ import {VesselcontrollerApi} from "../autogen/api/VesselcontrollerApi";
 
 @Injectable()
 export class VesselsService {
-  private chosenVessel: Vessel;
   constructor(private vesselApi: VesselcontrollerApi, private authService: AuthService) {
   }
 
@@ -16,53 +15,23 @@ export class VesselsService {
 		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn);
 	}
 
-	public getVessel(vesselMrn:string): Observable<Vessel> {
-		if (this.chosenVessel && this.chosenVessel.mrn === vesselMrn) {
-			return Observable.of(this.chosenVessel);
-		}
+	public deleteVessel(vesselMrn:string):Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.deleteVesselUsingDELETE(orgMrn, vesselMrn);
+	}
 
-		return Observable.create(observer => {
-			let orgMrn = this.authService.authState.orgMrn;
-			this.vesselApi.getVesselUsingGET(orgMrn, vesselMrn).subscribe(
-				vessel => {
-					this.chosenVessel = vessel;
-					observer.next(vessel);
-				},
-				err => {
-					observer.error(err);
-				}
-			);
-		});
+	public getVessel(vesselMrn:string): Observable<Vessel> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.getVesselUsingGET(orgMrn, vesselMrn);
 	}
 
 	public createVessel(vessel:Vessel) :Observable<Vessel>{
-		return Observable.create(observer => {
-			let orgMrn = this.authService.authState.orgMrn;
-
-			this.vesselApi.createVesselUsingPOST(orgMrn, vessel).subscribe(
-				vessel => {
-					this.chosenVessel = vessel;
-					observer.next(vessel);
-				},
-				err => {
-					observer.error(err);
-				}
-			);
-		});
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.createVesselUsingPOST(orgMrn, vessel);
 	}
 
   public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {
-    return Observable.create(observer => {
-      let orgMrn = this.authService.authState.orgMrn;
-      this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn).subscribe(
-        pemCertificate => {
-          this.chosenVessel = null; // We need to reload now we have a new certificate
-          observer.next(pemCertificate);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
+	  let orgMrn = this.authService.authState.orgMrn;
+    return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);
   }
 }

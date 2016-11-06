@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{titleName}}" baCardClass="table-panel">
-      <organization-details-table [isLoading]="isLoading" [organization]="organization"></organization-details-table>
+      <organization-details-table (onLogoLoaded)="logoLoaded()" [isLoading]="isLoading" [organization]="organization"></organization-details-table>
     </ba-card>
 
-    <div *ngIf="organization">
+    <div *ngIf="organization && !isLoading">
       <ba-card title="Certificates for {{organization.name}}" baCardClass="table-panel">
         <certificates-table [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="certificateTitle" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
       </ba-card>

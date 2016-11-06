@@ -7,7 +7,6 @@ import {UsercontrollerApi} from "../autogen/api/UsercontrollerApi";
 
 @Injectable()
 export class UsersService implements OnInit {
-  private chosenUser: User;
   constructor(private userApi: UsercontrollerApi, private authService: AuthService) {
   }
 
@@ -30,17 +29,7 @@ export class UsersService implements OnInit {
 	}
 
   public issueNewCertificate(userMrn:string) : Observable<PemCertificate> {
-    return Observable.create(observer => {
-      let orgMrn = this.authService.authState.orgMrn;
-      this.userApi.newUserCertUsingGET(orgMrn, userMrn).subscribe(
-        pemCertificate => {
-          this.chosenUser = null; // We need to reload now we have a new certificate
-          observer.next(pemCertificate);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
+	  let orgMrn = this.authService.authState.orgMrn;
+    return this.userApi.newUserCertUsingGET(orgMrn, userMrn);
   }
 }

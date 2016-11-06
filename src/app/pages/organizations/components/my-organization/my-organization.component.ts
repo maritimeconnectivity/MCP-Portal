@@ -30,7 +30,6 @@ export class MyOrganization implements OnInit {
         this.organization = organization;
         this.titleName = organization.name;
         this.certificateTitle = organization.name;
-        this.isLoading = false;
       },
       err => {
         this.isLoading = false;
@@ -39,5 +38,8 @@ export class MyOrganization implements OnInit {
     );
   }
 
+  public logoLoaded() {
+	  this.isLoading = false;
+  }
 
 }

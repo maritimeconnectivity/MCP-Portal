@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
 import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {VesselViewModel} from "../../view-models/VesselViewModel";
 import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'vessel-details',
@@ -21,13 +22,19 @@ export class VesselDetailsComponent {
 	public vessel:Vessel;
 	public entityType: CertificateEntityType;
 	public certificateTitle: string;
-  constructor(private route: ActivatedRoute, private vesselsService: VesselsService, private notifications:MCNotificationsService) {
+	public showModal:boolean = false;
+	public modalDescription:string;
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router:Router, private vesselsService: VesselsService, private notifications:MCNotificationsService) {
 
   }
 
   ngOnInit() {
 	  this.entityType = CertificateEntityType.Vessel;
 	  this.loadVessel();
+  }
+
+  public isAdmin() {
+	  return this.authService.authState.isAdmin;
   }
 
 	private loadVessel() {
@@ -59,5 +66,27 @@ export class VesselDetailsComponent {
 				this.labelValues.push({label: attributeViewModel.attributeNameText, valueHtml: attributeViewModel.attributeValue});
 			});
 		}
+	}
+
+	private delete() {
+		this.modalDescription = 'Are you sure you want to delete the vessel?';
+		this.showModal = true;
+	}
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public deleteForSure() {
+		this.isLoading = true;
+		this.showModal = false;
+		this.vesselsService.deleteVessel(this.vessel.mrn).subscribe(
+			() => {
+				this.router.navigate(['../'], {relativeTo: this.route });
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to delete the vessel', MCNotificationType.Error, err);
+			}
+		);
 	}
 }

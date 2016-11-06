@@ -2,9 +2,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
 import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'device-details',
@@ -19,7 +20,9 @@ export class DeviceDetailsComponent {
 	public device:Device;
 	public entityType: CertificateEntityType;
 	public certificateTitle: string;
-	constructor(private route: ActivatedRoute, private devicesService: DevicesService, private notifications:MCNotificationsService) {
+	public showModal:boolean = false;
+	public modalDescription:string;
+	constructor(private authService: AuthService, private route: ActivatedRoute, private devicesService: DevicesService, private router:Router, private notifications:MCNotificationsService) {
 
 	}
 
@@ -52,5 +55,31 @@ export class DeviceDetailsComponent {
 			this.labelValues.push({label: 'Name', valueHtml: this.device.name});
 			this.labelValues.push({label: 'Permissions', valueHtml: this.device.permissions});
 		}
+	}
+
+	public isAdmin() {
+		return this.authService.authState.isAdmin;
+	}
+
+	private delete() {
+		this.modalDescription = 'Are you sure you want to delete the device?';
+		this.showModal = true;
+	}
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public deleteForSure() {
+		this.isLoading = true;
+		this.showModal = false;
+		this.devicesService.deleteDevice(this.device.mrn).subscribe(
+			() => {
+				this.router.navigate(['../'], {relativeTo: this.route });
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to delete the device', MCNotificationType.Error, err);
+			}
+		);
 	}
 }

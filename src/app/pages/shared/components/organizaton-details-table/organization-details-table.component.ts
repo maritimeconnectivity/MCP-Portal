@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, Input, OnChanges} from '@angular/core';
+import {Component, ViewEncapsulation, Input, OnChanges, Output, EventEmitter} from '@angular/core';
 import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import {OrganizationViewModelService} from "../../services/organization-view-model.service";
@@ -15,7 +15,8 @@ import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-
 export class OrganizationDetailsTableComponent implements OnChanges {
   private labelValues:Array<LabelValueModel>;
   @Input() isLoading:boolean;
-  @Input() organization: Organization;
+	@Input() organization: Organization;
+	@Output() onLogoLoaded: EventEmitter<any> = new EventEmitter<any>();
 	public logo:string;
 	public canChangeLogo:boolean;
 	public isLoadingOrgAndLogo:boolean = true;
@@ -54,6 +55,7 @@ export class OrganizationDetailsTableComponent implements OnChanges {
 				this.logo = URL.createObjectURL(new Blob([logo]));
 				this.setLabelValues();
 				this.uploadingLogo = false;
+				this.onLogoLoaded.emit('');
 			},
 			err => {
 				if (this.canChangeTheLogo()) {
@@ -61,6 +63,7 @@ export class OrganizationDetailsTableComponent implements OnChanges {
 				}
 				this.setLabelValues();
 				this.uploadingLogo = false;
+				this.onLogoLoaded.emit('');
 			}
 		);
 	}

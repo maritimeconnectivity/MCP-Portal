@@ -7,13 +7,17 @@ import {DevicecontrollerApi} from "../autogen/api/DevicecontrollerApi";
 
 @Injectable()
 export class DevicesService implements OnInit {
-  private chosenDevice: Device;
   constructor(private deviceApi: DevicecontrollerApi, private authService: AuthService) {
   }
 
   ngOnInit() {
 
   }
+
+	public deleteDevice(deviceMrn:string):Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.deviceApi.deleteDeviceUsingDELETE(orgMrn, deviceMrn);
+	}
 
 	public getDevice(deviceMrn:string): Observable<Device> {
 		let orgMrn = this.authService.authState.orgMrn;
@@ -26,17 +30,7 @@ export class DevicesService implements OnInit {
 	}
 
   public issueNewCertificate(deviceMrn:string) : Observable<PemCertificate> {
-    return Observable.create(observer => {
-      let orgMrn = this.authService.authState.orgMrn;
-      this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn).subscribe(
-        pemCertificate => {
-          this.chosenDevice = null; // We need to reload now we have a new certificate
-          observer.next(pemCertificate);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
+	  let orgMrn = this.authService.authState.orgMrn;
+    return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
   }
 }
