@@ -1,16 +1,18 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-      <organization-details-table [isLoading]="isLoading" [organization]="organization"></organization-details-table>
+      <organization-details-table (onLogoLoaded)="logoLoaded()" [isLoading]="isLoading" [organization]="organization"></organization-details-table>
 
-      <div class="separator"></div>
+      <div  *ngIf="!isLoading">
+        <div class="separator"></div>
 
-      <div *ngIf="!isLoading" class="important-notice">To approve <span>{{organization.name}}</span>, you need to fill out the form below with a user, that will get administrative access to the organization.
+        <div class="important-notice">To approve <span>{{organization.name}}</span>, you need to fill out the form below with a user, that will get administrative access to the organization.
+        </div>
+
+        <div class="separator"></div>
+
+        <mc-form [formGroup]="userForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isApproving" [registerTitle]="approveTitle" (onCancel)="cancel()" (onRegister)="approve()"></mc-form>
       </div>
-
-      <div class="separator"></div>
-
-      <mc-form [formGroup]="userForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isApproving" [registerTitle]="approveTitle" (onCancel)="cancel()" (onRegister)="approve()"></mc-form>
     </ba-card>
 
 

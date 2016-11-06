@@ -62,7 +62,6 @@ export class ApproveDetailsComponent {
 				this.organization = organization;
 			 this.userMrn = this.mrnHelper.mrnMaskForUserOfOrg(organization.mrn);
 			 this.generateForm();
-				this.isLoading = false;
 			},
 			err => {
 				this.isLoading = false;
@@ -70,6 +69,10 @@ export class ApproveDetailsComponent {
 				this.router.navigate(['../'], {relativeTo: this.route });
 			}
 		);
+	}
+
+	public logoLoaded() {
+		this.isLoading = false;
 	}
 
 	private approveOrganization() {
