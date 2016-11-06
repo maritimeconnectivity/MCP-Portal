@@ -24,7 +24,6 @@ import {
   BaMsgCenter,
   BaMultiCheckbox,
   BaPageTop,
-  BaPictureUploader,
   BaSidebar
 } from './components';
 
@@ -70,6 +69,7 @@ import {McForm} from "./components/mcForm/mcForm.component";
 import {McModal} from "./components/mcModal/mcModal.component";
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 import {UrlValidator} from "./validators/url.validator";
+import {McLogoUploader} from "./components/mcLogoUploader/mcLogoUploader.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -84,14 +84,14 @@ const NGA_COMPONENTS = [
   BaMsgCenter,
   BaMultiCheckbox,
   BaPageTop,
-  BaPictureUploader,
   BaSidebar,
   FadingCircleComponent,
   FadingCircleSmallComponent,
   McCreateButton,
   McLabelValueTable,
   McTable,
-  McFileUploader,
+	McFileUploader,
+	McLogoUploader,
   McLoadingButton,
 	McEntityImageList,
 	McEntityImage,

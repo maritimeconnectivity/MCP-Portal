@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Http, ConnectionBackend, RequestOptions, Response, RequestOptionsArgs, Request} from '@angular/http';
 import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../authentication/services/auth.service";
+import {DONT_OVERWRITE_CONTENT_TYPE} from "../../shared/app.constants";
 
 @Injectable()
 export class McHttpService extends Http {
@@ -21,7 +22,11 @@ export class McHttpService extends Http {
   // Setting the http headers and if needed refreshes the access token
   private prepareService(options?: RequestOptionsArgs): Observable<RequestOptionsArgs> {
     return Observable.create(observer => {
-      options.headers.set('Content-Type', 'application/json; charset=utf-8' );
+	    if (options.headers.get(DONT_OVERWRITE_CONTENT_TYPE)){
+		    options.headers.delete(DONT_OVERWRITE_CONTENT_TYPE);
+	    } else {
+		    options.headers.set('Content-Type', 'application/json; charset=utf-8' );
+	    }
       if (McHttpService.shouldAuthenticate) {
         AuthService.getToken()
           .then(token => {

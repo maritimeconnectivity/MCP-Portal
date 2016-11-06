@@ -4,6 +4,7 @@ import {Organization} from "../../../../backend-api/identity-registry/autogen/mo
 import {OrganizationViewModelService} from "../../services/organization-view-model.service";
 import {LogoService} from "../../../../backend-api/identity-registry/services/logo.service";
 import {AuthService} from "../../../../authentication/services/auth.service";
+import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
 
 @Component({
   selector: 'organization-details-table',
@@ -15,14 +16,31 @@ export class OrganizationDetailsTableComponent implements OnChanges {
   private labelValues:Array<LabelValueModel>;
   @Input() isLoading:boolean;
   @Input() organization: Organization;
-	public logo:any;
+	public logo:string;
+	public canChangeLogo:boolean;
 	public isLoadingOrgAndLogo:boolean = true;
-  constructor(private authService:AuthService, private logoService: LogoService, private orgViewModelService: OrganizationViewModelService) {
+	public uploadingLogo:boolean = false;
+  constructor(private authService:AuthService, private logoService: LogoService, private orgViewModelService: OrganizationViewModelService, private notifications:MCNotificationsService) {
   }
   ngOnChanges() {
     if (this.organization) {
+	    this.canChangeLogo = this.canChangeTheLogo();
 	    this.loadLogo();
     }
+  }
+  public uploadLogo(logo:any) {
+	  let oldLogo = this.logo;
+	  this.uploadingLogo = true;
+	  this.logoService.uploadLogo(this.organization.mrn, logo).subscribe(
+		  logo => {
+			  this.loadLogo();
+		  },
+		  err => {
+			  this.logo = oldLogo;
+			  this.uploadingLogo = false;
+			  this.notifications.generateNotification('Error', 'Error when trying to upload logo', MCNotificationType.Error, err);
+		  }
+	  );
   }
 
   private setLabelValues() {
@@ -35,14 +53,19 @@ export class OrganizationDetailsTableComponent implements OnChanges {
 			logo => {
 				this.logo = URL.createObjectURL(new Blob([logo]));
 				this.setLabelValues();
+				this.uploadingLogo = false;
 			},
 			err => {
-				if (this.authService.isMyOrg(this.organization.mrn) || this.authService.authState.isSiteAdmin()) {
+				if (this.canChangeTheLogo()) {
 					this.logo = 'assets/img/no_organization.png';
 				}
 				this.setLabelValues();
+				this.uploadingLogo = false;
 			}
 		);
+	}
+	private canChangeTheLogo():boolean {
+		return (this.authService.authState.isAdmin() && this.authService.isMyOrg(this.organization.mrn)) || this.authService.authState.isSiteAdmin();
 	}
 
 }

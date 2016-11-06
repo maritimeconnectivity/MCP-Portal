@@ -1,0 +1,9 @@
+<div class="picture-group" >
+  <div class="picture-wrapper" (click)="bringFileSelector()" [ngClass]="{uploading: uploadingLogo}">
+    <img class="logo-image-no-center" [attr.src]="logo | sanitizeUrl" *ngIf="logo && !uploadingLogo">
+    <div class="logo-image-no-center"><sk-fading-circle [isRunning]="uploadingLogo" ></sk-fading-circle></div>
+  </div>
+  <i class="ion-ios-close-outline" (click)="removePicture();" *ngIf="logo && canDelete"></i>
+  <a *ngIf="!uploadingLogo" href (click)="bringFileSelector()" class="change-picture">Change Logo</a>
+  <input *ngIf="!uploadingLogo" #fileUpload type="file" hidden="true" id="uploadFile" (change)="onFiles()">
+</div>

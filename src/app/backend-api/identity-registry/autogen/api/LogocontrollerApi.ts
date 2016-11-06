@@ -30,6 +30,7 @@ import {Observable} from 'rxjs/Observable';
 /* tslint:disable:no-unused-variable member-ordering */
 
 'use strict';
+import {DONT_OVERWRITE_CONTENT_TYPE} from "../../../../shared/app.constants";
 // NOTE: be carefull when autogenerating. This file is changed manually
 
 @Injectable()
@@ -65,23 +66,29 @@ export class LogocontrollerApi {
         if (logo === null || logo === undefined) {
             throw new Error('Required parameter logo was null or undefined when calling createLogoPostUsingPOST.');
         }
-        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
+       // headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
 
-        formParams['logo'] = logo;
+      let requestOptions: RequestOptionsArgs = {
+          method: 'POST',
+          headers: headerParams,
+          search: queryParameters
+      };
+      requestOptions.body = formParams.toString();
 
-        let requestOptions: RequestOptionsArgs = {
-            method: 'POST',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = formParams.toString();
+	    var fd = new FormData();
+	    fd.append('logo', logo);
 
+	    headerParams.set('Content-Type', undefined);
+	    requestOptions.body = fd;
+	    // NOTE: be carefull when autogenerating. This file is changed manually
+	    requestOptions.headers.set(DONT_OVERWRITE_CONTENT_TYPE, 'dont');
+	    //requestOptions.responseType = ResponseContentType.Blob;
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-                    return response.json();
+                    return response.blob();
                 }
             });
     }

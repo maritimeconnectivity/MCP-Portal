@@ -1,22 +1,19 @@
 @import '../../sass/conf/conf';
 
+
+.uploading {
+  cursor: default !important;
+}
 .picture-group {
-  border: 1px dashed #b8b8b8;
-  width: 202px;
-  height: 202px;
   position: relative;
-  cursor: pointer;
+  display: inline-block;
   .picture-wrapper {
-    width: 200px;
-    height: 200px;
+    border: 1px dashed #b8b8b8;
+    padding: 10px;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
     align-items: center;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
+    cursor: pointer;
+
   }
   i {
     display: none;
@@ -36,9 +33,9 @@
       color: $danger;
     }
   }
-  a.change-picture {
+  .change-picture {
     display: none;
-    width: 202px;
+    width: 100%;
     background: rgba(0, 0, 0, 0.7);
     transition: all 200ms ease-in-out;
     color: $default-text;
