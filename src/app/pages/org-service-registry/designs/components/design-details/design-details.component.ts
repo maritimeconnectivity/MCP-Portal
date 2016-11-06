@@ -164,6 +164,7 @@ export class DesignDetailsComponent {
 				this.navigationHelperService.navigateToOrgDesign('', '');
 			},
 			err => {
+				this.isLoadingDesign = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
 			}
 		);

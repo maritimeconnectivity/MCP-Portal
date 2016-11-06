@@ -2,6 +2,12 @@
   <div class="col-lg-12">
     <ba-card title="{{organization?.name}}" baCardClass="table-panel">
       <organization-details-table [isLoading]="isLoading" [organization]="organization"></organization-details-table>
+      <ul *ngIf="!isLoading && shouldDisplayDelete" class="btn-list clearfix">
+        <li *ngIf="shouldDisplayDelete">
+          <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Organization</button>
+        </li>
+      </ul>
     </ba-card>
   </div>
 </div>
+<mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete organization'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>

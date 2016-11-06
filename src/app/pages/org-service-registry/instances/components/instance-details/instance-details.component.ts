@@ -127,6 +127,7 @@ export class InstanceDetailsComponent {
 				this.navigationHelperService.navigateToOrgInstance('', '');
 			},
 			err => {
+				this.isLoadingInstance = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete instance', MCNotificationType.Error, err);
 			}
 		);

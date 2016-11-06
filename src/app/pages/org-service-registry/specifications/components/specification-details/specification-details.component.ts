@@ -150,6 +150,7 @@ export class SpecificationDetailsComponent {
 				this.navigationHelperService.navigateToOrgSpecification('', '');
 			},
 			err => {
+				this.isLoadingSpecification = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete specification', MCNotificationType.Error, err);
 			}
 		);
