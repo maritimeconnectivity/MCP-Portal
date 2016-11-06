@@ -5,6 +5,10 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
+import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
+import {McFormControlModel} from "../../../../../theme/components/mcFormControl/mcFormControl.component";
+import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
+import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 
 
 @Component({
@@ -15,67 +19,102 @@ import {Device} from "../../../../../backend-api/identity-registry/autogen/model
 })
 export class DeviceNewComponent implements OnInit {
   public organization: Organization;
-  public isFormValid = false;
-  public isLoading = true;
+	private mrn: string;
+	private mrnMask:string;
+	private mrnPattern:string;
+	private mrnPatternError:string;
+	// McForm params
+	public isLoading = true;
+	public isRegistering = false;
+	public registerTitle = "Register Device";
+	public registerForm: FormGroup;
+	public formControlModels: Array<McFormControlModel>;
 
-  public isRegistering = false;
-  public registerTitle = "Register Device";
-  public registerButtonClass = "btn btn-danger btn-raised";
-  public onRegister: Function;
+	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private devicesService: DevicesService, mrnHelper: MrnHelperService) {
+		this.organization = {};
+		this.mrnMask = mrnHelper.mrnMaskForDevice();
+		this.mrnPattern = mrnHelper.mrnPattern();
+		this.mrnPatternError = mrnHelper.mrnPatternError();
+		this.mrn = this.mrnMask;
+	}
 
-  constructor(private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService) {
-    this.organization = {};
-  }
+	ngOnInit() {
+		this.isRegistering = false;
+		this.isLoading = true;
+		this.loadMyOrganization();
+	}
 
-  ngOnInit() {
-    this.onRegister = this.register.bind(this);
-    this.isRegistering = false;
-    this.isLoading = true;
-    this.loadMyOrganization();
-  }
+	public cancel() {
+		this.navigationService.cancelCreateDevice();
+	}
 
-  public calculateFormValid() {
-    this.isFormValid = false;
-  }
+	public register() {
+		this.isRegistering = true;
+		let device:Device = {};
+		device.mrn = this.mrn;
+		device.name = this.registerForm.value.name;
+		device.permissions = this.registerForm.value.permissions;
 
-  public cancel() {
-    this.navigationService.cancelCreateDevice();
-  }
+		this.createDevice(device);
+	}
 
-  public register() {
-    this.isRegistering = true;
-    let device:Device = {};
-    this.createDevice(device);
-  }
+	private createDevice(device:Device) {
+		this.devicesService.createDevice(device).subscribe(
+			device => {
+				this.navigationService.navigateToDevice(device.mrn);
+				this.isRegistering = false;
+			},
+			err => {
+				this.isRegistering = false;
+				this.notifications.generateNotification('Error', 'Error when trying to create device', MCNotificationType.Error, err);
+			}
+		);
+	}
 
-  private createDevice(device:Device) {
-	  this.notifications.generateNotification('Not Implemented', 'Register coming soon', MCNotificationType.Info);
-   /*
-    this.designsService.createDesign(design).subscribe(
-      design => {
-        this.navigationService.navigateToOrgDesign(design.designId, design.version);
-        this.isRegistering = false;
-      },
-      err => {
-        this.isRegistering = false;
-        this.notifications.generateNotification('Error', 'Error when trying to create design', MCNotificationType.Error, err);
-      }
-    );
-    */
-  }
+	private loadMyOrganization() {
+		this.orgService.getMyOrganization().subscribe(
+			organization => {
+				this.organization = organization;
+				this.generateForm();
+				this.isLoading = false;
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 
-  private loadMyOrganization() {
-    this.orgService.getMyOrganization().subscribe(
-      organization => {
-        this.organization = organization;
-        this.calculateFormValid();
-	      this.isLoading = false;
-      },
-      err => {
-	      this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
-      }
-    );
-  }
+	private generateMRN(idValue:string) {
+		var mrn = (idValue?idValue:'');
+		let valueNoSpaces = mrn.split(' ').join('').toLowerCase();
+		this.mrn = this.mrnMask + valueNoSpaces;
+		this.registerForm.patchValue({mrn: this.mrn});
+	}
 
+	private generateForm() {
+		this.registerForm = this.formBuilder.group({});
+		this.formControlModels = [];
+
+		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', inputType: 'text', labelName: 'MRN', placeholder: '', isDisabled: true};
+		var formControl = new FormControl(this.mrn, formControlModel.validator);
+		this.registerForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+
+		formControlModel = {formGroup: this.registerForm, elementId: 'deviceId', inputType: 'text', labelName: 'Device ID', placeholder: 'Enter Device ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+		formControl = new FormControl('', formControlModel.validator);
+		formControl.valueChanges.subscribe(param => this.generateMRN(param));
+		this.registerForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+
+		formControlModel = {formGroup: this.registerForm, elementId: 'name', inputType: 'text', labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
+		formControl = new FormControl('', formControlModel.validator);
+		this.registerForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+
+		formControlModel = {formGroup: this.registerForm, elementId: 'permissions', inputType: 'text', labelName: 'Permissions', placeholder: ''};
+		formControl = new FormControl('', formControlModel.validator);
+		this.registerForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+	}
 }

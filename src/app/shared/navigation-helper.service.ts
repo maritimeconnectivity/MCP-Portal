@@ -109,6 +109,15 @@ export class NavigationHelperService {
       this.navigateToOrgInstance('', '');
     }
   }
+
+	public navigateToDevice(deviceMrn:string):void {
+		this.path = '/' + deviceMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('devices', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
 	public navigateToVessel(vesselMrn:string):void {
 		this.path = '/' + vesselMrn;
 		let pagesMenu = PAGES_MENU;

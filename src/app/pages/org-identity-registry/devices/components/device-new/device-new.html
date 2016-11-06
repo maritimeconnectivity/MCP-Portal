@@ -1,18 +1,7 @@
 <div class="row">
   <div class="col-lg-12">
-    <ba-card title="Register new Device for {{organization.name}}" baCardClass="table-panel">
-      <div *ngIf="!isLoading">
-        Not implemented yet. Coming soon
-        <ul class="btn-list clearfix">
-          <li>
-            <mc-loading-button [class]="registerButtonClass" [disabled]="!isFormValid" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="onRegister" ></mc-loading-button>
-          </li>
-          <li>
-            <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
-          </li>
-        </ul>
-      </div>
-      <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+    <ba-card title="Register new Device for {{organization?.name}}" baCardClass="table-panel">
+      <mc-form [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isRegistering" [registerTitle]="registerTitle" (onCancel)="cancel()" (onRegister)="register()"></mc-form>
     </ba-card>
   </div>
 </div>
