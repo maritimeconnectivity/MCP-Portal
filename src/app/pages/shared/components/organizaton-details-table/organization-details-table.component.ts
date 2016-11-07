@@ -14,6 +14,7 @@ import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-
 })
 export class OrganizationDetailsTableComponent implements OnChanges {
   private labelValues:Array<LabelValueModel>;
+	@Input() displayLogo:boolean = true;
   @Input() isLoading:boolean;
 	@Input() organization: Organization;
 	@Output() onLogoLoaded: EventEmitter<any> = new EventEmitter<any>();

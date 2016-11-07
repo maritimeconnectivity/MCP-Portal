@@ -62,6 +62,7 @@ export class ApproveDetailsComponent {
 				this.organization = organization;
 			 this.userMrn = this.mrnHelper.mrnMaskForUserOfOrg(organization.mrn);
 			 this.generateForm();
+			 this.isLoading = false;
 			},
 			err => {
 				this.isLoading = false;
@@ -71,9 +72,6 @@ export class ApproveDetailsComponent {
 		);
 	}
 
-	public logoLoaded() {
-		this.isLoading = false;
-	}
 
 	private approveOrganization() {
 		this.orgService.approveOrganization(this.organization.mrn).subscribe(

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-      <organization-details-table (onLogoLoaded)="logoLoaded()" [isLoading]="isLoading" [organization]="organization"></organization-details-table>
+      <organization-details-table [displayLogo]="false" [isLoading]="isLoading" [organization]="organization"></organization-details-table>
 
       <div  *ngIf="!isLoading">
         <div class="separator"></div>

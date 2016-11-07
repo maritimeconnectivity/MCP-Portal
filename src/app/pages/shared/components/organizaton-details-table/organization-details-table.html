@@ -1,4 +1,4 @@
-<div *ngIf="logo" style="margin-bottom: 10px;">
+<div *ngIf="displayLogo && logo" style="margin-bottom: 10px;">
   <img class="logo-image-no-center" [attr.src]="logo | sanitizeUrl" *ngIf="logo && !canChangeLogo">
   <mc-logo-uploader [logo]="logo" [uploadingLogo]="uploadingLogo" (onUpload)="uploadLogo($event)" *ngIf="logo && canChangeLogo"></mc-logo-uploader>
 </div>
