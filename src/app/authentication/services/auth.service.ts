@@ -97,9 +97,11 @@ export class AuthService implements OnInit {
             }
 	          keycloakAuth.onAuthLogout = function() {
 		          console.log("USER LOGGED OUT");
+		          AuthService.handle401();
 	          };
 	          keycloakAuth.onTokenExpired = function() {
 		          console.log("TOKEN EXPIRED LOGGED OUT");
+		          AuthService.handle401();
 	          };
           } else {
             AuthService.staticAuth.loggedIn = false;
