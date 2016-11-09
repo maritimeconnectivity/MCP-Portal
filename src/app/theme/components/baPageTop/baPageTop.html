@@ -4,7 +4,7 @@
   <a #logo routerLink="/" class="al-logo clearfix">{{this.maritimeCloudHeadline}} <span>{{this.portalHeadline}}</span></a>
 
   <div [style.max-width]="orgNameMaxWidth" #orgnamewrapper class="org-name-wrapper">
-    <span #loggedin class="logged-in">{{loggedInText}} &nbsp;</span><span class="org-name">{{organizationName}}</span>
+    <span #loggedin class="logged-in">{{loggedInText}} &nbsp;</span><span class="org-name">{{loggedInName}}</span>
   </div>
 
   <a (click)="logout()" class="al-logout clearfix"><span>Log out</span></a>

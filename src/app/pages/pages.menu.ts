@@ -76,14 +76,22 @@ export const PAGES_MENU = [
           }
         },
         children: [
-          {
-            path: 'specifications',
-            data: {
-              menu: {
-                title: 'Specifications',
-              }
-            }
-          },
+	        {
+		        path: 'howto',
+		        data: {
+			        menu: {
+				        title: 'How To?',
+			        }
+		        }
+	        },
+	        {
+		        path: 'specifications',
+		        data: {
+			        menu: {
+				        title: 'Specifications',
+			        }
+		        }
+	        },
           {
             path: 'designs',
             data: {

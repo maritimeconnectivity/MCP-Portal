@@ -15,7 +15,7 @@ import {OrganizationsService} from "../backend-api/identity-registry/services/or
 		<div *ngIf="showSiteAdminMenu">
     	<ba-sidebar [menuRoutes]="routes"></ba-sidebar>
     </div>
-    <ba-page-top [organizationName]="organizationName"></ba-page-top>
+    <ba-page-top [loggedInName]="loggedInName"></ba-page-top>
     <div class="al-main">
       <div class="al-content">
         <ba-content-top></ba-content-top>
@@ -33,7 +33,7 @@ import {OrganizationsService} from "../backend-api/identity-registry/services/or
 export class Pages {
 	public routes = _.cloneDeep(MENU);
 	public showSiteAdminMenu = false;
-	public organizationName = "";
+	public loggedInName = "";
 
   constructor(private orgService: OrganizationsService, private authService: AuthService) {
   }
@@ -53,7 +53,11 @@ export class Pages {
   private loadOrganization() {
 	  this.orgService.getMyOrganization().subscribe(
 		  organization => {
-			  this.organizationName = organization.name;
+			  this.loggedInName = organization.name;
+			  let firstName = this.authService.authState.userFirstName;
+			  if (firstName) {
+			    this.loggedInName = firstName + ' - ' + this.loggedInName;
+			  }
 		  },
 		  err => {
 

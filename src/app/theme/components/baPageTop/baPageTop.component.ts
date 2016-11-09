@@ -16,7 +16,7 @@ export class BaPageTop {
 	@ViewChild('loggedin') loggedIn: ElementRef;
 	@ViewChild('logo') logo: ElementRef;
 
-	@Input() organizationName:string;
+	@Input() loggedInName:string;
 	public loggedInText = 'Logged in as';
 	public orgNameMaxWidth = '1000px';
 
