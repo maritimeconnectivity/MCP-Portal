@@ -69,7 +69,12 @@ export class OrganizationDetailsTableComponent implements OnChanges {
 		);
 	}
 	private canChangeTheLogo():boolean {
-		return (this.authService.authState.isAdmin() && this.authService.isMyOrg(this.organization.mrn)) || this.authService.authState.isSiteAdmin();
+		return this.isFirefox() && ( (this.authService.authState.isAdmin() && this.authService.isMyOrg(this.organization.mrn)) || this.authService.authState.isSiteAdmin());
 	}
 
+	// TODO: fix this so it works in other browsers
+	private isFirefox():boolean {
+		let userAgent = window.navigator.userAgent;
+		return userAgent.toLowerCase().indexOf('firefox') > -1;
+	}
 }
