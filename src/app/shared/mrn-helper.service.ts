@@ -29,10 +29,10 @@ export class MrnHelperService {
 	}
 
 	public mrnPattern():string {
-		return '[a-zA-Z0-9._-]{3,25}';
+		return '[a-zA-Z0-9_-]{3,25}';
 	}
 	public mrnPatternError():string {
-		return 'It should contain at least 3 characters and only a-z 0-9 . - _';
+		return 'It should contain at least 3 characters and only a-z 0-9 - _';
 	}
 
 	public mrnMaskForVessel():string {
