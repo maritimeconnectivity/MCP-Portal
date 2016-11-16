@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation, Input, EventEmitter, Output} from '@angular/core';
-import {McFormControlModel} from "../mcFormControl/mcFormControl.component";
 import {FormGroup} from "@angular/forms";
+import {McFormControlModel, McFormControlType} from "./mcFormControlModel";
 
 @Component({
   selector: 'mc-form',
@@ -31,5 +31,13 @@ export class McForm {
 
 	public cancel() {
 		this.onCancel.emit('');
+	}
+
+	public isControlTypeText(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.Text;
+	}
+
+	public isControlTypeCheckbox(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.Checkbox;
 	}
 }

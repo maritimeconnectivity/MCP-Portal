@@ -1,6 +1,6 @@
 <div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': !isValid(), 'has-success': formControlModel.validator && isValid()}" class="form-group mc-form-group has-feedback">
   <label class="mc-form-label">{{formControlModel.labelName | undefined}}
-    <input pattern="{{pattern}}" readonly="{{formControlModel.isDisabled}}" type="{{formControlModel.inputType}}" [ngClass]="{'mc-form-control-error': !isValid(), 'mc-form-control-success': formControlModel.validator && isValid()}" class="form-control mc-form-control" formControlName="{{formControlModel.elementId}}" placeholder="{{formControlModel.placeholder}}">
+    <input pattern="{{pattern}}" readonly="{{formControlModel.isDisabled}}" type="text" [ngClass]="{'mc-form-control-error': !isValid(), 'mc-form-control-success': formControlModel.validator && isValid()}" class="form-control mc-form-control" formControlName="{{formControlModel.elementId}}" placeholder="{{formControlModel.placeholder | undefined}}">
 
   </label>
   <i *ngIf="formControlModel.validator" [ngClass]="{'ion-android-cancel': !isValid(), 'ion-checkmark-circled': isValid()}" class="form-control-feedback" aria-hidden="true"></i>

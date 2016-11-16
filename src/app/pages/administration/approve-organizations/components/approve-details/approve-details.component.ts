@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {McFormControlModel} from "../../../../../theme/components/mcFormControl/mcFormControl.component";
 import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {McUtils} from "../../../../../shared/mc-utils";
@@ -13,6 +12,7 @@ import {UsersService} from "../../../../../backend-api/identity-registry/service
 import {RolesService} from "../../../../../backend-api/identity-registry/services/roles.service";
 import {Role} from "../../../../../backend-api/identity-registry/autogen/model/Role";
 import RoleNameEnum = Role.RoleNameEnum;
+import {McFormControlModel, McFormControlType} from "../../../../../theme/components/mcForm/mcFormControlModel";
 
 @Component({
   selector: 'approve-details',
@@ -143,23 +143,23 @@ export class ApproveDetailsComponent {
 		this.userForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel = {formGroup: this.userForm, elementId: 'mrn', inputType: 'text', labelName: 'MRN', placeholder: '', isDisabled: true};
+		var formControlModel:McFormControlModel = {formGroup: this.userForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: '', isDisabled: true};
 		var formControl = new FormControl(this.userMrn, formControlModel.validator);
 		this.userForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.userForm, elementId: 'userId', inputType: 'text', labelName: 'User ID', placeholder: 'Enter user ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+		formControlModel = {formGroup: this.userForm, elementId: 'userId', controlType: McFormControlType.Text, labelName: 'User ID', placeholder: 'Enter user ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
 		formControl = new FormControl('', formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.generateMRN(param));
 		this.userForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.userForm, elementId: 'firstName', inputType: 'text', labelName: 'First Name', placeholder: 'First Name is required', validator:Validators.required};
+		formControlModel = {formGroup: this.userForm, elementId: 'firstName', controlType: McFormControlType.Text, labelName: 'First Name', placeholder: 'First Name is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.userForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.userForm, elementId: 'lastName', inputType: 'text', labelName: 'Last Name', placeholder: 'Last Name is required', validator:Validators.required};
+		formControlModel = {formGroup: this.userForm, elementId: 'lastName', controlType: McFormControlType.Text, labelName: 'Last Name', placeholder: 'Last Name is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.userForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);

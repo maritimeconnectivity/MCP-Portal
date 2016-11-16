@@ -6,9 +6,9 @@ import {MCNotificationsService, MCNotificationType} from "../../../../../shared/
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
 import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
-import {McFormControlModel} from "../../../../../theme/components/mcFormControl/mcFormControl.component";
 import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import {McFormControlModel, McFormControlType} from "../../../../../theme/components/mcForm/mcFormControlModel";
 
 
 @Component({
@@ -96,23 +96,23 @@ export class DeviceNewComponent implements OnInit {
 		this.registerForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', inputType: 'text', labelName: 'MRN', placeholder: '', isDisabled: true};
+		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: '', isDisabled: true};
 		var formControl = new FormControl(this.mrn, formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'deviceId', inputType: 'text', labelName: 'Device ID', placeholder: 'Enter Device ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+		formControlModel = {formGroup: this.registerForm, elementId: 'deviceId', controlType: McFormControlType.Text, labelName: 'Device ID', placeholder: 'Enter Device ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
 		formControl = new FormControl('', formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.generateMRN(param));
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'name', inputType: 'text', labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
+		formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'permissions', inputType: 'text', labelName: 'Permissions', placeholder: ''};
+		formControlModel = {formGroup: this.registerForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);

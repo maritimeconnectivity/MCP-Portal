@@ -1,7 +1,7 @@
 import {FormControl, Validators, FormBuilder, FormGroup} from "@angular/forms";
 import {EmailValidator} from "../theme/validators/email.validator";
-import {McFormControlModel} from "../theme/components/mcFormControl/mcFormControl.component";
 import {EqualPasswordsValidator} from "../theme/validators/equalPasswords.validator";
+import {McFormControlModel, McFormControlType} from "../theme/components/mcForm/mcFormControlModel";
 export class McUtils {
 
 	// Generates a group with email equality validation.
@@ -10,13 +10,13 @@ export class McUtils {
 		let emails = formBuilder.group({});
 		formGroup.addControl('emails', emails);
 
-		let formControlModel:McFormControlModel = {formGroup: emails, elementId: 'email', inputType: 'text', labelName: 'Email', placeholder: 'Email is required', validator:Validators.compose([Validators.required, EmailValidator.validate]), errorText:'Email not valid'};
+		let formControlModel:McFormControlModel = {formGroup: emails, elementId: 'email', controlType: McFormControlType.Text, labelName: 'Email', placeholder: 'Email is required', validator:Validators.compose([Validators.required, EmailValidator.validate]), errorText:'Email not valid'};
 		let formControlEmail = new FormControl('', formControlModel.validator);
 		emails.addControl(formControlModel.elementId, formControlEmail);
 		formControlModelsToAdd.push(formControlModel);
 
 
-		formControlModel = {formGroup: emails, elementId: 'emailConfirm', inputType: 'text', labelName: 'Confirm email', placeholder: '', validator:Validators.required, errorText:'Emails not identical', requireGroupValid:true};
+		formControlModel = {formGroup: emails, elementId: 'emailConfirm', controlType: McFormControlType.Text, labelName: 'Confirm email', placeholder: '', validator:Validators.required, errorText:'Emails not identical', requireGroupValid:true};
 		let formControlEmail2 = new FormControl('');
 		emails.addControl(formControlModel.elementId, formControlEmail2);
 		formControlModelsToAdd.push(formControlModel);

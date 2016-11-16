@@ -19,6 +19,7 @@ export * from './mcLogoUploader';
 export * from './mcLoadingButton';
 export * from './mcEntityImageList';
 export * from './mcEntityImage';
-export * from './mcFormControl';
+export * from './mcFormControlText';
+export * from './mcFormControlCheckbox';
 export * from './mcForm';
 export * from './mcModal';

@@ -1,26 +1,13 @@
 import {Component, ViewEncapsulation, Input} from '@angular/core';
-import {FormGroup, ValidatorFn, AbstractControl} from "@angular/forms";
-
-export interface McFormControlModel {
-	labelName: string;
-	inputType: string;
-	elementId: string;
-	placeholder: string;
-	validator?: ValidatorFn;
-	formGroup: FormGroup;
-	errorText?: string;
-	pattern?: string;
-	isDisabled?:boolean;
-	requireGroupValid?:boolean;
-}
+import {McFormControlModel} from "../mcForm/mcFormControlModel";
 
 @Component({
-  selector: 'mc-form-control',
+  selector: 'mc-form-control-text',
   encapsulation: ViewEncapsulation.None,
-  template: require('./mcFormControl.html'),
-  styles: [require('./mcFormControl.scss')]
+  template: require('./mcFormControlText.html'),
+  styles: [require('./mcFormControlText.scss')]
 })
-export class McFormControl {
+export class McFormControlText {
 	@Input() formControlModel: McFormControlModel;
 	public pattern:string;
 

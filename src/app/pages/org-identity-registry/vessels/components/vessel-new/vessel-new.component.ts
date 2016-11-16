@@ -6,12 +6,12 @@ import {MCNotificationsService, MCNotificationType} from "../../../../../shared/
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
 import {FormGroup, Validators, FormBuilder, FormControl} from "@angular/forms";
-import {McFormControlModel} from "../../../../../theme/components/mcFormControl/mcFormControl.component";
 import {VesselViewModel, VesselAttributeViewModel} from "../../view-models/VesselViewModel";
 import {VesselAttribute} from "../../../../../backend-api/identity-registry/autogen/model/VesselAttribute";
 import AttributeNameEnum = VesselAttribute.AttributeNameEnum;
 import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import {McFormControlModel, McFormControlType} from "../../../../../theme/components/mcForm/mcFormControlModel";
 
 
 @Component({
@@ -108,23 +108,23 @@ export class VesselNewComponent implements OnInit {
 	  this.registerForm = this.formBuilder.group({});
 	  this.formControlModels = [];
 
-	  var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', inputType: 'text', labelName: 'MRN', placeholder: '', isDisabled: true};
+	  var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: '', isDisabled: true};
 	  var formControl = new FormControl(this.mrn, formControlModel.validator);
 	  this.registerForm.addControl(formControlModel.elementId, formControl);
 	  this.formControlModels.push(formControlModel);
 
-	  formControlModel = {formGroup: this.registerForm, elementId: 'vesselId', inputType: 'text', labelName: 'Vessel ID', placeholder: 'Enter Vessel ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+	  formControlModel = {formGroup: this.registerForm, elementId: 'vesselId', controlType: McFormControlType.Text, labelName: 'Vessel ID', placeholder: 'Enter Vessel ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
 	  formControl = new FormControl('', formControlModel.validator);
 	  formControl.valueChanges.subscribe(param => this.generateMRN(param));
 	  this.registerForm.addControl(formControlModel.elementId, formControl);
 	  this.formControlModels.push(formControlModel);
 
-	  formControlModel = {formGroup: this.registerForm, elementId: 'name', inputType: 'text', labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
+	  formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
 	  formControl = new FormControl('', formControlModel.validator);
 	  this.registerForm.addControl(formControlModel.elementId, formControl);
 	  this.formControlModels.push(formControlModel);
 
-	  formControlModel = {formGroup: this.registerForm, elementId: 'permissions', inputType: 'text', labelName: 'Permissions', placeholder: ''};
+	  formControlModel = {formGroup: this.registerForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
 	  formControl = new FormControl('', formControlModel.validator);
 	  this.registerForm.addControl(formControlModel.elementId, formControl);
 	  this.formControlModels.push(formControlModel);
@@ -138,7 +138,7 @@ export class VesselNewComponent implements OnInit {
 
 	  let vesselAttributes:Array<VesselAttributeViewModel> = VesselViewModel.getAllPossibleVesselAttributes();
 		vesselAttributes.forEach(vesselAttribute => {
-			let formControlModel:McFormControlModel = {formGroup: attributesGroup, elementId: AttributeNameEnum[vesselAttribute.attributeName], inputType: 'text', labelName: vesselAttribute.attributeNameText, placeholder: ''};
+			let formControlModel:McFormControlModel = {formGroup: attributesGroup, elementId: AttributeNameEnum[vesselAttribute.attributeName], controlType: McFormControlType.Text, labelName: vesselAttribute.attributeNameText, placeholder: ''};
 			let formControl = new FormControl('', formControlModel.validator);
 			attributesGroup.addControl(formControlModel.elementId, formControl);
 			this.formControlModels.push(formControlModel);

@@ -1,19 +1,20 @@
 import {Component, OnInit, HostListener} from '@angular/core';
 import {MCNotificationsService, MCNotificationType} from "../shared/mc-notifications.service";
-import {McFormControlModel} from "../theme/components/mcFormControl/mcFormControl.component";
 import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../authentication/services/auth.service";
 import {MrnHelperService} from "../shared/mrn-helper.service";
 import {Organization} from "../backend-api/identity-registry/autogen/model/Organization";
-import {EmailValidator} from "../theme/validators/email.validator";
 import {layoutSizes} from "../theme/theme.constants";
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 import {McHttpService} from "../backend-api/shared/mc-http.service";
 import {NavigationHelperService} from "../shared/navigation-helper.service";
 import {UrlValidator} from "../theme/validators/url.validator";
-import {EqualPasswordsValidator} from "../theme/validators/equalPasswords.validator";
 import {McUtils} from "../shared/mc-utils";
+import {
+	McFormControlModel,
+	McFormControlType
+} from "../theme/components/mcForm/mcFormControlModel";
 
 @Component({
   selector: 'apply-org',
@@ -36,8 +37,8 @@ export class ApplyOrgComponent implements OnInit {
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
-  constructor(private navigationHelper: NavigationHelperService, private formBuilder: FormBuilder, private authService: AuthService, private router:Router, private notificationService: MCNotificationsService, mrnHelper: MrnHelperService, private organizationsService: OrganizationsService) {
-	  this.mrnMask = mrnHelper.mrnMaskForOrganization();
+  constructor(private navigationHelper: NavigationHelperService, private formBuilder: FormBuilder, private authService: AuthService, private router:Router, private notificationService: MCNotificationsService, private mrnHelper: MrnHelperService, private organizationsService: OrganizationsService) {
+	  this.mrnMask = mrnHelper.mrnMaskForOrganization(false);
 	  this.mrnPattern = mrnHelper.mrnPattern();
 	  this.mrnPatternError = mrnHelper.mrnPatternError();
 	  this.mrn = this.mrnMask;
@@ -106,39 +107,52 @@ export class ApplyOrgComponent implements OnInit {
 		this.registerForm.patchValue({mrn: this.mrn});
 	}
 
+	private setMrnMask(isSTM:boolean) {
+		let mrnMask = this.mrnHelper.mrnMaskForOrganization(isSTM);
+		this.mrn = this.mrn.replace(this.mrnMask, mrnMask);
+		this.mrnMask = mrnMask;
+		this.registerForm.patchValue({mrn: this.mrn});
+	}
+
 	private generateForm() {
 		this.registerForm = this.formBuilder.group({});
 		this.formControlModels = [];
-
-		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', inputType: 'text', labelName: 'MRN', placeholder: '', isDisabled: true};
+		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: '', isDisabled: true};
+		//var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', inputType: 'text', labelName: 'MRN', placeholder: '', isDisabled: true};
 		var formControl = new FormControl(this.mrn, formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'orgId', inputType: 'text', labelName: 'Organization shortname', placeholder: 'Enter shortname to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+		formControlModel = {formGroup: this.registerForm, elementId: 'isStm', controlType: McFormControlType.Checkbox, labelName: 'Enroll the organization via STM'};
+		formControl = new FormControl({value: '', disabled: false}, formControlModel.validator);
+		formControl.valueChanges.subscribe(param => this.setMrnMask(param));
+		this.registerForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+
+		formControlModel = {formGroup: this.registerForm, elementId: 'orgId', controlType: McFormControlType.Text, labelName: 'Organization shortname', placeholder: 'Enter shortname to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
 		formControl = new FormControl('', formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.generateMRN(param));
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'name', inputType: 'text', labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
+		formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Organization name', placeholder: 'Name is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'address', inputType: 'text', labelName: 'Address', placeholder: 'Address is required', validator:Validators.required};
+		formControlModel = {formGroup: this.registerForm, elementId: 'address', controlType: McFormControlType.Text, labelName: 'Address', placeholder: 'Address is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'country', inputType: 'text', labelName: 'Country', placeholder: 'Country is required', validator:Validators.required};
+		formControlModel = {formGroup: this.registerForm, elementId: 'country', controlType: McFormControlType.Text, labelName: 'Country', placeholder: 'Country is required', validator:Validators.required};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
 		McUtils.generateEmailConfirmGroup(this.formBuilder, this.registerForm, this.formControlModels);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'url', inputType: 'text', labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid'};
+		formControlModel = {formGroup: this.registerForm, elementId: 'url', controlType: McFormControlType.Text, labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid'};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);

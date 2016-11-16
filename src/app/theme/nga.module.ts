@@ -64,12 +64,13 @@ import {McLoadingButton} from "./components/mcLoadingButton/mcLoadingButton.comp
 import {FadingCircleSmallComponent} from "./components/spinner/fading-circle-small";
 import {McEntityImageList} from "./components/mcEntityImageList/mcEntityImageList.component";
 import {McEntityImage} from "./components/mcEntityImage/mcEntityImage.component";
-import {McFormControl} from "./components/mcFormControl/mcFormControl.component";
+import {McFormControlText} from "./components/mcFormControlText/mcFormControlText.component";
 import {McForm} from "./components/mcForm/mcForm.component";
 import {McModal} from "./components/mcModal/mcModal.component";
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 import {UrlValidator} from "./validators/url.validator";
 import {McLogoUploader} from "./components/mcLogoUploader/mcLogoUploader.component";
+import {McFormControlCheckbox} from "./components/mcFormControlCheckbox/mcFormControlCheckbox.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -95,7 +96,8 @@ const NGA_COMPONENTS = [
   McLoadingButton,
 	McEntityImageList,
 	McEntityImage,
-	McFormControl,
+	McFormControlText,
+	McFormControlCheckbox,
 	McForm,
 	McModal
 ];
