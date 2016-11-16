@@ -7,6 +7,7 @@ import {UserListComponent} from "./components/user-list/user-list.component";
 import {UserDetailsComponent} from "./components/user-details/user-details.component";
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
+import {UserNewComponent} from "./components/user-new/user-new.component";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {SharedModule} from "../../shared/shared.module";
   declarations: [
     UsersComponent,
     UserDetailsComponent,
-    UserListComponent
+    UserListComponent,
+	  UserNewComponent
   ]
 })
 export default class UsersModule {

@@ -16,6 +16,7 @@ import {UsersService} from "../../../../../backend-api/identity-registry/service
   styles: []
 })
 export class UserListComponent implements OnInit {
+	private KEY_NEW = 'KEY_NEW_USER';
 	private users:Array<User>;
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
@@ -56,20 +57,33 @@ export class UserListComponent implements OnInit {
 	}
 
 	public gotoDetails(entityModel:EntityImageModel) {
-		this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+		if (entityModel.entityId === this.KEY_NEW) {
+			this.gotoCreate();
+		} else {
+			this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+		}
+	}
+
+	public gotoCreate() {
+		this.router.navigate(['register'], {relativeTo: this.route});
 	}
 
   private generateEntityImageList() {
 	  this.entityImageList = [];
 	  if (this.users) {
+		  var counter = 0;
 		  this.users.forEach(user => {
+			  counter++;
 			  var htmlContent = '&nbsp;';
-			  if (user.email) {
+			  if (user.email && counter%2 == 0) {
 				  htmlContent = "<a href='mailto:" + user.email + "'>" + user.email + "</a>";
 			  }
 			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(user), entityId:user.mrn, title:user.firstName + " " + user.lastName, htmlContent:htmlContent});
 			  }
 		  );
+	  }
+	  if (this.authService.authState.isAdmin()) {
+		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new User', isAdd:true, htmlContent: '&nbsp;'});
 	  }
   }
 

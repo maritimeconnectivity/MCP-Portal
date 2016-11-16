@@ -57,7 +57,11 @@ export class DeviceDetailsComponent {
 		}
 	}
 
-	public isAdmin() {
+	public showDelete():boolean {
+		return this.isAdmin() && this.device != null;
+	}
+
+	private isAdmin() {
 		return this.authService.authState.isAdmin();
 	}
 

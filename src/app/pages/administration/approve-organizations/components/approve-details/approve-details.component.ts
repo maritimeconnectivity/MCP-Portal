@@ -110,7 +110,7 @@ export class ApproveDetailsComponent {
 		user.permissions = MC_ADMIN;
 		user.email = this.userForm.value.emails.email;
 
-		this.userService.createUser(this.organization.mrn, user).subscribe(
+		this.userService.createUserForOrg(this.organization.mrn, user).subscribe(
 			user => {
 				this.isApproving = false;
 				this.notifications.generateNotification('Organization Approved', 'The organization was approved and now has access to the Maritime Cloud', MCNotificationType.Success);

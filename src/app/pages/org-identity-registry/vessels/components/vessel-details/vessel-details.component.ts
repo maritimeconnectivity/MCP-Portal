@@ -33,7 +33,11 @@ export class VesselDetailsComponent {
 	  this.loadVessel();
   }
 
-  public isAdmin() {
+	public showDelete():boolean {
+		return this.isAdmin() && this.vessel != null;
+	}
+
+  private isAdmin() {
 	  return this.authService.authState.isAdmin();
   }
 
