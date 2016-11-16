@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
 import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
+import {AuthService} from "../../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'user-details',
@@ -19,7 +20,9 @@ export class UserDetailsComponent {
 	public user:User;
 	public entityType: CertificateEntityType;
 	public certificateTitle: string;
-	constructor(private route: ActivatedRoute, private usersService: UsersService, private notifications:MCNotificationsService) {
+	public showModal:boolean = false;
+	public modalDescription:string;
+	constructor(private authService:AuthService, private route: ActivatedRoute, private router:Router, private usersService: UsersService, private notifications:MCNotificationsService) {
 
 	}
 
@@ -54,5 +57,35 @@ export class UserDetailsComponent {
 			this.labelValues.push({label: 'Email', valueHtml: this.user.email});
 			this.labelValues.push({label: 'Permissions', valueHtml: this.user.permissions});
 		}
+	}
+
+	public showDelete():boolean {
+		return this.isAdmin() && this.user != null;
+	}
+
+	private isAdmin() {
+		return this.authService.authState.isAdmin();
+	}
+
+	private delete() {
+		this.modalDescription = 'Are you sure you want to delete the user?';
+		this.showModal = true;
+	}
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public deleteForSure() {
+		this.isLoading = true;
+		this.showModal = false;
+		this.usersService.deleteUser(this.user.mrn).subscribe(
+			() => {
+				this.router.navigate(['../'], {relativeTo: this.route });
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to delete the user', MCNotificationType.Error, err);
+			}
+		);
 	}
 }

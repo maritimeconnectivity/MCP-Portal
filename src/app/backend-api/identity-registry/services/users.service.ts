@@ -14,6 +14,11 @@ export class UsersService implements OnInit {
 
   }
 
+	public deleteUser(userMrn:string):Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.userApi.deleteUserUsingDELETE(orgMrn, userMrn);
+	}
+
 	public getUser(userMrn:string): Observable<User> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.userApi.getUserUsingGET(orgMrn, userMrn);
@@ -24,8 +29,13 @@ export class UsersService implements OnInit {
 		return this.userApi.getOrganizationUsersUsingGET(orgMrn);
 	}
 
-	public createUser(orgMrn: string, user: User) : Observable<User> {
+	public createUserForOrg(orgMrn: string, user: User) : Observable<User> {
 		return this.userApi.createUserUsingPOST(orgMrn, user);
+	}
+
+	public createUser(user: User) : Observable<User> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.createUserForOrg(orgMrn, user);
 	}
 
   public issueNewCertificate(userMrn:string) : Observable<PemCertificate> {
