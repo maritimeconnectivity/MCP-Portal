@@ -103,8 +103,10 @@ export class InstanceDetailsComponent {
       this.notifications.generateNotification('Error', 'Error when trying to go to instance', MCNotificationType.Error, error);
     }
   }
+
+  // TODO: until the SR can deliver the owner organization, only siteadmins can delete
 	private isAdmin():boolean {
-		return this.authService.authState.isAdmin();
+		return this.authService.authState.isSiteAdmin();
 	}
 
 	public shouldDisplayDelete():boolean {
