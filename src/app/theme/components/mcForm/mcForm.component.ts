@@ -40,4 +40,8 @@ export class McForm {
 	public isControlTypeCheckbox(formControlModel:McFormControlModel) {
 		return formControlModel.controlType === McFormControlType.Checkbox;
 	}
+
+	public isControlTypeSelect(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.Select;
+	}
 }

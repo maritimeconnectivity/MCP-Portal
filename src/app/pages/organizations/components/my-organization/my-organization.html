@@ -4,7 +4,7 @@
       <organization-details-table (onLogoLoaded)="logoLoaded()" [isLoading]="isLoading" [organization]="organization"></organization-details-table>
     </ba-card>
 
-    <div *ngIf="organization && !isLoading">
+    <div *ngIf="!isLoading && organization">
       <ba-card title="Certificates for {{organization.name}}" baCardClass="with-scroll table-panel">
         <certificates-table [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="certificateTitle" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
       </ba-card>

@@ -86,6 +86,14 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
+	public cancelCreateService() {
+		this.path = '/';
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('services', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
 	public cancelCreateUser() {
 		this.path = '/';
 		let pagesMenu = PAGES_MENU;
@@ -122,6 +130,14 @@ export class NavigationHelperService {
 		this.path = '/' + deviceMrn;
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('devices', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
+	public navigateToService(serviceMrn:string):void {
+		this.path = '/' + serviceMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('services', pagesMenu[0]);
 
 		this.router.navigate([this.path]);
 	}

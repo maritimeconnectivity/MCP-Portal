@@ -47,6 +47,14 @@ export const PAGES_MENU = [
 		        }
 	        },
 	        {
+		        path: 'services',
+		        data: {
+			        menu: {
+				        title: 'Services',
+			        }
+		        }
+	        },
+	        {
 		        path: 'users',
 		        data: {
 			        menu: {

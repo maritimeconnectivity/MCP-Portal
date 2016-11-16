@@ -21,5 +21,6 @@ export * from './mcEntityImageList';
 export * from './mcEntityImage';
 export * from './mcFormControlText';
 export * from './mcFormControlCheckbox';
+export * from './mcFormControlSelect';
 export * from './mcForm';
 export * from './mcModal';

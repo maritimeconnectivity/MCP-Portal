@@ -7,7 +7,6 @@ import {PemCertificate} from "../autogen/model/PemCertificate";
 
 @Injectable()
 export class IdServicesService implements OnInit {
-  private chosenService: Service;
   constructor(private servicesApi: ServicecontrollerApi, private authService: AuthService) {
   }
 
@@ -15,20 +14,25 @@ export class IdServicesService implements OnInit {
 
   }
 
-  public issueNewCertificate(serviceMrn:string) : Observable<PemCertificate> {
-    return Observable.create(observer => {
-      let orgMrn = this.authService.authState.orgMrn;
-      this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn).subscribe(
-        pemCertificate => {
-          this.chosenService = null; // We need to reload now we have a new certificate
-          observer.next(pemCertificate);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
-  }
+	public deleteIdService(serviceMrn:string):Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.deleteServiceUsingDELETE(orgMrn, serviceMrn);
+	}
+
+	public getIdService(serviceMrn:string): Observable<Service> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.getServiceUsingGET(orgMrn, serviceMrn);
+	}
+
+	public getIdServices(): Observable<Array<Service>> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.getOrganizationServicesUsingGET(orgMrn);
+	}
+
+	public issueNewCertificate(serviceMrn:string) : Observable<PemCertificate> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn);
+	}
 
   public createIdService(service:Service):Observable<Service>{
     let orgMrn = this.authService.authState.orgMrn;

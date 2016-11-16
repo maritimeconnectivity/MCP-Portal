@@ -2,7 +2,13 @@ import {FormGroup, ValidatorFn} from "@angular/forms";
 
 export enum McFormControlType {
 	Text,
-	Checkbox
+	Checkbox,
+	Select
+}
+
+export interface SelectModel {
+	label:string;
+	value:string;
 }
 
 export interface McFormControlModel {
@@ -16,4 +22,7 @@ export interface McFormControlModel {
 	pattern?: string;
 	isDisabled?:boolean;
 	requireGroupValid?:boolean;
+}
+export interface McFormControlModelSelect extends McFormControlModel {
+	selectValues:Array<SelectModel>;
 }

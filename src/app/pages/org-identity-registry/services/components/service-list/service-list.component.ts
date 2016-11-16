@@ -6,29 +6,29 @@ import {Router, ActivatedRoute} from "@angular/router";
 import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {Observable} from "rxjs";
-import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
-import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
+import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 
 @Component({
-  selector: 'user-list',
+  selector: 'service-list',
   encapsulation: ViewEncapsulation.None,
-  template: require('./user-list.html'),
+  template: require('./service-list.html'),
   styles: []
 })
-export class UserListComponent implements OnInit {
-	private KEY_NEW = 'KEY_NEW_USER';
-	private users:Array<User>;
+export class ServiceListComponent implements OnInit {
+	private KEY_NEW = 'KEY_NEW_SERVICE';
+	private services:Array<Service>;
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
   public isLoading: boolean;
-  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private usersService: UsersService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private servicesService: IdServicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
     this.organization = {};
   }
 
   ngOnInit() {
     this.isLoading = true;
     this.loadMyOrganization();
-	  this.loadUsers();
+	  this.loadServices();
   }
 
 	private loadMyOrganization() {
@@ -42,16 +42,16 @@ export class UserListComponent implements OnInit {
 		);
 	}
 
-	private loadUsers() {
-		this.usersService.getUsers().subscribe(
-			users => {
-				this.users = users;
+	private loadServices() {
+		this.servicesService.getIdServices().subscribe(
+			services => {
+				this.services = services;
 				this.isLoading = false;
 				this.generateEntityImageList();
 			},
 			err => {
 				this.isLoading = false;
-				this.notifications.generateNotification('Error', 'Error when trying to get users', MCNotificationType.Error, err);
+				this.notifications.generateNotification('Error', 'Error when trying to get services', MCNotificationType.Error, err);
 			}
 		);
 	}
@@ -65,28 +65,24 @@ export class UserListComponent implements OnInit {
 	}
 
 	public gotoCreate() {
-		this.router.navigate(['register'], {relativeTo: this.route});
+		this.router.navigate(['register'], {relativeTo: this.route})
 	}
 
   private generateEntityImageList() {
 	  this.entityImageList = [];
-	  if (this.users) {
-		  this.users.forEach(user => {
-			  var htmlContent = '&nbsp;';
-			  if (user.email) {
-				  htmlContent = "<a href='mailto:" + user.email + "'>" + user.email + "</a>";
-			  }
-			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(user), entityId:user.mrn, title:user.firstName + " " + user.lastName, htmlContent:htmlContent});
+	  if (this.services) {
+		  this.services.forEach(service => {
+			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(service), entityId:service.mrn, title:service.name});
 			  }
 		  );
 	  }
 	  if (this.authService.authState.isAdmin()) {
-		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new User', isAdd:true, htmlContent: '&nbsp;'});
+		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Service', isAdd:true});
 	  }
   }
 
-	private createImgObservable(user:User):Observable<string> {
-		let imageSrc = 'assets/img/no_user.png';
+	private createImgObservable(service:Service):Observable<string> {
+		let imageSrc = 'assets/img/no_service.svg';
 		return Observable.create(observer => {
 			observer.next(imageSrc);
 		});

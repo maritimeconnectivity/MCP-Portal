@@ -71,6 +71,7 @@ import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 import {UrlValidator} from "./validators/url.validator";
 import {McLogoUploader} from "./components/mcLogoUploader/mcLogoUploader.component";
 import {McFormControlCheckbox} from "./components/mcFormControlCheckbox/mcFormControlCheckbox.component";
+import {McFormControlSelect} from "./components/mcFormControlSelect/mcFormControlSelect.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -98,6 +99,7 @@ const NGA_COMPONENTS = [
 	McEntityImage,
 	McFormControlText,
 	McFormControlCheckbox,
+	McFormControlSelect,
 	McForm,
 	McModal
 ];

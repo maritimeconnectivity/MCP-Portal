@@ -1,0 +1,11 @@
+@import '../../sass/conf/conf';
+
+.mc-form-control-feedback {
+  top: 20px !important;
+  right: 10px !important;
+}
+.mc-form-control:read-only {
+  cursor: default;
+  color: $default;
+}
+

@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, ViewEncapsulation, OnInit, ChangeDetectorRef} from '@angular/core';
 import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
@@ -19,7 +19,7 @@ export class MyOrganization implements OnInit {
   public titleName:string;
 
 
-  constructor(private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService) {
+  constructor(private changeDetector: ChangeDetectorRef, private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService) {
     this.entityType = CertificateEntityType.Organization;
   }
 
@@ -40,6 +40,7 @@ export class MyOrganization implements OnInit {
 
   public logoLoaded() {
 	  this.isLoading = false;
+	  this.changeDetector.detectChanges();
   }
 
 }

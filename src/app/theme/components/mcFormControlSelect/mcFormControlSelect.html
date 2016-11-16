@@ -1,0 +1,13 @@
+<div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': !isValid(), 'has-success': formControlModel.validator && isValid()}" class="form-group mc-form-group has-feedback">
+  <label class="mc-form-label">{{formControlModel.labelName | undefined}}
+    <select [(ngModel)]="selectedValue" class="form-control mc-form-control" [ngClass]="{'mc-form-control-error': !isValid(), 'mc-form-control-success': formControlModel.validator && isValid()}" formControlName="{{formControlModel.elementId}}">
+      <option *ngFor="let selectValue of formControlModel.selectValues" [ngValue]="selectValue.value">
+        {{selectValue.label}}
+      </option>
+    </select>
+  </label>
+  <i *ngIf="formControlModel.validator" [ngClass]="{'ion-android-cancel': !isValid(), 'ion-checkmark-circled': isValid()}" class="form-control-feedback mc-form-control-feedback" aria-hidden="true"></i>
+  <div *ngIf="formControlModel.validator" [hidden]="!formControlModel.errorText || isValid() || formControlModel.formGroup.controls[formControlModel.elementId].pristine" class="mc-form-error">
+    {{formControlModel.errorText | undefined}}
+  </div>
+</div>

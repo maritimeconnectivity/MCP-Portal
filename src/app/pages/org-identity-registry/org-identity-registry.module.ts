@@ -7,6 +7,7 @@ import { OrgIdentityRegistryComponent } from './org-identity-registry.component'
 import VesselsModule from "./vessels/vessels.module";
 import DevicesModule from "./devices/devices.module";
 import UsersModule from "./users/users.module";
+import ServicesModule from "./services/services.module";
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import UsersModule from "./users/users.module";
     NgaModule,
 	  VesselsModule,
 	  DevicesModule,
+	  ServicesModule,
 	  UsersModule,
     routing
   ],

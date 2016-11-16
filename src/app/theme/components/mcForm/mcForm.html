@@ -7,6 +7,9 @@
       <div *ngIf="isControlTypeCheckbox(formControlModel)">
         <mc-form-control-checkbox [formControlModel]="formControlModel"></mc-form-control-checkbox>
       </div>
+      <div *ngIf="isControlTypeSelect(formControlModel)">
+        <mc-form-control-select [formControlModel]="formControlModel"></mc-form-control-select>
+      </div>
     </div>
     <ul class="btn-list clearfix">
       <li>
