@@ -22,6 +22,7 @@
  * limitations under the License.
  */
 
+// NOTE: be carefull when autogenerating. This file is changed manually
 import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams} from '@angular/http';
 import {Injectable, Optional} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
@@ -284,7 +285,8 @@ export class ServicecontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-                    return response.json();
+// NOTE: be carefull when autogenerating. This file is changed manually
+	                return response.text();
                 }
             });
     }
@@ -358,7 +360,8 @@ export class ServicecontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-                    return response.json();
+// NOTE: be carefull when autogenerating. This file is changed manually
+                    return response.text();
                 }
             });
     }

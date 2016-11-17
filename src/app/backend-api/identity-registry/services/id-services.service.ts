@@ -14,6 +14,16 @@ export class IdServicesService implements OnInit {
 
   }
 
+	public getIdServiceJbossXml(serviceMrn:string): Observable<string> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.getServiceJbossXmlUsingGET(orgMrn, serviceMrn);
+	}
+
+	public getServiceKeycloakJson(serviceMrn:string): Observable<string> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.getServiceKeycloakJsonUsingGET(orgMrn, serviceMrn);
+	}
+
 	public deleteIdService(serviceMrn:string):Observable<any> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.servicesApi.deleteServiceUsingDELETE(orgMrn, serviceMrn);

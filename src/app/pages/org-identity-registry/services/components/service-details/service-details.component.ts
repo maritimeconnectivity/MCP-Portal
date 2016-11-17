@@ -7,6 +7,7 @@ import {AuthService} from "../../../../../authentication/services/auth.service";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
+import {FileHelperService} from "../../../../../shared/file-helper.service";
 
 @Component({
   selector: 'service-details',
@@ -23,13 +24,37 @@ export class ServiceDetailsComponent {
 	public certificateTitle: string;
 	public showModal:boolean = false;
 	public modalDescription:string;
-	constructor(private authService: AuthService, private route: ActivatedRoute, private servicesService: IdServicesService, private router:Router, private notifications:MCNotificationsService) {
+	constructor(private fileHelperService:FileHelperService, private authService: AuthService, private route: ActivatedRoute, private servicesService: IdServicesService, private router:Router, private notifications:MCNotificationsService) {
 
 	}
 
 	ngOnInit() {
 		this.entityType = CertificateEntityType.Service;
 		this.loadService();
+	}
+
+	public downloadXML() {
+		this.servicesService.getIdServiceJbossXml(this.service.mrn).subscribe(
+			xmlString => {
+				this.fileHelperService.downloadFile(xmlString, 'text/xml', 'keycloak-oidc-subsystem.xml');
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to download the XML', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public downloadJSON() {
+		this.servicesService.getServiceKeycloakJson(this.service.mrn).subscribe(
+			jsonString => {
+				this.fileHelperService.downloadFile(jsonString, 'text/json', 'keycloak.json');
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to download the JSON', MCNotificationType.Error, err);
+			}
+		);
 	}
 
 	private loadService() {
