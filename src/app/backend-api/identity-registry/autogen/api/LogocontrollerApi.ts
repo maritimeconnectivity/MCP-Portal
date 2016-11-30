@@ -161,7 +161,9 @@ export class LogocontrollerApi {
             headers: headerParams,
             search: queryParameters
         };
-        requestOptions.body = JSON.stringify(logo);
+
+	      // NOTE: be carefull when autogenerating. This file is changed manually
+        requestOptions.body = logo;
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {

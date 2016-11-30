@@ -15,7 +15,7 @@ export class LogoService implements OnInit {
 
   public uploadLogo(orgMrn:string, logo:any): Observable<any> {
 	  return Observable.create(observer => {
-		  this.logoApi.createLogoPostUsingPOST(orgMrn, logo).subscribe(
+		  this.logoApi.createLogoPutUsingPUT(orgMrn, logo).subscribe(
 			  logo => {
 				  this.putImageInCache(orgMrn, null);
 				  observer.next(logo);
