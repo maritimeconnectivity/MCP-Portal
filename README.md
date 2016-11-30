@@ -4,7 +4,7 @@ This is the implementation of a management portal for managing the [Maritime Clo
 
 ### Demo
 
-[The portal is live in beta versionMaritime Cloud](http://management.maritimecloud.net)
+[The portal is live in beta version](http://management.maritimecloud.net)
 
 ### Build
 
