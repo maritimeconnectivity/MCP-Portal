@@ -1,8 +1,8 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
 import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {FileUploadType} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
+import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
 import {Doc} from "../../../../../backend-api/service-registry/autogen/model/Doc";
 import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
@@ -14,6 +14,8 @@ import {ActivatedRoute} from "@angular/router";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
+import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import {DesignXmlParser} from "../../../shared/services/design-xml-parser.service";
 
 @Component({
   selector: 'design-new',
@@ -22,6 +24,10 @@ import {SrViewModelService} from "../../../shared/services/sr-view-model.service
   styles: []
 })
 export class DesignNewComponent implements OnInit {
+	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+	public hasMrnError: boolean = false;
+	public mrnErrorText: string;
+
   public organization: Organization;
   public labelValues:Array<LabelValueModel>;
   public captionXml = 'Upload Design Xml file';
@@ -41,7 +47,7 @@ export class DesignNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+  constructor(private xmlParser: DesignXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
     this.organization = {};
   }
 
@@ -63,9 +69,31 @@ export class DesignNewComponent implements OnInit {
   }
 
   public onUploadXml(file: Xml) {
-    this.xml = file;
+	  if (file && this.isXmlValid(file)) {
+		  this.xml = file;
+	  } else {
+		  this.xml = null;
+		  this.fileUploadXml.resetFileSelection();
+	  }
     this.calculateFormValid();
   }
+
+	private isXmlValid(file: Xml) : boolean {
+		try {
+			let mrn = this.xmlParser.getMrn(file);
+			let isValid = this.mrnHelper.checkMrnForDesign(mrn);
+			this.hasMrnError = !isValid;
+			if (!isValid) {
+				this.mrnErrorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+					+ this.mrnHelper.mrnMaskForDesign() + "'ID'<BR>"
+					+ "'ID'=" + this.mrnHelper.mrnPatternError();
+			}
+			return isValid;
+		} catch ( error ) {
+			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+			return false;
+		}
+	}
 
   public cancel() {
     this.navigationService.cancelCreateDesign();
@@ -77,12 +105,13 @@ export class DesignNewComponent implements OnInit {
       var design:Design = {};
       design.designAsXml = this.xml;
       design.designAsDoc = this.doc;
-      design.name = this.xmlParserService.getValueFromField('name', this.xml);
-      design.description = this.xmlParserService.getValueFromField('description', this.xml);
-      design.designId = this.xmlParserService.getValueFromField('id', this.xml);
-      design.status = this.xmlParserService.getValueFromField('status', this.xml);
-      design.organizationId = this.organization.mrn;
-      design.version = this.xmlParserService.getValueFromField('version', this.xml);
+	    design.name = this.xmlParser.getName(this.xml);
+	    design.description = this.xmlParser.getDescription(this.xml);
+	    design.designId = this.xmlParser.getMrn(this.xml);
+	    design.status = this.xmlParser.getStatus(this.xml);
+	    design.organizationId = this.organization.mrn;
+	    design.version = this.xmlParser.getVersion(this.xml);
+
       design.specifications = [this.specification];
       this.createDesign(design);
     } catch ( error ) {

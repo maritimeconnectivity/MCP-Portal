@@ -1,15 +1,16 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {FileUploadType} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
+import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
 import {Doc} from "../../../../../backend-api/service-registry/autogen/model/Doc";
 import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
-import {XmlParserService} from "../../../../../shared/xml-parser.service";
 import * as _ from 'lodash';
+import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import {SpecificationXmlParser} from "../../../shared/services/specification-xml-parser.service";
 
 @Component({
   selector: 'specification-new',
@@ -18,6 +19,11 @@ import * as _ from 'lodash';
   styles: []
 })
 export class SpecificationNewComponent implements OnInit {
+	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+
+	public hasMrnError: boolean = false;
+	public mrnErrorText: string;
+
   public organization: Organization;
   public captionXml = 'Upload Specification Xml file';
   public captionDoc = 'Upload Specification Document file';
@@ -35,7 +41,7 @@ export class SpecificationNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private xmlParserService: XmlParserService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private orgService: OrganizationsService) {
+  constructor(private xmlParser: SpecificationXmlParser, private mrnHelper: MrnHelperService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private orgService: OrganizationsService) {
     this.organization = {};
   }
 
@@ -56,26 +62,49 @@ export class SpecificationNewComponent implements OnInit {
   }
 
   public onUploadXml(file: Xml) {
-    this.xml = file;
+	  if (file && this.isXmlValid(file)) {
+	    this.xml = file;
+    } else {
+		  this.xml = null;
+	  	this.fileUploadXml.resetFileSelection();
+	  }
     this.calculateFormValid();
+  }
+
+  private isXmlValid(file: Xml) : boolean {
+	  try {
+	  	let mrn = this.xmlParser.getMrn(file);
+	  	let isValid = this.mrnHelper.checkMrnForSpecification(mrn);
+		  this.hasMrnError = !isValid;
+		  if (!isValid) {
+		  	this.mrnErrorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+				    + this.mrnHelper.mrnMaskForSpecification() + "'ID'<BR>"
+				    + "'ID'=" + this.mrnHelper.mrnPatternError();
+		  }
+		  return isValid;
+	  } catch ( error ) {
+		  this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+		  return false;
+	  }
   }
 
   public cancel() {
     this.navigationService.cancelCreateSpecification();
   }
+
   public register() {
     this.isRegistering = true;
     try {
       var specification:Specification = {};
       specification.specAsXml = _.cloneDeep(this.xml);
       specification.specAsDoc = this.doc;
-      specification.name = this.xmlParserService.getValueFromField('name', this.xml);
-      specification.description = this.xmlParserService.getValueFromField('description', this.xml);
-      specification.specificationId = this.xmlParserService.getValueFromField('id', this.xml);
-      specification.keywords = this.xmlParserService.getValueFromField('keywords', this.xml);
-      specification.status = this.xmlParserService.getValueFromField('status', this.xml);
+      specification.name = this.xmlParser.getName(this.xml);
+      specification.description = this.xmlParser.getDescription(this.xml);
+      specification.specificationId = this.xmlParser.getMrn(this.xml);
+      specification.keywords = this.xmlParser.getKeywords(this.xml);
+      specification.status = this.xmlParser.getStatus(this.xml);
       specification.organizationId = this.organization.mrn;
-      specification.version = this.xmlParserService.getValueFromField('version', this.xml);
+      specification.version = this.xmlParser.getVersion(this.xml);
       this.createSpecification(specification);
     } catch ( error ) {
       this.isRegistering = false;

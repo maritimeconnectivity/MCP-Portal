@@ -56,7 +56,7 @@ export class MrnHelperService {
 	}
 
 	public mrnMaskForSpecification():string {
-		return this.mrnPreFix() + 'service:specification' + this.orgShortName() + ':';
+		return this.mrnPreFix() + 'service:specification:' + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForDesign():string {
@@ -65,6 +65,30 @@ export class MrnHelperService {
 
 	public mrnMaskForInstance():string {
 		return this.mrnPreFix() + 'service:instance:' + this.orgShortName() + ':';
+	}
+
+	public checkMrnForSpecification(specificationMrn:string) : boolean {
+		return this.checkMrn(specificationMrn, this.mrnMaskForSpecification());
+	}
+
+	public checkMrnForDesign(designMrn:string) : boolean {
+		return this.checkMrn(designMrn, this.mrnMaskForDesign());
+	}
+
+	public checkMrnForInstance(instanceMrn:string) : boolean {
+		return this.checkMrn(instanceMrn, this.mrnMaskForInstance());
+	}
+
+	public checkMrn(mrn:string, validMrnMask:string) : boolean {
+		try {
+			let orgSplit = mrn.split(':');
+			let elementId = orgSplit[orgSplit.length-1];
+			let idMatches = elementId.match(this.mrnPattern());
+			let validMrn = validMrnMask + elementId;
+			return idMatches && validMrn === mrn;
+		} catch (error) {
+			return false;
+		}
 	}
 }
 

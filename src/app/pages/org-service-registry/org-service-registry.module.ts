@@ -8,6 +8,9 @@ import SpecificationsModule from "./specifications/specifications.module";
 import DesignsModule from "./designs/designs.module";
 import InstancesModule from "./instances/instances.module";
 import SrHowToModule from "./sr-how-to/sr-how-to.module";
+import {SpecificationXmlParser} from "./shared/services/specification-xml-parser.service";
+import {DesignXmlParser} from "./shared/services/design-xml-parser.service";
+import {InstanceXmlParser} from "./shared/services/instance-xml-parser.service";
 
 
 @NgModule({
@@ -22,7 +25,12 @@ import SrHowToModule from "./sr-how-to/sr-how-to.module";
   ],
   declarations: [
     OrgServiceRegistryComponent
-  ]
+  ],
+	providers: [
+		SpecificationXmlParser,
+		DesignXmlParser,
+		InstanceXmlParser
+	]
 })
 export default class OrgServiceRegistryModule {
 }

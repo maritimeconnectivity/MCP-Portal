@@ -21,7 +21,7 @@ export class McFileUploader {
 
   @Output() onUpload: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('fileUpload') protected _fileUpload:ElementRef;
+	@ViewChild('filePicker') protected _filePicker:ElementRef;
 
   public tableClass:string;
 
@@ -38,6 +38,12 @@ export class McFileUploader {
   public ngOnInit():void {
     this.accept = (this.fileUploadType === FileUploadType.Xml ? '.xml' : '');
     this.chosenFileValue = this.requiredText;
+  }
+
+  public resetFileSelection() {
+	  this._filePicker.nativeElement.value = "";
+  	this.hasChosenFile = false;
+  	this.chosenFileValue = this.requiredText;
   }
 
   public uploadFileListener($event) {
@@ -59,8 +65,7 @@ export class McFileUploader {
         }
       }
     } else {
-      this.chosenFileValue = this.requiredText;
-      this.hasChosenFile = false;
+      this.resetFileSelection();
       this.onUpload.emit(null);
     }
   }

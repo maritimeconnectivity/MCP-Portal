@@ -3,7 +3,7 @@
   <div class="input-group">
     <label class="input-group-btn">
         <span class="btn btn-primary">
-            Browse&hellip; <input type="file" accept="{{accept}}" id="filePicker" (change)="uploadFileListener($event)" style="display: none;">
+            Browse&hellip; <input type="file" accept="{{accept}}" #filePicker id="filePicker" (change)="uploadFileListener($event)" style="display: none;">
         </span>
     </label>
     <input id="fileUpload" type="text" class="form-control input-uploader" [ngClass]="{'has-error-input': requiredText && !hasChosenFile}" value="{{chosenFileValue}}" readonly>

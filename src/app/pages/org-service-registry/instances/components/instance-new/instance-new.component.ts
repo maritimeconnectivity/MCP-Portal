@@ -1,8 +1,8 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
 import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {FileUploadType} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
+import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
 import {Doc} from "../../../../../backend-api/service-registry/autogen/model/Doc";
 import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
@@ -15,7 +15,8 @@ import {SrViewModelService} from "../../../shared/services/sr-view-model.service
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
-import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
+import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 
 @Component({
   selector: 'instance-new',
@@ -24,6 +25,10 @@ import {Service} from "../../../../../backend-api/identity-registry/autogen/mode
   styles: []
 })
 export class InstanceNewComponent implements OnInit {
+	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+	public hasMrnError: boolean = false;
+	public mrnErrorText: string;
+
   public organization: Organization;
   public labelValues:Array<LabelValueModel>;
   public captionXml = 'Upload Instance Xml file';
@@ -43,7 +48,7 @@ export class InstanceNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
+  constructor(private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
     this.organization = {};
   }
 
@@ -65,9 +70,31 @@ export class InstanceNewComponent implements OnInit {
   }
 
   public onUploadXml(file: Xml) {
-    this.xml = file;
+	  if (file && this.isXmlValid(file)) {
+		  this.xml = file;
+	  }else {
+		  this.xml = null;
+		  this.fileUploadXml.resetFileSelection();
+	  }
     this.calculateFormValid();
   }
+
+	private isXmlValid(file: Xml) : boolean {
+		try {
+			let mrn = this.xmlParser.getMrn(file);
+			let isValid = this.mrnHelper.checkMrnForInstance(mrn);
+			this.hasMrnError = !isValid;
+			if (!isValid) {
+				this.mrnErrorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
+					+ "'ID'=" + this.mrnHelper.mrnPatternError();
+			}
+			return isValid;
+		} catch ( error ) {
+			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+			return false;
+		}
+	}
 
   public cancel() {
     this.navigationService.cancelCreateInstance();
@@ -79,13 +106,15 @@ export class InstanceNewComponent implements OnInit {
       var instance:Instance = {};
       instance.instanceAsXml = this.xml;
       instance.instanceAsDoc = this.doc;
-      instance.name = this.xmlParserService.getValueFromField('name', this.xml);
-      instance.description = this.xmlParserService.getValueFromField('description', this.xml);
-      instance.instanceId = this.xmlParserService.getValueFromField('id', this.xml);
-      instance.status = this.xmlParserService.getValueFromField('status', this.xml);
-      instance.keywords = this.xmlParserService.getValueFromField('keywords', this.xml);
-      instance.organizationId = this.organization.mrn;
-      instance.version = this.xmlParserService.getValueFromField('version', this.xml);
+	    instance.name = this.xmlParser.getName(this.xml);
+	    instance.description = this.xmlParser.getDescription(this.xml);
+	    instance.instanceId = this.xmlParser.getMrn(this.xml);
+	    instance.keywords = this.xmlParser.getKeywords(this.xml);
+	    instance.status = this.xmlParser.getStatus(this.xml);
+	    instance.organizationId = this.organization.mrn;
+	    instance.version = this.xmlParser.getVersion(this.xml);
+
+      // TODO change this with new version
       instance.designs = [this.design];
       this.createInstance(instance);
     } catch ( error ) {

@@ -8,8 +8,9 @@
 
       <div *ngIf="design">
         <form>
-          <mc-file-uploader [caption]="captionXml" [fileUploadType]="fileTypeXml" [requiredText]="requiredTextXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
+          <mc-file-uploader #uploadXml [caption]="captionXml" [fileUploadType]="fileTypeXml" [requiredText]="requiredTextXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
           <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
+          <div *ngIf="hasMrnError" class="mc-form-error" [innerHTML]="mrnErrorText | undefined | sanitizeHtml"></div>
           <ul class="btn-list clearfix">
             <li>
               <mc-loading-button [class]="registerButtonClass" [disabled]="!isFormValid" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="onRegister" ></mc-loading-button>
