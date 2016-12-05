@@ -170,7 +170,6 @@ export class InstancesService implements OnInit {
         return '';
       }
       var parser = new DOMParser();
-      // FIXME DID IT WORK: this should change to non-base64 string with next service-registry update
       let xmlString =  instance.instanceAsXml.content;
       var xmlData = parser.parseFromString(xmlString, instance.instanceAsXml.contentContentType);
 

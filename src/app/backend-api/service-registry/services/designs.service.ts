@@ -89,18 +89,17 @@ export class DesignsService implements OnInit {
     });
   }
 
-  // TODO for now there can only be 1 design for an instance, but may change
-  public getDesignsForInstance(instance:Instance): Observable<Array<Design>> {
+  public getDesignForInstance(instance:Instance): Observable<Design> {
     return Observable.create(observer => {
       let designId = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'id', instance.instanceAsXml);
       let version = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'version', instance.instanceAsXml);
       this.designsApi.getDesignUsingGET(designId, version).subscribe(
         design => {
-          observer.next([design]);
+          observer.next(design);
         },
         err => {
           if (err.status == 404) {
-            observer.next([]);
+            observer.next(undefined);
           } else {
             observer.error(err);
           }
@@ -117,6 +116,7 @@ export class DesignsService implements OnInit {
         designs => {
           var designsFiltered: Array<Design> = [];
 
+	        // TODO this should be deleted in next version because then there is a dedicated api for the call
           for (let design of designs) {
             let implementedSpecificationId = this.xmlParser.getVauleFromEmbeddedField('designsServiceSpecifications', 'id', design.designAsXml);
             if (implementedSpecificationId === specificationId) {
@@ -175,7 +175,6 @@ export class DesignsService implements OnInit {
         return '';
       }
       var parser = new DOMParser();
-      // FIXME DID IT WORK: this should change to non-base64 string with next service-registry update
       let xmlString =  design.designAsXml.content;
       var xmlData = parser.parseFromString(xmlString, design.designAsXml.contentContentType);
 

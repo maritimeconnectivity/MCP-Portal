@@ -19,10 +19,9 @@ import {AuthService} from "../../../../../authentication/services/auth.service";
 })
 export class InstanceDetailsComponent {
   public instance: Instance;
-  public designs: Array<Design>;
+  public design: Design;
   public title:string;
   public labelValues:Array<LabelValueModel>;
-  public isLoadingDesigns: boolean;
   public isLoadingInstance: boolean;
   public onGotoDesign: Function;
 	public showModal:boolean = false;
@@ -54,7 +53,7 @@ export class InstanceDetailsComponent {
       instance => {
         this.title = instance.name;
         this.instance = instance;
-        this.loadDesigns();
+        this.loadDesign();
       },
       err => {
         // TODO: make this as a general component
@@ -68,35 +67,29 @@ export class InstanceDetailsComponent {
     );
   }
 
-  // TODO this should be deleted and taken directly from the instance-model when service registry has proper data. from instance.designs
-  private loadDesigns() {
-    this.designsService.getDesignsForInstance(this.instance).subscribe(
-      designs => {
-        this.designs = designs;
+  private loadDesign() {
+    this.designsService.getDesignForInstance(this.instance).subscribe(
+      design => {
+        this.design = design;
         this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance);
-        this.generateLabelValuesForDesigns();
+        this.generateLabelValueForDesign();
         this.isLoadingInstance = false;
       },
       err => {
         this.isLoadingInstance = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error, err);
+        this.notifications.generateNotification('Error', 'Error when trying to get design', MCNotificationType.Error, err);
       }
     );
   }
 
-  private generateLabelValuesForDesigns() {
-    if (this.designs && this.designs.length > 0) {
-      let plur = (this.designs.length > 1 ? 's' : '');
-      var label = 'Implemented design' + plur;
-      this.designs.forEach((design) => {
-        this.labelValues.push({label: label, valueHtml: design.name + " - " + design.version, linkFunction: this.onGotoDesign, linkValue: [design.designId, design.version]});
-        label = "";
-      });
+  private generateLabelValueForDesign() {
+    if (this.design) {
+      var label = 'Implemented design';
+	    this.labelValues.push({label: label, valueHtml: this.design.name + " - " + this.design.version, linkFunction: this.onGotoDesign, linkValue: [this.design.designId, this.design.version]});
     }
   }
 
-  private gotoDesign(linkValue:any
-  ) {
+  private gotoDesign(linkValue:any) {
     try {
       this.navigationHelperService.navigateToOrgDesign(linkValue[0], linkValue[1]);
     } catch ( error ) {
