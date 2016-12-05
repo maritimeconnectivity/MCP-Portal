@@ -4,6 +4,7 @@ import {Router, Routes, NavigationEnd} from '@angular/router';
 import {BaMenuService} from './baMenu.service';
 import {GlobalState} from '../../../global.state';
 import {Subscription} from 'rxjs/Subscription';
+import {layoutSizes} from "../../theme.constants";
 
 @Component({
   selector: 'ba-menu',
@@ -43,6 +44,9 @@ export class BaMenu {
 
   public selectMenuAndNotify():void {
     if (this.menuItems) {
+    	if (this._shouldMenuCollapse()) {
+		    this._state.notifyDataChanged('menu.isCollapsed', true);
+	    }
       this.menuItems = this._service.selectMenuItem(this.menuItems);
       this._state.notifyDataChanged('menu.activeLink', this._service.getCurrentItem());
     }
@@ -78,4 +82,8 @@ export class BaMenu {
 
     return false;
   }
+
+	private _shouldMenuCollapse():boolean {
+		return window.innerWidth <= layoutSizes.resWidthCollapseSidebar;
+	}
 }
