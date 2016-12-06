@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation, Input} from '@angular/core';
-import {McFormControlModel} from "../mcForm/mcFormControlModel";
+import {McFormControlModelCheckbox} from "../mcForm/mcFormControlModel";
 
 @Component({
   selector: 'mc-form-control-checkbox',
@@ -8,16 +8,16 @@ import {McFormControlModel} from "../mcForm/mcFormControlModel";
   styles: [require('./mcFormControlCheckbox.scss')]
 })
 export class McFormControlCheckbox {
-	@Input() formControlModel: McFormControlModel;
+	@Input() formControlModel: McFormControlModelCheckbox;
 
 	public state: boolean;
 
   constructor() {
-	  this.state = false;
   }
 
 
 	ngOnInit() {
+  	this.state = this.formControlModel.state;
 	}
 
 	public onChange(value: any): void {

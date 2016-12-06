@@ -8,11 +8,12 @@ import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {
 	McFormControlModel, McFormControlType,
-	McFormControlModelSelect, SelectModel
+	McFormControlModelSelect, SelectModel, McFormControlModelCheckbox
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
+import {UrlValidator} from "../../../../../theme/validators/url.validator";
 
 
 @Component({
@@ -23,11 +24,14 @@ import {ServiceViewModel} from "../../view-models/ServiceViewModel";
 })
 export class ServiceNewComponent implements OnInit {
   public organization: Organization;
+  private isPrefilled = false;
 	private mrn: string;
+	private name: string;
 	private mrnMask:string;
 	private mrnPattern:string;
 	private mrnPatternError:string;
 	// McForm params
+	private useOIDC:boolean = false;
 	public isLoading = true;
 	public isRegistering = false;
 	public registerTitle = "Register Service";
@@ -45,6 +49,13 @@ export class ServiceNewComponent implements OnInit {
 	ngOnInit() {
 		this.isRegistering = false;
 		this.isLoading = true;
+		let mrn = this.activatedRoute.snapshot.queryParams['mrn'];
+		let name = this.activatedRoute.snapshot.queryParams['name'];
+		if (name && mrn) {
+			this.isPrefilled = true;
+			this.mrn = mrn;
+			this.name = name;
+		}
 		this.loadMyOrganization();
 	}
 
@@ -71,7 +82,11 @@ export class ServiceNewComponent implements OnInit {
 	private createService(service:Service) {
 		this.servicesService.createIdService(service).subscribe(
 			service => {
-				this.navigationService.navigateToService(service.mrn);
+				if (this.isPrefilled) {
+					this.cancel();
+				} else {
+					this.navigationService.navigateToService(service.mrn);
+				}
 				this.isRegistering = false;
 			},
 			err => {
@@ -94,6 +109,10 @@ export class ServiceNewComponent implements OnInit {
 			}
 		);
 	}
+	private shouldUseOIDC(useOIDC:boolean) {
+		this.useOIDC = useOIDC;
+		this.generateForm();
+	}
 
 	private generateMRN(idValue:string) {
 		var mrn = (idValue?idValue:'');
@@ -103,7 +122,11 @@ export class ServiceNewComponent implements OnInit {
 	}
 
 	private generateForm() {
+		var oldForm = this.registerForm;
 		this.registerForm = this.formBuilder.group({});
+		if (!oldForm) {
+			oldForm = this.registerForm;
+		}
 		this.formControlModels = [];
 
 		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: '', isDisabled: true};
@@ -111,36 +134,52 @@ export class ServiceNewComponent implements OnInit {
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'serviceId', controlType: McFormControlType.Text, labelName: 'Service ID', placeholder: 'Enter Service ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
-		formControl = new FormControl('', formControlModel.validator);
-		formControl.valueChanges.subscribe(param => this.generateMRN(param));
-		this.registerForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
+		if (!this.isPrefilled) {
+			formControlModel = {formGroup: this.registerForm, elementId: 'serviceId', controlType: McFormControlType.Text, labelName: 'Service ID', placeholder: 'Enter Service ID to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
+			formControl = new FormControl('', formControlModel.validator);
+			formControl.valueChanges.subscribe(param => this.generateMRN(param));
+			this.registerForm.addControl(formControlModel.elementId, formControl);
+			this.formControlModels.push(formControlModel);
+		}
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
-		formControl = new FormControl('', formControlModel.validator);
+
+		if (this.isPrefilled) {
+			formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: '', isDisabled: true};
+			formControl = new FormControl(this.name, formControlModel.validator);
+		} else {
+			formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
+			formControl = new FormControl('', formControlModel.validator);
+		}
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
 		formControlModel = {formGroup: this.registerForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
-		formControl = new FormControl('', formControlModel.validator);
+		formControl = new FormControl(oldForm.value.permissions, formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
 		formControlModel = {formGroup: this.registerForm, elementId: 'certDomainName', controlType: McFormControlType.Text, labelName: 'Certificate domain name', placeholder: ''};
-		formControl = new FormControl('', formControlModel.validator);
+		formControl = new FormControl(oldForm.value.certDomainName, formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: ''};
-		formControl = new FormControl('', formControlModel.validator);
-		this.registerForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
+		let formControlModelCheckbox:McFormControlModelCheckbox = {state:this.useOIDC, formGroup: this.registerForm, elementId: 'useOIDC', controlType: McFormControlType.Checkbox, labelName: 'Use OpenID Connect (OIDC)'};
+		formControl = new FormControl({value: '', disabled: false}, formControlModelCheckbox.validator);
+		formControl.valueChanges.subscribe(param => this.shouldUseOIDC(param));
+		this.registerForm.addControl(formControlModelCheckbox.elementId, formControl);
+		this.formControlModels.push(formControlModelCheckbox);
 
-		let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: ''};
-		formControl = new FormControl('', formControlModelSelect.validator);
-		this.registerForm.addControl(formControlModelSelect.elementId, formControl);
-		this.formControlModels.push(formControlModelSelect);
+		if (this.useOIDC) {
+			formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid'};
+			formControl = new FormControl('', formControlModel.validator);
+			this.registerForm.addControl(formControlModel.elementId, formControl);
+			this.formControlModels.push(formControlModel);
+
+			let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:Validators.required};
+			formControl = new FormControl('', formControlModelSelect.validator);
+			this.registerForm.addControl(formControlModelSelect.elementId, formControl);
+			this.formControlModels.push(formControlModelSelect);
+		}
 	}
 
 	private selectValues():Array<SelectModel> {

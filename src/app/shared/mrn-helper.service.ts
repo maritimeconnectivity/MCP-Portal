@@ -24,7 +24,7 @@ export class MrnHelperService {
 		return orgSplit[0] + ":";
 	}
 
-	private orgShortName():string {
+	public orgShortName():string {
 		return this.orgShortNameFromMrn(this.authService.authState.orgMrn);
 	}
 

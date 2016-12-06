@@ -9,6 +9,7 @@ import {McFormControlModel, McFormControlType} from "./mcFormControlModel";
   styles: [require('./mcForm.scss')]
 })
 export class McForm {
+	@Input() hideButtons:boolean = false;
 	@Input() formControlModels: Array<McFormControlModel>;
 	@Input() formGroup: FormGroup;
 	@Input() isLoading:boolean;

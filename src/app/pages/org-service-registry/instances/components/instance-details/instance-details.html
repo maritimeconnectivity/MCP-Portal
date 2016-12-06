@@ -14,6 +14,20 @@
         </li>
       </ul>
     </ba-card>
+
+    <div *ngIf="shouldDisplayIdService">
+      <service-details-view [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
+    </div>
+
+    <div *ngIf="shouldDisplayCreateButton">
+      <ba-card title="{{titleIdService}}" baCardClass="with-scroll table-panel">
+        <ul class="btn-list clearfix">
+          <li>
+            <button type="button" class="btn btn-danger btn-raised" (click)="createIdService()">Create ID Service</button>
+          </li>
+        </ul>
+      </ba-card>
+    </div>
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete instance'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>

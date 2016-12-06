@@ -1,25 +1,6 @@
 <div class="row">
   <div class="col-lg-12">
-    <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-      <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
-      <ul *ngIf="!isLoading && this.service.oidcRedirectUri" class="btn-list clearfix">
-        <li>
-          <button type="button" class="btn btn-primary btn-raised" (click)="downloadXML()">Download JBOSS XML</button>
-        </li>
-        <li>
-          <button type="button" class="btn btn-primary btn-raised" (click)="downloadJSON()">Download Keycloak JSON</button>
-        </li>
-        <li *ngIf="showDelete()">
-          <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Service</button>
-        </li>
-      </ul>
-    </ba-card>
-
-    <div *ngIf="service">
-      <ba-card title="Certificates for {{title}}" baCardClass="with-scroll table-panel">
-        <certificates-table [entityMrn]="service.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="service.certificates"></certificates-table>
-      </ba-card>
-    </div>
+    <service-details-view [shouldShowDelete]="true" (deleteAction)="delete()" [isLoading]="isLoading" [title]="title" [service]="service"></service-details-view>
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete service'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>

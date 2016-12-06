@@ -13,7 +13,7 @@ import {UrlValidator} from "../theme/validators/url.validator";
 import {McUtils} from "../shared/mc-utils";
 import {
 	McFormControlModel,
-	McFormControlType
+	McFormControlType, McFormControlModelCheckbox
 } from "../theme/components/mcForm/mcFormControlModel";
 
 @Component({
@@ -123,11 +123,11 @@ export class ApplyOrgComponent implements OnInit {
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'isStm', controlType: McFormControlType.Checkbox, labelName: 'Enroll the organization via STM'};
-		formControl = new FormControl({value: '', disabled: false}, formControlModel.validator);
+		let formControlModelCheck:McFormControlModelCheckbox = {state: false, formGroup: this.registerForm, elementId: 'isStm', controlType: McFormControlType.Checkbox, labelName: 'Enroll the organization via STM'};
+		formControl = new FormControl({value: '', disabled: false}, formControlModelCheck.validator);
 		formControl.valueChanges.subscribe(param => this.setMrnMask(param));
-		this.registerForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
+		this.registerForm.addControl(formControlModelCheck.elementId, formControl);
+		this.formControlModels.push(formControlModelCheck);
 
 		formControlModel = {formGroup: this.registerForm, elementId: 'orgId', controlType: McFormControlType.Text, labelName: 'Organization shortname', placeholder: 'Enter shortname to generate MRN', validator:Validators.required, pattern:this.mrnPattern, errorText:this.mrnPatternError};
 		formControl = new FormControl('', formControlModel.validator);

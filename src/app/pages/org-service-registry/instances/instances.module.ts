@@ -8,6 +8,7 @@ import {InstancesComponent} from "./instances.component";
 import {InstanceListComponent} from "./components/instance-list/instance-list.component";
 import {InstanceDetailsComponent} from "./components/instance-details/instance-details.component";
 import {InstanceNewComponent} from "./components/instance-new/instance-new.component";
+import ServicesModule from "../../org-identity-registry/services/services.module";
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import {InstanceNewComponent} from "./components/instance-new/instance-new.compo
     CommonModule,
     NgaModule,
     SharedModule,
-    routing
+    routing,
+	  ServicesModule
   ],
   declarations: [
     InstancesComponent,

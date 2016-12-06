@@ -10,6 +10,9 @@ import {Design} from "../../../../../backend-api/service-registry/autogen/model/
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 
 @Component({
   selector: 'instance-details',
@@ -27,14 +30,23 @@ export class InstanceDetailsComponent {
 	public showModal:boolean = false;
 	public modalDescription:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+	public isLoadingIdService: boolean;
+	public titleIdService:string;
+	public idService:Service;
+	public shouldDisplayIdService:boolean = false;
+	public shouldDisplayCreateButton:boolean = false;
+
+  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService) {
 
   }
 
   ngOnInit() {
     this.onGotoDesign = this.gotoDesign.bind(this);
-    this.isLoadingInstance = true;
+	  this.shouldDisplayCreateButton = false;
+	  this.isLoadingInstance = true;
+	  this.isLoadingIdService = true;
     this.title = 'Loading ...';
+	  this.titleIdService = 'ID information';
     this.loadInstance();
   }
 
@@ -45,6 +57,16 @@ export class InstanceDetailsComponent {
   public downloadDoc() {
     this.fileHelperService.downloadDoc(this.instance.instanceAsDoc);
   }
+
+  public createIdService() {
+		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name);
+  }
+
+  private isMyOrg():boolean{
+  	// TODO: with next version get this from this.instance.organizationId
+	  return this.instance.instanceId.indexOf(this.mrnHelper.orgShortName()) >= 0;
+  }
+
 
   private loadInstance() {
     let instanceId = this.route.snapshot.params['id'];
@@ -67,6 +89,24 @@ export class InstanceDetailsComponent {
     );
   }
 
+  private loadIdService(mrn:string) {
+	  this.servicesService.getIdService(mrn).subscribe(
+		  service => {
+			  this.idService = service;
+			  this.isLoadingIdService = false;
+		  },
+		  err => {
+			  if (err.status == 404) {
+				  this.shouldDisplayIdService = false;
+				  this.shouldDisplayCreateButton = this.isAdmin();
+			  } else {
+			    this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
+			  }
+			  this.isLoadingIdService = false;
+		  }
+	  );
+  }
+
   private loadDesign() {
     this.designsService.getDesignForInstance(this.instance).subscribe(
       design => {
@@ -74,6 +114,10 @@ export class InstanceDetailsComponent {
         this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance);
         this.generateLabelValueForDesign();
         this.isLoadingInstance = false;
+	      if (this.isMyOrg()) {
+		      this.shouldDisplayIdService = true;
+		      this.loadIdService(this.instance.instanceId);
+	      }
       },
       err => {
         this.isLoadingInstance = false;
@@ -97,9 +141,8 @@ export class InstanceDetailsComponent {
     }
   }
 
-  // TODO: until the SR can deliver the owner organization, only siteadmins can delete
 	private isAdmin():boolean {
-		return this.authService.authState.isSiteAdmin();
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
 	public shouldDisplayDelete():boolean {
@@ -107,7 +150,7 @@ export class InstanceDetailsComponent {
 	}
 
 	private delete() {
-		this.modalDescription = 'Do you want to delete the design?';
+		this.modalDescription = 'Do you want to delete the instance?';
 		this.showModal = true;
 	}
 	public cancelModal() {
@@ -119,11 +162,22 @@ export class InstanceDetailsComponent {
 		this.showModal = false;
 		this.instancesService.deleteInstance(this.instance).subscribe(
 			() => {
-				this.navigationHelperService.navigateToOrgInstance('', '');
+				this.deleteIdService();
 			},
 			err => {
 				this.isLoadingInstance = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private deleteIdService() {
+		this.servicesService.deleteIdService(this.idService.mrn).subscribe(
+			() => {
+				this.navigationHelperService.navigateToOrgInstance('', '');
+			},
+			err => {
+				this.navigationHelperService.navigateToOrgInstance('', '');
 			}
 		);
 	}

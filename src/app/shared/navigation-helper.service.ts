@@ -15,6 +15,7 @@ export const queryKeys = {
 @Injectable()
 export class NavigationHelperService {
   private path:string;
+	private pathBeforeCreateIdService:string;
   private pathBeforeCerticates:string;
   private pathBeforeCreateSpecification:string;
   private pathBeforeCreateDesign:string;
@@ -37,7 +38,7 @@ export class NavigationHelperService {
         break;
       }
       case CertificateEntityType.Service: {
-        pathElement = "services";
+        pathElement = "instances";
         break;
       }
       case CertificateEntityType.User: {
@@ -87,11 +88,11 @@ export class NavigationHelperService {
 	}
 
 	public cancelCreateService() {
-		this.path = '/';
-		let pagesMenu = PAGES_MENU;
-		this.generatePath('services', pagesMenu[0]);
-
-		this.router.navigate([this.path]);
+		if (this.pathBeforeCreateIdService) {
+			this.router.navigateByUrl(this.pathBeforeCreateIdService);
+		} else {
+			this.navigateToOrgInstance('', '');
+		}
 	}
 
 	public cancelCreateUser() {
@@ -156,6 +157,14 @@ export class NavigationHelperService {
 		this.generatePath('vessels', pagesMenu[0]);
 
 		this.router.navigate([this.path]);
+	}
+
+	public navigateToCreateIdService(mrn:string, name:string) {
+		this.pathBeforeCreateIdService = this.router.url;
+		this.path = '/register-id';
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('instances', pagesMenu[0]);
+		this.router.navigate([this.path], { queryParams: { mrn: mrn, name: name }, preserveQueryParams: false});
 	}
 
   public navigateToCreateSpecification() {

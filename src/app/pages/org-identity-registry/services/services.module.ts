@@ -22,7 +22,10 @@ import {ServiceNewComponent} from "./components/service-new/service-new.componen
     ServiceDetailsComponent,
     ServiceListComponent,
 	  ServiceNewComponent
-  ]
+  ],
+	exports: [
+		ServiceNewComponent
+	]
 })
 export default class ServicesModule {
 }

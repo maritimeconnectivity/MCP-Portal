@@ -11,7 +11,7 @@
         <mc-form-control-select [formControlModel]="formControlModel"></mc-form-control-select>
       </div>
     </div>
-    <ul class="btn-list clearfix">
+    <ul *ngIf="!hideButtons" class="btn-list clearfix">
       <li>
         <mc-loading-button [class]="'btn btn-danger btn-raised'" [disabled]="formGroup.invalid" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="registerFunc" ></mc-loading-button>
       </li>

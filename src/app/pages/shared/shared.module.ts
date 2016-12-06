@@ -10,6 +10,7 @@ import {CertificateHelperService} from "./services/certificate-helper.service";
 import {OrganizationDetailsTableComponent} from "./components/organizaton-details-table/organization-details-table.component";
 import {OrganizationViewModelService} from "./services/organization-view-model.service";
 import {CertificateIssueNewComponent} from "./components/certificate-issue-new/certificate-issue-new.component";
+import {ServiceDetailsViewComponent} from "./components/service-details-view/service-details-view.component";
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import {CertificateIssueNewComponent} from "./components/certificate-issue-new/c
     SpecificationsTableComponent,
     CertificatesTableComponent,
     OrganizationDetailsTableComponent,
-    CertificateIssueNewComponent
+    CertificateIssueNewComponent,
+	  ServiceDetailsViewComponent
   ],
   exports: [
     OrganizationDetailsTableComponent,
@@ -31,7 +33,8 @@ import {CertificateIssueNewComponent} from "./components/certificate-issue-new/c
     InstancesTableComponent,
     SpecificationsTableComponent,
     CertificatesTableComponent,
-    CertificateIssueNewComponent
+    CertificateIssueNewComponent,
+	  ServiceDetailsViewComponent
   ],
   providers: [
     SrViewModelService,

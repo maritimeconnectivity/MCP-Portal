@@ -26,3 +26,6 @@ export interface McFormControlModel {
 export interface McFormControlModelSelect extends McFormControlModel {
 	selectValues:Array<SelectModel>;
 }
+export interface McFormControlModelCheckbox extends McFormControlModel {
+	state:boolean;
+}
