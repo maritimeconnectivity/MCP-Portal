@@ -32,7 +32,7 @@ import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class ElasticsearchindexresourceApi {
-    protected basePath = 'https://sr.maritimecloud.net:8443/';
+    protected basePath = 'https://sr.maritimecloud.net';
     public defaultHeaders : Headers = new Headers();
 
     constructor(protected http: Http, @Optional() basePath: string) {
