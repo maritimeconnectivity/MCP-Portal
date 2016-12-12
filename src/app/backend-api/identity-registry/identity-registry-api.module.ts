@@ -7,6 +7,7 @@ import {DevicecontrollerApi} from "./autogen/api/DevicecontrollerApi";
 import {UsercontrollerApi} from "./autogen/api/UsercontrollerApi";
 import {VesselcontrollerApi} from "./autogen/api/VesselcontrollerApi";
 import {LogocontrollerApi} from "./autogen/api/LogocontrollerApi";
+import {Http} from "@angular/http";
 
 @NgModule({
   imports: [
@@ -15,14 +16,63 @@ import {LogocontrollerApi} from "./autogen/api/LogocontrollerApi";
   declarations: [
   ],
   providers: [
-    ServicecontrollerApi,
-    OrganizationcontrollerApi,
-    RolecontrollerApi,
-    DevicecontrollerApi,
-    ServicecontrollerApi,
-    UsercontrollerApi,
-    VesselcontrollerApi,
-	  LogocontrollerApi
+	  {
+		  provide: RolecontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new RolecontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: ServicecontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new ServicecontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: OrganizationcontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new OrganizationcontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: LogocontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new LogocontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: VesselcontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new VesselcontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: UsercontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new UsercontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: ServicecontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new ServicecontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: DevicecontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new DevicecontrollerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  }
+
   ]
 })
 export class IdentityRegistryApiModule { }

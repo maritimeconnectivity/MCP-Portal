@@ -33,7 +33,7 @@ import * as models from '../model/models';
 
 @Injectable()
 export class RolecontrollerApi {
-    protected basePath = 'https://api.maritimecloud.net/';
+    protected basePath = 'https://api.maritimecloud.ne';
     public defaultHeaders : Headers = new Headers();
 
     constructor(protected http: Http, @Optional() basePath: string) {
