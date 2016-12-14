@@ -108,7 +108,7 @@ module.exports = function(options) {
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
           'IR_BASE_PATH':JSON.stringify('https://test-api.maritimecloud.net'),
-          'SR_BASE_PATH':JSON.stringify('https://sr.maritimecloud.net'),
+          'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimecloud.net'),
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'process.env': {
