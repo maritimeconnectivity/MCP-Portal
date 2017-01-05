@@ -19,7 +19,8 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: HMR
+  HMR: HMR,
+  KEYCLOAK: 'https://maritimeid.maritimecloud.net/auth/js/keycloak.js'
 });
 
 /**
