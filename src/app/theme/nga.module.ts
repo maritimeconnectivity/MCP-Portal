@@ -72,6 +72,7 @@ import {UrlValidator} from "./validators/url.validator";
 import {McLogoUploader} from "./components/mcLogoUploader/mcLogoUploader.component";
 import {McFormControlCheckbox} from "./components/mcFormControlCheckbox/mcFormControlCheckbox.component";
 import {McFormControlSelect} from "./components/mcFormControlSelect/mcFormControlSelect.component";
+import {SelectValidator} from "./validators/select.validator";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -130,7 +131,8 @@ const NGA_SERVICES = [
 const NGA_VALIDATORS = [
   EmailValidator,
   EqualPasswordsValidator,
-	UrlValidator
+	UrlValidator,
+	SelectValidator
 ];
 
 @NgModule({

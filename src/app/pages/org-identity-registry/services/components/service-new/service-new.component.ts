@@ -14,6 +14,7 @@ import {IdServicesService} from "../../../../../backend-api/identity-registry/se
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
 import {UrlValidator} from "../../../../../theme/validators/url.validator";
+import {SelectValidator} from "../../../../../theme/validators/select.validator";
 
 
 @Component({
@@ -164,7 +165,7 @@ export class ServiceNewComponent implements OnInit {
 		this.formControlModels.push(formControlModel);
 
 		let formControlModelCheckbox:McFormControlModelCheckbox = {state:this.useOIDC, formGroup: this.registerForm, elementId: 'useOIDC', controlType: McFormControlType.Checkbox, labelName: 'Use OpenID Connect (OIDC)'};
-		formControl = new FormControl({value: '', disabled: false}, formControlModelCheckbox.validator);
+		formControl = new FormControl({value: formControlModelCheckbox.state, disabled: false}, formControlModelCheckbox.validator);
 		formControl.valueChanges.subscribe(param => this.shouldUseOIDC(param));
 		this.registerForm.addControl(formControlModelCheckbox.elementId, formControl);
 		this.formControlModels.push(formControlModelCheckbox);
@@ -175,7 +176,7 @@ export class ServiceNewComponent implements OnInit {
 			this.registerForm.addControl(formControlModel.elementId, formControl);
 			this.formControlModels.push(formControlModel);
 
-			let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:Validators.required};
+			let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate};
 			formControl = new FormControl('', formControlModelSelect.validator);
 			this.registerForm.addControl(formControlModelSelect.elementId, formControl);
 			this.formControlModels.push(formControlModelSelect);
@@ -184,10 +185,10 @@ export class ServiceNewComponent implements OnInit {
 
 	private selectValues():Array<SelectModel> {
 		let selectValues:Array<SelectModel> = [];
-		selectValues.push({value:undefined, label:'Choose access type...'});
+		selectValues.push({value:undefined, label:'Choose access type...', isSelected: true});
 		let allOidcTypes = ServiceViewModel.getAllOidcAccessTypes();
 		allOidcTypes.forEach(oidcType => {
-			selectValues.push({value:oidcType.value, label:oidcType.label});
+			selectValues.push({value:oidcType.value, label:oidcType.label, isSelected: false});
 		});
 		return selectValues;
 	}

@@ -13,7 +13,7 @@
     </div>
     <ul *ngIf="!hideButtons" class="btn-list clearfix">
       <li>
-        <mc-loading-button [class]="'btn btn-danger btn-raised'" [disabled]="formGroup.invalid" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="registerFunc" ></mc-loading-button>
+        <mc-loading-button [class]="'btn btn-danger btn-raised'" [disabled]="formGroup.invalid || disableRegister()" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="registerFunc" ></mc-loading-button>
       </li>
       <li>
         <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>

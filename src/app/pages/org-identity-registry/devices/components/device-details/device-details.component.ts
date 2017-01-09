@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
 import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'device-details',
@@ -22,7 +23,7 @@ export class DeviceDetailsComponent {
 	public certificateTitle: string;
 	public showModal:boolean = false;
 	public modalDescription:string;
-	constructor(private authService: AuthService, private route: ActivatedRoute, private devicesService: DevicesService, private router:Router, private notifications:MCNotificationsService) {
+	constructor(private authService: AuthService, private route: ActivatedRoute, private devicesService: DevicesService, private router:Router, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
 
 	}
 
@@ -57,6 +58,10 @@ export class DeviceDetailsComponent {
 		}
 	}
 
+	public showUpdate():boolean {
+		return this.isAdmin() && this.device != null;
+	}
+
 	public showDelete():boolean {
 		return this.isAdmin() && this.device != null;
 	}
@@ -65,7 +70,11 @@ export class DeviceDetailsComponent {
 		return this.authService.authState.isAdmin();
 	}
 
-	private delete() {
+	public update() {
+		this.navigationHelper.navigateToUpdateDevice(this.device.mrn);
+	}
+
+	public delete() {
 		this.modalDescription = 'Are you sure you want to delete the device?';
 		this.showModal = true;
 	}

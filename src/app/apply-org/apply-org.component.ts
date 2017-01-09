@@ -124,7 +124,7 @@ export class ApplyOrgComponent implements OnInit {
 		this.formControlModels.push(formControlModel);
 
 		let formControlModelCheck:McFormControlModelCheckbox = {state: false, formGroup: this.registerForm, elementId: 'isStm', controlType: McFormControlType.Checkbox, labelName: 'Enroll the organization via STM'};
-		formControl = new FormControl({value: '', disabled: false}, formControlModelCheck.validator);
+		formControl = new FormControl({value: formControlModelCheck.state, disabled: false}, formControlModelCheck.validator);
 		formControl.valueChanges.subscribe(param => this.setMrnMask(param));
 		this.registerForm.addControl(formControlModelCheck.elementId, formControl);
 		this.formControlModels.push(formControlModelCheck);

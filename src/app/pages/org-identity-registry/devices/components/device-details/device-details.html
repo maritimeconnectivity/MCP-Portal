@@ -2,8 +2,11 @@
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
       <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
-      <ul *ngIf="!isLoading && showDelete()" class="btn-list clearfix">
-        <li>
+      <ul *ngIf="!isLoading && (showDelete() || showUpdate())" class="btn-list clearfix">
+        <li *ngIf="showUpdate()">
+          <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update device</button>
+        </li>
+        <li *ngIf="showDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete device</button>
         </li>
       </ul>

@@ -8,6 +8,7 @@ import {DeviceDetailsComponent} from "./components/device-details/device-details
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
 import {DeviceNewComponent} from "./components/device-new/device-new.component";
+import {DeviceUpdateComponent} from "./components/device-update/device-update.component";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {DeviceNewComponent} from "./components/device-new/device-new.component";
     DevicesComponent,
     DeviceDetailsComponent,
     DeviceListComponent,
-	  DeviceNewComponent
+	  DeviceNewComponent,
+	  DeviceUpdateComponent
   ]
 })
 export default class DevicesModule {

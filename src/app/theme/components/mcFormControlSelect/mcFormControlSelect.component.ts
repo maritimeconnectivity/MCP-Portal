@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation, Input} from '@angular/core';
-import {McFormControlModelSelect, SelectModel} from "../mcForm/mcFormControlModel";
+import {Component, ViewEncapsulation, Input, ChangeDetectorRef} from '@angular/core';
+import {McFormControlModelSelect} from "../mcForm/mcFormControlModel";
 
 @Component({
   selector: 'mc-form-control-select',
@@ -12,11 +12,17 @@ export class McFormControlSelect {
 
 	public selectedValue:string;
 
-  constructor() {
+  constructor(private changeDetector: ChangeDetectorRef) {
   }
 
 
-	ngOnInit() {
+	ngAfterViewInit() {
+		this.formControlModel.selectValues.forEach(model => {
+			if (model.isSelected) {
+				this.selectedValue = model.value;
+			}
+		});
+		this.changeDetector.detectChanges();
 	}
 
 	public isValid():boolean {
