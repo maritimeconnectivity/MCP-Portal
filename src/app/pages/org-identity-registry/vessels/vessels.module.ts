@@ -8,15 +8,13 @@ import {VesselDetailsComponent} from "./components/vessel-details/vessel-details
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
 import {VesselNewComponent} from "./components/vessel-new/vessel-new.component";
-import {ReactiveFormsModule, FormsModule} from "@angular/forms";
+import {VesselUpdateComponent} from "./components/vessel-update/vessel-update.component";
 
 
 @NgModule({
   imports: [
     CommonModule,
     NgaModule,
-	  FormsModule,
-	  ReactiveFormsModule,
     SharedModule,
     routing
   ],
@@ -24,7 +22,8 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms";
     VesselsComponent,
     VesselDetailsComponent,
     VesselListComponent,
-	  VesselNewComponent
+	  VesselNewComponent,
+	  VesselUpdateComponent
   ]
 })
 export default class VesselsModule {

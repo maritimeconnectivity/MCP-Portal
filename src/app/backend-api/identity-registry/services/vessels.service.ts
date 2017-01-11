@@ -30,6 +30,11 @@ export class VesselsService {
 		return this.vesselApi.createVesselUsingPOST(orgMrn, vessel);
 	}
 
+	public updateVessel(vessel:Vessel) :Observable<Vessel>{
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.updateVesselUsingPUT(orgMrn, vessel.mrn, vessel);
+	}
+
   public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {
 	  let orgMrn = this.authService.authState.orgMrn;
     return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);

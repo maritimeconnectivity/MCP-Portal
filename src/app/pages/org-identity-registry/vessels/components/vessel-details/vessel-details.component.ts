@@ -7,6 +7,7 @@ import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable
 import {VesselViewModel} from "../../view-models/VesselViewModel";
 import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'vessel-details',
@@ -24,7 +25,7 @@ export class VesselDetailsComponent {
 	public certificateTitle: string;
 	public showModal:boolean = false;
 	public modalDescription:string;
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router:Router, private vesselsService: VesselsService, private notifications:MCNotificationsService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router:Router, private vesselsService: VesselsService, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
 
   }
 
@@ -32,6 +33,10 @@ export class VesselDetailsComponent {
 	  this.entityType = CertificateEntityType.Vessel;
 	  this.loadVessel();
   }
+
+  public showUpdate():boolean {
+		return this.isAdmin() && this.vessel != null;
+	}
 
 	public showDelete():boolean {
 		return this.isAdmin() && this.vessel != null;
@@ -70,6 +75,10 @@ export class VesselDetailsComponent {
 				this.labelValues.push({label: attributeViewModel.attributeNameText, valueHtml: attributeViewModel.attributeValue});
 			});
 		}
+	}
+
+	public update() {
+		this.navigationHelper.navigateToUpdateVessel(this.vessel.mrn);
 	}
 
 	private delete() {

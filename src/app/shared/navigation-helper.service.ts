@@ -135,6 +135,14 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
+	public navigateToUpdateVessel(vesselMrn:string):void {
+		this.path = '/update/' + vesselMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('vessels', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
 	public navigateToDevice(deviceMrn:string):void {
 		this.path = '/' + deviceMrn;
 		let pagesMenu = PAGES_MENU;

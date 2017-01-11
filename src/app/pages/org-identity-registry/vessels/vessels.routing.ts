@@ -4,6 +4,7 @@ import {VesselListComponent} from "./components/vessel-list/vessel-list.componen
 import {VesselDetailsComponent} from "./components/vessel-details/vessel-details.component";
 import {VesselNewComponent} from "./components/vessel-new/vessel-new.component";
 import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
+import {VesselUpdateComponent} from "./components/vessel-update/vessel-update.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -32,7 +33,12 @@ const routes: Routes = [
         path: ':id',
         component: VesselDetailsComponent,
         data:{breadcrumb: 'Details'}
-      }
+      },
+	    {
+		    path: 'update/:id',
+		    component: VesselUpdateComponent,
+		    data:{breadcrumb: 'Update'}
+	    }
     ]
   }
 ];

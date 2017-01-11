@@ -1,4 +1,4 @@
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoading && formGroup">
   <form [formGroup]="formGroup">
     <div *ngFor="let formControlModel of formControlModels">
       <div *ngIf="isControlTypeText(formControlModel)">

@@ -21,9 +21,8 @@ export class DeviceUpdateComponent implements OnInit {
 	public device: Device;
 	// McForm params
 	public isLoading = true;
-	public disableUpdate = true;
 	public isUpdating = false;
-	public updateTitle = "Update Device";
+	public updateTitle = "Update device";
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
@@ -74,6 +73,8 @@ export class DeviceUpdateComponent implements OnInit {
 			err => {
 				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get the device', MCNotificationType.Error, err);
+
+				this.navigationService.navigateToDevice(mrn);
 			}
 		);
 	}
