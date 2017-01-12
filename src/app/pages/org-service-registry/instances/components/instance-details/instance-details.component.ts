@@ -172,13 +172,17 @@ export class InstanceDetailsComponent {
 	}
 
 	private deleteIdService() {
-		this.servicesService.deleteIdService(this.idService.mrn).subscribe(
-			() => {
-				this.navigationHelperService.navigateToOrgInstance('', '');
-			},
-			err => {
-				this.navigationHelperService.navigateToOrgInstance('', '');
-			}
-		);
+  	if (this.idService) {
+			this.servicesService.deleteIdService(this.idService.mrn).subscribe(
+				() => {
+					this.navigationHelperService.navigateToOrgInstance('', '');
+				},
+				err => {
+					this.navigationHelperService.navigateToOrgInstance('', '');
+				}
+			);
+	  } else {
+		  this.navigationHelperService.navigateToOrgInstance('', '');
+	  }
 	}
 }
