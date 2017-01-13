@@ -46,7 +46,7 @@ export class OrganizationDetailsComponent {
 	}
 
 	private delete() {
-		this.modalDescription = 'Are you sure you want to delete the organization? \n\nAll entities will be deleted and all issued certificates will be revoked.';
+		this.modalDescription = "Are you sure you want to delete the organization?<br><br>All entities will be deleted and all issued certificates will be revoked.";
 		this.showModal = true;
 	}
 	public cancelModal() {

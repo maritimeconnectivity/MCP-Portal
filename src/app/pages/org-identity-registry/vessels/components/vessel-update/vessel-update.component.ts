@@ -19,6 +19,8 @@ import {McFormControlModel, McFormControlType} from "../../../../../theme/compon
 })
 export class VesselUpdateComponent implements OnInit {
 	public vessel:Vessel;
+	public showModal:boolean = false;
+	public modalDescription:string;
 	// McForm params
 	public isLoading = true;
 	public isUpdating = false;
@@ -58,6 +60,30 @@ export class VesselUpdateComponent implements OnInit {
 	}
 
 	public update() {
+		if (this.hasActiveCertificate()){
+			this.modalDescription = "<b>Certificates</b> will be <b>invalid</b> if you update the Vessel.<br>You need to revoke the certificates and issue new ones.<br><br>Would you still like to update?";
+			this.showModal = true;
+		} else {
+			this.updateForSure();
+		}
+	}
+
+	private hasActiveCertificate() : boolean {
+		if (this.vessel.certificates && this.vessel.certificates.length > 0) {
+			for(let certificate of this.vessel.certificates) {
+				if (!certificate.revoked) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public updateForSure() {
 		this.isUpdating = true;
 		this.vessel.name = this.updateForm.value.name;
 		this.vessel.permissions = this.updateForm.value.permissions;
