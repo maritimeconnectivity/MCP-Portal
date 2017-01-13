@@ -9,14 +9,14 @@
         <li *ngIf="instance.instanceAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
-        <li *ngIf="shouldDisplayDelete()">
+        <li *ngIf="showDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Instance</button>
         </li>
       </ul>
     </ba-card>
 
     <div *ngIf="shouldDisplayIdService">
-      <service-details-view [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
+      <service-details-view [shouldShowUpdate]="showUpdateIdService" (updateAction)="updateIdService()" [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
     </div>
 
     <div *ngIf="shouldDisplayCreateButton">

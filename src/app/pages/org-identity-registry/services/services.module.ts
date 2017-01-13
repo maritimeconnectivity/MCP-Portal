@@ -8,6 +8,7 @@ import {ServiceDetailsComponent} from "./components/service-details/service-deta
 import {NgaModule} from "../../../theme/nga.module";
 import {SharedModule} from "../../shared/shared.module";
 import {ServiceNewComponent} from "./components/service-new/service-new.component";
+import {ServiceUpdateComponent} from "./components/service-update/service-update.component";
 
 
 @NgModule({
@@ -21,10 +22,12 @@ import {ServiceNewComponent} from "./components/service-new/service-new.componen
     ServicesComponent,
     ServiceDetailsComponent,
     ServiceListComponent,
-	  ServiceNewComponent
+	  ServiceNewComponent,
+	  ServiceUpdateComponent
   ],
 	exports: [
-		ServiceNewComponent
+		ServiceNewComponent,
+		ServiceUpdateComponent
 	]
 })
 export default class ServicesModule {

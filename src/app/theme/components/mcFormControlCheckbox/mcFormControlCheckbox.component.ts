@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, Input} from '@angular/core';
+import {Component, ViewEncapsulation, Input, ChangeDetectorRef} from '@angular/core';
 import {McFormControlModelCheckbox} from "../mcForm/mcFormControlModel";
 
 @Component({
@@ -12,12 +12,13 @@ export class McFormControlCheckbox {
 
 	public state: boolean;
 
-  constructor() {
+  constructor(private changeDetector: ChangeDetectorRef) {
   }
 
 
-	ngOnInit() {
+	ngAfterViewInit() {
   	this.state = this.formControlModel.state;
+		this.changeDetector.detectChanges();
 	}
 
 	public onChange(value: any): void {

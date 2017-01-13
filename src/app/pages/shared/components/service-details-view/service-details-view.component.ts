@@ -17,10 +17,12 @@ import {IdServicesService} from "../../../../backend-api/identity-registry/servi
 export class ServiceDetailsViewComponent {
 	@Input() service:Service;
 	@Input() shouldShowDelete:boolean = true;
+	@Input() shouldShowUpdate:boolean = true;
 	@Input() isLoading:boolean;
 	@Input() title:string;
 
 	@Output() deleteAction:EventEmitter<any> = new EventEmitter<any>();
+	@Output() updateAction:EventEmitter<any> = new EventEmitter<any>();
 
 	public labelValues:Array<LabelValueModel>;
 	public entityType: CertificateEntityType;
@@ -82,11 +84,19 @@ export class ServiceDetailsViewComponent {
 		return this.shouldShowDelete && this.isAdmin() && this.service != null;
 	}
 
+	public showUpdate():boolean {
+		return this.shouldShowUpdate && this.isAdmin() && this.service != null;
+	}
+
 	private isAdmin() {
 		return this.authService.authState.isAdmin();
 	}
 
 	private delete() {
 		this.deleteAction.emit('');
+	}
+
+	private update() {
+		this.updateAction.emit('');
 	}
 }

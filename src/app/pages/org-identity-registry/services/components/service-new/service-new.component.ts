@@ -71,11 +71,16 @@ export class ServiceNewComponent implements OnInit {
 		service.name = this.registerForm.value.name;
 		service.permissions = this.registerForm.value.permissions;
 		service.certDomainName = this.registerForm.value.certDomainName;
-		service.oidcRedirectUri = this.registerForm.value.oidcRedirectUri;
 
-		let oidcAccessType = this.registerForm.value.oidcAccessType;
-		if (oidcAccessType && oidcAccessType.toLowerCase().indexOf('undefined') < 0) {
-			service.oidcAccessType = oidcAccessType;
+		if (this.useOIDC) {
+			service.oidcRedirectUri = this.registerForm.value.oidcRedirectUri;
+			let oidcAccessType = this.registerForm.value.oidcAccessType;
+			if (oidcAccessType && oidcAccessType.toLowerCase().indexOf('undefined') < 0) {
+				service.oidcAccessType = oidcAccessType;
+			}
+		} else {
+			service.oidcAccessType = null;
+			service.oidcRedirectUri = null;
 		}
 		this.createService(service);
 	}

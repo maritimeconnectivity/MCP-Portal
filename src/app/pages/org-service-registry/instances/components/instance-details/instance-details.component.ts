@@ -35,6 +35,7 @@ export class InstanceDetailsComponent {
 	public idService:Service;
 	public shouldDisplayIdService:boolean = false;
 	public shouldDisplayCreateButton:boolean = false;
+	public showUpdateIdService:boolean = false;
 
   constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService) {
 
@@ -93,6 +94,7 @@ export class InstanceDetailsComponent {
 	  this.servicesService.getIdService(mrn).subscribe(
 		  service => {
 			  this.idService = service;
+			  this.showUpdateIdService = false //this.isAdmin(); TODO: there is an error in the IR, thus the update function does not work until next IR release
 			  this.isLoadingIdService = false;
 		  },
 		  err => {
@@ -114,7 +116,7 @@ export class InstanceDetailsComponent {
         this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance);
         this.generateLabelValueForDesign();
         this.isLoadingInstance = false;
-	      if (this.isMyOrg()) {
+	      if (this.isMyOrg() || this.authService.authState.isSiteAdmin()) {
 		      this.shouldDisplayIdService = true;
 		      this.loadIdService(this.instance.instanceId);
 	      }
@@ -133,6 +135,10 @@ export class InstanceDetailsComponent {
     }
   }
 
+	public updateIdService() {
+		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn);
+	}
+
   private gotoDesign(linkValue:any) {
     try {
       this.navigationHelperService.navigateToOrgDesign(linkValue[0], linkValue[1]);
@@ -145,7 +151,7 @@ export class InstanceDetailsComponent {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
-	public shouldDisplayDelete():boolean {
+	public showDelete():boolean {
 		return this.isAdmin();
 	}
 

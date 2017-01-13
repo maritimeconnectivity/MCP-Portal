@@ -44,8 +44,13 @@ export class IdServicesService implements OnInit {
 		return this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn);
 	}
 
-  public createIdService(service:Service):Observable<Service>{
-    let orgMrn = this.authService.authState.orgMrn;
-    return this.servicesApi.createServiceUsingPOST(orgMrn, service);
-  }
+	public createIdService(service:Service):Observable<Service>{
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.createServiceUsingPOST(orgMrn, service);
+	}
+
+	public updateIdService(service:Service):Observable<Service>{
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.servicesApi.updateServiceUsingPUT(orgMrn, service.mrn, service);
+	}
 }

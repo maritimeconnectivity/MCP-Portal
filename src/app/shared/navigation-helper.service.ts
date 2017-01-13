@@ -16,6 +16,7 @@ export const queryKeys = {
 export class NavigationHelperService {
   private path:string;
 	private pathBeforeCreateIdService:string;
+	private pathBeforeUpdateIdService:string;
   private pathBeforeCerticates:string;
   private pathBeforeCreateSpecification:string;
   private pathBeforeCreateDesign:string;
@@ -95,6 +96,14 @@ export class NavigationHelperService {
 		}
 	}
 
+	public gobackFromUpdateService() {
+		if (this.pathBeforeUpdateIdService) {
+			this.router.navigateByUrl(this.pathBeforeUpdateIdService);
+		} else {
+			this.navigateToOrgInstance('', '');
+		}
+	}
+
 	public cancelCreateUser() {
 		this.path = '/';
 		let pagesMenu = PAGES_MENU;
@@ -139,6 +148,15 @@ export class NavigationHelperService {
 		this.path = '/update/' + vesselMrn;
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('vessels', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
+	public navigateToUpdateIdService(serviceMrn:string):void {
+		this.pathBeforeUpdateIdService = this.router.url;
+		this.path = '/update-id/' + serviceMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('instances', pagesMenu[0]);
 
 		this.router.navigate([this.path]);
 	}

@@ -5,6 +5,7 @@ import {InstanceDetailsComponent} from "./components/instance-details/instance-d
 import {InstanceNewComponent} from "./components/instance-new/instance-new.component";
 import {ServiceNewComponent} from "../../org-identity-registry/services/components/service-new/service-new.component";
 import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
+import {ServiceUpdateComponent} from "../../org-identity-registry/services/components/service-update/service-update.component";
 
 // noinspection TypeScriptValidateTypes
 export const routes: Routes = [
@@ -38,7 +39,12 @@ export const routes: Routes = [
         path: ':id',
         component: InstanceDetailsComponent,
         data:{breadcrumb: 'Details'}
-      }
+      },
+	    {
+		    path: 'update-id/:id',
+		    component: ServiceUpdateComponent,
+		    data:{breadcrumb: 'Update'}
+	    }
     ]
   }
 ];
