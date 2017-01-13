@@ -4,6 +4,7 @@ import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-
 import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
 import {AuthService} from "../../../../authentication/services/auth.service";
 import {CertificateEntityType} from "../../../shared/services/certificate-helper.service";
+import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'my-organization',
@@ -19,7 +20,7 @@ export class MyOrganization implements OnInit {
   public titleName:string;
 
 
-  constructor(private changeDetector: ChangeDetectorRef, private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService) {
+  constructor(private changeDetector: ChangeDetectorRef, private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService, private navigationHelper: NavigationHelperService) {
     this.entityType = CertificateEntityType.Organization;
   }
 
@@ -43,4 +44,11 @@ export class MyOrganization implements OnInit {
 	  this.changeDetector.detectChanges();
   }
 
+	private shouldDisplayUpdate() :boolean {
+		return this.authService.authState.isAdmin();
+	}
+
+	public update() {
+		this.navigationHelper.navigateToUpdateMyOrg();
+	}
 }

@@ -136,6 +136,14 @@ export class NavigationHelperService {
     }
   }
 
+	public navigateToUpdateMyOrg():void {
+		this.path = '/update';
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('my-organization', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
 	public navigateToUpdateDevice(deviceMrn:string):void {
 		this.path = '/update/' + deviceMrn;
 		let pagesMenu = PAGES_MENU;

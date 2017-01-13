@@ -85,6 +85,20 @@ export class OrganizationsService implements OnInit {
 	  return this.organizationApi.applyOrganizationUsingPOST(organization);
   }
 
+	public updateOrganization(organization:Organization) : Observable<PemCertificate> {
+		return Observable.create(observer => {
+			this.organizationApi.updateOrganizationUsingPUT(organization.mrn, organization).subscribe(
+				_ => {
+					this.myOrganization = null; // We need to reload my org in case it's my org that was updated
+					observer.next(_);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
   public issueNewCertificate() : Observable<PemCertificate> {
     return Observable.create(observer => {
       let orgMrn = this.authService.authState.orgMrn;
