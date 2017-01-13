@@ -164,6 +164,6 @@ export class ApproveDetailsComponent {
 		this.userForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		McUtils.generateEmailConfirmGroup(this.formBuilder, this.userForm, this.formControlModels);
+		McUtils.generateEmailConfirmGroup(this.formBuilder, this.userForm, this.formControlModels, this.organization.email);
 	}
 }
