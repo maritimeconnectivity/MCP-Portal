@@ -24,7 +24,7 @@ import {OrganizationsService} from "../backend-api/identity-registry/services/or
     </div>
     <footer class="al-footer clearfix">
       <div class="al-footer-main clearfix">
-        <div class="al-copy">&copy; <a href="http://maritimecloud.net" target="_blank">Maritime Cloud</a> 2016</div>
+        <div class="al-copy">Co-Funded by <a href="http://www.cpse-labs.eu/" target="_blank"><img class="al-footer-img" src="{{ ( 'cpse-long.png' | baAppPicture ) }}"></a></div>
       </div>
       <div class="al-footer-right"><a style="color: lightsalmon" href="https://github.com/MaritimeCloud/MaritimeCloudPortal/issues" target="_blank"><i style="color: white" class="fa fa-bug" aria-hidden="true"></i> Bug reporting</a></div>
     </footer>
