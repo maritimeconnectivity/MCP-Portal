@@ -20,7 +20,11 @@
 
 </head>
 
+<% if (webpackConfig.metadata.BANNER_TEXT && webpackConfig.metadata.BANNER_TEXT !== '') { %>
+<body class="test-banner" data-title="<%= webpackConfig.metadata.BANNER_TEXT %>">
+<% } else { %>
 <body>
+<% } %>
 <app>
 </app>
 

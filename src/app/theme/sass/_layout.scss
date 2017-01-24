@@ -13,6 +13,30 @@ html, body {
   min-width: $resMin;
 }
 
+.test-banner:after {
+  pointer-events: none;
+  content: attr(data-title);
+  position: fixed;
+  width: 80px;
+  height: 25px;
+  background: red;
+  /* opacity: 0.90;
+   fill-opacity: 0.90;*/
+  top: 7px;
+  left: -20px;
+  text-align: center;
+  font-size: 13px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #fff;
+  line-height: 27px;
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  z-index: 9999;
+}
+
 main {
   min-height: 100%;
   position: relative;
