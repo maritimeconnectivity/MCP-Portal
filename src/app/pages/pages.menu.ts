@@ -118,18 +118,30 @@ export const PAGES_MENU = [
           }
         ]
       },
-      {
-        path: '',
-        data: {
-          menu: {
-            title: 'Maritime Cloud',
-            url: 'http://maritimecloud.net',
-            icon: 'ion-android-exit',
-            order: 800,
-            target: '_blank'
-          }
-        }
-      }
+	    {
+		    path: '',
+		    data: {
+			    menu: {
+				    title: 'User Guide',
+				    url: 'http://manual.maritimecloud.net',
+				    icon: 'ion-help',
+				    order: 700,
+				    target: '_blank'
+			    }
+		    }
+	    },
+	    {
+		    path: '',
+		    data: {
+			    menu: {
+				    title: 'Maritime Cloud',
+				    url: 'http://maritimecloud.net',
+				    icon: 'ion-android-exit',
+				    order: 800,
+				    target: '_blank'
+			    }
+		    }
+	    }
     ]
   }
 ];
