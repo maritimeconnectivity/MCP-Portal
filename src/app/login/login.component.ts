@@ -23,7 +23,6 @@ export class LoginComponent implements OnInit {
     this.authService.login();
   }
 
-  // TODO: Fix the IE problem
   isIe():boolean {
 	  let userAgent = window.navigator.userAgent;
 	  let isIe11 = userAgent.toLowerCase().indexOf('msie') > -1;
