@@ -22,7 +22,6 @@ export class UserListComponent implements OnInit {
   public organization: Organization;
   public isLoading: boolean;
   constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private usersService: UsersService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

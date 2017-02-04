@@ -22,7 +22,6 @@ export class ServiceListComponent implements OnInit {
   public organization: Organization;
   public isLoading: boolean;
   constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private servicesService: IdServicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

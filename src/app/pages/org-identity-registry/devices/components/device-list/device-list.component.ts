@@ -22,7 +22,7 @@ export class DeviceListComponent implements OnInit {
   public organization: Organization;
   public isLoading: boolean;
   constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private devicesService: DevicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
-    this.organization = {};
+
   }
 
   ngOnInit() {

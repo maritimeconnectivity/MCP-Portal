@@ -86,9 +86,10 @@ export class ApproveDetailsComponent {
 	}
 
 	private createAdminRole() {
-		let role:Role = {};
-		role.permission = MC_ADMIN;
-		role.roleName = RoleNameEnum.ROLE_ORG_ADMIN;
+		let role:Role = {
+			permission: MC_ADMIN,
+			roleName: RoleNameEnum.ORGADMIN
+		};
 
 		this.roleService.createRole(this.organization.mrn, role).subscribe(
 			role => {
@@ -103,12 +104,13 @@ export class ApproveDetailsComponent {
 	}
 
 	private createUser() {
-		let user:User = {};
-		user.mrn = this.userMrn;
-		user.firstName= this.userForm.value.firstName;
-		user.lastName= this.userForm.value.lastName;
-		user.permissions = MC_ADMIN;
-		user.email = this.userForm.value.emails.email;
+		let user:User = {
+			mrn: this.userMrn,
+			firstName: this.userForm.value.firstName,
+			lastName: this.userForm.value.lastName,
+			permissions: MC_ADMIN,
+			email: this.userForm.value.emails.email
+		};
 
 		this.userService.createUserForOrg(this.organization.mrn, user).subscribe(
 			user => {

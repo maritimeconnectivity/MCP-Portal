@@ -42,7 +42,6 @@ export class SpecificationNewComponent implements OnInit {
   private doc:Doc;
 
   constructor(private xmlParser: SpecificationXmlParser, private mrnHelper: MrnHelperService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private orgService: OrganizationsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

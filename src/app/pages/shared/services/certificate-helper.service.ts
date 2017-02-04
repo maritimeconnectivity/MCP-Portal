@@ -52,43 +52,43 @@ export class CertificateHelperService implements OnInit {
   public getRevokeReasonTextFromRevokationReason(revokationReason:RevokationReasonEnum):string {
     var reasonText = '';
     switch (revokationReason) {
-      case RevokationReasonEnum.aacompromise: {
+      case RevokationReasonEnum.Aacompromise: {
         reasonText = 'AA compromised';
         break;
       }
-      case RevokationReasonEnum.affiliationchanged: {
+      case RevokationReasonEnum.Affiliationchanged: {
         reasonText = 'Afiliation changed';
         break;
       }
-      case RevokationReasonEnum.cacompromise: {
+      case RevokationReasonEnum.Cacompromise: {
         reasonText = 'CA compromised';
         break;
       }
-      case RevokationReasonEnum.certificatehold: {
+      case RevokationReasonEnum.Certificatehold: {
         reasonText = 'Certificate Hold';
         break;
       }
-      case RevokationReasonEnum.cessationofoperation: {
+      case RevokationReasonEnum.Cessationofoperation: {
         reasonText = 'Cessation of Operation';
         break;
       }
-      case RevokationReasonEnum.keycompromise: {
+      case RevokationReasonEnum.Keycompromise: {
         reasonText = 'Key compromised';
         break;
       }
-      case RevokationReasonEnum.privilegewithdrawn: {
+      case RevokationReasonEnum.Privilegewithdrawn: {
         reasonText = 'Privilege withdrawn';
         break;
       }
-      case RevokationReasonEnum.removefromcrl: {
+      case RevokationReasonEnum.Removefromcrl: {
         reasonText = 'Remove from CRL';
         break;
       }
-      case RevokationReasonEnum.superseded: {
+      case RevokationReasonEnum.Superseded: {
         reasonText = 'Superseded';
         break;
       }
-      case RevokationReasonEnum.unspecified: {
+      case RevokationReasonEnum.Unspecified: {
         reasonText = 'Unspecified';
         break;
       }

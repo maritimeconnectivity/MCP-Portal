@@ -40,7 +40,6 @@ export class ServiceNewComponent implements OnInit {
 	public formControlModels: Array<McFormControlModel>;
 
 	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private servicesService: IdServicesService, mrnHelper: MrnHelperService) {
-		this.organization = {};
 		this.mrnMask = mrnHelper.mrnMaskForInstance();
 		this.mrnPattern = mrnHelper.mrnPattern();
 		this.mrnPatternError = mrnHelper.mrnPatternError();
@@ -66,12 +65,12 @@ export class ServiceNewComponent implements OnInit {
 
 	public register() {
 		this.isRegistering = true;
-		let service:Service = {};
-		service.mrn = this.mrn;
-		service.name = this.registerForm.value.name;
-		service.permissions = this.registerForm.value.permissions;
-		service.certDomainName = this.registerForm.value.certDomainName;
-
+		let service:Service = {
+			mrn: this.mrn,
+			name: this.registerForm.value.name,
+			permissions: this.registerForm.value.permissions,
+			certDomainName: this.registerForm.value.certDomainName
+		};
 		if (this.useOIDC) {
 			service.oidcRedirectUri = this.registerForm.value.oidcRedirectUri;
 			let oidcAccessType = this.registerForm.value.oidcAccessType;

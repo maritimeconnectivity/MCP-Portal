@@ -35,7 +35,6 @@ export class VesselNewComponent implements OnInit {
 	public formControlModels: Array<McFormControlModel>;
 
   constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private vesselsService: VesselsService, mrnHelper: MrnHelperService) {
-    this.organization = {};
 	  this.mrnMask = mrnHelper.mrnMaskForVessel();
 	  this.mrnPattern = mrnHelper.mrnPattern();
 	  this.mrnPatternError = mrnHelper.mrnPatternError();
@@ -54,11 +53,11 @@ export class VesselNewComponent implements OnInit {
 
   public register() {
     this.isRegistering = true;
-    let vessel:Vessel = {};
-	  vessel.mrn = this.mrn;
-	  vessel.name = this.registerForm.value.name;
-	  vessel.permissions = this.registerForm.value.permissions;
-
+	  let vessel:Vessel = {
+		  mrn: this.mrn,
+		  name: this.registerForm.value.name,
+		  permissions: this.registerForm.value.permissions
+	  };
 	  let formAttributes = this.registerForm.value.attributes;
 	  let vesselAttributes:Array<VesselAttribute> = [];
 	  Object.getOwnPropertyNames(formAttributes).forEach(propertyName => {

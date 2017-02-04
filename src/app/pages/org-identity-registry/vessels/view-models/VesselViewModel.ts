@@ -21,9 +21,11 @@ export class VesselViewModel {
 
 		let attributeKeysAndValues = EnumsHelper.getKeysAndValuesFromEnum(AttributeNameEnum);
 		attributeKeysAndValues.forEach(enumKeyAndValue => {
-			let vesselAttribute:VesselAttributeViewModel = {};
-			vesselAttribute.attributeName = enumKeyAndValue.value;
-			vesselAttribute.attributeNameText = VesselViewModel.getTextForVesselAttributeNameEnum(enumKeyAndValue.value);
+			let vesselAttribute:VesselAttributeViewModel = {
+				attributeValue: '',
+				attributeName: enumKeyAndValue.value,
+				attributeNameText: VesselViewModel.getTextForVesselAttributeNameEnum(enumKeyAndValue.value)
+			};
 			attributes.push(vesselAttribute);
 		});
 		return attributes;
@@ -66,27 +68,27 @@ export class VesselViewModel {
 	private static getTextForVesselAttributeNameEnum(vesselAttributeEnum:AttributeNameEnum):string {
 		var text = '';
 		switch (vesselAttributeEnum) {
-			case AttributeNameEnum.ais_class: {
+			case AttributeNameEnum.AisClass: {
 				text = 'AIS class';
 				break;
 			}
-			case AttributeNameEnum.callsign: {
+			case AttributeNameEnum.Callsign: {
 				text = 'Call sign';
 				break;
 			}
-			case AttributeNameEnum.flagstate: {
+			case AttributeNameEnum.Flagstate: {
 				text = 'Flag state';
 				break;
 			}
-			case AttributeNameEnum.imo_number: {
+			case AttributeNameEnum.ImoNumber: {
 				text = 'IMO number';
 				break;
 			}
-			case AttributeNameEnum.mmsi_number: {
+			case AttributeNameEnum.MmsiNumber: {
 				text = 'MMSI number';
 				break;
 			}
-			case AttributeNameEnum.port_of_register: {
+			case AttributeNameEnum.PortOfRegister: {
 				text = 'Port of register';
 				break;
 			}

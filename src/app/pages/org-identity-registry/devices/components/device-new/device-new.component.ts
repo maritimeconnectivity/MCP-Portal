@@ -31,7 +31,6 @@ export class DeviceNewComponent implements OnInit {
 	public formControlModels: Array<McFormControlModel>;
 
 	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private devicesService: DevicesService, mrnHelper: MrnHelperService) {
-		this.organization = {};
 		this.mrnMask = mrnHelper.mrnMaskForDevice();
 		this.mrnPattern = mrnHelper.mrnPattern();
 		this.mrnPatternError = mrnHelper.mrnPatternError();
@@ -50,11 +49,11 @@ export class DeviceNewComponent implements OnInit {
 
 	public register() {
 		this.isRegistering = true;
-		let device:Device = {};
-		device.mrn = this.mrn;
-		device.name = this.registerForm.value.name;
-		device.permissions = this.registerForm.value.permissions;
-
+		let device:Device = {
+			mrn: this.mrn,
+			name: this.registerForm.value.name,
+			permissions: this.registerForm.value.permissions
+		};
 		this.createDevice(device);
 	}
 

@@ -63,7 +63,6 @@ export class InstanceNewComponent implements OnInit {
 	public formControlModels: Array<McFormControlModel>;
 
   constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
-    this.organization = {};
   }
 
   ngOnInit() {
@@ -166,11 +165,12 @@ export class InstanceNewComponent implements OnInit {
   }
 
 	public registerIdService(instance:Instance) {
-		let service:Service = {};
-		service.mrn = this.mrn;
-		service.name = this.name;
-		service.permissions = this.registerForm.value.permissions;
-		service.certDomainName = this.registerForm.value.certDomainName;
+		let service:Service = {
+			mrn: this.mrn,
+			name: this.name,
+			permissions: this.registerForm.value.permissions,
+			certDomainName: this.registerForm.value.certDomainName
+		};
 		if (this.useOIDC) {
 			service.oidcRedirectUri = this.registerForm.value.oidcRedirectUri;
 			let oidcAccessType = this.registerForm.value.oidcAccessType;

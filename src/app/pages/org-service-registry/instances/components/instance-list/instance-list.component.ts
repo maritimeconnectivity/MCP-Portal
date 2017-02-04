@@ -19,7 +19,6 @@ export class InstanceListComponent implements OnInit {
   public onGotoInstance: Function;
 	public cardTitle:string;
   constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private instancesService: InstancesService) {
-    this.organization = {};
   }
 
   ngOnInit() {

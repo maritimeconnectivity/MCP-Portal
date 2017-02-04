@@ -32,7 +32,6 @@ export class UserNewComponent implements OnInit {
 	public formControlModels: Array<McFormControlModel>;
 
 	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private usersService: UsersService, mrnHelper: MrnHelperService) {
-		this.organization = {};
 		this.mrnMask = mrnHelper.mrnMaskForUser();
 		this.mrnPattern = mrnHelper.mrnPattern();
 		this.mrnPatternError = mrnHelper.mrnPatternError();
@@ -51,12 +50,13 @@ export class UserNewComponent implements OnInit {
 
 	public register() {
 		this.isRegistering = true;
-		let user:User = {};
-		user.mrn = this.mrn;
-		user.firstName= this.userForm.value.firstName;
-		user.lastName= this.userForm.value.lastName;
-		user.permissions = this.userForm.value.permissions;
-		user.email = this.userForm.value.emails.email;
+		let user:User = {
+			mrn: this.mrn,
+			firstName: this.userForm.value.firstName,
+			lastName: this.userForm.value.lastName,
+			permissions: this.userForm.value.permissions,
+			email: this.userForm.value.emails.email
+		};
 
 		this.createUser(user);
 	}

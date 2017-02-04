@@ -22,7 +22,6 @@ export class VesselListComponent implements OnInit {
   public organization: Organization;
   public isLoading: boolean;
   constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private vesselsService: VesselsService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

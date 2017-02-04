@@ -48,7 +48,6 @@ export class DesignNewComponent implements OnInit {
   private doc:Doc;
 
   constructor(private xmlParser: DesignXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

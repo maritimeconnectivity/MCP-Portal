@@ -19,56 +19,56 @@ import {Http} from "@angular/http";
 	  {
 		  provide: RolecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new RolecontrollerApi(http, IR_BASE_PATH);
+			  return new RolecontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: ServicecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new ServicecontrollerApi(http, IR_BASE_PATH);
+			  return new ServicecontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: OrganizationcontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new OrganizationcontrollerApi(http, IR_BASE_PATH);
+			  return new OrganizationcontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: LogocontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new LogocontrollerApi(http, IR_BASE_PATH);
+			  return new LogocontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: VesselcontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new VesselcontrollerApi(http, IR_BASE_PATH);
+			  return new VesselcontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: UsercontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new UsercontrollerApi(http, IR_BASE_PATH);
+			  return new UsercontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: ServicecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new ServicecontrollerApi(http, IR_BASE_PATH);
+			  return new ServicecontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: DevicecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new DevicecontrollerApi(http, IR_BASE_PATH);
+			  return new DevicecontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  }

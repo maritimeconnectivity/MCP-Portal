@@ -30,15 +30,15 @@ export class ServiceViewModel {
 		}
 		var text = '';
 		switch (oidcAccessTypeEnum) {
-			case OidcAccessTypeEnum.bearer_only: {
+			case OidcAccessTypeEnum.BearerOnly: {
 				text = 'Bearer only';
 				break;
 			}
-			case OidcAccessTypeEnum.confidential: {
+			case OidcAccessTypeEnum.Confidential: {
 				text = 'Confidential';
 				break;
 			}
-			case OidcAccessTypeEnum.public: {
+			case OidcAccessTypeEnum.Public: {
 				text = 'Public';
 				break;
 			}

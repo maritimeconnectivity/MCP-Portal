@@ -75,13 +75,14 @@ export class ApplyOrgComponent implements OnInit {
 	public apply() {
 		this.isRegistering = true;
 
-		let organization:Organization = {};
-		organization.name = this.registerForm.value.name;
-		organization.address = this.registerForm.value.address;
-		organization.country = this.registerForm.value.country;
-		organization.email = this.registerForm.value.emails.email;
-		organization.mrn = this.mrn;
-		organization.url = this.registerForm.value.url;
+		let organization:Organization = {
+			name: this.registerForm.value.name,
+			address: this.registerForm.value.address,
+			country: this.registerForm.value.country,
+			email: this.registerForm.value.emails.email,
+			mrn: this.mrn,
+			url: this.registerForm.value.url
+		};
 		this.applyOrganization(organization);
 	}
 

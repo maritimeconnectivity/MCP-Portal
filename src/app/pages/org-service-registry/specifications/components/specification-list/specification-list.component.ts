@@ -21,7 +21,6 @@ export class SpecificationListComponent implements OnInit {
   public onGotoSpec: Function;
 	public cardTitle:string;
   constructor(private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

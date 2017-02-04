@@ -19,7 +19,6 @@ export class DesignListComponent implements OnInit {
   public onGotoDesign: Function;
 	public cardTitle:string;
   constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private designsService: DesignsService) {
-    this.organization = {};
   }
 
   ngOnInit() {

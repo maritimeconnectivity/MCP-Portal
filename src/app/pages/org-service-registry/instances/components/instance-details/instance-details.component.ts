@@ -94,7 +94,7 @@ export class InstanceDetailsComponent {
 	  this.servicesService.getIdService(mrn).subscribe(
 		  service => {
 			  this.idService = service;
-			  this.showUpdateIdService = false //this.isAdmin(); TODO: there is an error in the IR, thus the update function does not work until next IR release
+			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) || this.authService.authState.isSiteAdmin();
 			  this.isLoadingIdService = false;
 		  },
 		  err => {

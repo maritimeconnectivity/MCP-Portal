@@ -43,10 +43,10 @@ export class AuthService implements OnInit {
       this.rolesService.getMyRoles(this.authState.orgMrn).subscribe(
         roles => {
           for (let roleString of roles) {
-	          if (roleString === RoleNameEnum[RoleNameEnum.ROLE_ORG_ADMIN]) {
+	          if (RoleNameEnum[roleString] === RoleNameEnum[RoleNameEnum.ORGADMIN]) {
 		          this.authState.permission = this.authState.permission | AuthPermission.Admin;
 	          }
-	          if (roleString === RoleNameEnum[RoleNameEnum.ROLE_SITE_ADMIN]) {
+	          if (RoleNameEnum[roleString] === RoleNameEnum[RoleNameEnum.SITEADMIN]) {
 		          this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
 	          }
           }
