@@ -18,35 +18,35 @@ import {Http} from "@angular/http";
 	  {
 		  provide: ServicespecificationresourceApi,
 		  useFactory: (http: Http) => {
-			  return new ServicespecificationresourceApi(http, SR_BASE_PATH);
+			  return new ServicespecificationresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: ServiceinstanceresourceApi,
 		  useFactory: (http: Http) => {
-			  return new ServiceinstanceresourceApi(http, SR_BASE_PATH);
+			  return new ServiceinstanceresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: TechnicaldesignresourceApi,
 		  useFactory: (http: Http) => {
-			  return new TechnicaldesignresourceApi(http, SR_BASE_PATH);
+			  return new TechnicaldesignresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: XmlresourceApi,
 		  useFactory: (http: Http) => {
-			  return new XmlresourceApi(http, SR_BASE_PATH);
+			  return new XmlresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: DocresourceApi,
 		  useFactory: (http: Http) => {
-			  return new DocresourceApi(http, SR_BASE_PATH);
+			  return new DocresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  }

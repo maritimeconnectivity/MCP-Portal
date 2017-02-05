@@ -31,7 +31,7 @@ export class DesignListComponent implements OnInit {
   }
 
   private loadDesigns() {
-    this.designsService.getDesignsForMyOrg().subscribe(
+    this.designsService.getAllDesigns().subscribe(
       designs => {
         this.designs = designs;
         this.isLoading = false;

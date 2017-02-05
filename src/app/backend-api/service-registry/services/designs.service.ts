@@ -30,7 +30,7 @@ export class DesignsService implements OnInit {
     design.comment = '';
     design.designAsXml.comment = '';
     return Observable.create(observer => {
-      // TODO fthis is just stupid. For now you need to create the xml and doc first and then the design
+      // TODO The api is a bit strange. For now you need to create the xml and doc first and then the design
       this.xmlApi.createXmlUsingPOST(design.designAsXml).subscribe(
         xml => {
           design.designAsXml = xml;
@@ -69,11 +69,9 @@ export class DesignsService implements OnInit {
     );
   }
 
-  public getDesignsForMyOrg(): Observable<Array<Design>> {
-    let orgMrn = this.authService.authState.orgMrn;
+  public getAllDesigns(): Observable<Array<Design>> {
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      // TODO for now just get all designs. Needs to be for this org only though
       this.designsApi.getAllDesignsUsingGET().subscribe(
         designs => {
           // TODO delete this again, when description is part of the json
@@ -90,9 +88,18 @@ export class DesignsService implements OnInit {
   }
 
   public getDesignForInstance(instance:Instance): Observable<Design> {
+
+	  let designId = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'id', instance.instanceAsXml);
+	  let version = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'version', instance.instanceAsXml);
+	  // TODO: change when data is actually there
+	  //let designId = instance.designId;
+	  //let version = instance.version;
+
+	  if (this.isChosenDesign(designId, version)) {
+		  return Observable.of(this.chosenDesign);
+	  }
+
     return Observable.create(observer => {
-      let designId = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'id', instance.instanceAsXml);
-      let version = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'version', instance.instanceAsXml);
       this.designsApi.getDesignUsingGET(designId, version).subscribe(
         design => {
           observer.next(design);
@@ -111,20 +118,12 @@ export class DesignsService implements OnInit {
   public getDesignsForSpecification(specificationId:string, version?:string): Observable<Array<Design>> {
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      // TODO for now just get all designs. Needs to be for this specification only though
-      this.designsApi.getAllDesignsUsingGET().subscribe(
+      this.designsApi.getAllDesignsBySpecificationIdUsingGET(specificationId).subscribe(
         designs => {
-          var designsFiltered: Array<Design> = [];
-
-	        // TODO this should be deleted in next version because then there is a dedicated api for the call
           for (let design of designs) {
-            let implementedSpecificationId = this.xmlParser.getVauleFromEmbeddedField('designsServiceSpecifications', 'id', design.designAsXml);
-            if (implementedSpecificationId === specificationId) {
               design.description = this.getDescription(design);
-              designsFiltered.push(design);
-            }
           }
-          observer.next(designsFiltered);
+          observer.next(designs);
         },
         err => {
           observer.error(err);
@@ -134,17 +133,7 @@ export class DesignsService implements OnInit {
   }
 
   public getDesign(designId:string, version?:string): Observable<Design> {
-    var found = false;
-    if (this.chosenDesign && this.chosenDesign.designId === designId) {
-      if (version) {
-        if (this.chosenDesign.version === version) {
-          found = true;
-        }
-      } else {
-        found = true;
-      }
-    }
-    if (found) {
+    if (this.isChosenDesign(designId, version)) {
       return Observable.of(this.chosenDesign);
     }
 
@@ -182,5 +171,19 @@ export class DesignsService implements OnInit {
     } catch ( error ) {
       return '';
     }
+  }
+
+  private isChosenDesign(designId:string, version?:string) : boolean{
+	  var found = false;
+	  if (this.chosenDesign && this.chosenDesign.designId === designId) {
+		  if (version) {
+			  if (this.chosenDesign.version === version) {
+				  found = true;
+			  }
+		  } else {
+			  found = true;
+		  }
+	  }
+	  return found;
   }
 }

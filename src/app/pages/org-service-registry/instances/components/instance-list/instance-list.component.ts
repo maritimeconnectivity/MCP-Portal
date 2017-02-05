@@ -31,7 +31,7 @@ export class InstanceListComponent implements OnInit {
   }
 
   private loadInstances() {
-    this.instancesService.getInstancesForMyOrg().subscribe(
+    this.instancesService.getAllInstances().subscribe(
       instances => {
         this.instances = instances;
         this.isLoading = false;

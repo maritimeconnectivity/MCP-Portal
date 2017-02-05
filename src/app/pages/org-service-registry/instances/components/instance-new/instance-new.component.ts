@@ -133,7 +133,6 @@ export class InstanceNewComponent implements OnInit {
     try {
       var instance:Instance = {};
       instance.instanceAsXml = this.xml;
-      instance.instanceAsDoc = this.doc;
 	    instance.name = this.xmlParser.getName(this.xml);
 	    instance.description = this.xmlParser.getDescription(this.xml);
 	    instance.instanceId = this.xmlParser.getMrn(this.xml);
@@ -141,9 +140,7 @@ export class InstanceNewComponent implements OnInit {
 	    instance.status = this.xmlParser.getStatus(this.xml);
 	    instance.organizationId = this.organization.mrn;
 	    instance.version = this.xmlParser.getVersion(this.xml);
-
-      // TODO change this with new version
-      instance.designs = [this.design];
+      instance.designId = this.design.designId;
 
       this.createInstance(instance);
     } catch ( error ) {
@@ -153,7 +150,7 @@ export class InstanceNewComponent implements OnInit {
   }
 
   private createInstance(instance:Instance) {
-    this.instancesService.createInstance(instance).subscribe(
+    this.instancesService.createInstance(instance, this.doc).subscribe(
       instanceCreated => {
         this.registerIdService(instanceCreated);
       },

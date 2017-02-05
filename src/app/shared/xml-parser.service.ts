@@ -10,7 +10,6 @@ export class XmlParserService {
   public getVauleFromEmbeddedField(outerField:string, fieldToFind:string, xml:Xml) {
     try {
       var parser = new DOMParser();
-      // FIXME DID IT WORK: this should not be an array with the new version. so remove tostring
       let xmlString =  xml.content;
       var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
 
@@ -24,7 +23,6 @@ export class XmlParserService {
   public getValueFromField(field:string, xml:Xml):string {
     try {
       var parser = new DOMParser();
-      // FIXME DID IT WORK: this should not be an array with the new version. so remove tostring
       let xmlString =  xml.content;
       var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
 

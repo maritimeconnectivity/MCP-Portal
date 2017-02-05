@@ -13,6 +13,7 @@ import {AuthService} from "../../../../../authentication/services/auth.service";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
+import {DocsService} from "../../../../../backend-api/service-registry/services/docs.service";
 
 @Component({
   selector: 'instance-details',
@@ -37,7 +38,7 @@ export class InstanceDetailsComponent {
 	public shouldDisplayCreateButton:boolean = false;
 	public showUpdateIdService:boolean = false;
 
-  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService) {
+  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService) {
 
   }
 
@@ -56,16 +57,20 @@ export class InstanceDetailsComponent {
   }
 
   public downloadDoc() {
-    this.fileHelperService.downloadDoc(this.instance.instanceAsDoc);
+  	// TODO How the %¤"# should i get it???
+	  this.docsService.getDoc().subscribe(
+	  	doc => {
+			  this.fileHelperService.downloadDoc(doc);
+		  }
+	  );
   }
 
   public createIdService() {
 		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name);
   }
 
-  private isMyOrg():boolean{
-  	// TODO: with next version get this from this.instance.organizationId
-	  return this.instance.instanceId.indexOf(this.mrnHelper.orgShortName()) >= 0;
+  private isMyOrg():boolean {
+	  return this.instance.organizationId === this.authService.authState.orgMrn;
   }
 
 

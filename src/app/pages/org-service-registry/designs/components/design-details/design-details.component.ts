@@ -21,7 +21,6 @@ import {SrViewModelService} from "../../../shared/services/sr-view-model.service
 })
 export class DesignDetailsComponent {
   public design: Design;
-  public specifications: Array<Specification>;
   public instances: Array<Instance>;
   public title:string;
   public labelValues:Array<LabelValueModel>;
@@ -62,7 +61,9 @@ export class DesignDetailsComponent {
       design => {
         this.title = design.name;
         this.design = design;
-        this.loadSpecifications();
+	      this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
+	      this.generateLabelValuesForSpecification();
+	      this.isLoadingDesign = false;
         this.loadInstances();
       },
       err => {
@@ -91,28 +92,11 @@ export class DesignDetailsComponent {
     );
   }
 
-  // TODO this should be deleted and taken directly from the design-model when service registry has proper data. from design.specifications
-
-  private loadSpecifications() {
-    this.specificationsService.getSpecificationsForDesign(this.design).subscribe(
-      specifications => {
-        this.specifications = specifications;
-        this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
-        this.generateLabelValuesForSpecification();
-        this.isLoadingDesign = false;
-      },
-      err => {
-        this.isLoadingDesign = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error, err);
-      }
-    );
-  }
-
   private generateLabelValuesForSpecification() {
-    if (this.specifications && this.specifications.length > 0) {
-      let plur = (this.specifications.length > 1 ? 's' : '');
+    if (this.design.specifications && this.design.specifications.length > 0) {
+      let plur = (this.design.specifications.length > 1 ? 's' : '');
       var label = 'Implemented specification' + plur;
-      this.specifications.forEach((specification) => {
+      this.design.specifications.forEach((specification) => {
         this.labelValues.push({label: label, valueHtml: specification.name + " - " + specification.version, linkFunction: this.onGotoSpec, linkValue: [specification.specificationId,specification.version]});
         label = "";
       });
@@ -134,10 +118,12 @@ export class DesignDetailsComponent {
   private gotoInstance(index:number) {
     this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
+	private isMyOrg():boolean {
+		return this.design.organizationId === this.authService.authState.orgMrn;
+	}
 
-	// TODO: until the SR can deliver the owner organization, only siteadmins can delete
 	private isAdmin():boolean {
-		return this.authService.authState.isSiteAdmin();
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
 	}
 
 	public shouldDisplayDelete():boolean {

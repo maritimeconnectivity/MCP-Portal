@@ -49,7 +49,7 @@ export class SpecificationListComponent implements OnInit {
   }
 
   private loadSpecifications() {
-    this.specificationsService.getSpecificationsForMyOrg().subscribe(
+    this.specificationsService.getAllSpecifications().subscribe(
       specifications => {
         this.specifications = specifications;
         this.isLoading = false;

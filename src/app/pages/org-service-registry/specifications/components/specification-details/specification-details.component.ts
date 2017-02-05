@@ -122,9 +122,12 @@ export class SpecificationDetailsComponent {
     this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
 
-	// TODO: until the SR can deliver the owner organization, only siteadmins can delete
+	private isMyOrg():boolean {
+		return this.specification.organizationId === this.authService.authState.orgMrn;
+	}
+
 	private isAdmin():boolean {
-		return this.authService.authState.isSiteAdmin();
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
 	}
 
 	public shouldDisplayDelete():boolean {
