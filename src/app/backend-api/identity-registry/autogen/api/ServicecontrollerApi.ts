@@ -1,3 +1,4 @@
+// NOTE: be carefull when autogenerating. This file is changed manually
 /**
  * Maritime Cloud Identity Registry API
  * Maritime Cloud Identity Registry API can be used for managing entities in the Maritime Cloud.
@@ -167,7 +168,8 @@ export class ServicecontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-                    return response.json();
+// NOTE: be carefull when autogenerating. This file is changed manually
+	                return response.text();
                 }
             });
     }
@@ -201,7 +203,8 @@ export class ServicecontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-                    return response.json();
+// NOTE: be carefull when autogenerating. This file is changed manually
+	                return response.text();
                 }
             });
     }
