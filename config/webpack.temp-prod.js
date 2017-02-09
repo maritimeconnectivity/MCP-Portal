@@ -15,6 +15,7 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
+
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   host: HOST,
   port: PORT,
@@ -108,15 +109,16 @@ module.exports = function(options) {
        */
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-        'IR_BASE_PATH':JSON.stringify('https://api.maritimecloud.net'),
-        'SR_BASE_PATH':JSON.stringify('https://sr.maritimecloud.net'),
-        'ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
-        'process.env': {
+          'IR_BASE_PATH':JSON.stringify('https://api.maritimecloud.net'),
+          'SR_BASE_PATH':JSON.stringify('https://sr.maritimecloud.net'),
+          'KEYCLOAK_JSON':JSON.stringify('assets/temp-prod-keycloak.json'),
           'ENV': JSON.stringify(METADATA.ENV),
-          'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-        }
+          'process.env': {
+              'ENV': JSON.stringify(METADATA.ENV),
+              'NODE_ENV': JSON.stringify(METADATA.ENV),
+              'HMR': METADATA.HMR,
+          }
       }),
 
       /**

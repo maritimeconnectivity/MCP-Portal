@@ -53,6 +53,7 @@ declare module '*';
 declare var ENV: string;
 declare var IR_BASE_PATH: string;
 declare var SR_BASE_PATH: string;
+declare var KEYCLOAK_JSON: string;
 declare var HMR: boolean;
 declare var System: SystemJS;
 

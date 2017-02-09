@@ -1,6 +1,6 @@
 {
   "realm": "MaritimeCloud",
-  "auth-server-url": "https://test-maritimeid.maritimecloud.net/auth",
+  "auth-server-url": "https://staging-maritimeid.maritimecloud.net/auth",
   "ssl-required": "none",
   "resource": "MaritimeCloudPortal",
   "public-client": true

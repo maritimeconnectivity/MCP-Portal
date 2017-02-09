@@ -111,13 +111,14 @@ module.exports = function(options) {
       new DefinePlugin({
           'IR_BASE_PATH':JSON.stringify('https://test-api.maritimecloud.net'),
           'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimecloud.net'),
-        'ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
-        'process.env': {
+          'KEYCLOAK_JSON':JSON.stringify('assets/dev-test-keycloak.json'),
           'ENV': JSON.stringify(METADATA.ENV),
-          'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-        }
+          'process.env': {
+              'ENV': JSON.stringify(METADATA.ENV),
+              'NODE_ENV': JSON.stringify(METADATA.ENV),
+              'HMR': METADATA.HMR,
+          }
       }),
 
       /**
