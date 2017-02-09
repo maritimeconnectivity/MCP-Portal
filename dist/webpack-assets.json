@@ -1,0 +1,9 @@
+{
+  "main": {
+    "js": "main.bundle.js",
+    "css": "initial.css"
+  },
+  "polyfills": {
+    "js": "polyfills.bundle.js"
+  }
+}

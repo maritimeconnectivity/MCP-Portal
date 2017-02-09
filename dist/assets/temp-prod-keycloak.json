@@ -1,0 +1,7 @@
+{
+  "realm": "MaritimeCloud",
+  "auth-server-url": "https://maritimeid.maritimecloud.net/auth",
+  "ssl-required": "none",
+  "resource": "MaritimeCloudPortal",
+  "public-client": true
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="131px" height="98px" viewBox="0 0 131 98" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7 (28169) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons_EndUserServices</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="20" height="20" rx="4"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <rect id="path-3" x="33" y="0" width="20" height="20" rx="4"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <rect id="path-5" x="66" y="0" width="20" height="20" rx="4"></rect>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+        <rect id="path-7" x="0" y="36" width="20" height="20" rx="4"></rect>
+        <mask id="mask-8" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-7"></use>
+        </mask>
+        <rect id="path-9" x="33" y="36" width="20" height="20" rx="4"></rect>
+        <mask id="mask-10" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-9"></use>
+        </mask>
+        <rect id="path-11" x="66" y="36" width="20" height="20" rx="4"></rect>
+        <mask id="mask-12" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-11"></use>
+        </mask>
+    </defs>
+    <g id="Desktop-Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="00.Solutions-icons" transform="translate(-339.000000, -357.000000)">
+            <g id="Icons_EndUserServices" transform="translate(339.000000, 357.000000)">
+                <use id="Rectangle-315" stroke="#265FA9" mask="url(#mask-2)" stroke-width="6" fill-opacity="0.5" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <use id="Rectangle-315" stroke="#265FA9" mask="url(#mask-4)" stroke-width="6" fill-opacity="0.5" fill="#FFFFFF" xlink:href="#path-3"></use>
+                <use id="Rectangle-315" stroke="#265FA9" mask="url(#mask-6)" stroke-width="6" fill-opacity="0.5" fill="#FFFFFF" xlink:href="#path-5"></use>
+                <use id="Rectangle-315" stroke="#265FA9" mask="url(#mask-8)" stroke-width="6" fill-opacity="0.5" fill="#FFFFFF" xlink:href="#path-7"></use>
+                <use id="Rectangle-315" stroke="#265FA9" mask="url(#mask-10)" stroke-width="6" fill-opacity="0.5" fill="#FFFFFF" xlink:href="#path-9"></use>
+                <use id="Rectangle-315" stroke="#265FA9" mask="url(#mask-12)" stroke-width="6" xlink:href="#path-11"></use>
+                <path d="M95.215353,69.2979143 C56.2696691,46.0200343 144.731267,50.4281325 106.66984,67.0032698 C104.534377,67.9332297 102.101963,67.9168452 99.8180246,68.3736329 L95.215353,69.2979143 Z" id="Path-1167" fill="#FFFFFF"></path>
+                <path d="M78.7272766,60.5478298 C78.0303404,60.6561702 77.315617,60.712766 76.5895745,60.712766 C68.7551064,60.712766 62.4050638,54.1525106 62.4050638,46.0593191 C62.4050638,37.9661277 68.7551064,31.4042553 76.5895745,31.4042553 C84.4240426,31.4042553 90.7757021,37.9661277 90.7757021,46.0593191 C90.7757021,49.2108936 89.8119574,52.129617 88.1722979,54.5211915" id="Stroke-7" fill="#76D2FF"></path>
+                <path d="M92.8467909,64.8297689 L80.0905566,42.9410458 C78.7595355,40.6557077 75.9010163,39.9274132 73.7057918,41.3130933 C71.5105672,42.6987734 70.8103408,45.6754743 72.1428391,47.9608124 L90.698839,79.8033868 L78.7624901,77.1679355 C78.7624901,77.1679355 73.3320422,77.3156626 72.8711337,82.2024747 C72.4087479,87.0878096 82.8973714,86.6992874 82.8973714,86.6992874 C82.8973714,86.6992874 93.1407678,87.7791724 99.9421231,94.3131416 C106.743478,100.845634 118.19676,90.661328 118.19676,90.661328 C118.19676,90.661328 123.930048,87.6122408 127.069249,85.4258799 C130.208449,83.2409962 130.243904,75.9994142 125.9805,68.6824914 L114.081083,48.2636529 C112.748585,45.9783148 109.984611,45.1894521 107.906091,46.502746 C105.82757,47.8145626 105.223367,50.7306953 106.554388,53.0160334 L109.436543,57.9634137" id="Stroke-1" stroke="#265FA9" stroke-width="3" fill="#FFFFFF"></path>
+                <path d="M92.1478941,63.6303726 L87.9864219,56.4877678 C86.6539235,54.2024297 87.2596046,51.2862969 89.3381248,49.9744803 C91.416645,48.6611865 94.1806188,49.4500492 95.5116399,51.7353873 L100.094134,59.597423" id="Stroke-3" stroke="#265FA9" stroke-width="3" fill="#FFFFFF"></path>
+                <path d="M100.093691,59.597423 L96.8082406,53.95868 C95.4757422,51.6733419 96.0814233,48.7572091 98.1599435,47.4439153 C100.238464,46.1320987 103.002437,46.9209614 104.333459,49.2062995 L107.830159,55.2040194" id="Stroke-5" stroke="#265FA9" stroke-width="3" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
