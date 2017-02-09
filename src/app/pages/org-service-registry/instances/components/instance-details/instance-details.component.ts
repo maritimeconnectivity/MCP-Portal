@@ -57,12 +57,7 @@ export class InstanceDetailsComponent {
   }
 
   public downloadDoc() {
-  	// TODO How the %¤"# should i get it???
-	  this.docsService.getDoc().subscribe(
-	  	doc => {
-			  this.fileHelperService.downloadDoc(doc);
-		  }
-	  );
+	  this.fileHelperService.downloadDoc(this.instance.instanceAsDoc);
   }
 
   public createIdService() {

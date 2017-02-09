@@ -147,7 +147,7 @@ export class InstancesService implements OnInit {
 
     // We create a new observable because we need to save the response for simple caching
     return Observable.create(observer => {
-      this.instancesApi.getInstanceUsingGET(instanceId,version).subscribe(
+      this.instancesApi.getInstanceUsingGET(instanceId,version, "true").subscribe(
         instance => {
           // TODO delete this again, when description is part of the json
           instance.description = this.getDescription(instance);

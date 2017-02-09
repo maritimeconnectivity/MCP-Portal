@@ -59,9 +59,10 @@ export class ServiceinstanceresourceApi {
      * createInstance
      * 
      * @param instance instance
+     * @param authorization Authorization
      */
-    public createInstanceUsingPOST(instance: models.Instance, extraHttpRequestParams?: any): Observable<models.Instance> {
-        return this.createInstanceUsingPOSTWithHttpInfo(instance, extraHttpRequestParams)
+    public createInstanceUsingPOST(instance: models.Instance, authorization?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
+        return this.createInstanceUsingPOSTWithHttpInfo(instance, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -76,9 +77,10 @@ export class ServiceinstanceresourceApi {
      * 
      * @param id id
      * @param version version
+     * @param authorization Authorization
      */
-    public deleteInstanceUsingDELETE(id: string, version: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteInstanceUsingDELETEWithHttpInfo(id, version, extraHttpRequestParams)
+    public deleteInstanceUsingDELETE(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteInstanceUsingDELETEWithHttpInfo(id, version, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -94,10 +96,12 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesByIdUsingGET(id: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.getAllInstancesByIdUsingGETWithHttpInfo(id, page, size, sort, extraHttpRequestParams)
+    public getAllInstancesByIdUsingGET(id: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.getAllInstancesByIdUsingGETWithHttpInfo(id, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -112,10 +116,12 @@ export class ServiceinstanceresourceApi {
      * 
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesUsingGET(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.getAllInstancesUsingGETWithHttpInfo(page, size, sort, extraHttpRequestParams)
+    public getAllInstancesUsingGET(page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.getAllInstancesUsingGETWithHttpInfo(page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -130,9 +136,11 @@ export class ServiceinstanceresourceApi {
      * Returns the service instance with the specified id and version. Use version &#39;latest&#39; to get the newest one.
      * @param id id
      * @param version version
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      */
-    public getInstanceUsingGET(id: string, version: string, extraHttpRequestParams?: any): Observable<models.Instance> {
-        return this.getInstanceUsingGETWithHttpInfo(id, version, extraHttpRequestParams)
+    public getInstanceUsingGET(id: string, version: string, includeDoc?: string, authorization?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
+        return this.getInstanceUsingGETWithHttpInfo(id, version, includeDoc, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -149,10 +157,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryGeojsonUsingGET(geometry: string, query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry, query, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByGeometryGeojsonUsingGET(geometry: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry, query, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -169,10 +179,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryWKTUsingGET(geometry: string, query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry, query, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByGeometryWKTUsingGET(geometry: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry, query, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -188,10 +200,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByKeywordsUsingGET(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByKeywordsUsingGETWithHttpInfo(query, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByKeywordsUsingGET(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByKeywordsUsingGETWithHttpInfo(query, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -209,10 +223,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByLocationUsingGET(latitude: string, longitude: string, query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByLocationUsingGETWithHttpInfo(latitude, longitude, query, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByLocationUsingGET(latitude: string, longitude: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByLocationUsingGETWithHttpInfo(latitude, longitude, query, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -228,10 +244,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByUnlocodeUsingGET(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByUnlocodeUsingGETWithHttpInfo(query, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByUnlocodeUsingGET(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByUnlocodeUsingGETWithHttpInfo(query, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -247,10 +265,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesUsingGET(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesUsingGETWithHttpInfo(query, page, size, sort, extraHttpRequestParams)
+    public searchInstancesUsingGET(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesUsingGETWithHttpInfo(query, page, size, includeDoc, authorization, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -266,9 +286,10 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param version version
      * @param status status
+     * @param authorization Authorization
      */
-    public updateInstanceStatusUsingPUT(id: string, version: string, status: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.updateInstanceStatusUsingPUTWithHttpInfo(id, version, status, extraHttpRequestParams)
+    public updateInstanceStatusUsingPUT(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.updateInstanceStatusUsingPUTWithHttpInfo(id, version, status, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -282,9 +303,10 @@ export class ServiceinstanceresourceApi {
      * updateInstance
      * 
      * @param instance instance
+     * @param authorization Authorization
      */
-    public updateInstanceUsingPUT(instance: models.Instance, extraHttpRequestParams?: any): Observable<models.Instance> {
-        return this.updateInstanceUsingPUTWithHttpInfo(instance, extraHttpRequestParams)
+    public updateInstanceUsingPUT(instance: models.Instance, authorization?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
+        return this.updateInstanceUsingPUTWithHttpInfo(instance, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -299,8 +321,9 @@ export class ServiceinstanceresourceApi {
      * createInstance
      * 
      * @param instance instance
+     * @param authorization Authorization
      */
-    public createInstanceUsingPOSTWithHttpInfo(instance: models.Instance, extraHttpRequestParams?: any): Observable<Response> {
+    public createInstanceUsingPOSTWithHttpInfo(instance: models.Instance, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -309,6 +332,8 @@ export class ServiceinstanceresourceApi {
         if (instance === null || instance === undefined) {
             throw new Error('Required parameter instance was null or undefined when calling createInstanceUsingPOST.');
         }
+
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -345,8 +370,9 @@ export class ServiceinstanceresourceApi {
      * 
      * @param id id
      * @param version version
+     * @param authorization Authorization
      */
-    public deleteInstanceUsingDELETEWithHttpInfo(id: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
+    public deleteInstanceUsingDELETEWithHttpInfo(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance/${id}/${version}/`;
 
         let queryParameters = new URLSearchParams();
@@ -359,6 +385,8 @@ export class ServiceinstanceresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling deleteInstanceUsingDELETE.');
         }
+
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -394,9 +422,11 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesByIdUsingGETWithHttpInfo(id: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllInstancesByIdUsingGETWithHttpInfo(id: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance/${id}`;
 
         let queryParameters = new URLSearchParams();
@@ -411,10 +441,14 @@ export class ServiceinstanceresourceApi {
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (sort !== undefined) {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -449,9 +483,11 @@ export class ServiceinstanceresourceApi {
      * 
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesUsingGETWithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllInstancesUsingGETWithHttpInfo(page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -462,10 +498,14 @@ export class ServiceinstanceresourceApi {
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (sort !== undefined) {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -500,8 +540,10 @@ export class ServiceinstanceresourceApi {
      * Returns the service instance with the specified id and version. Use version &#39;latest&#39; to get the newest one.
      * @param id id
      * @param version version
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      */
-    public getInstanceUsingGETWithHttpInfo(id: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
+    public getInstanceUsingGETWithHttpInfo(id: string, version: string, includeDoc?: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance/${id}/${version}/`;
 
         let queryParameters = new URLSearchParams();
@@ -514,7 +556,11 @@ export class ServiceinstanceresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling getInstanceUsingGET.');
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -551,9 +597,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry: string, query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/_searchGeometryGeoJSON/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -575,6 +623,9 @@ export class ServiceinstanceresourceApi {
         if (geometry !== undefined) {
             queryParameters.set('geometry', <any>geometry);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
@@ -582,6 +633,7 @@ export class ServiceinstanceresourceApi {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -618,9 +670,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry: string, query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/_searchGeometryWKT/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -645,10 +699,14 @@ export class ServiceinstanceresourceApi {
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (sort !== undefined) {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -684,9 +742,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByKeywordsUsingGETWithHttpInfo(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByKeywordsUsingGETWithHttpInfo(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/_searchKeywords/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -704,10 +764,14 @@ export class ServiceinstanceresourceApi {
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (sort !== undefined) {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -745,9 +809,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByLocationUsingGETWithHttpInfo(latitude: string, longitude: string, query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByLocationUsingGETWithHttpInfo(latitude: string, longitude: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/_searchLocation/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -773,6 +839,9 @@ export class ServiceinstanceresourceApi {
         if (latitude !== undefined) {
             queryParameters.set('latitude', <any>latitude);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (longitude !== undefined) {
             queryParameters.set('longitude', <any>longitude);
         }
@@ -783,6 +852,7 @@ export class ServiceinstanceresourceApi {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -818,9 +888,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByUnlocodeUsingGETWithHttpInfo(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByUnlocodeUsingGETWithHttpInfo(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/_searchUnlocode/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -838,10 +910,14 @@ export class ServiceinstanceresourceApi {
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (sort !== undefined) {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -877,9 +953,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param page Page number of the requested page
      * @param size Size of a page
+     * @param includeDoc includeDoc
+     * @param authorization Authorization
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesUsingGETWithHttpInfo(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesUsingGETWithHttpInfo(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/_search/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -897,10 +975,14 @@ export class ServiceinstanceresourceApi {
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+        if (includeDoc !== undefined) {
+            queryParameters.set('includeDoc', <any>includeDoc);
+        }
         if (sort !== undefined) {
             queryParameters.set('sort', <any>sort);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -936,8 +1018,9 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param version version
      * @param status status
+     * @param authorization Authorization
      */
-    public updateInstanceStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, extraHttpRequestParams?: any): Observable<Response> {
+    public updateInstanceStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance/${id}/${version}/status`;
 
         let queryParameters = new URLSearchParams();
@@ -958,6 +1041,7 @@ export class ServiceinstanceresourceApi {
             queryParameters.set('status', <any>status);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -991,8 +1075,9 @@ export class ServiceinstanceresourceApi {
      * updateInstance
      * 
      * @param instance instance
+     * @param authorization Authorization
      */
-    public updateInstanceUsingPUTWithHttpInfo(instance: models.Instance, extraHttpRequestParams?: any): Observable<Response> {
+    public updateInstanceUsingPUTWithHttpInfo(instance: models.Instance, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/api/serviceInstance`;
 
         let queryParameters = new URLSearchParams();
@@ -1001,6 +1086,8 @@ export class ServiceinstanceresourceApi {
         if (instance === null || instance === undefined) {
             throw new Error('Required parameter instance was null or undefined when calling updateInstanceUsingPUT.');
         }
+
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [

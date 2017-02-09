@@ -20,6 +20,8 @@ export interface Instance {
 
     designId?: string;
 
+    docs?: Array<models.Doc>;
+
     endpointType?: string;
 
     endpointUri?: string;
@@ -33,6 +35,8 @@ export interface Instance {
     imo?: string;
 
     implementedSpecificationVersion?: models.SpecificationTemplate;
+
+    instanceAsDoc?: models.Doc;
 
     instanceAsXml?: models.Xml;
 
