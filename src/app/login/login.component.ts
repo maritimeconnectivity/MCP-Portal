@@ -10,6 +10,8 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class LoginComponent implements OnInit {
 
+	public version = require("../../../package.json").version;
+
   constructor(private authService: AuthService, private notificationService: MCNotificationsService, private route: ActivatedRoute) {
   }
 
