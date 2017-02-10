@@ -49,6 +49,7 @@ export class InstancesService implements OnInit {
 	  instanceDoc.comment = '';
     this.docApi.createDocUsingPOST(instanceDoc).subscribe(
       doc => {
+      	instance.instanceAsDoc = doc;
         this.createActualInstance(instance, observer);
       },
       err => {
@@ -59,6 +60,7 @@ export class InstancesService implements OnInit {
   private createActualInstance(instance:Instance, observer:Observer<any>) {
     this.instancesApi.createInstanceUsingPOST(instance).subscribe(
       createdInstance => {
+	      this.chosenInstance = createdInstance;
         observer.next(createdInstance);
       },
       err => {
