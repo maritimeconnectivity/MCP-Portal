@@ -8,6 +8,7 @@ import {PemCertificate} from "../autogen/model/PemCertificate";
 @Injectable()
 export class OrganizationsService implements OnInit {
 	private myOrganization: Organization;
+	private organizations: Array<Organization>;
 	private unapprovedOrganizations: Array<Organization>;
   constructor(private organizationApi: OrganizationcontrollerApi, private authService: AuthService) {
   }
@@ -141,5 +142,33 @@ export class OrganizationsService implements OnInit {
 
 	public getAllOrganizations () : Observable<Array<Organization>> {
 		return this.organizationApi.getOrganizationUsingGET2();
+	}
+
+	public getOrganizationName(orgMrn:string) : Observable<string> {
+		if (this.organizations) {
+			return Observable.of(this.searchOrganizationNameFromList(orgMrn));
+		}
+
+		return Observable.create(observer => {
+			this.organizationApi.getOrganizationUsingGET2().subscribe(
+				organizations => {
+					this.organizations = organizations;
+					observer.next(this.searchOrganizationNameFromList(orgMrn));
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+	private searchOrganizationNameFromList(orgMrn:string) : string {
+		if (this.organizations) {
+			for(let organization of this.organizations) {
+				if (organization.mrn === orgMrn) {
+					return organization.name;
+				}
+			}
+		}
+		return '';
 	}
 }

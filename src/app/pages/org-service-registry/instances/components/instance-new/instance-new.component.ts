@@ -209,8 +209,7 @@ export class InstanceNewComponent implements OnInit {
     this.designsService.getDesign(designId, version).subscribe(
       design => {
         this.design = design;
-        this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
-        this.isLoading = false;
+        this.loadOrganizationName();
       },
       err => {
         this.isLoading = false;
@@ -218,6 +217,20 @@ export class InstanceNewComponent implements OnInit {
       }
     );
   }
+
+	private loadOrganizationName() {
+		this.orgService.getOrganizationName(this.design.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design, organizationName);
+				this.isLoading = false;
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.design, '');
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 
 	private shouldUseOIDC(useOIDC:boolean) {
 		this.useOIDC = useOIDC;

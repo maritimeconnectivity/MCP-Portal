@@ -150,9 +150,7 @@ export class DesignNewComponent implements OnInit {
     this.specificationsService.getSpecification(specificationId, version).subscribe(
       specification => {
         this.specification = specification;
-        this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification);
-        this.calculateFormValid();
-        this.isLoading = false;
+        this.loadOrganizationName();
       },
       err => {
         this.isLoading = false;
@@ -160,4 +158,19 @@ export class DesignNewComponent implements OnInit {
       }
     );
   }
+	private loadOrganizationName() {
+		this.orgService.getOrganizationName(this.specification.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, organizationName);
+				this.calculateFormValid();
+				this.isLoading = false;
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, '');
+				this.calculateFormValid();
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 }

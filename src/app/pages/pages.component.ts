@@ -49,22 +49,34 @@ export class Pages {
 			  this.loadOrganization();
 		  });
 	  }
+	  this.preloadOrganizationNames();
   }
 
-  private loadOrganization() {
-	  this.orgService.getMyOrganization().subscribe(
-		  organization => {
-			  this.loggedInName = organization.name;
-			  let firstName = this.authService.authState.userFirstName;
-			  if (firstName) {
-			    this.loggedInName = firstName + ' - ' + this.loggedInName;
-			  }
-		  },
-		  err => {
+	private loadOrganization() {
+		this.orgService.getMyOrganization().subscribe(
+			organization => {
+				this.loggedInName = organization.name;
+				let firstName = this.authService.authState.userFirstName;
+				if (firstName) {
+					this.loggedInName = firstName + ' - ' + this.loggedInName;
+				}
+			},
+			err => {
 
-		  }
-	  );
-  }
+			}
+		);
+	}
+
+	private preloadOrganizationNames() {
+		this.orgService.getOrganizationName('').subscribe(
+			_ => {
+
+			},
+			err => {
+
+			}
+		);
+	}
 
   private generateSiteAdminMenu() {
 	  if (this.authService.authState.isSiteAdmin()) {

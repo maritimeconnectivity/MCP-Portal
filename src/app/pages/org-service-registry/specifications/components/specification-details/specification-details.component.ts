@@ -12,6 +12,7 @@ import {InstancesService} from "../../../../../backend-api/service-registry/serv
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 
 @Component({
   selector: 'specification-details',
@@ -34,7 +35,7 @@ export class SpecificationDetailsComponent {
 	public showModal:boolean = false;
 	public modalDescription:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -69,8 +70,7 @@ export class SpecificationDetailsComponent {
       specification => {
         this.title = specification.name;
         this.specification = specification;
-        this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification);
-        this.isLoadingSpecification = false;
+        this.loadOrganizationName();
         this.loadDesigns();
         this.loadInstances();
       },
@@ -87,6 +87,20 @@ export class SpecificationDetailsComponent {
       }
     );
   }
+
+	private loadOrganizationName() {
+		this.orgsService.getOrganizationName(this.specification.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, organizationName);
+				this.isLoadingSpecification = false;
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, '');
+				this.isLoadingSpecification = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 
   private loadInstances() {
     this.instancesService.getInstancesForSpecification(this.specification.specificationId, this.specification.version).subscribe(

@@ -14,7 +14,8 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
   styles: []
 })
 export class SpecificationListComponent implements OnInit {
-  public organization: Organization;
+	public organization: Organization;
+	public allOrganizations: Array<Organization>;
   public specifications: Array<Specification>;
   public isLoading: boolean;
   public onCreate: Function;
@@ -30,23 +31,23 @@ export class SpecificationListComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.loadMyOrganization();
+	  this.loadMyOrganization();
     this.loadSpecifications();
   }
 
-  private loadMyOrganization() {
-    this.orgService.getMyOrganization().subscribe(
-      organization => {
-        this.organization = organization;
-	      // TODO: change when filtering on organization
-	      //this.cardTitle = 'Specifications for ' + organization.name;
-	      this.cardTitle = 'All Specifications';
-      },
-      err => {
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
-      }
-    );
-  }
+	private loadMyOrganization() {
+		this.orgService.getMyOrganization().subscribe(
+			organization => {
+				this.organization = organization;
+				// TODO: change when filtering on organization
+				//this.cardTitle = 'Specifications for ' + organization.name;
+				this.cardTitle = 'All Specifications';
+			},
+			err => {
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 
   private loadSpecifications() {
     this.specificationsService.getAllSpecifications().subscribe(

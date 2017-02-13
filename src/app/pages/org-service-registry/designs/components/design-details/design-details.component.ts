@@ -12,6 +12,7 @@ import {Instance} from "../../../../../backend-api/service-registry/autogen/mode
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 
 @Component({
   selector: 'design-details',
@@ -32,7 +33,7 @@ export class DesignDetailsComponent {
 	public showModal:boolean = false;
 	public modalDescription:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -61,9 +62,8 @@ export class DesignDetailsComponent {
       design => {
         this.title = design.name;
         this.design = design;
-	      this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design);
+	      this.loadOrganizationName();
 	      this.generateLabelValuesForSpecification();
-	      this.isLoadingDesign = false;
         this.loadInstances();
       },
       err => {
@@ -78,6 +78,21 @@ export class DesignDetailsComponent {
       }
     );
   }
+
+
+	private loadOrganizationName() {
+		this.orgsService.getOrganizationName(this.design.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design, organizationName);
+				this.isLoadingDesign = false;
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.design, '');
+				this.isLoadingDesign = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 
   private loadInstances() {
     this.instancesService.getInstancesForDesign(this.design.designId, this.design.version).subscribe(
