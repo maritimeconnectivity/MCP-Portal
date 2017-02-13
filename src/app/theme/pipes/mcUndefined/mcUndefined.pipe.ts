@@ -8,6 +8,6 @@ export class UndefinedPipe implements PipeTransform  {
   constructor(){}
 
   transform(v?: string) : string {
-    return (v?v:'');
+    return (v?(v.toLowerCase()==='null' ? '' : v):(''));
   }
 }

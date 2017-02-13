@@ -24,6 +24,11 @@ export class UsersService implements OnInit {
 		return this.userApi.getUserUsingGET(orgMrn, userMrn);
 	}
 
+	public updateUser(user:User): Observable<User> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.userApi.updateUserUsingPUT(orgMrn,user.mrn,user);
+	}
+
 	public getUsers(): Observable<Array<User>> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.userApi.getOrganizationUsersUsingGET(orgMrn);
