@@ -73,8 +73,15 @@ export class ServiceDetailsViewComponent {
 			this.labelValues.push({label: 'Certificate domain name', valueHtml: this.service.certDomainName});
 			if (this.service.oidcRedirectUri) {
 				this.labelValues.push({label: 'OIDC Redirect URI', valueHtml: this.service.oidcRedirectUri});
+			}
+			if (this.service.oidcClientId) {
 				this.labelValues.push({label: 'OIDC Client ID', valueHtml: this.service.oidcClientId});
+			}
+			if (this.service.oidcClientSecret) {
 				this.labelValues.push({label: 'OIDC Client Secret', valueHtml: this.service.oidcClientSecret});
+			}
+
+			if (this.service.oidcAccessType) {
 				this.labelValues.push({label: 'Access type', valueHtml: ServiceViewModel.getLabelForEnum(this.service.oidcAccessType)});
 			}
 		}

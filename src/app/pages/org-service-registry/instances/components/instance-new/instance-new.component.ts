@@ -26,6 +26,7 @@ import {UrlValidator} from "../../../../../theme/validators/url.validator";
 import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
+import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 @Component({
   selector: 'instance-new',
@@ -56,7 +57,9 @@ export class InstanceNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
+  private oidcAccessType:OidcAccessTypeEnum = null;
   private useOIDC:boolean = false;
+	private useOIDCRedirect:boolean = true;
 	private mrn:string = '';
 	private name:string = '';
 	public registerForm: FormGroup;
@@ -169,7 +172,11 @@ export class InstanceNewComponent implements OnInit {
 			certDomainName: this.registerForm.value.certDomainName
 		};
 		if (this.useOIDC) {
-			service.oidcRedirectUri = this.registerForm.value.oidcRedirectUri;
+			if (this.useOIDCRedirect) {
+				service.oidcRedirectUri = this.registerForm.value.oidcRedirectUri;
+			} else {
+				service.oidcRedirectUri = '';
+			}
 			let oidcAccessType = this.registerForm.value.oidcAccessType;
 			if (oidcAccessType && oidcAccessType.toLowerCase().indexOf('undefined') < 0) {
 				service.oidcAccessType = oidcAccessType;
@@ -232,6 +239,14 @@ export class InstanceNewComponent implements OnInit {
 		);
 	}
 
+	private shouldUseOIDCRedirect(value:OidcAccessTypeEnum) {
+  	if (value && this.oidcAccessType != value) {
+		  this.oidcAccessType = value;
+		  this.useOIDCRedirect = value != OidcAccessTypeEnum.BearerOnly;
+		  this.generateForm();
+	  }
+	}
+
 	private shouldUseOIDC(useOIDC:boolean) {
 		this.useOIDC = useOIDC;
 		this.generateForm();
@@ -273,25 +288,38 @@ export class InstanceNewComponent implements OnInit {
 		this.formControlModels.push(formControlModelCheckbox);
 
 		if (this.useOIDC) {
-			formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid'};
-			formControl = new FormControl('', formControlModel.validator);
-			this.registerForm.addControl(formControlModel.elementId, formControl);
-			this.formControlModels.push(formControlModel);
-
-			let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate};
-			formControl = new FormControl('', formControlModelSelect.validator);
+			let selectValues = this.selectValues();
+			let formControlModelSelect:McFormControlModelSelect = {selectValues:selectValues, formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate};
+			formControl = new FormControl(this.selectedValue(selectValues), formControlModelSelect.validator);
+			formControl.valueChanges.subscribe(param => this.shouldUseOIDCRedirect(param));
 			this.registerForm.addControl(formControlModelSelect.elementId, formControl);
 			this.formControlModels.push(formControlModelSelect);
+
+			if (this.useOIDCRedirect) {
+				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid'};
+				formControl = new FormControl('', formControlModel.validator);
+				this.registerForm.addControl(formControlModel.elementId, formControl);
+				this.formControlModels.push(formControlModel);
+			}
 		}
 	}
 
 	private selectValues():Array<SelectModel> {
-		let selectValues: Array<SelectModel> = [];
-		selectValues.push({value: undefined, label: 'Choose access type...', isSelected: true});
+		let selectValues:Array<SelectModel> = [];
+		selectValues.push({value:undefined, label:'Choose access type...', isSelected: this.oidcAccessType == null});
 		let allOidcTypes = ServiceViewModel.getAllOidcAccessTypes();
 		allOidcTypes.forEach(oidcType => {
-			selectValues.push({value: oidcType.value, label: oidcType.label, isSelected: false});
+			let isSelected = OidcAccessTypeEnum[oidcType.value] === OidcAccessTypeEnum[this.oidcAccessType];
+			selectValues.push({value:oidcType.value, label:oidcType.label, isSelected: isSelected});
 		});
 		return selectValues;
+	}
+	private selectedValue(selectValues:Array<SelectModel>):string {
+		for(let selectModel of selectValues) {
+			if (selectModel.isSelected) {
+				return selectModel.value;
+			}
+		}
+		return '';
 	}
 }

@@ -92,7 +92,7 @@ export class InstanceDetailsComponent {
   }
 
 	private loadOrganizationName() {
-		this.orgsService.getOrganizationName(this.design.organizationId).subscribe(
+		this.orgsService.getOrganizationName(this.instance.organizationId).subscribe(
 			organizationName => {
 				this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance, organizationName);
 				this.finalizeLoading();
