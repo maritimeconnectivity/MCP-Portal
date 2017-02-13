@@ -115,10 +115,10 @@ export class InstanceDetailsComponent {
 	}
 
   private loadIdService(mrn:string) {
-	  this.servicesService.getIdService(mrn).subscribe(
+	  this.servicesService.getIdService(mrn, this.instance.organizationId).subscribe(
 		  service => {
 			  this.idService = service;
-			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) || this.authService.authState.isSiteAdmin();
+			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
 			  this.isLoadingIdService = false;
 		  },
 		  err => {

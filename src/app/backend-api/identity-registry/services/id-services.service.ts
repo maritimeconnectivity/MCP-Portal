@@ -29,8 +29,10 @@ export class IdServicesService implements OnInit {
 		return this.servicesApi.deleteServiceUsingDELETE(orgMrn, serviceMrn);
 	}
 
-	public getIdService(serviceMrn:string): Observable<Service> {
-		let orgMrn = this.authService.authState.orgMrn;
+	public getIdService(serviceMrn:string, orgMrn?:string): Observable<Service> {
+  	if (!orgMrn) {
+		  orgMrn = this.authService.authState.orgMrn;
+	  }
 		return this.servicesApi.getServiceUsingGET(orgMrn, serviceMrn);
 	}
 
