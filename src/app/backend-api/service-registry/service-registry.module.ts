@@ -6,6 +6,7 @@ import {TechnicaldesignresourceApi} from "./autogen/api/TechnicaldesignresourceA
 import {XmlresourceApi} from "./autogen/api/XmlresourceApi";
 import {DocresourceApi} from "./autogen/api/DocresourceApi";
 import {Http} from "@angular/http";
+import {XsdresourceApi} from "./autogen/api/XsdresourceApi";
 
 @NgModule({
   imports: [
@@ -47,6 +48,13 @@ import {Http} from "@angular/http";
 		  provide: DocresourceApi,
 		  useFactory: (http: Http) => {
 			  return new DocresourceApi(http, SR_BASE_PATH, null);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: XsdresourceApi,
+		  useFactory: (http: Http) => {
+			  return new XsdresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  }
