@@ -51,7 +51,7 @@ export class ServiceUpdateComponent implements OnInit {
 		this.servicesService.getIdService(mrn).subscribe(
 			idService => {
 				this.idService = idService;
-				this.useOIDC = this.idService.oidcAccessType;
+				this.useOIDC = this.idService.oidcAccessType != undefined;
 				this.useOIDCRedirect = (this.idService.oidcAccessType && this.idService.oidcAccessType != OidcAccessTypeEnum.BearerOnly);
 				this.generateForm();
 				this.isLoading = false;
