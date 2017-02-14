@@ -7,6 +7,9 @@ import {XmlresourceApi} from "./autogen/api/XmlresourceApi";
 import {DocresourceApi} from "./autogen/api/DocresourceApi";
 import {Http} from "@angular/http";
 import {XsdresourceApi} from "./autogen/api/XsdresourceApi";
+import {InstanceXmlParser} from "../../pages/org-service-registry/shared/services/instance-xml-parser.service";
+import {DesignXmlParser} from "../../pages/org-service-registry/shared/services/design-xml-parser.service";
+import {SpecificationXmlParser} from "../../pages/org-service-registry/shared/services/specification-xml-parser.service";
 
 @NgModule({
   imports: [
@@ -57,7 +60,10 @@ import {XsdresourceApi} from "./autogen/api/XsdresourceApi";
 			  return new XsdresourceApi(http, SR_BASE_PATH, null);
 		  },
 		  deps: [Http]
-	  }
+	  },
+	  SpecificationXmlParser,
+	  DesignXmlParser,
+	  InstanceXmlParser
   ]
 })
 export class ServiceRegistryModule { }

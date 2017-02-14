@@ -10,7 +10,7 @@
         <form>
           <mc-file-uploader #uploadXml [caption]="captionXml" [fileUploadType]="fileTypeXml" [requiredText]="requiredTextXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
           <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
-          <div *ngIf="hasMrnError" class="mc-form-error" [innerHTML]="mrnErrorText | undefined | sanitizeHtml"></div>
+          <div *ngIf="hasError" class="mc-form-error" [innerHTML]="errorText | undefined | sanitizeHtml"></div>
 
           <mc-form [hideButtons]="true" [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading"></mc-form>
 

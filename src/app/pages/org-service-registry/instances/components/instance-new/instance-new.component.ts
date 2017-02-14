@@ -36,8 +36,8 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 })
 export class InstanceNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
-	public hasMrnError: boolean = false;
-	public mrnErrorText: string;
+	public hasError: boolean = false;
+	public errorText: string;
 
   public organization: Organization;
   public labelValues:Array<LabelValueModel>;
@@ -107,19 +107,29 @@ export class InstanceNewComponent implements OnInit {
 		try {
 			let mrn = this.xmlParser.getMrn(file);
 			let isValid = this.mrnHelper.checkMrnForInstance(mrn);
-			this.hasMrnError = !isValid;
 			if (isValid) {
-				this.mrn = mrn;
-				this.name = this.xmlParser.getName(file);
+				let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
+				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
+				isValid = (designMrn === this.design.designId) && (designVersion === this.design.version);
+
+				if (isValid) {
+					this.mrn = mrn;
+					this.name = this.xmlParser.getName(file);
+				} else {
+					this.errorText  = "The MRN and/or version referencing the Design in the XML, doesn't match the MRN and/or version of the chosen Design.<BR><BR>"
+						+ "Chosen Design: " + this.design.designId + ", version: " + this.design.version + "<BR>"
+						+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
+				}
 			} else {
 				this.mrn = '';
 				this.name = '';
-				this.mrnErrorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+				this.errorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			}
 			this.registerForm.patchValue({mrn: this.mrn});
 			this.registerForm.patchValue({name: this.name});
+			this.hasError = !isValid;
 			return isValid;
 		} catch ( error ) {
 			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);

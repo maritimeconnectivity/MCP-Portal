@@ -1,18 +1,17 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
-import {AuthService} from "../../../authentication/services/auth.service";
 import {ServiceinstanceresourceApi} from "../autogen/api/ServiceinstanceresourceApi";
 import {Instance} from "../autogen/model/Instance";
 import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
-import {XmlParserService} from "../../../shared/xml-parser.service";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {Doc} from "../autogen/model/Doc";
+import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/services/instance-xml-parser.service";
 
 @Injectable()
 export class InstancesService implements OnInit {
   private chosenInstance: Instance;
-  constructor(private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
+  constructor(private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
   }
 
   ngOnInit() {
@@ -90,11 +89,12 @@ export class InstancesService implements OnInit {
   public getInstancesForDesign(designId:string, version?:string): Observable<Array<Instance>> {
     return Observable.create(observer => {
       // TODO for now just get all instances and filter myself until the api can do it
+	    // TODO should I filter on the version also?????????????????
       this.instancesApi.getAllInstancesUsingGET().subscribe(
         instances => {
           var instancesFiltered: Array<Instance> = [];
           for (let instance of instances) {
-            let implementedDesignId = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'id', instance.instanceAsXml);
+            let implementedDesignId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
             if (implementedDesignId === designId) {
               instance.description = this.getDescription(instance);
               instancesFiltered.push(instance);
@@ -167,7 +167,8 @@ export class InstancesService implements OnInit {
   private getDescription(instance:Instance):string {
     try {
       if (!instance || !instance.instanceAsXml) {
-        return '';
+	      console.log("PARSE ERROR: ", instance);
+	      return 'Parse error';
       }
       var parser = new DOMParser();
       let xmlString =  instance.instanceAsXml.content;
