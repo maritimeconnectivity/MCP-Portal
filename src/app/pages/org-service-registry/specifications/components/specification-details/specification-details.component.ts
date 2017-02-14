@@ -33,7 +33,9 @@ export class SpecificationDetailsComponent {
   public onGotoDesign: Function;
   public onGotoInstance: Function;
 	public showModal:boolean = false;
+	public showModalNoDelete:boolean = false;
 	public modalDescription:string;
+	public modalDescriptionNoDelete:string;
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
@@ -145,7 +147,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	public shouldDisplayDelete():boolean {
-		return this.isAdmin() && !this.isLoadingDesigns && !this.hasDesigns();
+		return this.isAdmin() && !this.isLoadingDesigns;
 	}
 
 	private hasDesigns():boolean {
@@ -153,16 +155,22 @@ export class SpecificationDetailsComponent {
 	}
 
 	private delete() {
-		this.modalDescription = 'Do you want to delete the specification?';
-		this.showModal = true;
+  	if (this.hasDesigns()) {
+		  this.modalDescriptionNoDelete = "Specification can't be deleted with active Technical Designs.<br><br>You must first delete the Technical Designs.";
+		  this.showModalNoDelete = true;
+	  } else {
+		  this.modalDescription = 'Do you want to delete the specification?';
+		  this.showModal = true;
+	  }
 	}
 	public cancelModal() {
 		this.showModal = false;
+		this.showModalNoDelete = false;
 	}
 
 	public deleteForSure() {
-		this.isLoadingSpecification = true;
 		this.showModal = false;
+		this.isLoadingSpecification = true;
 		this.specificationsService.deleteSpecification(this.specification).subscribe(
 			() => {
 				this.navigationHelperService.navigateToOrgSpecification('', '');
