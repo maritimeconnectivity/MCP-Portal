@@ -65,7 +65,6 @@ export class DesignDetailsComponent {
         this.title = design.name;
         this.design = design;
 	      this.loadOrganizationName();
-	      this.generateLabelValuesForSpecification();
         this.loadInstances();
       },
       err => {
@@ -86,10 +85,12 @@ export class DesignDetailsComponent {
 		this.orgsService.getOrganizationName(this.design.organizationId).subscribe(
 			organizationName => {
 				this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design, organizationName);
+				this.generateLabelValuesForSpecification();
 				this.isLoadingDesign = false;
 			},
 			err => {
 				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.design, '');
+				this.generateLabelValuesForSpecification();
 				this.isLoadingDesign = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
 			}
