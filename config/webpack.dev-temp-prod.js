@@ -112,6 +112,8 @@ module.exports = function(options) {
           'IR_BASE_PATH':JSON.stringify('https://api.maritimecloud.net'),
           'SR_BASE_PATH':JSON.stringify('https://sr.maritimecloud.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-temp-prod-keycloak.json'),
+          'BANNER_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
+          'IS_DEV': true,
           'ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
           'process.env': {

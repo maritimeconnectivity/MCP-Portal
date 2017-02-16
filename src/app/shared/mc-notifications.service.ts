@@ -21,7 +21,7 @@ export class MCNotificationsService {
 
   public generateNotification(title:string, message:string, type: MCNotificationType, originalError?:any) {
     if (originalError) {
-      this.errorLogger.logError(originalError, false);
+      this.errorLogger.logErrorWithMessage(message, originalError, false);
 	    try {
 		    let extraMessage = "\n\nError was: " + originalError.json().error + ",\n" + originalError.json().message;
 		    message += extraMessage;

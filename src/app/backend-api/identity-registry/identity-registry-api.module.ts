@@ -8,6 +8,7 @@ import {UsercontrollerApi} from "./autogen/api/UsercontrollerApi";
 import {VesselcontrollerApi} from "./autogen/api/VesselcontrollerApi";
 import {LogocontrollerApi} from "./autogen/api/LogocontrollerApi";
 import {Http} from "@angular/http";
+import {BugReportControllerApi} from "./autogen/api/BugReportControllerApi";
 
 @NgModule({
   imports: [
@@ -16,6 +17,13 @@ import {Http} from "@angular/http";
   declarations: [
   ],
   providers: [
+	  {
+		  provide: BugReportControllerApi,
+		  useFactory: (http: Http) => {
+			  return new BugReportControllerApi(http, IR_BASE_PATH);
+		  },
+		  deps: [Http]
+	  },
 	  {
 		  provide: RolecontrollerApi,
 		  useFactory: (http: Http) => {

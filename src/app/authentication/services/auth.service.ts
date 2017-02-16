@@ -3,6 +3,7 @@ import {RolesService} from "../../backend-api/identity-registry/services/roles.s
 import {MCNotificationsService, MCNotificationType} from "../../shared/mc-notifications.service";
 import {Role} from "../../backend-api/identity-registry/autogen/model/Role";
 import RoleNameEnum = Role.RoleNameEnum;
+import {User} from "../../backend-api/identity-registry/autogen/model/User";
 
 
 export enum AuthPermission {
@@ -11,19 +12,32 @@ export enum AuthPermission {
 	SiteAdmin = 1 << 2
 }
 
+export interface AuthUser extends User {
+	organization:string,
+	preferredUsername:string
+}
+
 export interface AuthState {
   loggedIn: boolean,
   permission: any,
   orgMrn: string,
-	userFirstName:string,
+	user: AuthUser,
   rolesLoaded: boolean,
 	isAdmin(): boolean,
 	isSiteAdmin(): boolean
 }
 
+interface StaticAuthInfo {
+	loggedIn?: boolean,
+	logoutUrl?:string,
+	permission?: any,
+	orgMrn?: string,
+	user?: AuthUser
+	authz?: any
+}
 @Injectable()
 export class AuthService implements OnInit {
-  private static staticAuth: any = {};
+  public static staticAuthInfo: StaticAuthInfo = {}; // This is needed to save some information about user, because these informations is found before this class is initiated
 
 	public rolesLoaded: EventEmitter<any> = new EventEmitter<any>();
 
@@ -32,7 +46,6 @@ export class AuthService implements OnInit {
 
   constructor(private rolesService: RolesService, private notificationService: MCNotificationsService) {
     this.authState = this.createAuthState();
-    AuthService.staticAuth.notificationService = notificationService;
     this.findPermissionRoles();
   }
 
@@ -64,10 +77,10 @@ export class AuthService implements OnInit {
   }
   private createAuthState(): AuthState {
     return {
-      loggedIn: AuthService.staticAuth.loggedIn,
+      loggedIn: AuthService.staticAuthInfo.loggedIn,
       permission: AuthPermission.Member,
-      orgMrn: AuthService.staticAuth.orgMrn,
-	    userFirstName: AuthService.staticAuth.userFirstName,
+      orgMrn: AuthService.staticAuthInfo.orgMrn,
+	    user: AuthService.staticAuthInfo.user,
       rolesLoaded: false,
 	    isAdmin() {
 		    return (this.permission & AuthPermission.Admin || this.permission & AuthPermission.SiteAdmin) > 0;
@@ -80,23 +93,16 @@ export class AuthService implements OnInit {
 
   static init(): Promise<any> {
     let keycloakAuth: any = new Keycloak(KEYCLOAK_JSON);
-    AuthService.staticAuth.loggedIn = false;
+    AuthService.staticAuthInfo.loggedIn = false;
 
     return new Promise((resolve, reject) => {
       keycloakAuth.init({ onLoad: 'check-sso' })
         .success((authenticated) => {
           if (authenticated) {
-            AuthService.staticAuth.loggedIn = true;
-            if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.org) {
-              AuthService.staticAuth.orgMrn =  keycloakAuth.tokenParsed.org;
-            } else {
-              throw new Error('Keycloak token parse error');
-            }
-            if (keycloakAuth.tokenParsed && keycloakAuth.tokenParsed.given_name) {
-              AuthService.staticAuth.userFirstName =  keycloakAuth.tokenParsed.given_name;
-            } else {
-              throw new Error('Keycloak token parse error');
-            }
+            AuthService.staticAuthInfo.loggedIn = true;
+
+	          AuthService.parseAuthInfo(keycloakAuth.tokenParsed);
+
 	          keycloakAuth.onAuthLogout = function() {
 		          console.log("USER LOGGED OUT");
 		          AuthService.handle401();
@@ -105,16 +111,49 @@ export class AuthService implements OnInit {
 		          console.log("TOKEN EXPIRED LOGGED OUT");
 	          };
           } else {
-            AuthService.staticAuth.loggedIn = false;
+            AuthService.staticAuthInfo.loggedIn = false;
           }
-          AuthService.staticAuth.authz = keycloakAuth;
-          AuthService.staticAuth.logoutUrl = "/login";
+          AuthService.staticAuthInfo.authz = keycloakAuth;
+          AuthService.staticAuthInfo.logoutUrl = "/login";
           resolve();
         })
         .error(() => {
           reject();
         });
     });
+  }
+
+  private static parseAuthInfo(keycloakToken:any) {
+  	if (!keycloakToken) {
+		  throw new Error('Keycloak token parse error: Token not present');
+	  }
+	  if (!keycloakToken.org) {
+		  throw new Error("Keycloak token parse error: 'org' not present");
+	  }
+	  if (!keycloakToken.given_name) {
+		  throw new Error("Keycloak token parse error: 'given_name' not present");
+	  }
+	  if (!keycloakToken.family_name) {
+		  throw new Error("Keycloak token parse error: 'family_name' not present");
+	  }
+	  if (!keycloakToken.mrn) {
+		  throw new Error("Keycloak token parse error: 'mrn' not present");
+	  }
+	  if (!keycloakToken.email) {
+		  throw new Error("Keycloak token parse error: 'email' not present");
+	  }
+	  if (!keycloakToken.preferred_username) {
+		  throw new Error("Keycloak token parse error: 'preferred_username' not present");
+	  }
+
+	  AuthService.staticAuthInfo.orgMrn =  keycloakToken.org;
+	  let firstname = keycloakToken.given_name;
+	  let lastname = keycloakToken.family_name;
+	  let mrn = keycloakToken.mrn;
+	  let email= keycloakToken.email;
+	  let preferredUsername= keycloakToken.preferred_username;
+	  let authUser:AuthUser = {firstName:firstname, lastName:lastname, mrn:mrn, email:email, organization:keycloakToken.org, preferredUsername:preferredUsername};
+	  AuthService.staticAuthInfo.user = authUser;
   }
 
   isMyOrg(orgMrn:string){
@@ -126,21 +165,21 @@ export class AuthService implements OnInit {
   }
 
   login() {
-    AuthService.staticAuth.authz.login({redirectUri:  '/'});
+    AuthService.staticAuthInfo.authz.login({redirectUri:  '/'});
   }
 
   logout() {
     this.authState.loggedIn = false;
-    AuthService.staticAuth.authz.logout();
-    AuthService.staticAuth.authz = null;
+    AuthService.staticAuthInfo.authz.logout();
+    AuthService.staticAuthInfo.authz = null;
   }
 
   static getToken(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      if (AuthService.staticAuth.authz.token) {
-        AuthService.staticAuth.authz.updateToken(30)
+      if (AuthService.staticAuthInfo.authz.token) {
+        AuthService.staticAuthInfo.authz.updateToken(30)
           .success(() => {
-            resolve(<string>AuthService.staticAuth.authz.token);
+            resolve(<string>AuthService.staticAuthInfo.authz.token);
           })
           .error((error) => {
             AuthService.handle401();
@@ -150,9 +189,9 @@ export class AuthService implements OnInit {
   }
 
   public static handle401() {
-    AuthService.staticAuth.loggedIn = false;
-    AuthService.staticAuth.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuth.logoutUrl + '?reason=401'});
-    AuthService.staticAuth.authz = null;
+    AuthService.staticAuthInfo.loggedIn = false;
+    AuthService.staticAuthInfo.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuthInfo.logoutUrl + '?reason=401'});
+    AuthService.staticAuthInfo.authz = null;
   }
 
 }

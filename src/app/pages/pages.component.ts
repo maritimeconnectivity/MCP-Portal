@@ -56,7 +56,7 @@ export class Pages {
 		this.orgService.getMyOrganization().subscribe(
 			organization => {
 				this.loggedInName = organization.name;
-				let firstName = this.authService.authState.userFirstName;
+				let firstName = this.authService.authState.user.firstName;
 				if (firstName) {
 					this.loggedInName = firstName + ' - ' + this.loggedInName;
 				}
