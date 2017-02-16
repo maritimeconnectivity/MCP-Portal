@@ -3,7 +3,8 @@ import {FormGroup, ValidatorFn} from "@angular/forms";
 export enum McFormControlType {
 	Text,
 	Checkbox,
-	Select
+	Select,
+	Datepicker
 }
 
 export interface SelectModel {
@@ -26,6 +27,10 @@ export interface McFormControlModel {
 }
 export interface McFormControlModelSelect extends McFormControlModel {
 	selectValues:Array<SelectModel>;
+	showCheckmark:boolean;
+}
+export interface McFormControlModelDatepicker extends McFormControlModel {
+	minDate:Date;
 }
 export interface McFormControlModelCheckbox extends McFormControlModel {
 	state:boolean;

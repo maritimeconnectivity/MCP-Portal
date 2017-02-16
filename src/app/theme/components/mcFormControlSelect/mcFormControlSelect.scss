@@ -5,7 +5,8 @@
   right: 10px !important;
 }
 .mc-form-control-select:read-only {
-  cursor: default;
-  color: $default;
+  cursor: default !important;
+  color: $default !important;
 }
+
 

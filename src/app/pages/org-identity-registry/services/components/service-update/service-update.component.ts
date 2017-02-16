@@ -186,7 +186,7 @@ export class ServiceUpdateComponent implements OnInit {
 
 		if (this.useOIDC) {
 			let selectValues = this.selectValues();
-			let formControlModelSelect:McFormControlModelSelect = {selectValues:selectValues, formGroup: this.updateForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate};
+			let formControlModelSelect:McFormControlModelSelect = {selectValues:selectValues, formGroup: this.updateForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate, showCheckmark:true};
 			formControl = new FormControl(this.selectedValue(selectValues), formControlModelSelect.validator);
 			formControl.valueChanges.subscribe(param => this.shouldUseOIDCRedirect(param));
 			this.updateForm.addControl(formControlModelSelect.elementId, formControl);

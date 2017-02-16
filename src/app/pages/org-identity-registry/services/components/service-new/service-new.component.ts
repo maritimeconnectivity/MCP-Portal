@@ -180,7 +180,7 @@ export class ServiceNewComponent implements OnInit {
 			this.registerForm.addControl(formControlModel.elementId, formControl);
 			this.formControlModels.push(formControlModel);
 
-			let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate};
+			let formControlModelSelect:McFormControlModelSelect = {selectValues:this.selectValues(), formGroup: this.registerForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate, showCheckmark:true};
 			formControl = new FormControl('', formControlModelSelect.validator);
 			this.registerForm.addControl(formControlModelSelect.elementId, formControl);
 			this.formControlModels.push(formControlModelSelect);

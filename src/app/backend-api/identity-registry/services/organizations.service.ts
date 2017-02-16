@@ -4,6 +4,7 @@ import {OrganizationcontrollerApi} from "../autogen/api/OrganizationcontrollerAp
 import {Observable} from "rxjs";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
+import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 
 @Injectable()
 export class OrganizationsService implements OnInit {
@@ -100,20 +101,35 @@ export class OrganizationsService implements OnInit {
 		});
 	}
 
-  public issueNewCertificate() : Observable<PemCertificate> {
-    return Observable.create(observer => {
-      let orgMrn = this.authService.authState.orgMrn;
-      this.organizationApi.newOrgCertUsingGET(orgMrn).subscribe(
-        pemCertificate => {
-          this.myOrganization = null; // We need to reload the org now we have a new certificate
-          observer.next(pemCertificate);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
-  }
+	public issueNewCertificate() : Observable<PemCertificate> {
+		return Observable.create(observer => {
+			let orgMrn = this.authService.authState.orgMrn;
+			this.organizationApi.newOrgCertUsingGET(orgMrn).subscribe(
+				pemCertificate => {
+					this.myOrganization = null; // We need to reload the org now we have a new certificate
+					observer.next(pemCertificate);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
+	public revokeCertificate(certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+		return Observable.create(observer => {
+			let orgMrn = this.authService.authState.orgMrn;
+			this.organizationApi.revokeOrgCertUsingPOST(orgMrn, certificateId, certicateRevocation).subscribe(
+				res => {
+					this.myOrganization = null; // We need to reload the org now we have a new certificate
+					observer.next(res);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   // TODO: explore the possibilities with returning cahced responses. Currently there is 2 calls to myOrg before result is ready. I'm sure there is something in Observable to fix this
   public getMyOrganization(): Observable<Organization> {

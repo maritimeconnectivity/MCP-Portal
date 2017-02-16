@@ -8,7 +8,8 @@ import {MCNotificationsService, MCNotificationType} from "./mc-notifications.ser
 
 export const queryKeys = {
   ENTITY_TYPE: "entityType",
-  ENTITY_MRN: "entityMrn",
+	ENTITY_MRN: "entityMrn",
+	CERT_ID: "certId",
   ENTITY_TITLE: "entityTitle"
 };
 
@@ -24,41 +25,78 @@ export class NavigationHelperService {
   constructor(private notificationService: MCNotificationsService, private router: Router, private activatedRoute: ActivatedRoute) {
   }
 
-  public navigateToIssueNewCertificate(entityType: CertificateEntityType, entityMrn:string, entityTitle: string) {
-    this.pathBeforeCerticates = this.router.url;
-    this.path = '/issuecert';
-    let pagesMenu = PAGES_MENU;
-    var pathElement = "";
-    switch (entityType) {
-      case CertificateEntityType.Device: {
-        pathElement = "devices";
-        break;
-      }
-      case CertificateEntityType.Organization: {
-        pathElement = "my-organization";
-        break;
-      }
-      case CertificateEntityType.Service: {
-        pathElement = "instances";
-        break;
-      }
-      case CertificateEntityType.User: {
-        pathElement = "users";
-        break;
-      }
-      case CertificateEntityType.Vessel: {
-        pathElement = "vessels";
-        break;
-      }
-      default: {
-        this.notificationService.generateNotification("Error", "Error when trying to navigate to issue new certificate.\n Missing: " + entityType, MCNotificationType.Error);
-        return;
-      }
-    }
-    this.generatePath(pathElement, pagesMenu[0]);
+	public navigateToIssueNewCertificate(entityType: CertificateEntityType, entityMrn:string, entityTitle: string) {
+		this.pathBeforeCerticates = this.router.url;
+		this.path = '/issuecert';
+		let pagesMenu = PAGES_MENU;
+		var pathElement = "";
+		switch (entityType) {
+			case CertificateEntityType.Device: {
+				pathElement = "devices";
+				break;
+			}
+			case CertificateEntityType.Organization: {
+				pathElement = "my-organization";
+				break;
+			}
+			case CertificateEntityType.Service: {
+				pathElement = "instances";
+				break;
+			}
+			case CertificateEntityType.User: {
+				pathElement = "users";
+				break;
+			}
+			case CertificateEntityType.Vessel: {
+				pathElement = "vessels";
+				break;
+			}
+			default: {
+				this.notificationService.generateNotification("Error", "Error when trying to navigate to issue new certificate.\n Missing: " + entityType, MCNotificationType.Error);
+				return;
+			}
+		}
+		this.generatePath(pathElement, pagesMenu[0]);
 
-    this.router.navigate([this.path], { queryParams: { entityType: entityType, entityMrn: entityMrn, entityTitle:entityTitle}});
-  }
+		this.router.navigate([this.path], { queryParams: { entityType: entityType, entityMrn: entityMrn, entityTitle:entityTitle}});
+	}
+
+	public navigateToRevokeCertificate(entityType: CertificateEntityType, entityMrn:string, entityTitle: string, certificateId:number) {
+		this.pathBeforeCerticates = this.router.url;
+		this.path = '/revokecert';
+		let pagesMenu = PAGES_MENU;
+		var pathElement = "";
+		switch (entityType) {
+			case CertificateEntityType.Device: {
+				pathElement = "devices";
+				break;
+			}
+			case CertificateEntityType.Organization: {
+				pathElement = "my-organization";
+				break;
+			}
+			case CertificateEntityType.Service: {
+				pathElement = "instances";
+				break;
+			}
+			case CertificateEntityType.User: {
+				pathElement = "users";
+				break;
+			}
+			case CertificateEntityType.Vessel: {
+				pathElement = "vessels";
+				break;
+			}
+			default: {
+				this.notificationService.generateNotification("Error", "Error when trying to navigate to revoke certificate.\n Missing: " + entityType, MCNotificationType.Error);
+				return;
+			}
+		}
+		this.generatePath(pathElement, pagesMenu[0]);
+
+		this.router.navigate([this.path], { queryParams: { entityType: entityType, entityMrn: entityMrn, entityTitle:entityTitle, certId:certificateId}});
+	}
+
   public cancelNavigateCertificates() {
     if (this.pathBeforeCerticates) {
       this.router.navigateByUrl(this.pathBeforeCerticates);

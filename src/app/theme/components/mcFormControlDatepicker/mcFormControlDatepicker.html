@@ -1,0 +1,7 @@
+<div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': !isValid(), 'has-success': formControlModel.validator && isValid()}" class="form-group mc-form-group has-feedback">
+  <label class="mc-form-label">{{formControlModel.labelName | undefined}}
+    <div [ngClass]="{'mc-form-control-calender-error': !isValid(), 'mc-form-control-calender-success': formControlModel.validator && isValid()}">
+      <p-calendar formControlName="{{formControlModel.elementId}}" [minDate]="formControlModel.minDate" [inline]="true"></p-calendar>
+    </div>
+  </label>
+</div>

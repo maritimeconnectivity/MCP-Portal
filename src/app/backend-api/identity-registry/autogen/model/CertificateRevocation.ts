@@ -21,7 +21,7 @@ export interface CertificateRevocation {
     /**
      * The date the certificate revocation should be activated.
      */
-    revokedAt: Date;
+    revokedAt: string;
 
 }
 export namespace CertificateRevocation {
