@@ -51,16 +51,16 @@ export class CertificateHelperService implements OnInit {
 
   public certificateViewModelFromCertificate(certificate:Certificate): CertificateViewModel {
     let certificateViewModel: CertificateViewModel = certificate;
-    certificateViewModel.revokeReasonText = this.getRevokeReasonText(certificate.revokeReason);
+    certificateViewModel.revokeReasonText = this.getRevokeReasonText(certificate.revokeReason+'ddsf');
     return certificateViewModel;
   }
 
-  public getRevokeReasonText(revokeReason?:string):string {
+  public getRevokeReasonText(revokeReason?:any):string {
     var reasonText = '';
     if (revokeReason) {
       reasonText = revokeReason;
-      let revokeReasonEnum = RevokationReasonEnum[revokeReason];
-      if (revokeReasonEnum) {
+      let revokeReasonEnum:RevokationReasonEnum = revokeReason;
+      if (RevokationReasonEnum[revokeReasonEnum]) {
         reasonText = this.getRevokeReasonTextFromRevokationReason(revokeReasonEnum);
       }
     }
@@ -79,6 +79,7 @@ export class CertificateHelperService implements OnInit {
         break;
       }
       case RevokationReasonEnum.Cacompromise: {
+	      console.log('compromised: ',revokationReason);
         reasonText = 'CA compromised';
         break;
       }
@@ -111,6 +112,7 @@ export class CertificateHelperService implements OnInit {
         break;
       }
       default : {
+	      console.log('default: ',revokationReason);
         reasonText = RevokationReasonEnum[revokationReason];
       }
     }

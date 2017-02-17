@@ -66,9 +66,7 @@ export class CertificateRevokeComponent implements OnInit {
 	  if (tempRevocationReason && tempRevocationReason.toLowerCase().indexOf('undefined') < 0) {
 		  revocationReason = tempRevocationReason;
 	  }
-
-	  console.log("SSS: ", revokeDate.valueOf());
-    let certificateRevocation:CertificateRevocation = {revokationReason:revocationReason, revokedAt:'1499925534000'}//revokeDate.valueOf()}
+    let certificateRevocation:CertificateRevocation = {revokationReason:revocationReason, revokedAt:revokeDate.getTime()+''}
     this.certificateService.revokeCertificate(this.entityType, this.entityMrn, this.certificateId, certificateRevocation).subscribe(
       _ => {
         this.isRevoking = false;
