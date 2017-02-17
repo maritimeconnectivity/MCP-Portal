@@ -1,8 +1,17 @@
 <div *ngIf="!isLoading && formGroup">
   <form [formGroup]="formGroup">
     <div *ngFor="let formControlModel of formControlModels">
+      <div *ngIf="isControlTypeFileUpload(formControlModel)">
+        <mc-form-control-fileupload [formControlModel]="formControlModel"></mc-form-control-fileupload>
+      </div>
       <div *ngIf="isControlTypeText(formControlModel)">
         <mc-form-control-text [formControlModel]="formControlModel"></mc-form-control-text>
+      </div>
+      <div *ngIf="isControlTypeTextArea(formControlModel)">
+        <mc-form-control-textarea [formControlModel]="formControlModel"></mc-form-control-textarea>
+      </div>
+      <div *ngIf="isControlTypeDatepicker(formControlModel)">
+        <mc-form-control-datepicker [formControlModel]="formControlModel"></mc-form-control-datepicker>
       </div>
       <div *ngIf="isControlTypeCheckbox(formControlModel)">
         <mc-form-control-checkbox [formControlModel]="formControlModel"></mc-form-control-checkbox>

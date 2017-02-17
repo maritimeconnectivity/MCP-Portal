@@ -1,0 +1,19 @@
+@import '../../sass/conf/conf';
+
+.mc-form-control-calender-error {
+
+}
+.mc-form-control-calender-success {
+  border: 1px solid $success !important;
+  &:focus {
+    border: 1px solid $success-light !important;
+  }
+}
+.mc-form-control-calender-error {
+  border: 1px solid $danger !important;
+  &:focus {
+    border: 1px solid $danger-light !important;
+  }
+}
+
+

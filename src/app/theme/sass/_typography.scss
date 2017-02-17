@@ -179,6 +179,16 @@ h5 {
   padding-left: 11px;
   border-left: 4px solid $warning-bg;
 }
+.error-notice {
+  font-weight: $font-normal;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: $default-text;
+  line-height: 14px;
+  font-size: 14px;
+  padding-left: 11px;
+  border-left: 4px solid $danger;
+}
 
 .lists-widget {
 

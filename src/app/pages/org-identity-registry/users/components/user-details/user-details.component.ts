@@ -6,6 +6,10 @@ import {MCNotificationsService, MCNotificationType} from "../../../../../shared/
 import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
 import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import FederationTypeEnum = Organization.FederationTypeEnum;
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'user-details',
@@ -14,6 +18,7 @@ import {AuthService} from "../../../../../authentication/services/auth.service";
   styles: []
 })
 export class UserDetailsComponent {
+	private organization:Organization;
 	public labelValues:Array<LabelValueModel>;
 	public title:string;
 	public isLoading:boolean;
@@ -22,12 +27,13 @@ export class UserDetailsComponent {
 	public certificateTitle: string;
 	public showModal:boolean = false;
 	public modalDescription:string;
-	constructor(private authService:AuthService, private route: ActivatedRoute, private router:Router, private usersService: UsersService, private notifications:MCNotificationsService) {
+	constructor(private authService:AuthService, private route: ActivatedRoute, private router:Router, private usersService: UsersService, private organizationService: OrganizationsService, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
 
 	}
 
 	ngOnInit() {
 		this.entityType = CertificateEntityType.User;
+		this.loadOrganization();
 		this.loadUser();
 	}
 
@@ -48,6 +54,17 @@ export class UserDetailsComponent {
 		);
 	}
 
+	private loadOrganization() {
+		this.organizationService.getMyOrganization().subscribe(
+			organization => {
+				this.organization = organization;
+			},
+			err => {
+
+			}
+		);
+	}
+
 	public generateLabelValues() {
 		this.labelValues = [];
 		if (this.user) {
@@ -57,6 +74,17 @@ export class UserDetailsComponent {
 			this.labelValues.push({label: 'Email', valueHtml: this.user.email});
 			this.labelValues.push({label: 'Permissions', valueHtml: this.user.permissions});
 		}
+	}
+
+	public showUpdate():boolean {
+		if (!this.organization) {
+			return false;
+		}
+		return this.isAdmin() && this.organization.federationType === FederationTypeEnum.TestIdp;
+	}
+
+	public update() {
+		this.navigationHelper.navigateToUpdateUser(this.user.mrn);
 	}
 
 	public showDelete():boolean {

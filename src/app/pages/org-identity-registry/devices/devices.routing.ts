@@ -5,6 +5,7 @@ import {DeviceDetailsComponent} from "./components/device-details/device-details
 import {DeviceNewComponent} from "./components/device-new/device-new.component";
 import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
 import {DeviceUpdateComponent} from "./components/device-update/device-update.component";
+import {CertificateRevokeComponent} from "../../shared/components/certificate-revoke/certificate-revoke.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -21,6 +22,13 @@ const routes: Routes = [
 		    path: 'issuecert',
 		    component: CertificateIssueNewComponent,
 		    data:{breadcrumb: 'New Certificate'},
+		    children: [
+		    ]
+	    },
+	    {
+		    path: 'revokecert',
+		    component: CertificateRevokeComponent,
+		    data:{breadcrumb: 'Revoke Certificate'},
 		    children: [
 		    ]
 	    },

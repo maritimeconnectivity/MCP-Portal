@@ -1,5 +1,5 @@
 <div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': !isValid(), 'has-success': formControlModel.validator && isValid()}" class="form-group mc-form-group has-feedback">
-  <label class="checkbox-inline custom-checkbox nowrap">
+  <label class="checkbox-inline custom-checkbox">
     <input type="checkbox" [checked]=state [ngClass]="{'mc-form-control-error': !isValid(), 'mc-form-control-success': formControlModel.validator && isValid()}" class="form-control mc-form-control" formControlName="{{formControlModel.elementId}}"
            (change)="onChange($event.target.checked)"
            [value]="value">

@@ -18,7 +18,7 @@ import * as models from './models';
 export interface Xsd {
     comment?: string;
 
-    content?: Array<string>;
+    content?: string;
 
     contentContentType?: string;
 

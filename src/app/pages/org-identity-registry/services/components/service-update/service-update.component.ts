@@ -29,6 +29,7 @@ export class ServiceUpdateComponent implements OnInit {
 	public modalDescription:string;
 	// McForm params
 	private useOIDC:boolean = false;
+	private useOIDCRedirect:boolean = true;
 	public isLoading = true;
 	public isUpdating = false;
 	public updateTitle = "Update";
@@ -50,7 +51,8 @@ export class ServiceUpdateComponent implements OnInit {
 		this.servicesService.getIdService(mrn).subscribe(
 			idService => {
 				this.idService = idService;
-				this.useOIDC = this.idService.oidcRedirectUri && this.idService.oidcRedirectUri.length > 0;
+				this.useOIDC = this.idService.oidcAccessType != undefined;
+				this.useOIDCRedirect = (this.idService.oidcAccessType && this.idService.oidcAccessType != OidcAccessTypeEnum.BearerOnly);
 				this.generateForm();
 				this.isLoading = false;
 			},
@@ -103,7 +105,11 @@ export class ServiceUpdateComponent implements OnInit {
 
 		if (overwriteOidc) {
 			if (this.useOIDC) {
-				this.idService.oidcRedirectUri = this.updateForm.value.oidcRedirectUri;
+				if (this.useOIDCRedirect) {
+					this.idService.oidcRedirectUri = this.updateForm.value.oidcRedirectUri;
+				} else {
+					this.idService.oidcRedirectUri = '';
+				}
 				let oidcAccessType = this.updateForm.value.oidcAccessType;
 				if (oidcAccessType && oidcAccessType.toLowerCase().indexOf('undefined') < 0) {
 					this.idService.oidcAccessType = oidcAccessType;
@@ -130,6 +136,14 @@ export class ServiceUpdateComponent implements OnInit {
 				this.notifications.generateNotification('Error', 'Error when trying to update service', MCNotificationType.Error, err);
 			}
 		);
+	}
+
+	private shouldUseOIDCRedirect(value:OidcAccessTypeEnum) {
+		if (value && this.idService.oidcAccessType != value) {
+			this.idService.oidcAccessType = value;
+			this.useOIDCRedirect = value != OidcAccessTypeEnum.BearerOnly;
+			this.generateForm();
+		}
 	}
 
 	private shouldUseOIDC(useOIDC:boolean) {
@@ -171,16 +185,20 @@ export class ServiceUpdateComponent implements OnInit {
 		this.formControlModels.push(formControlModelCheckbox);
 
 		if (this.useOIDC) {
-			formControlModel = {formGroup: this.updateForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid'};
-			formControl = new FormControl(this.idService.oidcRedirectUri, formControlModel.validator);
-			this.updateForm.addControl(formControlModel.elementId, formControl);
-			this.formControlModels.push(formControlModel);
-
 			let selectValues = this.selectValues();
-			let formControlModelSelect:McFormControlModelSelect = {selectValues:selectValues, formGroup: this.updateForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate};
+			let formControlModelSelect:McFormControlModelSelect = {selectValues:selectValues, formGroup: this.updateForm, elementId: 'oidcAccessType', controlType: McFormControlType.Select, labelName: 'Access type', placeholder: '', validator:SelectValidator.validate, showCheckmark:true};
 			formControl = new FormControl(this.selectedValue(selectValues), formControlModelSelect.validator);
+			formControl.valueChanges.subscribe(param => this.shouldUseOIDCRedirect(param));
 			this.updateForm.addControl(formControlModelSelect.elementId, formControl);
 			this.formControlModels.push(formControlModelSelect);
+
+			if (this.useOIDCRedirect) {
+				formControlModel = {formGroup: this.updateForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid'};
+				formControl = new FormControl(this.idService.oidcRedirectUri, formControlModel.validator);
+				this.updateForm.addControl(formControlModel.elementId, formControl);
+				this.formControlModels.push(formControlModel);
+			}
+
 		}
 	}
 

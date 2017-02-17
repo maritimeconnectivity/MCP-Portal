@@ -4,7 +4,7 @@ import {Xml} from "../../../../backend-api/service-registry/autogen/model/Xml";
 
 @Injectable()
 export class ServiceRegistryXmlParser {
-	constructor(private xmlParserService: XmlParserService) {
+	constructor(protected xmlParserService: XmlParserService) {
 	}
 
 	public getName(xml: Xml): string {

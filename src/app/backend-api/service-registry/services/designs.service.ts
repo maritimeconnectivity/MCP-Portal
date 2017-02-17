@@ -5,15 +5,15 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {TechnicaldesignresourceApi} from "../autogen/api/TechnicaldesignresourceApi";
 import {Design} from "../autogen/model/Design";
 import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
-import {XmlParserService} from "../../../shared/xml-parser.service";
 import {Instance} from "../autogen/model/Instance";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
+import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/services/instance-xml-parser.service";
 
 
 @Injectable()
 export class DesignsService implements OnInit {
   private chosenDesign: Design;
-  constructor(private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
+  constructor(private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: InstanceXmlParser) {
   }
 
   ngOnInit() {
@@ -90,8 +90,8 @@ export class DesignsService implements OnInit {
 
   public getDesignForInstance(instance:Instance): Observable<Design> {
 
-	  let designId = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'id', instance.instanceAsXml);
-	  let version = this.xmlParser.getVauleFromEmbeddedField('implementsServiceDesign', 'version', instance.instanceAsXml);
+	  let designId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
+	  let version = this.xmlParser.getVersionForDesignInInstance(instance.instanceAsXml);
 	  // TODO: change when data is actually there
 	  //let designId = instance.designId;
 	  //let version = instance.version;
@@ -162,7 +162,8 @@ export class DesignsService implements OnInit {
   private getDescription(design:Design):string {
     try {
       if (!design || !design.designAsXml) {
-        return '';
+      	console.log("PARSE ERROR: ", design);
+        return 'Parse error';
       }
       var parser = new DOMParser();
       let xmlString =  design.designAsXml.content;

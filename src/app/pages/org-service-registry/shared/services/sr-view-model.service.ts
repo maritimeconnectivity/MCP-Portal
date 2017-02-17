@@ -13,20 +13,21 @@ export class SrViewModelService implements OnInit {
 
   }
 
-  public generateLabelValuesForSpecification(specification:Specification):Array<LabelValueModel> {
+  public generateLabelValuesForSpecification(specification:Specification, organizationName:string):Array<LabelValueModel> {
     var labelValues:Array<LabelValueModel> = undefined;
     if (specification) {
       labelValues = [];
       labelValues.push({label: 'MRN', valueHtml: specification.specificationId});
       labelValues.push({label: 'Name', valueHtml: specification.name});
       labelValues.push({label: 'Version', valueHtml: specification.version});
-      labelValues.push({label: 'Status', valueHtml: specification.status});
+	    labelValues.push({label: 'Status', valueHtml: specification.status});
+		  labelValues.push({label: 'Organization', valueHtml: organizationName});
       labelValues.push({label: 'Description', valueHtml: specification.description});
     }
     return labelValues
   }
 
-  public generateLabelValuesForDesign(design:Design):Array<LabelValueModel> {
+  public generateLabelValuesForDesign(design:Design, organizationName:string):Array<LabelValueModel> {
     var labelValues:Array<LabelValueModel> = undefined;
     if (design) {
       labelValues = [];
@@ -34,12 +35,13 @@ export class SrViewModelService implements OnInit {
       labelValues.push({label: 'Name', valueHtml: design.name});
       labelValues.push({label: 'Version', valueHtml: design.version});
       labelValues.push({label: 'Status', valueHtml: design.status});
+	    labelValues.push({label: 'Organization', valueHtml: organizationName});
       labelValues.push({label: 'Description', valueHtml: design.description});
     }
     return labelValues;
   }
 
-  public generateLabelValuesForInstance(instance:Instance):Array<LabelValueModel> {
+  public generateLabelValuesForInstance(instance:Instance, organizationName:string):Array<LabelValueModel> {
     var labelValues:Array<LabelValueModel> = undefined;
     if (instance) {
       labelValues = [];
@@ -47,6 +49,7 @@ export class SrViewModelService implements OnInit {
       labelValues.push({label: 'Name', valueHtml: instance.name});
       labelValues.push({label: 'Version', valueHtml: instance.version});
       labelValues.push({label: 'Status', valueHtml: instance.status});
+	    labelValues.push({label: 'Organization', valueHtml: organizationName});
       labelValues.push({label: 'Description', valueHtml: instance.description});
       labelValues.push({label: 'Service endpoint', valueHtml: instance.endpointUri});
     }

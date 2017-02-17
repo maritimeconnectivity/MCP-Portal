@@ -1,0 +1,9 @@
+<div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': !isValid(), 'has-success': formControlModel.validator && isValid()}" class="form-group mc-form-group has-feedback">
+  <label class="mc-form-label">{{formControlModel.labelName | undefined}}
+    <textarea readonly="{{formControlModel.isDisabled}}" [ngClass]="{'mc-form-control-error': !isValid(), 'mc-form-control-success': formControlModel.validator && isValid()}" class="form-control mc-form-control" formControlName="{{formControlModel.elementId}}" placeholder="{{formControlModel.placeholder | undefined}}"></textarea>
+  </label>
+  <i *ngIf="formControlModel.validator" [ngClass]="{'ion-android-cancel': !isValid(), 'ion-checkmark-circled': isValid()}" class="form-control-feedback" aria-hidden="true"></i>
+  <div *ngIf="formControlModel.validator" [hidden]="!formControlModel.errorText || isValid() || formControlModel.formGroup.controls[formControlModel.elementId].pristine" class="mc-form-error">
+    {{formControlModel.errorText | undefined}}
+  </div>
+</div>

@@ -126,7 +126,8 @@ export class SpecificationsService implements OnInit {
   private getDescription(specification:Specification):string {
     try {
       if (!specification || !specification.specAsXml) {
-        return '';
+	      console.log("PARSE ERROR: ", specification);
+	      return 'Parse error';
       }
       var parser = new DOMParser();
       let xmlString =  specification.specAsXml.content;

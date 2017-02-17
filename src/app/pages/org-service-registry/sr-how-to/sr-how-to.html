@@ -4,15 +4,19 @@
       <h5 style="margin-bottom: 2px;">Guide on how to make services for the Maritime Cloud - Concepts and how to:</h5>
       <a href="http://maritimecloud.net/docs/Service_Documentation_Guidelines.pdf" class="learn-more" target="_blank">Service Specification Guideline</a>
 
-      <h5 style="margin-bottom: 2px; margin-top: 15px">Service Specification template:</h5>
+      <h5 style="margin-bottom: 2px; margin-top: 15px">TEMPLATES:</h5>
       <a href="http://maritimecloud.net/docs/Service_Specification_Template.docx" class="learn-more" target="_blank">Download Specification template</a>
-
-      <h5 style="margin-bottom: 2px; margin-top: 15px">Service Technical Design template:</h5>
+      <BR/>
       <a href="http://maritimecloud.net/docs/Service_Design_Description_Template.docx" class="learn-more" target="_blank">Download Technical Design template</a>
-
-      <h5 style="margin-bottom: 2px; margin-top: 15px">Service Instance template:</h5>
+      <BR/>
       <a href="http://maritimecloud.net/docs/Service_Implementation_Description_Template.docx" class="learn-more" target="_blank">Download Instance template</a>
-
+      <div *ngIf="xsds && xsds.length>0">
+        <h5 style="margin-bottom: 2px; margin-top: 15px">XSDs:</h5>
+        <div *ngFor="let xsd of xsds">
+          <a (click)="download(xsd)" class="learn-more">Download {{xsd.name}}</a>
+          <BR/>
+        </div>
+      </div>
       <BR/>
       <BR/>
       If you have any questions or comments please find contact informations on the official <a href="http://maritimecloud.net" class="learn-more" target="_blank">Maritime Cloud Homepage</a>

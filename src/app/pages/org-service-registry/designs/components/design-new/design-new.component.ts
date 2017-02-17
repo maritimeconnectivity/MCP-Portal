@@ -25,8 +25,8 @@ import {DesignXmlParser} from "../../../shared/services/design-xml-parser.servic
 })
 export class DesignNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
-	public hasMrnError: boolean = false;
-	public mrnErrorText: string;
+	public hasError: boolean = false;
+	public errorText: string;
 
   public organization: Organization;
   public labelValues:Array<LabelValueModel>;
@@ -81,12 +81,22 @@ export class DesignNewComponent implements OnInit {
 		try {
 			let mrn = this.xmlParser.getMrn(file);
 			let isValid = this.mrnHelper.checkMrnForDesign(mrn);
-			this.hasMrnError = !isValid;
 			if (!isValid) {
-				this.mrnErrorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+				this.errorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForDesign() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
+			} else {
+				let specificationMrn = this.xmlParser.getMrnForSpecificationInDesign(file);
+				let specificationVersion = this.xmlParser.getVersionForSpecificationInDesign(file);
+				isValid = (specificationMrn === this.specification.specificationId) && (specificationVersion === this.specification.version);
+
+				if (!isValid) {
+					this.errorText  = "The MRN and/or version referencing the Specification in the XML, doesn't match the MRN and/or version of the chosen Specification.<BR><BR>"
+						+ "Chosen Specification: " + this.specification.specificationId + ", version: " + this.specification.version + "<BR>"
+						+ "Xml-parsed Specification: " + specificationMrn + ", version: " + specificationVersion + "<BR>";
+				}
 			}
+			this.hasError = !isValid;
 			return isValid;
 		} catch ( error ) {
 			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
@@ -150,9 +160,7 @@ export class DesignNewComponent implements OnInit {
     this.specificationsService.getSpecification(specificationId, version).subscribe(
       specification => {
         this.specification = specification;
-        this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification);
-        this.calculateFormValid();
-        this.isLoading = false;
+        this.loadOrganizationName();
       },
       err => {
         this.isLoading = false;
@@ -160,4 +168,19 @@ export class DesignNewComponent implements OnInit {
       }
     );
   }
+	private loadOrganizationName() {
+		this.orgService.getOrganizationName(this.specification.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, organizationName);
+				this.calculateFormValid();
+				this.isLoading = false;
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, '');
+				this.calculateFormValid();
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 }
