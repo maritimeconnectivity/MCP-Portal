@@ -64,8 +64,20 @@ export class McForm {
   	return this.disableRegisterButton;
 	}
 
+	public isControlTypeFileUpload(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.FileUpload;
+	}
+
 	public isControlTypeText(formControlModel:McFormControlModel) {
 		return formControlModel.controlType === McFormControlType.Text;
+	}
+
+	public isControlTypeTextArea(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.TextArea;
+	}
+
+	public isControlTypeDatepicker(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.Datepicker;
 	}
 
 	public isControlTypeCheckbox(formControlModel:McFormControlModel) {

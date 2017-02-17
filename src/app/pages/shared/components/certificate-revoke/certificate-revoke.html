@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-lg-12">
+    <ba-card title="Revoke certificate" baCardClass="with-scroll table-panel">
+      <!-- Before issue -->
+      <div *ngIf="entityType != null && !isLoading">
+        <h5>Revoking certificate for:</h5>
+        <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+        <br>
+        <h5>
+          Please choose a reason and date for revocation.
+        </h5>
+        <mc-form [formGroup]="revokeForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isRevoking" [registerTitle]="revokeTitle" (onCancel)="cancel()" (onRegister)="revoke()"></mc-form>
+      </div>
+      <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+    </ba-card>
+  </div>
+</div>

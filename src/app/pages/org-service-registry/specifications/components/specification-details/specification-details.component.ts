@@ -12,6 +12,7 @@ import {InstancesService} from "../../../../../backend-api/service-registry/serv
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 
 @Component({
   selector: 'specification-details',
@@ -32,9 +33,11 @@ export class SpecificationDetailsComponent {
   public onGotoDesign: Function;
   public onGotoInstance: Function;
 	public showModal:boolean = false;
+	public showModalNoDelete:boolean = false;
 	public modalDescription:string;
+	public modalDescriptionNoDelete:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService) {
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -69,8 +72,7 @@ export class SpecificationDetailsComponent {
       specification => {
         this.title = specification.name;
         this.specification = specification;
-        this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification);
-        this.isLoadingSpecification = false;
+        this.loadOrganizationName();
         this.loadDesigns();
         this.loadInstances();
       },
@@ -87,6 +89,20 @@ export class SpecificationDetailsComponent {
       }
     );
   }
+
+	private loadOrganizationName() {
+		this.orgsService.getOrganizationName(this.specification.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, organizationName);
+				this.isLoadingSpecification = false;
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, '');
+				this.isLoadingSpecification = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
 
   private loadInstances() {
     this.instancesService.getInstancesForSpecification(this.specification.specificationId, this.specification.version).subscribe(
@@ -131,7 +147,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	public shouldDisplayDelete():boolean {
-		return this.isAdmin() && !this.isLoadingDesigns && !this.hasDesigns();
+		return this.isAdmin() && !this.isLoadingDesigns;
 	}
 
 	private hasDesigns():boolean {
@@ -139,16 +155,22 @@ export class SpecificationDetailsComponent {
 	}
 
 	private delete() {
-		this.modalDescription = 'Do you want to delete the specification?';
-		this.showModal = true;
+  	if (this.hasDesigns()) {
+		  this.modalDescriptionNoDelete = "Specification can't be deleted with active Technical Designs.<br><br>You must first delete the Technical Designs.";
+		  this.showModalNoDelete = true;
+	  } else {
+		  this.modalDescription = 'Do you want to delete the specification?';
+		  this.showModal = true;
+	  }
 	}
 	public cancelModal() {
 		this.showModal = false;
+		this.showModalNoDelete = false;
 	}
 
 	public deleteForSure() {
-		this.isLoadingSpecification = true;
 		this.showModal = false;
+		this.isLoadingSpecification = true;
 		this.specificationsService.deleteSpecification(this.specification).subscribe(
 			() => {
 				this.navigationHelperService.navigateToOrgSpecification('', '');

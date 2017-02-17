@@ -4,6 +4,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {Device} from "../autogen/model/Device";
 import {DevicecontrollerApi} from "../autogen/api/DevicecontrollerApi";
+import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 
 @Injectable()
 export class DevicesService implements OnInit {
@@ -39,8 +40,13 @@ export class DevicesService implements OnInit {
 		return this.deviceApi.updateDeviceUsingPUT(orgMrn, device.mrn, device);
 	}
 
-  public issueNewCertificate(deviceMrn:string) : Observable<PemCertificate> {
-	  let orgMrn = this.authService.authState.orgMrn;
-    return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
-  }
+	public issueNewCertificate(deviceMrn:string) : Observable<PemCertificate> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
+	}
+
+	public revokeCertificate(deviceMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.deviceApi.revokeDeviceCertUsingPOST(orgMrn, deviceMrn, certificateId, certicateRevocation);
+	}
 }

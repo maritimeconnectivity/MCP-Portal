@@ -3,6 +3,7 @@ import {Certificate} from "../../../backend-api/identity-registry/autogen/model/
 import {CertificateViewModel} from "../view-models/CertificateViewModel";
 import {CertificateRevocation} from "../../../backend-api/identity-registry/autogen/model/CertificateRevocation";
 import RevokationReasonEnum = CertificateRevocation.RevokationReasonEnum;
+import {EnumsHelper} from "../../../shared/enums-helper";
 
 export enum CertificateEntityType {
   Device,
@@ -10,6 +11,10 @@ export enum CertificateEntityType {
   Service,
   User,
   Vessel
+}
+export interface CertificateRevocationTypeViewModel {
+	value?:string;
+	label?:string;
 }
 
 @Injectable()
@@ -20,6 +25,19 @@ export class CertificateHelperService implements OnInit {
   ngOnInit() {
 
   }
+
+	public getAllRevocationTypes(): Array<CertificateRevocationTypeViewModel> {
+		let models:Array<CertificateRevocationTypeViewModel> = [];
+
+		let keysAndValues = EnumsHelper.getKeysAndValuesFromEnum(RevokationReasonEnum);
+		keysAndValues.forEach(enumKeyAndValue => {
+			let model:CertificateRevocationTypeViewModel = {};
+			model.value = enumKeyAndValue.value;
+			model.label = this.getRevokeReasonTextFromRevokationReason(enumKeyAndValue.value);
+			models.push(model);
+		});
+		return models;
+	}
 
   public convertCertificatesToViewModels(certificates:Array<Certificate>): Array<CertificateViewModel> {
     let viewModels: Array<CertificateViewModel> = [];
@@ -33,16 +51,16 @@ export class CertificateHelperService implements OnInit {
 
   public certificateViewModelFromCertificate(certificate:Certificate): CertificateViewModel {
     let certificateViewModel: CertificateViewModel = certificate;
-    certificateViewModel.revokeReasonText = this.getRevokeReasonText(certificate.revokeReason);
+    certificateViewModel.revokeReasonText = this.getRevokeReasonText(certificate.revokeReason+'ddsf');
     return certificateViewModel;
   }
 
-  public getRevokeReasonText(revokeReason?:string):string {
+  public getRevokeReasonText(revokeReason?:any):string {
     var reasonText = '';
     if (revokeReason) {
       reasonText = revokeReason;
-      let revokeReasonEnum = RevokationReasonEnum[revokeReason];
-      if (revokeReasonEnum) {
+      let revokeReasonEnum:RevokationReasonEnum = revokeReason;
+      if (RevokationReasonEnum[revokeReasonEnum]) {
         reasonText = this.getRevokeReasonTextFromRevokationReason(revokeReasonEnum);
       }
     }
@@ -61,6 +79,7 @@ export class CertificateHelperService implements OnInit {
         break;
       }
       case RevokationReasonEnum.Cacompromise: {
+	      console.log('compromised: ',revokationReason);
         reasonText = 'CA compromised';
         break;
       }
@@ -93,6 +112,7 @@ export class CertificateHelperService implements OnInit {
         break;
       }
       default : {
+	      console.log('default: ',revokationReason);
         reasonText = RevokationReasonEnum[revokationReason];
       }
     }

@@ -1,6 +1,6 @@
 {
   "name": "maritime-cloud-management-portal",
-  "version": "0.0.1",
+  "version": "0.4.1",
   "description": "Management Portal for the Maritime Cloud",
   "author": "Danish Maritime Authority",
   "homepage": "http://maritimecloud.net",
@@ -55,6 +55,7 @@
     "ng2-tree": "^0.0.2-7",
     "ng2-uploader": "1.1.0",
     "normalize.css": "^4.1.1",
+    "primeng": "^2.0.0",
     "rxjs": "5.0.0-beta.12",
     "tether": "^1.2.4",
     "web-animations-js": "^2.2.2",

@@ -3,7 +3,6 @@ import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-
 import {NavigationHelperService, queryKeys} from "../../../../shared/navigation-helper.service";
 import {ActivatedRoute} from "@angular/router";
 import {CertificateEntityType} from "../../services/certificate-helper.service";
-import {AuthService} from "../../../../authentication/services/auth.service";
 import {CertificatesService} from "../../../../backend-api/identity-registry/services/certificates.service";
 import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
 import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";

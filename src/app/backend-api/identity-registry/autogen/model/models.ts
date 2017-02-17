@@ -1,3 +1,5 @@
+export * from './BugReport';
+export * from './BugReportAttachment';
 export * from './Certificate';
 export * from './CertificateRevocation';
 export * from './Device';

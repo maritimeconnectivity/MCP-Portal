@@ -11,6 +11,7 @@ import {OrganizationDetailsTableComponent} from "./components/organizaton-detail
 import {OrganizationViewModelService} from "./services/organization-view-model.service";
 import {CertificateIssueNewComponent} from "./components/certificate-issue-new/certificate-issue-new.component";
 import {ServiceDetailsViewComponent} from "./components/service-details-view/service-details-view.component";
+import {CertificateRevokeComponent} from "./components/certificate-revoke/certificate-revoke.component";
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {ServiceDetailsViewComponent} from "./components/service-details-view/ser
     CertificatesTableComponent,
     OrganizationDetailsTableComponent,
     CertificateIssueNewComponent,
+	  CertificateRevokeComponent,
 	  ServiceDetailsViewComponent
   ],
   exports: [
@@ -34,6 +36,7 @@ import {ServiceDetailsViewComponent} from "./components/service-details-view/ser
     SpecificationsTableComponent,
     CertificatesTableComponent,
     CertificateIssueNewComponent,
+	  CertificateRevokeComponent,
 	  ServiceDetailsViewComponent
   ],
   providers: [

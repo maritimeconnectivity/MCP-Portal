@@ -4,6 +4,8 @@ import {UserListComponent} from "./components/user-list/user-list.component";
 import {UserDetailsComponent} from "./components/user-details/user-details.component";
 import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
 import {UserNewComponent} from "./components/user-new/user-new.component";
+import {UserUpdateComponent} from "./components/user-update/user-update.component";
+import {CertificateRevokeComponent} from "../../shared/components/certificate-revoke/certificate-revoke.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -24,6 +26,13 @@ const routes: Routes = [
 		    ]
 	    },
 	    {
+		    path: 'revokecert',
+		    component: CertificateRevokeComponent,
+		    data:{breadcrumb: 'Revoke Certificate'},
+		    children: [
+		    ]
+	    },
+	    {
 		    path: 'register',
 		    component: UserNewComponent,
 		    data:{breadcrumb: 'Register'}
@@ -32,7 +41,12 @@ const routes: Routes = [
         path: ':id',
         component: UserDetailsComponent,
         data:{breadcrumb: 'Details'}
-      }
+      },
+	    {
+		    path: 'update/:id',
+		    component: UserUpdateComponent,
+		    data:{breadcrumb: 'Update'}
+	    }
     ]
   }
 ];

@@ -15,6 +15,7 @@ import {
 	McFormControlModel,
 	McFormControlType, McFormControlModelCheckbox
 } from "../theme/components/mcForm/mcFormControlModel";
+import {CheckboxValidator} from "../theme/validators/checkbox.validator";
 
 @Component({
   selector: 'apply-org',
@@ -90,7 +91,6 @@ export class ApplyOrgComponent implements OnInit {
 		McHttpService.nextCallShouldNotAuthenticate();
 		this.organizationsService.applyOrganization(organization).subscribe(
 			organization => {
-				this.isRegistering = false;
 				this.notificationService.generateNotification('Apply', 'You have successfully applied to join the Maritime Cloud. An email will be send with confirmation.', MCNotificationType.Success);
 				this.navigationHelper.takeMeHome();
 			},
@@ -157,5 +157,11 @@ export class ApplyOrgComponent implements OnInit {
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
+
+		let formControlCheck:McFormControlModelCheckbox = {state: false, formGroup: this.registerForm, elementId: 'isAccept', controlType: McFormControlType.Checkbox, labelName: 'I hereby accept, that I have the legal rights to act on behalf of the organization provided above.', validator:CheckboxValidator.validate};
+		formControl = new FormControl({value: formControlCheck.state, disabled: false}, formControlCheck.validator);
+
+		this.registerForm.addControl(formControlCheck.elementId, formControl);
+		this.formControlModels.push(formControlCheck);
 	}
 }

@@ -8,6 +8,7 @@ import {DevicesService} from "./devices.service";
 import {IdServicesService} from "./id-services.service";
 import {UsersService} from "./users.service";
 import {VesselsService} from "./vessels.service";
+import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 
 @Injectable()
 export class CertificatesService implements OnInit {
@@ -19,35 +20,66 @@ export class CertificatesService implements OnInit {
 
   }
 
-  public issueNewCertificate(entityType: CertificateEntityType, entityMrn) : Observable<PemCertificate> {
-    if (entityType == null || !entityMrn) { // We lost our state data somehow???
-      throw new Error('Internal state lost');
-    }
-    return Observable.create(observer => {
-      switch (entityType) {
-        case CertificateEntityType.Device: {
-          this.issueNewCertificateForDevice(entityMrn, observer);
-          break;
-        }
-        case CertificateEntityType.Organization: {
-          this.issueNewCertificateForOrganization(observer)
-          break;
-        }
-        case CertificateEntityType.Service: {
-          this.issueNewCertificateForService(entityMrn, observer);
-          break;
-        }
-        case CertificateEntityType.User: {
-          this.issueNewCertificateForUser(entityMrn, observer);
-          break;
-        }
-        case CertificateEntityType.Vessel: {
-          this.issueNewCertificateForVessel(entityMrn, observer);
-          break;
-        }
-      }
-    });
-  }
+	public issueNewCertificate(entityType: CertificateEntityType, entityMrn:string) : Observable<PemCertificate> {
+		if (entityType == null || !entityMrn) { // We lost our state data somehow???
+			throw new Error('Internal state lost');
+		}
+		return Observable.create(observer => {
+			switch (entityType) {
+				case CertificateEntityType.Device: {
+					this.issueNewCertificateForDevice(entityMrn, observer);
+					break;
+				}
+				case CertificateEntityType.Organization: {
+					this.issueNewCertificateForOrganization(observer);
+					break;
+				}
+				case CertificateEntityType.Service: {
+					this.issueNewCertificateForService(entityMrn, observer);
+					break;
+				}
+				case CertificateEntityType.User: {
+					this.issueNewCertificateForUser(entityMrn, observer);
+					break;
+				}
+				case CertificateEntityType.Vessel: {
+					this.issueNewCertificateForVessel(entityMrn, observer);
+					break;
+				}
+			}
+		});
+	}
+
+	public revokeCertificate(entityType: CertificateEntityType, entityMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+		if (entityType == null || !entityMrn) { // We lost our state data somehow???
+			throw new Error('Internal state lost');
+		}
+
+		return Observable.create(observer => {
+			switch (entityType) {
+				case CertificateEntityType.Device: {
+					this.revokeCertificateForDevice(entityMrn, certificateId, certicateRevocation, observer);
+					break;
+				}
+				case CertificateEntityType.Organization: {
+					this.revokeCertificateForOrganization(certificateId, certicateRevocation, observer);
+					break;
+				}
+				case CertificateEntityType.Service: {
+					this.revokeCertificateForService(entityMrn, certificateId, certicateRevocation, observer);
+					break;
+				}
+				case CertificateEntityType.User: {
+					this.revokeCertificateForUser(entityMrn, certificateId, certicateRevocation, observer);
+					break;
+				}
+				case CertificateEntityType.Vessel: {
+					this.revokeCertificateForVessel(entityMrn, certificateId, certicateRevocation, observer);
+					break;
+				}
+			}
+		});
+	}
 
   private issueNewCertificateForOrganization(observer: Observer<any>) {
     this.organizationsService.issueNewCertificate().subscribe(
@@ -60,6 +92,17 @@ export class CertificatesService implements OnInit {
     );
   }
 
+	private revokeCertificateForOrganization(certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+		this.organizationsService.revokeCertificate(certificateId, certicateRevocation).subscribe(
+			res => {
+				observer.next(res);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
+
   private issueNewCertificateForDevice(deviceMrn: string, observer: Observer<any>) {
     this.devicesService.issueNewCertificate(deviceMrn).subscribe(
       pemCertificate => {
@@ -70,6 +113,17 @@ export class CertificatesService implements OnInit {
       }
     );
   }
+
+	private revokeCertificateForDevice(deviceMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+		this.devicesService.revokeCertificate(deviceMrn, certificateId, certicateRevocation).subscribe(
+			res => {
+				observer.next(res);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
 
   private issueNewCertificateForService(serviceMrn: string, observer: Observer<any>) {
     this.servicesService.issueNewCertificate(serviceMrn).subscribe(
@@ -82,6 +136,17 @@ export class CertificatesService implements OnInit {
     );
   }
 
+	private revokeCertificateForService(serviceMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+		this.servicesService.revokeCertificate(serviceMrn, certificateId, certicateRevocation).subscribe(
+			res => {
+				observer.next(res);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
+
   private issueNewCertificateForUser(userMrn: string, observer: Observer<any>) {
     this.usersService.issueNewCertificate(userMrn).subscribe(
       pemCertificate => {
@@ -93,6 +158,17 @@ export class CertificatesService implements OnInit {
     );
   }
 
+	private revokeCertificateForUser(userMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+		this.usersService.revokeCertificate(userMrn, certificateId, certicateRevocation).subscribe(
+			res => {
+				observer.next(res);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
+
   private issueNewCertificateForVessel(vesselMrn: string, observer: Observer<any>) {
     this.vesselsService.issueNewCertificate(vesselMrn).subscribe(
       pemCertificate => {
@@ -103,4 +179,15 @@ export class CertificatesService implements OnInit {
       }
     );
   }
+
+	private revokeCertificateForVessel(vesselMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+		this.vesselsService.revokeCertificate(vesselMrn, certificateId, certicateRevocation).subscribe(
+			res => {
+				observer.next(res);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
 }

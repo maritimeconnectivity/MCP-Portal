@@ -14,6 +14,7 @@ import {Service} from "../../../../../backend-api/identity-registry/autogen/mode
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {DocsService} from "../../../../../backend-api/service-registry/services/docs.service";
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 
 @Component({
   selector: 'instance-details',
@@ -38,7 +39,7 @@ export class InstanceDetailsComponent {
 	public shouldDisplayCreateButton:boolean = false;
 	public showUpdateIdService:boolean = false;
 
-  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService) {
+  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService) {
 
   }
 
@@ -90,11 +91,34 @@ export class InstanceDetailsComponent {
     );
   }
 
+	private loadOrganizationName() {
+		this.orgsService.getOrganizationName(this.instance.organizationId).subscribe(
+			organizationName => {
+				this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance, organizationName);
+				this.finalizeLoading();
+			},
+			err => {
+				this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance, '');
+				this.finalizeLoading();
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private finalizeLoading() {
+		this.generateLabelValueForDesign();
+		this.isLoadingInstance = false;
+		if (this.isMyOrg() || this.authService.authState.isSiteAdmin()) {
+			this.shouldDisplayIdService = true;
+			this.loadIdService(this.instance.instanceId);
+		}
+	}
+
   private loadIdService(mrn:string) {
-	  this.servicesService.getIdService(mrn).subscribe(
+	  this.servicesService.getIdService(mrn, this.instance.organizationId).subscribe(
 		  service => {
 			  this.idService = service;
-			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) || this.authService.authState.isSiteAdmin();
+			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
 			  this.isLoadingIdService = false;
 		  },
 		  err => {
@@ -113,13 +137,7 @@ export class InstanceDetailsComponent {
     this.designsService.getDesignForInstance(this.instance).subscribe(
       design => {
         this.design = design;
-        this.labelValues = this.viewModelService.generateLabelValuesForInstance(this.instance);
-        this.generateLabelValueForDesign();
-        this.isLoadingInstance = false;
-	      if (this.isMyOrg() || this.authService.authState.isSiteAdmin()) {
-		      this.shouldDisplayIdService = true;
-		      this.loadIdService(this.instance.instanceId);
-	      }
+	      this.loadOrganizationName();
       },
       err => {
         this.isLoadingInstance = false;

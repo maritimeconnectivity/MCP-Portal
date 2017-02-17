@@ -1,0 +1,14 @@
+<div [formGroup]="formControlModel.formGroup" [ngClass]="{'has-error': !isValid(), 'has-success': formControlModel.validator && isValid()}" class="form-group mc-form-group has-feedback">
+  <label for="fileUpload">{{formControlModel.labelName | undefined}}</label>
+  <div class="input-group">
+    <label class="input-group-btn">
+        <span class="btn btn-primary">
+            Browse&hellip; <input type="file" multiple="{{multiple}}" accept="{{formControlModel.fileAccept}}" #filePicker id="filePicker" (change)="uploadFileListener($event)" style="display: none;">
+        </span>
+    </label>
+    <input id="fileUpload" type="text" class="form-control input-uploader" [ngClass]="{'has-error-input': formControlModel.validator && !hasChosenFile}" value="{{chosenFileValue}}" readonly>
+  </div>
+  <div *ngIf="formControlModel.validator" [hidden]="!formControlModel.errorText || isValid() || formControlModel.formGroup.controls[formControlModel.elementId].pristine" class="mc-form-error">
+    {{formControlModel.errorText | undefined}}
+  </div>
+</div>

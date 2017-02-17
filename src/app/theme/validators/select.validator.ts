@@ -12,5 +12,4 @@ export class SelectValidator {
 	  	return null;
 	  }
   }
-
 }

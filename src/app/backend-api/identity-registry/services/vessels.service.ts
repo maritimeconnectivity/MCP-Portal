@@ -4,6 +4,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {Vessel} from "../autogen/model/Vessel";
 import {VesselcontrollerApi} from "../autogen/api/VesselcontrollerApi";
+import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 
 @Injectable()
 export class VesselsService {
@@ -39,4 +40,9 @@ export class VesselsService {
 	  let orgMrn = this.authService.authState.orgMrn;
     return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);
   }
+
+	public revokeCertificate(vesselMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.vesselApi.revokeVesselCertUsingPOST(orgMrn, vesselMrn, certificateId, certicateRevocation);
+	}
 }

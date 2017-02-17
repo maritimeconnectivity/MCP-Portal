@@ -4,6 +4,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {User} from "../autogen/model/User";
 import {UsercontrollerApi} from "../autogen/api/UsercontrollerApi";
+import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 
 @Injectable()
 export class UsersService implements OnInit {
@@ -24,6 +25,11 @@ export class UsersService implements OnInit {
 		return this.userApi.getUserUsingGET(orgMrn, userMrn);
 	}
 
+	public updateUser(user:User): Observable<User> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.userApi.updateUserUsingPUT(orgMrn,user.mrn,user);
+	}
+
 	public getUsers(): Observable<Array<User>> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.userApi.getOrganizationUsersUsingGET(orgMrn);
@@ -42,4 +48,9 @@ export class UsersService implements OnInit {
 	  let orgMrn = this.authService.authState.orgMrn;
     return this.userApi.newUserCertUsingGET(orgMrn, userMrn);
   }
+
+	public revokeCertificate(userMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+		let orgMrn = this.authService.authState.orgMrn;
+		return this.userApi.revokeUserCertUsingPOST(orgMrn, userMrn, certificateId, certicateRevocation);
+	}
 }

@@ -22,3 +22,4 @@
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete design'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>
+<mc-modal (onOk)="cancelModal()" [show]="showModalNoDelete" [title]="'Delete design'" [description]="modalDescriptionNoDelete" [okClass]="'btn btn-default btn-raised'" [okTitle]="'OK'"></mc-modal>

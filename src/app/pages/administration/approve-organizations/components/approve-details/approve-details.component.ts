@@ -87,7 +87,7 @@ export class ApproveDetailsComponent {
 
 	private createAdminRole() {
 		let role:Role = {
-			permission: MC_ADMIN,
+			permission: MC_ADMIN, // TODO is this correct? Revise when creating the new role-functionality
 			roleName: RoleNameEnum.ORGADMIN
 		};
 
@@ -108,7 +108,7 @@ export class ApproveDetailsComponent {
 			mrn: this.userMrn,
 			firstName: this.userForm.value.firstName,
 			lastName: this.userForm.value.lastName,
-			permissions: MC_ADMIN,
+			permissions: MC_ADMIN, // TODO is this correct? Revise when creating the new role-functionality
 			email: this.userForm.value.emails.email
 		};
 

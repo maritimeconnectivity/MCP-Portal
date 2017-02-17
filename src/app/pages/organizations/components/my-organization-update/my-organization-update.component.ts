@@ -1,5 +1,4 @@
 import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
 import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {McFormControlModel, McFormControlType} from "../../../../theme/components/mcForm/mcFormControlModel";
@@ -25,7 +24,7 @@ export class MyOrganizationUpdateComponent implements OnInit {
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
-	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService) {
+	constructor(private formBuilder: FormBuilder, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService) {
 	}
 
 	ngOnInit() {

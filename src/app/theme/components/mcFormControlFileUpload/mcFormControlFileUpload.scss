@@ -1,0 +1,23 @@
+@import '../../sass/conf/conf';
+
+.btn:hover {
+  transform: none !important;
+}
+
+.input-group {
+  width: 100%;
+  max-width: 450px;
+  margin-bottom: 5px;
+}
+.file-uploader-wrapper {
+  margin-bottom: 15px;
+}
+.has-error {
+  color: $danger;
+}
+.has-error-input {
+  border: 1px solid $danger;
+}
+.input-uploader {
+  color: rgba($default, 0.70);
+}
