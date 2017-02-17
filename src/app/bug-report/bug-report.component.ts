@@ -8,7 +8,7 @@ import {UrlValidator} from "../theme/validators/url.validator";
 import {McUtils} from "../shared/mc-utils";
 import {
 	McFormControlModel,
-	McFormControlType
+	McFormControlType, McFormControlModelFileUpload
 } from "../theme/components/mcForm/mcFormControlModel";
 import {AuthService} from "../authentication/services/auth.service";
 import {BugReport} from "../backend-api/identity-registry/autogen/model/BugReport";
@@ -26,10 +26,9 @@ import {Observable} from "rxjs";
 export class BugReportComponent implements OnInit {
 	public class:string;
 	public classWidth:string;
-	private fileSizeLimit:number = 4000000
-	public fileCaption = 'Upload files (Max 4MB combined)';
-	public fileType = FileUploadType.Any;
+	private fileSizeLimit:number = 4000000;
 	public files:File[];
+	public fileCaption = 'Upload files (Max 4MB combined)';
 
 	// McForm params
 	public isLoading = true;
@@ -62,20 +61,11 @@ export class BugReportComponent implements OnInit {
 	}
 
 	private isWindowToSmall():boolean {
-		return window.innerHeight < 700;
+		return window.innerHeight < (this.authService.authState.loggedIn ? 470 : 620);
 	}
 
 	private isWindowToNarrow():boolean {
 		return window.innerWidth < layoutSizes.resWidthHideSidebar;
-	}
-
-	public showFileUpload():boolean {
-  	return this.authService.authState.loggedIn;
-	}
-
-	public onUploadFiles(files: File[]) {
-  	console.log("FILES: ", files)
-		this.files = files;
 	}
 
 	public cancel() {
@@ -87,6 +77,7 @@ export class BugReportComponent implements OnInit {
 		let subject = this.registerForm.value.subject;
 		let description = this.registerForm.value.description;
 		let bugReport:BugReport = {subject:subject, description:description};
+		this.files = this.registerForm.value.files;
 		if (this.files && this.files.length > 0) {
 			this.observableBatch = [];
 			for(let file of this.files) {
@@ -144,12 +135,17 @@ export class BugReportComponent implements OnInit {
 
 	private reportBug(bugReport:BugReport) {
 
-  	if (this.doesSizeOfFilesExceedsLimit()) {
+  	if (this.files && this.doesSizeOfFilesExceedsLimit()) {
 		  let fileString = (this.files.length == 1 ? 'File is too large to upload' : 'The combined size of the Files are too large to upload');
 		  this.notificationService.generateNotification('Error', fileString, MCNotificationType.Error);
 		  this.isRegistering = false;
   		return;
 	  }
+
+		if (!this.authService.authState.loggedIn) {
+  		this.addUserInfo(bugReport);
+		}
+
 		this.bugReportService.reportBug(bugReport).subscribe(
 			organization => {
 				this.notificationService.generateNotification('Bug Reporting', 'You have successfully reported a bug.', MCNotificationType.Success);
@@ -165,6 +161,19 @@ export class BugReportComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	private addUserInfo(bugReport:BugReport) {
+		let name = this.registerForm.value.name;
+		let email  = this.registerForm.value.emails.email;
+
+		let userString =
+			"USER INFO: \n" +
+			"Name: " + name + "\n" +
+			"Email: " + email + "\n\n" +
+			"BUG REPORT MESSAGE: \n";
+
+		bugReport.description = userString + bugReport.description;
 	}
 
 	private doesSizeOfFilesExceedsLimit():boolean {
@@ -190,10 +199,22 @@ export class BugReportComponent implements OnInit {
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		var email = '';
 		if (this.authService.authState.loggedIn) {
-			email = this.authService.authState.user.email;
+			let formControlModelFile:McFormControlModelFileUpload = {formGroup: this.registerForm, elementId: 'files', controlType: McFormControlType.FileUpload, labelName: this.fileCaption, placeholder: '', fileAccept:'', multipleFiles:true};
+			let formControlFile = new FormControl('', formControlModelFile.validator);
+			this.registerForm.addControl(formControlModelFile.elementId, formControlFile);
+			this.formControlModels.push(formControlModelFile);
+		} else {
+			formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Name is required', validator:Validators.required};
+			formControl = new FormControl('', formControlModel.validator);
+			this.registerForm.addControl(formControlModel.elementId, formControl);
+			this.formControlModels.push(formControlModel);
+
+			var email = '';
+			if (this.authService.authState.loggedIn) {
+				email = this.authService.authState.user.email;
+			}
+			McUtils.generateEmailConfirmGroup(this.formBuilder, this.registerForm, this.formControlModels, email);
 		}
-		McUtils.generateEmailConfirmGroup(this.formBuilder, this.registerForm, this.formControlModels, email);
 	}
 }

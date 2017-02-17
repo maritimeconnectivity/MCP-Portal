@@ -44,7 +44,7 @@ export class UserUpdateComponent implements OnInit {
 		this.isUpdating = true;
 		this.user.firstName = this.updateForm.value.firstName;
 		this.user.lastName = this.updateForm.value.lastName;
-		this.user.email = this.updateForm.value.emails.email
+		this.user.email = this.updateForm.value.emails.email;
 		this.user.permissions = this.updateForm.value.permissions;
 
 		this.updateUser(this.user);

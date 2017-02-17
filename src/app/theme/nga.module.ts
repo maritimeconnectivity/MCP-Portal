@@ -77,6 +77,7 @@ import {CheckboxValidator} from "./validators/checkbox.validator";
 import {McFormControlDatepicker} from "./components/mcFormControlDatepicker/mcFormControlDatepicker.component";
 import {CalendarModule} from "primeng/components/calendar/calendar";
 import {McFormControlTextArea} from "./components/mcFormControlTextArea/mcFormControlTextArea.component";
+import {McFormControlFileUpload} from "./components/mcFormControlFileUpload/mcFormControlFileUpload.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -104,6 +105,7 @@ const NGA_COMPONENTS = [
 	McEntityImage,
 	McFormControlText,
 	McFormControlTextArea,
+	McFormControlFileUpload,
 	McFormControlCheckbox,
 	McFormControlSelect,
 	McFormControlDatepicker,

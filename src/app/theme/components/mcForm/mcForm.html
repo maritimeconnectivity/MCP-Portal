@@ -1,6 +1,9 @@
 <div *ngIf="!isLoading && formGroup">
   <form [formGroup]="formGroup">
     <div *ngFor="let formControlModel of formControlModels">
+      <div *ngIf="isControlTypeFileUpload(formControlModel)">
+        <mc-form-control-fileupload [formControlModel]="formControlModel"></mc-form-control-fileupload>
+      </div>
       <div *ngIf="isControlTypeText(formControlModel)">
         <mc-form-control-text [formControlModel]="formControlModel"></mc-form-control-text>
       </div>

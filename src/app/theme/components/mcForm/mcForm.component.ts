@@ -64,6 +64,10 @@ export class McForm {
   	return this.disableRegisterButton;
 	}
 
+	public isControlTypeFileUpload(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.FileUpload;
+	}
+
 	public isControlTypeText(formControlModel:McFormControlModel) {
 		return formControlModel.controlType === McFormControlType.Text;
 	}
