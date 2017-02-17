@@ -43,11 +43,13 @@ export class ErrorLoggingService {
 	}
 
 	private sendToServer(message:string,error: any): void {
-  	let subject = "#AUTO Auto-generated error";
+  	let autoTag = '#AUTO';
+  	let subject = autoTag +" Auto-generated error";
   	var errorString = '';
 
 		if ( message ) {
 			errorString += "MESSAGE: \n" + message + "\n\n";
+			subject = autoTag + ' ' + message;
 		}
 
 		try {
