@@ -14,21 +14,13 @@ export class BugReportingService {
   constructor(private bugReportApi: BugReportControllerApi) {
   }
 
-  public reportBug(bugReport:BugReport) {
+  public reportBug(bugReport:BugReport) : Observable<any> {
 		bugReport.subject = "#"+ ERROR_TAG_TEXT + ' v.' + this.version + ': ' + bugReport.subject;
   	if (AuthService.staticAuthInfo && AuthService.staticAuthInfo.loggedIn) {
   		this.addUserToReport(bugReport, AuthService.staticAuthInfo.user);
 	  }
 	  McHttpService.nextCallShouldNotAuthenticate();
-	  this.bugReportApi.reportBugPostUsingPOST(bugReport).subscribe(
-	  	_ => {
-	  		// Nothing should happen
-		  },
-		  err => {
-			  // Error reporting error. Just log and ignore
-			  console.log("Error when sending bug report: ", err);
-		  }
-	  );
+	  return this.bugReportApi.reportBugPostUsingPOST(bugReport);
   }
 
   private addUserToReport(bugReport:BugReport,authUser: AuthUser) {

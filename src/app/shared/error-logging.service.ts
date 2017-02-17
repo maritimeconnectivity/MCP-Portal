@@ -14,7 +14,7 @@ export var MC_ERROR_LOGGER_OPTIONS: MCErrorLoggerOptions = {
 @Injectable()
 export class ErrorLoggingService {
 
-	private options: MCErrorLoggerOptions;
+	public options: MCErrorLoggerOptions;
   constructor(private notificationService: NotificationsService, private bugreportService: BugReportingService, @Inject( MC_ERROR_LOGGER_OPTIONS ) options: MCErrorLoggerOptions) {
 	  this.options = options;
   }
@@ -62,11 +62,22 @@ export class ErrorLoggingService {
 			errorString += "ORIGINAL ERROR MESSAGE: \n" + error.message + "\n\n";
 		}
 		if ( error.stack ) {
-			errorString += "ORIGINAL ERROR STACKTRACE: \n" + error.stack;
+			errorString += "ORIGINAL ERROR STACKTRACE: \n" + error.stack + "\n\n";
+		}
+		if ( error ) {
+			errorString += "ERROR STRING: \n" + error  + "\n\n";
 		}
 		if (errorString.length > 0) {
 			let bugReport:BugReport = {subject:subject, description:errorString};
-			this.bugreportService.reportBug(bugReport);
+			this.bugreportService.reportBug(bugReport).subscribe(
+				_ => {
+					// Nothing should happen
+				},
+				err => {
+					// Error reporting error. Just log and ignore
+					console.log("Error when sending bug report: ", err);
+				}
+			);
 		}
 	}
 

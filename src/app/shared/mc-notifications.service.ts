@@ -30,5 +30,9 @@ export class MCNotificationsService {
 	    }
     }
 	  this.notificationObserver.next({title:title, message:message, type:type});
+
+	  if(originalError && this.errorLogger.options.makeBugReportFromError) {
+		  this.notificationObserver.next({title:title, message:"A Bug Report was send automatically.", type:type});
+	  }
   }
 }
