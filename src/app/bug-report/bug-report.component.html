@@ -1,0 +1,11 @@
+<div class="auth-main {{class}}">
+  <div class="auth-block bug-report-wrapper {{classWidth}}">
+    <h1>Report a Bug</h1>
+    <div class="auth-sep"><span>Describe the Bug in the form below.</span></div>
+    <br>
+    <div *ngIf="showFileUpload()">
+      <mc-file-uploader [caption]="fileCaption" [fileUploadType]="fileType" [multipleFiles]="true" (onUpload)="onUploadFiles($event)"></mc-file-uploader>
+    </div>
+    <mc-form [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isRegistering" [registerTitle]="registerTitle" (onCancel)="cancel()" (onRegister)="report()"></mc-form>
+  </div>
+</div>

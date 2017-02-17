@@ -36,7 +36,8 @@ export class BugReportingService {
 		  "Name: " + fullName + "\n" +
 		  "Email: " + email + "\n" +
 		  "Preferred username: " + userName + "\n" +
-		  "Organization mrn: " + organization + "\n\n";
+		  "Organization mrn: " + organization + "\n\n" +
+		  "BUG REPORT MESSAGE: \n";
 
 	  bugReport.description = userString + bugReport.description;
   }

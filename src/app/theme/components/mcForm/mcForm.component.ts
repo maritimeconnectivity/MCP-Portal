@@ -68,6 +68,10 @@ export class McForm {
 		return formControlModel.controlType === McFormControlType.Text;
 	}
 
+	public isControlTypeTextArea(formControlModel:McFormControlModel) {
+		return formControlModel.controlType === McFormControlType.TextArea;
+	}
+
 	public isControlTypeDatepicker(formControlModel:McFormControlModel) {
 		return formControlModel.controlType === McFormControlType.Datepicker;
 	}

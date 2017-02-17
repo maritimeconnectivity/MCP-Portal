@@ -2,6 +2,7 @@ import {FormGroup, ValidatorFn} from "@angular/forms";
 
 export enum McFormControlType {
 	Text,
+	TextArea,
 	Checkbox,
 	Select,
 	Datepicker

@@ -20,6 +20,7 @@ export * from './mcLoadingButton';
 export * from './mcEntityImageList';
 export * from './mcEntityImage';
 export * from './mcFormControlText';
+export * from './mcFormControlTextArea';
 export * from './mcFormControlCheckbox';
 export * from './mcFormControlSelect';
 export * from './mcFormControlDatepicker';

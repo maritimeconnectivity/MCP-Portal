@@ -4,7 +4,7 @@ import {Xml} from "../../../backend-api/service-registry/autogen/model/Xml";
 import {Doc} from "../../../backend-api/service-registry/autogen/model/Doc";
 import {layoutSizes} from "../../theme.constants";
 
-export enum FileUploadType {Doc, Xml}
+export enum FileUploadType {Doc, Xml, Any}
 
 @Component({
   selector: 'mc-file-uploader',
@@ -13,7 +13,9 @@ export enum FileUploadType {Doc, Xml}
 })
 export class McFileUploader {
 
-  @Input() caption:string = '';
+	@Input() caption:string = '';
+
+	@Input() multipleFiles:boolean = false;
 
   @Input() fileUploadType:FileUploadType = FileUploadType.Doc;
 
@@ -27,6 +29,8 @@ export class McFileUploader {
 
   public accept:string = '';
 
+  public multiple = '';
+
   public chosenFileValue:string = '';
 
   public hasChosenFile = false;
@@ -38,6 +42,11 @@ export class McFileUploader {
   public ngOnInit():void {
     this.accept = (this.fileUploadType === FileUploadType.Xml ? '.xml' : '');
     this.chosenFileValue = this.requiredText;
+    if (this.multipleFiles) {
+	    this.multiple = 'multiple';
+    } else {
+	    this.multiple = '';
+    }
   }
 
   public resetFileSelection() {
@@ -59,10 +68,17 @@ export class McFileUploader {
           this.handleDocFile(file);
           break;
         }
-        case FileUploadType.Xml: {
-          this.handleXmlFile(file);
-          break;
-        }
+	      case FileUploadType.Xml: {
+		      this.handleXmlFile(file);
+		      break;
+	      }
+	      case FileUploadType.Any: {
+		      let filesArr = [].slice.call(files);
+		      this.chosenFileValue = filesArr.map(f => f.name).join(', ');
+
+		      this.handleAnyFile(files);
+		      break;
+	      }
       }
     } else {
       this.resetFileSelection();
@@ -70,16 +86,20 @@ export class McFileUploader {
     }
   }
 
-  private handleDocFile(file: File) {
-    let fileReader:FileReader = new FileReader();
-    fileReader.onload = (fileRef) => {
-      let data = btoa(fileReader.result);
-      // TODO: content should not be Array with next update
-      let docFile: Doc = {filecontent: data, filecontentContentType:file.type, mimetype:file.type, name: file.name};
-      this.onUpload.emit(docFile);
-    }
-    fileReader.readAsBinaryString(file);
-  }
+	private handleAnyFile(files: File[]) {
+		this.onUpload.emit(files);
+	}
+
+	private handleDocFile(file: File) {
+		let fileReader:FileReader = new FileReader();
+		fileReader.onload = (fileRef) => {
+			let data = btoa(fileReader.result);
+			// TODO: content should not be Array with next update
+			let docFile: Doc = {filecontent: data, filecontentContentType:file.type, mimetype:file.type, name: file.name};
+			this.onUpload.emit(docFile);
+		}
+		fileReader.readAsBinaryString(file);
+	}
 
   private handleXmlFile(file: File) {
     let fileReader:FileReader = new FileReader();

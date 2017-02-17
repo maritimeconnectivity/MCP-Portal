@@ -122,6 +122,17 @@ export const PAGES_MENU = [
 		    path: '',
 		    data: {
 			    menu: {
+				    title: 'Report Bug',
+				    icon: 'ion-bug',
+				    url: '/#/report',
+				    order: 600
+			    }
+		    }
+	    },
+	    {
+		    path: '',
+		    data: {
+			    menu: {
 				    title: 'User Guide',
 				    url: 'http://manual.maritimecloud.net',
 				    icon: 'ion-help',

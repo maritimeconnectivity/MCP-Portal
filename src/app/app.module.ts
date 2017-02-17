@@ -36,6 +36,7 @@ import {MrnHelperService} from "./shared/mrn-helper.service";
 import {ApplyOrgModule} from "./apply-org/apply-org.module";
 import {SiteAdminAuthGuard} from "./authentication/services/site-admin-guard.service";
 import {BugReportingService} from "./backend-api/identity-registry/services/bug-reporting.service";
+import {BugReportModule} from "./bug-report/bug-report.module";
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
@@ -67,6 +68,7 @@ type StoreType = {
     PagesModule,
     LoginModule,
 	  ApplyOrgModule,
+	  BugReportModule,
     Four04Module,
     IdentityRegistryApiModule,
     SimpleNotificationsModule,
