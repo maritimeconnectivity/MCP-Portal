@@ -31,13 +31,13 @@ export class BugReportingService {
 	  let organization = authUser.organization;
 
 	  let userString =
-		  "USER INFO: \n" +
-		  "mrn: " + mrn + "\n" +
-		  "Name: " + fullName + "\n" +
-		  "Email: " + email + "\n" +
-		  "Preferred username: " + userName + "\n" +
-		  "Organization mrn: " + organization + "\n\n" +
-		  "BUG REPORT MESSAGE: \n";
+		  "**USER INFO**: \n" +
+		  "*mrn*: " + mrn + "\n" +
+		  "*Name*: " + fullName + "\n" +
+		  "*Email*: " + email + "\n" +
+		  "*Preferred username*: " + userName + "\n" +
+		  "*Organization mrn*: " + organization + "\n\n" +
+		  "**BUG REPORT MESSAGE**: \n";
 
 	  bugReport.description = userString + bugReport.description;
   }
