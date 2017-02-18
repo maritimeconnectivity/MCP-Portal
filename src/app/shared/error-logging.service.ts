@@ -48,24 +48,24 @@ export class ErrorLoggingService {
   	var errorString = '';
 
 		if ( message ) {
-			errorString += "MESSAGE: \n" + message + "\n\n";
+			errorString += "**MESSAGE**: \n" + message + "\n\n";
 			subject = autoTag + ' ' + message;
 		}
 
 		try {
 			if ( error.json() ) {
-				errorString += "ERROR JSON: \n" + JSON.stringify(error.json()) + "\n\n";
+				errorString += "**ERROR JSON**: \n" + JSON.stringify(error.json()) + "\n\n";
 			}
 		}catch (err) {} // Error occured when trying to call error.json(). This is OK, because it's then probably a system error and no action is needed
 
 		if ( error.message ) {
-			errorString += "ORIGINAL ERROR MESSAGE: \n" + error.message + "\n\n";
+			errorString += "**ORIGINAL ERROR MESSAGE**: \n" + error.message + "\n\n";
 		}
 		if ( error.stack ) {
-			errorString += "ORIGINAL ERROR STACKTRACE: \n" + error.stack + "\n\n";
+			errorString += "**ORIGINAL ERROR STACKTRACE**: \n" + error.stack + "\n\n";
 		}
 		if ( error ) {
-			errorString += "ERROR STRING: \n" + error  + "\n\n";
+			errorString += "**ERROR STRING**: \n" + error  + "\n\n";
 		}
 		if (errorString.length > 0) {
 			let bugReport:BugReport = {subject:subject, description:errorString};
