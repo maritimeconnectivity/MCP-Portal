@@ -130,28 +130,19 @@ export class AuthService implements OnInit {
 	  if (!keycloakToken.org) {
 		  throw new Error("Keycloak token parse error: 'org' not present");
 	  }
-	  if (!keycloakToken.given_name) {
-		  throw new Error("Keycloak token parse error: 'given_name' not present");
-	  }
-	  if (!keycloakToken.family_name) {
-		  throw new Error("Keycloak token parse error: 'family_name' not present");
-	  }
 	  if (!keycloakToken.mrn) {
 		  throw new Error("Keycloak token parse error: 'mrn' not present");
 	  }
 	  if (!keycloakToken.email) {
 		  throw new Error("Keycloak token parse error: 'email' not present");
 	  }
-	  if (!keycloakToken.preferred_username) {
-		  throw new Error("Keycloak token parse error: 'preferred_username' not present");
-	  }
 
 	  AuthService.staticAuthInfo.orgMrn =  keycloakToken.org;
-	  let firstname = keycloakToken.given_name;
-	  let lastname = keycloakToken.family_name;
+	  let firstname = keycloakToken.given_name ? keycloakToken.given_name : '';
+	  let lastname = keycloakToken.family_name ? keycloakToken.family_name : '';
 	  let mrn = keycloakToken.mrn;
 	  let email= keycloakToken.email;
-	  let preferredUsername= keycloakToken.preferred_username;
+	  let preferredUsername= keycloakToken.preferred_username ? keycloakToken.preferred_username : '';
 	  let authUser:AuthUser = {firstName:firstname, lastName:lastname, mrn:mrn, email:email, organization:keycloakToken.org, preferredUsername:preferredUsername};
 	  AuthService.staticAuthInfo.user = authUser;
   }
