@@ -144,9 +144,7 @@ export class CertificatesTableComponent implements OnChanges{
   }
 
   public revoke(certificate:Certificate) {
-	  this.notificationService.generateNotification('Not Implemented', 'Revoke coming soon', MCNotificationType.Info);
-	  // TODO: Waiting for the new IR deploy coming ultimo february
-  	//this.navigationHelper.navigateToRevokeCertificate(this.certificateEntityType, this.entityMrn, this.certificateTitle, certificate.id);
+  	this.navigationHelper.navigateToRevokeCertificate(this.certificateEntityType, this.entityMrn, this.certificateTitle, certificate.id);
   }
 
   public download(certificate:Certificate) {
