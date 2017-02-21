@@ -73,7 +73,8 @@ export class DesignsService implements OnInit {
   public getAllDesigns(): Observable<Array<Design>> {
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.designsApi.getAllDesignsUsingGET().subscribe(
+	    // TODO FIXME Hotfix. This pagination should be done the right way
+      this.designsApi.getAllDesignsUsingGET(0, 100).subscribe(
         designs => {
           // TODO delete this again, when description is part of the json
           for (let design of designs) {
