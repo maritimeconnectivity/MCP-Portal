@@ -40,6 +40,10 @@ export class ServiceDetailsViewComponent {
 		}
 	}
 
+	public showDownload():boolean {
+		return this.service.oidcClientId && this.isAdmin();
+	}
+
 	public downloadXML() {
 		this.servicesService.getIdServiceJbossXml(this.service.mrn).subscribe(
 			xmlString => {
