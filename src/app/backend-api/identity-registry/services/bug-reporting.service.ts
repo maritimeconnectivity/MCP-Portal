@@ -29,12 +29,14 @@ export class BugReportingService {
 	  let mrn = authUser.mrn;
 	  let userName = authUser.preferredUsername;
 	  let organization = authUser.organization;
+	  let permissions = authUser.keycloakPermissions;
 
 	  let userString =
 		  "**USER INFO**: \n" +
 		  "*mrn*: " + mrn + "\n" +
 		  "*Name*: " + fullName + "\n" +
 		  "*Email*: " + email + "\n" +
+		  "*Keycloak permissions*: " + permissions + "\n" +
 		  "*Preferred username*: " + userName + "\n" +
 		  "*Organization mrn*: " + organization + "\n\n" +
 		  "**BUG REPORT MESSAGE**: \n";
