@@ -14,7 +14,8 @@ export enum AuthPermission {
 
 export interface AuthUser extends User {
 	organization:string,
-	preferredUsername:string
+	preferredUsername:string,
+	keycloakPermissions:string
 }
 
 export interface AuthState {
@@ -140,10 +141,11 @@ export class AuthService implements OnInit {
 	  AuthService.staticAuthInfo.orgMrn =  keycloakToken.org;
 	  let firstname = keycloakToken.given_name ? keycloakToken.given_name : '';
 	  let lastname = keycloakToken.family_name ? keycloakToken.family_name : '';
+	  let permissions = keycloakToken.permissions ? keycloakToken.permissions : '';
 	  let mrn = keycloakToken.mrn;
 	  let email= keycloakToken.email;
 	  let preferredUsername= keycloakToken.preferred_username ? keycloakToken.preferred_username : '';
-	  let authUser:AuthUser = {firstName:firstname, lastName:lastname, mrn:mrn, email:email, organization:keycloakToken.org, preferredUsername:preferredUsername};
+	  let authUser:AuthUser = {firstName:firstname, lastName:lastname, mrn:mrn, email:email, organization:keycloakToken.org, preferredUsername:preferredUsername, keycloakPermissions:permissions};
 	  AuthService.staticAuthInfo.user = authUser;
   }
 
@@ -160,9 +162,13 @@ export class AuthService implements OnInit {
   }
 
   logout() {
-    this.authState.loggedIn = false;
-    AuthService.staticAuthInfo.authz.logout();
-    AuthService.staticAuthInfo.authz = null;
+	  try {
+		  this.authState.loggedIn = false;
+		  AuthService.staticAuthInfo.authz.logout();
+		  AuthService.staticAuthInfo.authz = null;
+	  }catch (err) { // State is somehow lost. Just do nothing.
+
+	  }
   }
 
   static getToken(): Promise<string> {
@@ -180,9 +186,13 @@ export class AuthService implements OnInit {
   }
 
   public static handle401() {
-    AuthService.staticAuthInfo.loggedIn = false;
-    AuthService.staticAuthInfo.authz.logout({redirectUri:  window.location.origin + '/#' + AuthService.staticAuthInfo.logoutUrl + '?reason=401'});
-    AuthService.staticAuthInfo.authz = null;
+  	try {
+		  AuthService.staticAuthInfo.loggedIn = false;
+		  AuthService.staticAuthInfo.authz.logout({redirectUri: window.location.origin + '/#' + AuthService.staticAuthInfo.logoutUrl + '?reason=401'});
+		  AuthService.staticAuthInfo.authz = null;
+	  }catch (err) { // State is somehow lost. Just do nothing.
+
+	  }
   }
 
 }
