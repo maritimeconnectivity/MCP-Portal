@@ -51,7 +51,7 @@ export class CertificateHelperService implements OnInit {
 
   public certificateViewModelFromCertificate(certificate:Certificate): CertificateViewModel {
     let certificateViewModel: CertificateViewModel = certificate;
-    certificateViewModel.revokeReasonText = this.getRevokeReasonText(certificate.revokeReason+'ddsf');
+    certificateViewModel.revokeReasonText = this.getRevokeReasonText(certificate.revokeReason);
     return certificateViewModel;
   }
 

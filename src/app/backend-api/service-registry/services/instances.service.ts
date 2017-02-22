@@ -71,7 +71,8 @@ export class InstancesService implements OnInit {
   public getAllInstances(): Observable<Array<Instance>> {
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
-      this.instancesApi.getAllInstancesUsingGET().subscribe(
+	    // TODO FIXME Hotfix. This pagination should be done the right way
+      this.instancesApi.getAllInstancesUsingGET(0, 100).subscribe(
         instances => {
           // TODO delete this again, when description is part of the json
           for (let instance of instances) {
@@ -90,7 +91,8 @@ export class InstancesService implements OnInit {
     return Observable.create(observer => {
       // TODO for now just get all instances and filter myself until the api can do it
 	    // TODO should I filter on the version also?????????????????
-      this.instancesApi.getAllInstancesUsingGET().subscribe(
+	    // TODO FIXME Hotfix. This pagination should be done the right way
+      this.instancesApi.getAllInstancesUsingGET(0,100).subscribe(
         instances => {
           var instancesFiltered: Array<Instance> = [];
           for (let instance of instances) {

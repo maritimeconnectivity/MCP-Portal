@@ -1,10 +1,10 @@
 <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
   <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
-  <ul *ngIf="!isLoading && service && (this.service.oidcRedirectUri || showDelete() || showUpdate())" class="btn-list clearfix">
-    <li *ngIf="this.service.oidcRedirectUri">
+  <ul *ngIf="!isLoading && service && (showDownload() || showDelete() || showUpdate())" class="btn-list clearfix">
+    <li *ngIf="showDownload()">
       <button type="button" class="btn btn-primary btn-raised" (click)="downloadXML()">Download JBOSS XML</button>
     </li>
-    <li *ngIf="this.service.oidcRedirectUri">
+    <li *ngIf="showDownload()">
       <button type="button" class="btn btn-primary btn-raised" (click)="downloadJSON()">Download Keycloak JSON</button>
     </li>
     <li *ngIf="showUpdate()">
@@ -21,4 +21,3 @@
     <certificates-table [entityMrn]="service.mrn" [isLoading]="isLoading" [certificateTitle]="service.name" [certificateEntityType]="entityType" [certificates]="service.certificates"></certificates-table>
   </ba-card>
 </div>
-
