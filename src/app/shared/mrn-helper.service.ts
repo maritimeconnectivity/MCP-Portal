@@ -24,6 +24,10 @@ export class MrnHelperService {
 		return orgSplit[0] + ":";
 	}
 
+	public isStmOrg():boolean {
+		return this.authService.authState.orgMrn.indexOf(mrnSTM) > -1;
+	}
+
 	public orgShortName():string {
 		return this.orgShortNameFromMrn(this.authService.authState.orgMrn);
 	}
