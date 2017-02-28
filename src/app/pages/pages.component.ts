@@ -1,9 +1,13 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {MENU, SITE_ADMIN_SUB_MENU} from "../app.menu";
+import {SITE_ADMIN_SUB_MENU} from "../app.menu";
 import {Route} from "@angular/router";
 import * as _ from 'lodash';
 import {AuthService} from "../authentication/services/auth.service";
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
+import {MrnHelperService} from "../shared/mrn-helper.service";
+import {PAGES_MENU_STM, PAGES_MENU_ALL} from "./pages.menu";
+
+export var PAGES_MENU;
 @Component({
   selector: 'pages',
   encapsulation: ViewEncapsulation.None,
@@ -31,15 +35,22 @@ import {OrganizationsService} from "../backend-api/identity-registry/services/or
     `
 })
 export class Pages {
-	public routes = _.cloneDeep(MENU);
+	public routes;
 	public showSiteAdminMenu = false;
 	public loggedInName = "";
 	public version = require("../../../package.json").version;
 
-  constructor(private orgService: OrganizationsService, private authService: AuthService) {
+  constructor(private mrnHelper:MrnHelperService, private orgService: OrganizationsService, private authService: AuthService) {
   }
 
   ngOnInit() {
+  	if (this.mrnHelper.isStmOrg()) {
+  		PAGES_MENU = PAGES_MENU_STM;
+	  } else {
+		  PAGES_MENU = PAGES_MENU_ALL;
+	  }
+	  this.routes = _.cloneDeep(PAGES_MENU);
+
 	  if (this.authService.authState.rolesLoaded) {
 		  this.generateSiteAdminMenu();
 		  this.loadOrganization();

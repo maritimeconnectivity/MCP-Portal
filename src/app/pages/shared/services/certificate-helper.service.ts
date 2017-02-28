@@ -79,7 +79,6 @@ export class CertificateHelperService implements OnInit {
         break;
       }
       case RevokationReasonEnum.Cacompromise: {
-	      console.log('compromised: ',revokationReason);
         reasonText = 'CA compromised';
         break;
       }
@@ -112,7 +111,6 @@ export class CertificateHelperService implements OnInit {
         break;
       }
       default : {
-	      console.log('default: ',revokationReason);
         reasonText = RevokationReasonEnum[revokationReason];
       }
     }
