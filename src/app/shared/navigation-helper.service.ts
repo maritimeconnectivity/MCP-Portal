@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
-import {PAGES_MENU} from "../pages/pages.menu";
 import {Router, Route, ActivatedRoute} from "@angular/router";
 import {CertificateEntityType} from "../pages/shared/services/certificate-helper.service";
 import {MCNotificationsService, MCNotificationType} from "./mc-notifications.service";
+import {PAGES_MENU} from "../pages/pages.component";
 
 //TODO: I cannot for the life of me find a way to get the url of a component and navigate to the url. Thus this helper class :-( But hey I then had to make a recursive function and who doesn't love that :-)
 
