@@ -41,11 +41,11 @@ export class InstanceNewComponent implements OnInit {
 
   public organization: Organization;
   public labelValues:Array<LabelValueModel>;
-  public captionXml = 'Upload Instance Xml file';
+  public captionXml = 'Upload Instance XML file';
   public captionDoc = 'Upload Instance Document file';
   public fileTypeXml = FileUploadType.Xml;
   public fileTypeDoc = FileUploadType.Doc;
-  public requiredTextXml = 'You need to upload Xml file';
+  public requiredTextXml = 'You need to upload XML file';
   public isLoading = true;
 
   public isRegistering = false;
@@ -123,7 +123,7 @@ export class InstanceNewComponent implements OnInit {
 			} else {
 				this.mrn = '';
 				this.name = '';
-				this.errorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			}
@@ -275,7 +275,7 @@ export class InstanceNewComponent implements OnInit {
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Upload Instance Xml', isDisabled: true};
+		formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Upload Instance XML', isDisabled: true};
 		formControl = new FormControl(this.name, formControlModel.validator);
 
 		this.registerForm.addControl(formControlModel.elementId, formControl);

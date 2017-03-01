@@ -25,11 +25,11 @@ export class SpecificationNewComponent implements OnInit {
 	public mrnErrorText: string;
 
   public organization: Organization;
-  public captionXml = 'Upload Specification Xml file';
+  public captionXml = 'Upload Specification XML file';
   public captionDoc = 'Upload Specification Document file';
   public fileTypeXml = FileUploadType.Xml;
   public fileTypeDoc = FileUploadType.Doc;
-  public requiredTextXml = 'You need to upload Xml file';
+  public requiredTextXml = 'You need to upload XML file';
   public isFormValid = false;
   public isLoading = true;
 
@@ -76,7 +76,7 @@ export class SpecificationNewComponent implements OnInit {
 	  	let isValid = this.mrnHelper.checkMrnForSpecification(mrn);
 		  this.hasMrnError = !isValid;
 		  if (!isValid) {
-		  	this.mrnErrorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+		  	this.mrnErrorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 				    + this.mrnHelper.mrnMaskForSpecification() + "'ID'<BR>"
 				    + "'ID'=" + this.mrnHelper.mrnPatternError();
 		  }

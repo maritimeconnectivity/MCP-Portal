@@ -9,6 +9,9 @@
         <li *ngIf="instance.instanceAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
+        <li *ngIf="showUpdate()">
+          <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update Instance</button>
+        </li>
         <li *ngIf="showDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Instance</button>
         </li>

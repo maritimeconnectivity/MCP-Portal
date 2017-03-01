@@ -169,11 +169,19 @@ export class InstanceDetailsComponent {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
+	public showUpdate():boolean {
+		return this.isAdmin();
+	}
+
 	public showDelete():boolean {
 		return this.isAdmin();
 	}
 
-	private delete() {
+	public update() {
+		this.navigationHelperService.navigateToUpdateInstance(this.instance.instanceId, this.instance.version);
+	}
+
+	public delete() {
 		this.modalDescription = 'Do you want to delete the instance?';
 		this.showModal = true;
 	}

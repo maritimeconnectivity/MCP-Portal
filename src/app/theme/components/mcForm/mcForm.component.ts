@@ -15,6 +15,7 @@ export class McForm {
 	@Input() isLoading:boolean;
 	@Input() isRegistering:boolean;
 	@Input() registerTitle:string;
+	@Input() isFormValid:boolean = true;
 	@Input() formNeedsUpdating:boolean = false;
 	@Output() onRegister: EventEmitter<any> = new EventEmitter<any>();
 	@Output() onCancel: EventEmitter<any> = new EventEmitter<any>();
@@ -61,7 +62,7 @@ export class McForm {
 	}
 
 	public disableRegister() {
-  	return this.disableRegisterButton;
+  	return this.disableRegisterButton || !this.isFormValid;
 	}
 
 	public isControlTypeFileUpload(formControlModel:McFormControlModel) {

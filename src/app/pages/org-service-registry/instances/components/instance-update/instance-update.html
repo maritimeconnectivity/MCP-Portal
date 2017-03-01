@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-lg-12">
+    <ba-card title="Update Instance - {{instance?.name}}" baCardClass="with-scroll table-panel">
+      <h5>Updating Instance</h5>
+      <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+
+      <div class="separator"></div>
+
+      <div *ngIf="instance">
+        <div class="important-notice-big">
+          If only the <span>status</span> needs to be updated, leave the <span>XML</span> and <span>Document</span> fields empty.<br>
+          <br>
+          If a new XML-file is uploaded the <span>status</span> will be parsed from the XML.
+        </div>
+        <div class="separator"></div>
+        <form>
+          <mc-file-uploader #uploadXml [caption]="captionXml" [fileUploadType]="fileTypeXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
+          <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
+          <div *ngIf="hasError" class="error-notice" [innerHTML]="errorText | undefined | sanitizeHtml"></div>
+          <mc-form [isFormValid]="isFormChanged" [formGroup]="updateForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isUpdating" [registerTitle]="updateTitle" (onCancel)="cancel()" (onRegister)="update()"></mc-form>
+        </form>
+      </div>
+      <div class="no-data" *ngIf="!instance && !isLoading">No data</div>
+    </ba-card>
+  </div>
+</div>

@@ -215,6 +215,14 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
+	public navigateToUpdateInstance(instanceMrn:string, version:string):void {
+		this.path = '/update/' + instanceMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('instances', pagesMenu[0]);
+
+		this.router.navigate([this.path], {queryParams: {instanceVersion: version}});
+	}
+
 	public navigateToDevice(deviceMrn:string):void {
 		this.path = '/' + deviceMrn;
 		let pagesMenu = PAGES_MENU;

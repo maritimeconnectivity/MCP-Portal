@@ -18,6 +18,70 @@ export class InstancesService implements OnInit {
 
   }
 
+	public updateStatus(instance:Instance, newStatus:string) : Observable<{}> {
+		this.chosenInstance = null;
+		return this.instancesApi.updateInstanceStatusUsingPUT(instance.instanceId, instance.version, newStatus);
+	}
+
+	public updateInstance(instance:Instance, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
+		this.chosenInstance = null;
+		if (updateXml || updateDoc){
+			return this.updateInstanceWithNewFiles(instance, updateDoc, updateXml);
+		} else {
+			return this.instancesApi.updateInstanceUsingPUT(instance);
+		}
+	}
+
+	private updateInstanceWithNewFiles(instance:Instance, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
+  	if (updateXml) {
+		  return this.updateWithXml(instance, updateDoc);
+	  } else {
+		  return Observable.create(observer => {
+			  this.updateWithDoc(instance, observer);
+		  });
+	  }
+	}
+	private updateWithXml(instance:Instance, updateDoc:boolean) : Observable<{}> {
+		return Observable.create(observer => {
+			this.xmlApi.createXmlUsingPOST(instance.instanceAsXml).subscribe(
+				xml => {
+					instance.instanceAsXml = xml;
+					if (updateDoc) {
+						this.updateWithDoc(instance, observer);
+					} else {
+						this.updateActualInstance(instance, observer);
+					}
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
+	private updateWithDoc(instance:Instance, observer:Observer<any>){
+		this.docApi.createDocUsingPOST(instance.instanceAsDoc).subscribe(
+			doc => {
+				instance.instanceAsDoc = doc;
+				this.updateActualInstance(instance, observer);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
+
+	private updateActualInstance(instance:Instance, observer:Observer<any>) {
+		this.instancesApi.updateInstanceUsingPUT(instance).subscribe(
+			_ => {
+				observer.next(_);
+			},
+			err => {
+				observer.error(err);
+			}
+		);
+	}
+
   public deleteInstance(instance:Instance) : Observable<{}> {
     this.chosenInstance = null;
     return this.instancesApi.deleteInstanceUsingDELETE(instance.instanceId, instance.version);

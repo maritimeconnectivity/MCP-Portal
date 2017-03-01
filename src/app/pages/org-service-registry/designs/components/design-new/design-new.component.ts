@@ -30,11 +30,11 @@ export class DesignNewComponent implements OnInit {
 
   public organization: Organization;
   public labelValues:Array<LabelValueModel>;
-  public captionXml = 'Upload Design Xml file';
+  public captionXml = 'Upload Design XML file';
   public captionDoc = 'Upload Design Document file';
   public fileTypeXml = FileUploadType.Xml;
   public fileTypeDoc = FileUploadType.Doc;
-  public requiredTextXml = 'You need to upload Xml file';
+  public requiredTextXml = 'You need to upload XML file';
   public isFormValid = false;
   public isLoading = true;
 
@@ -82,7 +82,7 @@ export class DesignNewComponent implements OnInit {
 			let mrn = this.xmlParser.getMrn(file);
 			let isValid = this.mrnHelper.checkMrnForDesign(mrn);
 			if (!isValid) {
-				this.errorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForDesign() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			} else {
