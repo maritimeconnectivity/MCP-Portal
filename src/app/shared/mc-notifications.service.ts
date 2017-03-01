@@ -35,7 +35,8 @@ export class MCNotificationsService {
     }
 	  this.notificationObserver.next({title:title, message:message, type:type});
 
-	  if(originalError && this.errorLogger.options.makeBugReportFromError) {
+	  let isXmlError = message.indexOf("Error trying to parse required field") > -1;
+	  if(originalError && this.errorLogger.options.makeBugReportFromError && !isXmlError) {
 		  this.notificationObserver.next({title:title, message:"A Bug Report was send automatically.", type:type});
 	  }
   }

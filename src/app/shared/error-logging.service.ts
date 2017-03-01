@@ -27,7 +27,8 @@ export class ErrorLoggingService {
 		if (showToUser) {
 			this.sendToUser(error);
 		}
-		if (this.options.makeBugReportFromError && !IS_DEV) {
+		let isXmlError = message.indexOf("Error trying to parse required field") > -1;
+		if (this.options.makeBugReportFromError && !IS_DEV && !isXmlError) {
 			this.sendToServer(message, error);
 		}
 	}
