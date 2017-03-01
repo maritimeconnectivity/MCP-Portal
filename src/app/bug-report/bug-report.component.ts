@@ -167,10 +167,12 @@ export class BugReportComponent implements OnInit {
 		let name = this.registerForm.value.name;
 		let email  = this.registerForm.value.emails.email;
 
+		let userAgent = window.navigator.userAgent;
 		let userString =
 			"**USER INFO**: \n" +
-			"*Name*: " + name + "\n" +
-			"*Email*: " + email + "\n\n" +
+			"*Agent*: " + userAgent + " \n \n" +
+			"*Name*: " + name + " \n" +
+			"*Email*: " + email + " \n\n" +
 			"**BUG REPORT MESSAGE**: \n";
 
 		bugReport.description = userString + bugReport.description;
