@@ -156,12 +156,38 @@ export class InstancesService implements OnInit {
       // TODO for now just get all instances and filter myself until the api can do it
 	    // TODO should I filter on the version also?????????????????
 	    // TODO FIXME Hotfix. This pagination should be done the right way
+	    /*let versionQuery = '';
+	    if (version){
+	    	versionQuery = " AND version:" + encodeURIComponent(version);
+	    }
+	    let query = "designId:" + encodeURIComponent(designId) + versionQuery; // TODO: create a common query-generator, so changes to query-keys etc. only needs to be updated 1 place
+	    this.instancesApi.searchInstancesUsingGET(query,0,100).subscribe(
+		    instances => {
+			    var instancesFiltered: Array<Instance> = [];
+			    for (let instance of instances) {
+				    let implementedDesignId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
+				    if (implementedDesignId === designId) {
+					    instance.description = this.getDescription(instance);
+					    instancesFiltered.push(instance);
+				    }
+			    }
+			    observer.next(instancesFiltered);
+		    },
+		    err => {
+			    observer.error(err);
+		    }
+	    );*/
       this.instancesApi.getAllInstancesUsingGET(0,100).subscribe(
         instances => {
           var instancesFiltered: Array<Instance> = [];
           for (let instance of instances) {
-            let implementedDesignId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
-            if (implementedDesignId === designId) {
+	          let implementedDesignId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
+	          let implementedDesignVersion = this.xmlParser.getVersionForDesignInInstance(instance.instanceAsXml);
+	          var versionOK = true;
+	          if (version) {
+	          	versionOK = implementedDesignVersion === version;
+	          }
+            if (implementedDesignId === designId && versionOK) {
               instance.description = this.getDescription(instance);
               instancesFiltered.push(instance);
             }

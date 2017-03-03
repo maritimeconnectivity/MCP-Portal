@@ -8,12 +8,13 @@ import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
 import {Instance} from "../autogen/model/Instance";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/services/instance-xml-parser.service";
+import {DesignXmlParser} from "../../../pages/org-service-registry/shared/services/design-xml-parser.service";
 
 
 @Injectable()
 export class DesignsService implements OnInit {
   private chosenDesign: Design;
-  constructor(private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: InstanceXmlParser) {
+  constructor(private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlInstanceParser: InstanceXmlParser, private xmlDesignParser: DesignXmlParser) {
   }
 
   ngOnInit() {
@@ -91,8 +92,8 @@ export class DesignsService implements OnInit {
 
   public getDesignForInstance(instance:Instance): Observable<Design> {
 
-	  let designId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
-	  let version = this.xmlParser.getVersionForDesignInInstance(instance.instanceAsXml);
+	  let designId = this.xmlInstanceParser.getMrnForDesignInInstance(instance.instanceAsXml);
+	  let version = this.xmlInstanceParser.getVersionForDesignInInstance(instance.instanceAsXml);
 	  // TODO: change when data is actually there
 	  //let designId = instance.designId;
 	  //let version = instance.version;
@@ -122,10 +123,20 @@ export class DesignsService implements OnInit {
     return Observable.create(observer => {
       this.designsApi.getAllDesignsBySpecificationIdUsingGET(specificationId).subscribe(
         designs => {
+	        var designsFiltered: Array<Design> = [];
           for (let design of designs) {
-              design.description = this.getDescription(design);
+	          design.description = this.getDescription(design);
+          	if (version) {
+          		let specificationVersion = this.xmlDesignParser.getVersionForSpecificationInDesign(design.designAsXml)
+		          if (version === specificationVersion) {
+          			designsFiltered.push(design);
+		          }
+	          } else {
+          		designsFiltered.push(design);
+	          }
+
           }
-          observer.next(designs);
+          observer.next(designsFiltered);
         },
         err => {
           observer.error(err);
