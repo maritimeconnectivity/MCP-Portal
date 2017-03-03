@@ -1,8 +1,13 @@
 <div baCardBlur class="animated fadeIn card {{cardType}} {{baCardClass || ''}}" zoom-in>
-    <div *ngIf="title" class="card-header clearfix">
-        <h3 class="card-title">{{title}}</h3>
+    <div *ngIf="title" class="card-header {{collapsedClass}} clearfix">
+      <a (click)="toggle()"> <h3 class="card-title">
+          {{title}}
+          <div class="card-title-right"><i style="color: white" class="{{toggleClass}}" aria-hidden="true"></i></div>
+        </h3>
+      </a>
     </div>
-    <div class="card-body">
+
+    <div *ngIf="!isCollapsed" class="card-body">
         <ng-content></ng-content>
     </div>
 </div>
