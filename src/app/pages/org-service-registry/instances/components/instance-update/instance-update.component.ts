@@ -187,7 +187,10 @@ export class InstanceUpdateComponent implements OnInit {
   	if (this.xml || this.doc) {
 		  try {
 			  if (this.xml) {
-				  this.instance.instanceAsXml = this.xml;
+				  // Already contains an XML, so just update the values and not the ID
+				  this.instance.instanceAsXml.content = this.xml.content;
+				  this.instance.instanceAsXml.contentContentType = this.xml.contentContentType;
+				  this.instance.instanceAsXml.name = this.xml.name;
 				  this.instance.name = this.xmlParser.getName(this.xml);
 				  this.instance.description = this.xmlParser.getDescription(this.xml);
 				  this.instance.keywords = this.xmlParser.getKeywords(this.xml);
@@ -196,7 +199,13 @@ export class InstanceUpdateComponent implements OnInit {
 				  this.instance.designId = this.xmlParser.getMrnForDesignInInstance(this.xml);
 			  }
 			  if (this.doc) {
-			  	this.instance.instanceAsDoc = this.doc;
+				  if (this.instance.instanceAsDoc) { // Already contains a Doc, so just update the values and not the ID
+					  this.instance.instanceAsDoc.filecontent = this.doc.filecontent;
+					  this.instance.instanceAsDoc.filecontentContentType = this.doc.filecontentContentType;
+					  this.instance.instanceAsDoc.name = this.doc.name;
+				  } else {
+					  this.instance.instanceAsDoc = this.doc;
+				  }
 			  }
 			  this.updateInstance();
 		  } catch ( error ) {
@@ -210,6 +219,9 @@ export class InstanceUpdateComponent implements OnInit {
   }
 
   private updateStatus() {
+  	this.notifications.generateNotification("Not Implemented", "Update status only, is sadly not implemented yet", MCNotificationType.Info);
+	  this.isUpdating = false;
+  	/*
 	  this.instancesService.updateStatus(this.instance, this.status).subscribe(_ => {
 			  this.navigationService.navigateToOrgInstance(this.instance.instanceId, this.instance.version);
 		  },
@@ -217,6 +229,7 @@ export class InstanceUpdateComponent implements OnInit {
 			  this.isUpdating = false;
 			  this.notifications.generateNotification('Error', 'Error when trying to update status', MCNotificationType.Error, err);
 		  });
+		  */
   }
 
   private updateInstance() {

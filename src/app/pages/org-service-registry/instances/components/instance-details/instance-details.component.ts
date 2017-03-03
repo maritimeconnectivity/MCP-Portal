@@ -118,13 +118,13 @@ export class InstanceDetailsComponent {
 	  this.servicesService.getIdService(mrn, this.instance.organizationId).subscribe(
 		  service => {
 			  this.idService = service;
-			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
+			  this.showUpdateIdService = (this.isMyOrg() && this.isServiceAdminForOrg()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
 			  this.isLoadingIdService = false;
 		  },
 		  err => {
 			  if (err.status == 404) {
 				  this.shouldDisplayIdService = false;
-				  this.shouldDisplayCreateButton = this.isAdmin();
+				  this.shouldDisplayCreateButton = this.isServiceAdminForOrg();
 			  } else {
 			    this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
 			  }
@@ -165,16 +165,16 @@ export class InstanceDetailsComponent {
     }
   }
 
-	private isAdmin():boolean {
+	private isServiceAdminForOrg():boolean {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
 	public showUpdate():boolean {
-		return this.isAdmin();
+		return this.isServiceAdminForOrg();
 	}
 
 	public showDelete():boolean {
-		return this.isAdmin();
+		return this.isServiceAdminForOrg();
 	}
 
 	public update() {

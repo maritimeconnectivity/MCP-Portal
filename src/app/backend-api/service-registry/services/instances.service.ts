@@ -7,11 +7,14 @@ import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {Doc} from "../autogen/model/Doc";
 import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/services/instance-xml-parser.service";
+import {DocsService} from "./docs.service";
+import {XmlsService} from "./xmls.service";
+import {Xml} from "../autogen/model/Xml";
 
 @Injectable()
 export class InstancesService implements OnInit {
   private chosenInstance: Instance;
-  constructor(private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
+  constructor(private docsService:DocsService, private xmlsService:XmlsService, private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
   }
 
   ngOnInit() {
@@ -25,61 +28,57 @@ export class InstancesService implements OnInit {
 
 	public updateInstance(instance:Instance, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
 		this.chosenInstance = null;
-		if (updateXml || updateDoc){
-			return this.updateInstanceWithNewFiles(instance, updateDoc, updateXml);
+		let parallelObservables = [];
+
+		parallelObservables.push(this.updateOrCreateXml(updateXml?instance.instanceAsXml:null).take(1));
+		parallelObservables.push(this.updateOrCreateDoc(updateDoc?instance.instanceAsDoc:null).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let xml:Xml = resultArray[0];
+				let doc:Doc = resultArray[1];
+
+				var shouldUpdateInstance = false;
+				if (doc) {
+					if (instance.instanceAsDoc) {
+						shouldUpdateInstance = instance.instanceAsDoc.id !== doc.id; // update the instance if the id isn't the same
+					} else { // No doc before, but one now, so we need to update instance
+						shouldUpdateInstance = true;
+					}
+					instance.instanceAsDoc = doc;
+				}
+
+				if (xml) { // If xml has changed we need to update the instance
+					instance.instanceAsXml = xml;
+					shouldUpdateInstance = true;
+				}
+
+				if (shouldUpdateInstance) {
+					return this.instancesApi.updateInstanceUsingPUT(instance);
+				} else {
+					return Observable.of({});
+				}
+			});
+	}
+
+	private updateOrCreateDoc(doc:Doc) : Observable<Doc> {
+		if (!doc) {
+			return Observable.of(null);
+		} else if (doc.id) { // If doc has an ID then it has already been created and needs only update
+			return this.docsService.updateDoc(doc);
 		} else {
-			return this.instancesApi.updateInstanceUsingPUT(instance);
+			return this.docsService.createDoc(doc);
 		}
 	}
 
-	private updateInstanceWithNewFiles(instance:Instance, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
-  	if (updateXml) {
-		  return this.updateWithXml(instance, updateDoc);
-	  } else {
-		  return Observable.create(observer => {
-			  this.updateWithDoc(instance, observer);
-		  });
-	  }
-	}
-	private updateWithXml(instance:Instance, updateDoc:boolean) : Observable<{}> {
-		return Observable.create(observer => {
-			this.xmlApi.createXmlUsingPOST(instance.instanceAsXml).subscribe(
-				xml => {
-					instance.instanceAsXml = xml;
-					if (updateDoc) {
-						this.updateWithDoc(instance, observer);
-					} else {
-						this.updateActualInstance(instance, observer);
-					}
-				},
-				err => {
-					observer.error(err);
-				}
-			);
-		});
-	}
-
-	private updateWithDoc(instance:Instance, observer:Observer<any>){
-		this.docApi.createDocUsingPOST(instance.instanceAsDoc).subscribe(
-			doc => {
-				instance.instanceAsDoc = doc;
-				this.updateActualInstance(instance, observer);
-			},
-			err => {
-				observer.error(err);
-			}
-		);
-	}
-
-	private updateActualInstance(instance:Instance, observer:Observer<any>) {
-		this.instancesApi.updateInstanceUsingPUT(instance).subscribe(
-			_ => {
-				observer.next(_);
-			},
-			err => {
-				observer.error(err);
-			}
-		);
+	private updateOrCreateXml(xml:Xml) : Observable<Xml> {
+		if (!xml) {
+			return Observable.of(null);
+		} else if (xml.id) { // If xml has an ID then it has already been created and needs only update
+			return this.xmlsService.updateXml(xml);
+		} else {
+			return this.xmlsService.createXml(xml);
+		}
 	}
 
   public deleteInstance(instance:Instance) : Observable<{}> {

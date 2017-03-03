@@ -18,6 +18,7 @@ import {VesselsService} from "../backend-api/identity-registry/services/vessels.
 import {LogoService} from "../backend-api/identity-registry/services/logo.service";
 import {DocsService} from "../backend-api/service-registry/services/docs.service";
 import {XsdsService} from "../backend-api/service-registry/services/xsds.service";
+import {XmlsService} from "../backend-api/service-registry/services/xmls.service";
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import {XsdsService} from "../backend-api/service-registry/services/xsds.service
     DesignsService,
     InstancesService,
 	  DocsService,
+	  XmlsService,
 	  XsdsService,
     CertificatesService,
     DevicesService,
