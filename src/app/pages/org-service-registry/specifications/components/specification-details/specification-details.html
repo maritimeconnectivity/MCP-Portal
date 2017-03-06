@@ -14,18 +14,16 @@
         </li>
       </ul>
 
-      <div class="separator"></div>
-
-      <h5>Designs that implements this Specification</h5>
-      <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
-      <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
-
       <!-- Doesn't work atm.
       <div class="separator"></div>
 
       <h5>Instances that implements this Specification</h5>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
       -->
+    </ba-card>
+    <ba-card title="Designs implementing this Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
+      <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
+      <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
   </div>
 </div>
