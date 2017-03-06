@@ -91,7 +91,7 @@ export class CertificatesTableComponent implements OnChanges{
 				let actionButton:TableActionButton = {buttonClass: 'btn btn-primary btn-raised btn-sm', name: 'Download certificate', onClick:() => {this.download(certificate)}};
 				actionButtons.push(actionButton);
 				if (this.isAdmin()) {
-					actionButton = {buttonClass: 'btn btn-danger btn-raised btn-sm', name: 'Revoke certificate', onClick:() => {this.revoke(certificate)}};
+					actionButton = {buttonClass: 'btn btn-primary btn-raised btn-sm', name: 'Revoke certificate', onClick:() => {this.revoke(certificate)}};
 					actionButtons.push(actionButton);
 				}
 				let tableCellActionButtons: TableCellActionButtons = {valueHtml:'', class:'table-buttons', truncateNumber:0, actionButtons:actionButtons};
