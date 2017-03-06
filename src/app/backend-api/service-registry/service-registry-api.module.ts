@@ -66,4 +66,4 @@ import {SpecificationXmlParser} from "../../pages/org-service-registry/shared/se
 	  InstanceXmlParser
   ]
 })
-export class ServiceRegistryModule { }
+export class ServiceRegistryApiModule { }

@@ -8,9 +8,10 @@ import {Component, ViewEncapsulation, Input} from '@angular/core';
 })
 export class McLoadingButton {
   @Input() title:string;
-  @Input() class:string;
+	@Input() class:string;
+	@Input() type:string = 'button';
   @Input() isLoading:boolean;
-  @Input() disabled:boolean;
+	@Input() disabled:boolean;
   @Input() onClick:Function;
   constructor() {
   }

@@ -10,6 +10,7 @@ import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/serv
 import {DocsService} from "./docs.service";
 import {XmlsService} from "./xmls.service";
 import {Xml} from "../autogen/model/Xml";
+import {QueryHelper} from "./query-helper";
 
 @Injectable()
 export class InstancesService implements OnInit {
@@ -152,14 +153,8 @@ export class InstancesService implements OnInit {
 
   public getInstancesForDesign(designId:string, version?:string): Observable<Array<Instance>> {
     return Observable.create(observer => {
-      // TODO for now just get all instances and filter myself until the api can do it
-	    // TODO should I filter on the version also?????????????????
 	    // TODO FIXME Hotfix. This pagination should be done the right way
-	    /*let versionQuery = '';
-	    if (version){
-	    	versionQuery = " AND version:" + encodeURIComponent(version);
-	    }
-	    let query = "designId:" + encodeURIComponent(designId) + versionQuery; // TODO: create a common query-generator, so changes to query-keys etc. only needs to be updated 1 place
+	    let query = QueryHelper.generateQueryStringForDesign(designId, version);
 	    this.instancesApi.searchInstancesUsingGET(query,0,100).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
@@ -175,7 +170,7 @@ export class InstancesService implements OnInit {
 		    err => {
 			    observer.error(err);
 		    }
-	    );*/
+	    );
       this.instancesApi.getAllInstancesUsingGET(0,100).subscribe(
         instances => {
           var instancesFiltered: Array<Instance> = [];

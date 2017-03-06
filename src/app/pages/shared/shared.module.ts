@@ -12,12 +12,15 @@ import {OrganizationViewModelService} from "./services/organization-view-model.s
 import {CertificateIssueNewComponent} from "./components/certificate-issue-new/certificate-issue-new.component";
 import {ServiceDetailsViewComponent} from "./components/service-details-view/service-details-view.component";
 import {CertificateRevokeComponent} from "./components/certificate-revoke/certificate-revoke.component";
+import {ServiceRegistrySearchComponent} from "./components/service-registry-search/service-registry-search.component";
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
   imports: [
     CommonModule,
-    NgaModule
+    NgaModule,
+	  ReactiveFormsModule
   ],
   declarations: [
     DesignsTableComponent,
@@ -27,7 +30,8 @@ import {CertificateRevokeComponent} from "./components/certificate-revoke/certif
     OrganizationDetailsTableComponent,
     CertificateIssueNewComponent,
 	  CertificateRevokeComponent,
-	  ServiceDetailsViewComponent
+	  ServiceDetailsViewComponent,
+	  ServiceRegistrySearchComponent
   ],
   exports: [
     OrganizationDetailsTableComponent,
@@ -37,7 +41,8 @@ import {CertificateRevokeComponent} from "./components/certificate-revoke/certif
     CertificatesTableComponent,
     CertificateIssueNewComponent,
 	  CertificateRevokeComponent,
-	  ServiceDetailsViewComponent
+	  ServiceDetailsViewComponent,
+	  ServiceRegistrySearchComponent
   ],
   providers: [
     SrViewModelService,

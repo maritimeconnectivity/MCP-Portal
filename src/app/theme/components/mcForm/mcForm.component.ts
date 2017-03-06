@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation, Input, EventEmitter, Output} from '@angular/core';
-import {FormGroup, AbstractControl} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 import {McFormControlModel, McFormControlType} from "./mcFormControlModel";
 
 @Component({

@@ -1,0 +1,48 @@
+<a class="search-link" (click)="toggle()">
+  <h4>Search filters <i style="margin-left:2px;color: white; font-size: 16px;" class="{{toggleClass}}" aria-hidden="true"></i></h4>
+</a>
+<div class="mc-form-group" *ngIf="!isCollapsed && !isLoading && formGroup">
+  <form [formGroup]="formGroup">
+    <div class="row">
+      <div class="col-sm-12">
+        <div [formGroup]="formGroup" class="form-group mc-form-group">
+          <label class="mc-form-label">Keywords
+            <input type="text" class="form-control mc-form-control" formControlName="keywords">
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div [formGroup]="formGroup" class="form-group mc-form-group">
+          <label class="mc-form-label">Registered by
+            <select class="form-control mc-form-control mc-form-control-select" formControlName="registeredBy">
+              <option *ngFor="let selectValue of selectValuesOrganizations" [ngValue]="selectValue.value">
+                {{selectValue.label}}
+              </option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div *ngIf="showEndorsement" class="col-sm-6">
+        <div [formGroup]="formGroup" class="form-group mc-form-group">
+          <label class="mc-form-label">Endorsed by
+            <select class="form-control mc-form-control mc-form-control-select" formControlName="endorsedBy">
+              <option *ngFor="let selectValue of selectValuesOrganizations" [ngValue]="selectValue.value">
+                {{selectValue.label}}
+              </option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </div>
+    <ul class="btn-list clearfix">
+      <li style="margin-bottom: 3px !important;">
+        <mc-loading-button [type]="'submit'" [class]="'btn btn-primary btn-raised'" [isLoading]="isSearching" [title]="'Search'" [onClick]="onSearchFunction" ></mc-loading-button>
+      </li>
+    </ul>
+  </form>
+</div>
+<div *ngIf="!isCollapsed">
+  <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+</div>

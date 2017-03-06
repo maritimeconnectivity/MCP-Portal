@@ -1,6 +1,10 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{cardTitle}}" baCardClass="with-scroll table-panel">
+      <service-registry-search [isSearching]="isSearching" [showEndorsement]="true" [preFilterMyOrg]="true" (onSearch)="search($event)"></service-registry-search>
+
+      <div class="separator"></div>
+
       <mc-create-button *ngIf="!isLoading" title="Register new Specification" [onClick]="onCreate" ></mc-create-button>
       <specifications-table [specifications]="specifications" [isLoading]="isLoading" [onRowClick]="onGotoSpec"></specifications-table>
     </ba-card>

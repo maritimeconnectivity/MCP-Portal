@@ -6,6 +6,7 @@ import {SpecificationsService} from "../../../../../backend-api/service-registry
 import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {Router, ActivatedRoute} from "@angular/router";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
+import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
 
 @Component({
   selector: 'specification-list',
@@ -15,7 +16,7 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 })
 export class SpecificationListComponent implements OnInit {
 	public organization: Organization;
-	public allOrganizations: Array<Organization>;
+	public isSearching = false;
   public specifications: Array<Specification>;
   public isLoading: boolean;
   public onCreate: Function;
@@ -25,7 +26,7 @@ export class SpecificationListComponent implements OnInit {
   }
 
   ngOnInit() {
-	  this.cardTitle = 'Loading ...';
+	  this.cardTitle = 'Specifications';
     this.onCreate = this.createSpecification.bind(this);
     this.onGotoSpec = this.gotoSpecification.bind(this);
 
@@ -35,13 +36,25 @@ export class SpecificationListComponent implements OnInit {
     this.loadSpecifications();
   }
 
+  public search(searchRequest: ServiceRegistrySearchRequest) {
+  	this.isSearching = true;
+
+	  this.specificationsService.searchSpecifications(searchRequest).subscribe(
+		  specifications => {
+			  this.specifications = specifications;
+			  this.isSearching = false;
+		  },
+		  err => {
+			  this.isSearching = false;
+			  this.notifications.generateNotification('Error', 'Error when trying to search specifications', MCNotificationType.Error, err);
+		  }
+	  );
+  }
+
 	private loadMyOrganization() {
 		this.orgService.getMyOrganization().subscribe(
 			organization => {
 				this.organization = organization;
-				// TODO: change when filtering on organization
-				//this.cardTitle = 'Specifications for ' + organization.name;
-				this.cardTitle = 'All Specifications';
 			},
 			err => {
 				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
@@ -50,7 +63,7 @@ export class SpecificationListComponent implements OnInit {
 	}
 
   private loadSpecifications() {
-    this.specificationsService.getAllSpecifications().subscribe(
+    this.specificationsService.getSpecificationsForMyOrg().subscribe(
       specifications => {
         this.specifications = specifications;
         this.isLoading = false;

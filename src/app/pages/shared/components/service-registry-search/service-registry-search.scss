@@ -1,0 +1,12 @@
+@import '../../../../theme/components/mcForm/mcForm.scss';
+@import '../../../../theme/components/mcFormControlText/mcFormControlText.scss';
+@import '../../../../theme/components/mcFormControlSelect/mcFormControlSelect.scss';
+
+.search-link {
+  cursor: pointer;
+  color: $content-text;
+  &:hover {
+    transform: none;
+    color: $content-text;
+  }
+}

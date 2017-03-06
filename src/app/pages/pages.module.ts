@@ -5,7 +5,7 @@ import { routing }       from './pages.routing';
 import { NgaModule } from '../theme/nga.module';
 
 import { Pages } from './pages.component';
-import {ServiceRegistryModule} from "../backend-api/service-registry/service-registry.module";
+import {ServiceRegistryApiModule} from "../backend-api/service-registry/service-registry-api.module";
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 import {SpecificationsService} from "../backend-api/service-registry/services/specifications.service";
 import {DesignsService} from "../backend-api/service-registry/services/designs.service";
@@ -19,12 +19,15 @@ import {LogoService} from "../backend-api/identity-registry/services/logo.servic
 import {DocsService} from "../backend-api/service-registry/services/docs.service";
 import {XsdsService} from "../backend-api/service-registry/services/xsds.service";
 import {XmlsService} from "../backend-api/service-registry/services/xmls.service";
+import {EndorsementApiModule} from "../backend-api/endorsements/endorsement-api.module";
+import {EndorsementsService} from "../backend-api/endorsements/services/endorsements.service";
 
 @NgModule({
   imports: [
     CommonModule,
     NgaModule,
-    ServiceRegistryModule,
+    ServiceRegistryApiModule,
+	  EndorsementApiModule,
     routing
   ],
   declarations: [Pages],
@@ -37,6 +40,7 @@ import {XmlsService} from "../backend-api/service-registry/services/xmls.service
 	  DocsService,
 	  XmlsService,
 	  XsdsService,
+	  EndorsementsService,
     CertificatesService,
     DevicesService,
     UsersService,

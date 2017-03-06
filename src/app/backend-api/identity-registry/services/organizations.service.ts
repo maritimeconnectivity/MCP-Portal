@@ -19,6 +19,7 @@ export class OrganizationsService implements OnInit {
   }
 
 	public approveOrganization(orgMrn:string):Observable<Organization> {
+  	this.organizations = null;
 		return this.organizationApi.approveOrganizationUsingGET(orgMrn);
 	}
 
@@ -30,6 +31,7 @@ export class OrganizationsService implements OnInit {
 		if (this.authService.isMyOrg(orgMrn)) {
 			throw Error('You cannot delete your own organization');
 		}
+		this.organizations = null;
 		return this.organizationApi.deleteOrgUsingDELETE(orgMrn);
 	}
 
@@ -92,6 +94,7 @@ export class OrganizationsService implements OnInit {
 			this.organizationApi.updateOrganizationUsingPUT(organization.mrn, organization).subscribe(
 				_ => {
 					this.myOrganization = null; // We need to reload my org in case it's my org that was updated
+					this.organizations = null; // Also need to get fresh organization list
 					observer.next(_);
 				},
 				err => {
@@ -131,7 +134,7 @@ export class OrganizationsService implements OnInit {
 		});
 	}
 
-  // TODO: explore the possibilities with returning cahced responses. Currently there is 2 calls to myOrg before result is ready. I'm sure there is something in Observable to fix this
+  // TODO: explore the possibilities with returning cached responses. Currently there is 2 calls to myOrg before result is ready. I'm sure there is something in Observable to fix this
   public getMyOrganization(): Observable<Organization> {
     if (this.myOrganization) {
       return Observable.of(this.myOrganization);
@@ -157,9 +160,23 @@ export class OrganizationsService implements OnInit {
   }
 
 	public getAllOrganizations () : Observable<Array<Organization>> {
-		return this.organizationApi.getOrganizationUsingGET2();
-	}
+		if (this.organizations) {
+			return Observable.of(this.organizations);
+		}
 
+		return Observable.create(observer => {
+			this.organizationApi.getOrganizationUsingGET2().subscribe(
+				organizations => {
+					this.organizations = organizations;
+					observer.next(organizations);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+// TODO: explore the possibilities with returning cached responses. Currently there is many calls to this function before result is ready when the organizations has been reset. I'm sure there is something in Observable to fix this
 	public getOrganizationName(orgMrn:string) : Observable<string> {
 		if (this.organizations) {
 			return Observable.of(this.searchOrganizationNameFromList(orgMrn));

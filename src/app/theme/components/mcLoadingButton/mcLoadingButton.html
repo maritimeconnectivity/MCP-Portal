@@ -1,4 +1,4 @@
-<button *ngIf="!isLoading" [disabled]="disabled" type="button" (click)="clickHandler()" class="{{class}}">{{title}}
+<button *ngIf="!isLoading" [disabled]="disabled" type="{{type}}" (click)="clickHandler()" class="{{class}}">{{title}}
 </button>
 <div *ngIf="isLoading" class="loading-wrapper">
   <sk-fading-circle-small [isRunning]="isLoading" ></sk-fading-circle-small>

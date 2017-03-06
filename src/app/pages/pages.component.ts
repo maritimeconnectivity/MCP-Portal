@@ -60,7 +60,7 @@ export class Pages {
 			  this.loadOrganization();
 		  });
 	  }
-	  this.preloadOrganizationNames();
+	  this.preloadOrganizations();
   }
 
 	private loadOrganization() {
@@ -78,8 +78,9 @@ export class Pages {
 		);
 	}
 
-	private preloadOrganizationNames() {
-		this.orgService.getOrganizationName('').subscribe(
+	private preloadOrganizations() {
+  	// Just preload organizations to cache. No need to do anything with results or errors
+		this.orgService.getAllOrganizations().subscribe(
 			_ => {
 
 			},
