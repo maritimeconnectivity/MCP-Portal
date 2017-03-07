@@ -14,6 +14,7 @@ import {ServiceDetailsViewComponent} from "./components/service-details-view/ser
 import {CertificateRevokeComponent} from "./components/certificate-revoke/certificate-revoke.component";
 import {ServiceRegistrySearchComponent} from "./components/service-registry-search/service-registry-search.component";
 import {ReactiveFormsModule} from "@angular/forms";
+import {SrSearchRequestsService} from "../org-service-registry/shared/services/sr-search-requests.service";
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import {ReactiveFormsModule} from "@angular/forms";
   providers: [
     SrViewModelService,
     CertificateHelperService,
-    OrganizationViewModelService
+    OrganizationViewModelService,
+	  SrSearchRequestsService
   ]
 })
 export class SharedModule {

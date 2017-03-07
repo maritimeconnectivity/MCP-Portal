@@ -74,7 +74,7 @@ export class SpecificationDetailsComponent {
         this.specification = specification;
         this.loadOrganizationName();
         this.loadDesigns();
-        this.loadInstances();
+        //this.loadInstances(); // TODO: this doesn't work atm
       },
       err => {
         // TODO: make this as a general component

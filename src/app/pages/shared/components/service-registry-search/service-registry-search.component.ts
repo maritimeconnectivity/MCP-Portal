@@ -5,6 +5,7 @@ import {ServiceRegistrySearchRequest} from "./ServiceRegistrySearchRequest";
 import {FormGroup, FormBuilder, FormControl} from "@angular/forms";
 import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import {AuthService} from "../../../../authentication/services/auth.service";
+import {SrSearchRequestsService} from "../../../org-service-registry/shared/services/sr-search-requests.service";
 
 interface SelectModel {
 	label:string;
@@ -18,8 +19,10 @@ interface SelectModel {
 	styles: [require('./service-registry-search.scss')]
 })
 export class ServiceRegistrySearchComponent {
-	@Input() preFilterMyOrg: boolean;
+	@Input() searchTitle: string;
+	@Input() searchKey: string;
 	@Input() isSearching: boolean;
+	@Input() preFilterMyOrg: boolean;
 	@Input() showEndorsement: boolean;
 	@Output() onSearch:EventEmitter<ServiceRegistrySearchRequest> = new EventEmitter<ServiceRegistrySearchRequest>();
 
@@ -31,7 +34,7 @@ export class ServiceRegistrySearchComponent {
 	public collapsedClass:string;
 	public toggleClass:string;
 
-  constructor(private changeDetector: ChangeDetectorRef, private authService:AuthService, formBuilder:FormBuilder, private orgsService: OrganizationsService, private notifications: MCNotificationsService) {
+  constructor(private searchRequestsService:SrSearchRequestsService, private changeDetector: ChangeDetectorRef, private authService:AuthService, formBuilder:FormBuilder, private orgsService: OrganizationsService, private notifications: MCNotificationsService) {
   	this.formGroup = formBuilder.group({});
   }
 
@@ -42,7 +45,7 @@ export class ServiceRegistrySearchComponent {
   	this.isLoading = true;
 		this.generateForm();
   	this.loadOrganizations();
-		}
+	}
 
 	public toggle() {
 			this.isCollapsed = !this.isCollapsed;
@@ -71,6 +74,7 @@ export class ServiceRegistrySearchComponent {
 	  }
 
   	let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
+	  this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
   	this.onSearch.emit(searchRequest);
   }
 	private generateForm() {
@@ -89,18 +93,18 @@ export class ServiceRegistrySearchComponent {
 	private loadOrganizations() {
 		this.orgsService.getAllOrganizations().subscribe(
 			organizations => {
-				this.setupOrganizationSelectValues(organizations);
+				this.setupSearchRequest(organizations);
 				this.isLoading = false;
 			},
 			err => {
-				this.setupOrganizationSelectValues([]);
+				this.setupSearchRequest([]);
 				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get organizations', MCNotificationType.Error, err);
 			}
 		);
 	}
 
-	private setupOrganizationSelectValues(organizations:Array<Organization>) {
+	private setupSearchRequest(organizations:Array<Organization>) {
 		this.selectValuesOrganizations = [];
 		this.selectValuesOrganizations.push({value:undefined, label:'All'});
 
@@ -108,11 +112,25 @@ export class ServiceRegistrySearchComponent {
 			this.selectValuesOrganizations.push({value:organization.mrn, label:organization.name});
 		});
 		var registeredBy:string;
-		if (this.preFilterMyOrg) {
+		var endorsedBy:string;
+		var keywords:string = '';
+		let searchRequest = this.searchRequestsService.getSearchRequest(this.searchKey);
+		if (searchRequest) {
+			if (searchRequest.registeredBy && searchRequest.registeredBy.length > 0) {
+				registeredBy = searchRequest.registeredBy[0]; // TODO: handle multi select
+			}
+			if (searchRequest.endorsedBy && searchRequest.endorsedBy.length > 0) {
+				endorsedBy = searchRequest.endorsedBy[0]; // TODO: handle multi select
+			}
+			if (searchRequest.keywords) {
+				keywords = searchRequest.keywords;
+			}
+		} else if (this.preFilterMyOrg){
 			registeredBy = this.authService.authState.orgMrn;
 		}
 		this.formGroup.patchValue({registeredBy: registeredBy});
-		this.formGroup.patchValue({endorsedBy: undefined});
+		this.formGroup.patchValue({endorsedBy: endorsedBy});
+		this.formGroup.patchValue({keywords: keywords});
 
 		this.changeDetector.detectChanges();
 	}

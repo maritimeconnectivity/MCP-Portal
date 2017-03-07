@@ -7,7 +7,9 @@ import {Specification} from "../../../../../backend-api/service-registry/autogen
 import {Router, ActivatedRoute} from "@angular/router";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
 
+const SEARCH_KEY = 'SpecificationListComponent';
 @Component({
   selector: 'specification-list',
   encapsulation: ViewEncapsulation.None,
@@ -15,6 +17,7 @@ import {ServiceRegistrySearchRequest} from "../../../../shared/components/servic
   styles: []
 })
 export class SpecificationListComponent implements OnInit {
+	public searchKey = SEARCH_KEY;
 	public organization: Organization;
 	public isSearching = false;
   public specifications: Array<Specification>;
@@ -22,7 +25,7 @@ export class SpecificationListComponent implements OnInit {
   public onCreate: Function;
   public onGotoSpec: Function;
 	public cardTitle:string;
-  constructor(private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+  constructor(private searchRequestsService:SrSearchRequestsService, private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
   }
 
   ngOnInit() {
@@ -31,21 +34,25 @@ export class SpecificationListComponent implements OnInit {
     this.onGotoSpec = this.gotoSpecification.bind(this);
 
     this.isLoading = true;
-
 	  this.loadMyOrganization();
     this.loadSpecifications();
   }
 
   public search(searchRequest: ServiceRegistrySearchRequest) {
   	this.isSearching = true;
+  	this.searchSpecifications(searchRequest);
+  }
 
+  private searchSpecifications(searchRequest: ServiceRegistrySearchRequest) {
 	  this.specificationsService.searchSpecifications(searchRequest).subscribe(
 		  specifications => {
 			  this.specifications = specifications;
 			  this.isSearching = false;
+			  this.isLoading = false;
 		  },
 		  err => {
 			  this.isSearching = false;
+			  this.isLoading = false;
 			  this.notifications.generateNotification('Error', 'Error when trying to search specifications', MCNotificationType.Error, err);
 		  }
 	  );
@@ -63,16 +70,21 @@ export class SpecificationListComponent implements OnInit {
 	}
 
   private loadSpecifications() {
-    this.specificationsService.getSpecificationsForMyOrg().subscribe(
-      specifications => {
-        this.specifications = specifications;
-        this.isLoading = false;
-      },
-      err => {
-        this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error, err);
-      }
-    );
+  	let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+  	if (searchRequest) {
+  		this.searchSpecifications(searchRequest);
+	  } else {
+	    this.specificationsService.getSpecificationsForMyOrg().subscribe(
+	      specifications => {
+	        this.specifications = specifications;
+	        this.isLoading = false;
+	      },
+	      err => {
+	        this.isLoading = false;
+	        this.notifications.generateNotification('Error', 'Error when trying to get specifications', MCNotificationType.Error, err);
+	      }
+	    );
+	  }
   }
 
   private createSpecification() {

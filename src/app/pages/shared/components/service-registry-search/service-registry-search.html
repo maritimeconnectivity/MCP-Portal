@@ -1,5 +1,5 @@
 <a class="search-link" (click)="toggle()">
-  <h4>Search filters <i style="margin-left:2px;color: white; font-size: 16px;" class="{{toggleClass}}" aria-hidden="true"></i></h4>
+  <h4>{{searchTitle}} <i style="margin-left:2px;color: white; font-size: 16px;" class="{{toggleClass}}" aria-hidden="true"></i></h4>
 </a>
 <div class="mc-form-group" *ngIf="!isCollapsed && !isLoading && formGroup">
   <form [formGroup]="formGroup">

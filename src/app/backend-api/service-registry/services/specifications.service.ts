@@ -158,6 +158,7 @@ export class SpecificationsService implements OnInit {
 
 	// TODO remove this when search actually works
 	private getAllSpecificationsAndFilter(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
+  	// ONLY TEMP method. So just hacking away fast an inefficient ;-)
 		return Observable.create(observer => {
 			this.specificationsApi.getAllSpecificationsUsingGET(0,100).subscribe(
 				specifications => {
@@ -170,7 +171,7 @@ export class SpecificationsService implements OnInit {
 							} else {
 								var keywordArray = searchRequest.keywords.split(' ');
 								for (let keyword of keywordArray) {
-									if (keyword && keyword.length > 0 && specification.keywords.indexOf(keyword) > -1) {
+									if (keyword && keyword.length > 0 && specification.keywords.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
 										filteredSpecification.push(specification);
 										break;
 									}
@@ -184,7 +185,7 @@ export class SpecificationsService implements OnInit {
 									} else {
 										var keywordArray = searchRequest.keywords.split(' ');
 										for (let keyword of keywordArray) {
-											if (keyword && keyword.length > 0 && specification.keywords.indexOf(keyword) > -1) {
+											if (keyword && keyword.length > 0 && specification.keywords.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
 												filteredSpecification.push(specification);
 												break;
 											}
