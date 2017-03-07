@@ -12,6 +12,7 @@ import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/ser
 import {QueryHelper} from "./query-helper";
 import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
 import {forEach} from "@angular/router/src/utils/collection";
+import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
@@ -93,7 +94,7 @@ export class SpecificationsService implements OnInit {
 	}
 
 	public getSpecificationsForMyOrg(): Observable<Array<Specification>> {
-		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:[this.authService.authState.orgMrn],endorsedBy:[]}
+		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
 
 		return this.getSpecifications(searchRequest);
 	}
@@ -120,11 +121,11 @@ export class SpecificationsService implements OnInit {
 		return Observable.of(specifications);
 	}
 
-	private filterSpecifications(specifications:Array<Specification>, endorsements:Array<string>) : Array<Specification> {
+	private filterSpecifications(specifications:Array<Specification>, endorsements:Array<Endorsement>) : Array<Specification> {
   	let filteredSpecifications: Array<Specification> = [];
   	specifications.forEach(specification => {
-  		for (let endorsement of endorsements){ // TODO change when endorsement model is ready
-  			if (specification.specificationId === endorsement) {
+  		for (let endorsement of endorsements){
+  			if (specification.specificationId === endorsement.serviceMrn) {
 					filteredSpecifications.push(specification);
 					break;
 			  }
@@ -165,7 +166,7 @@ export class SpecificationsService implements OnInit {
 					let filteredSpecification:Array<Specification> = [];
 					for (let specification of specifications) {
 						specification.description = this.getDescription(specification);
-						if (searchRequest.registeredBy.length == 0) {
+						if (!searchRequest.registeredBy || searchRequest.registeredBy.length == 0) {
 							if (!searchRequest.keywords || searchRequest.keywords.length == 0) {
 								filteredSpecification.push(specification);
 							} else {
@@ -178,20 +179,19 @@ export class SpecificationsService implements OnInit {
 								};
 							}
 						} else {
-							for (let organizationId of searchRequest.registeredBy) {
-								if (organizationId === specification.organizationId) {
-									if (!searchRequest.keywords || searchRequest.keywords.length == 0) {
-										filteredSpecification.push(specification);
-									} else {
-										var keywordArray = searchRequest.keywords.split(' ');
-										for (let keyword of keywordArray) {
-											if (keyword && keyword.length > 0 && specification.keywords.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-												filteredSpecification.push(specification);
-												break;
-											}
-										};
-									}
+							if (searchRequest.registeredBy === specification.organizationId) {
+								if (!searchRequest.keywords || searchRequest.keywords.length == 0) {
+									filteredSpecification.push(specification);
+								} else {
+									var keywordArray = searchRequest.keywords.split(' ');
+									for (let keyword of keywordArray) {
+										if (keyword && keyword.length > 0 && specification.keywords.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+											filteredSpecification.push(specification);
+											break;
+										}
+									};
 								}
+
 							}
 						}
 					}

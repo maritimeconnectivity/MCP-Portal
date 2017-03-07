@@ -111,6 +111,7 @@ module.exports = function(options) {
       new DefinePlugin({
           'IR_BASE_PATH':JSON.stringify('https://staging-api.maritimecloud.net'),
           'SR_BASE_PATH':JSON.stringify('https://sr-staging.maritimecloud.net'),
+          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://staging-endorse.maritimecloud.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-staging-keycloak.json'),
           'ERROR_TAG_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': true,

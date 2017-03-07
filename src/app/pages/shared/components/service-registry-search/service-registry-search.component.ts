@@ -59,18 +59,17 @@ export class ServiceRegistrySearchComponent {
   public search() {
   	let keywords = this.formGroup.value.keywords;
 
-  	// TODO: make multiselect
-	  let endorsedBy:Array<string> = [];
-	  let registeredBy:Array<string> = [];
+	  let endorsedBy:string;
+	  let registeredBy:string;
 
 	  let registeredByValue = this.formGroup.value.registeredBy;
 	  if (registeredByValue && registeredByValue.toLowerCase().indexOf('undefined') < 0) {
-		  registeredBy.push(registeredByValue);
+		  registeredBy = registeredByValue;
 	  }
 
 	  let endorsedByValue = this.formGroup.value.endorsedBy;
 	  if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
-		  endorsedBy.push(endorsedByValue);
+		  endorsedBy = endorsedByValue;
 	  }
 
   	let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
@@ -116,12 +115,8 @@ export class ServiceRegistrySearchComponent {
 		var keywords:string = '';
 		let searchRequest = this.searchRequestsService.getSearchRequest(this.searchKey);
 		if (searchRequest) {
-			if (searchRequest.registeredBy && searchRequest.registeredBy.length > 0) {
-				registeredBy = searchRequest.registeredBy[0]; // TODO: handle multi select
-			}
-			if (searchRequest.endorsedBy && searchRequest.endorsedBy.length > 0) {
-				endorsedBy = searchRequest.endorsedBy[0]; // TODO: handle multi select
-			}
+			registeredBy = searchRequest.registeredBy;
+			endorsedBy = searchRequest.endorsedBy;
 			if (searchRequest.keywords) {
 				keywords = searchRequest.keywords;
 			}

@@ -24,14 +24,7 @@ export class QueryHelper {
 			if (parameterAdded) {
 				queryString += QueryOperatorString.AND;
 			}
-			queryString += "("
-			for (let i=0; i<searchRequest.registeredBy.length; i++) {
-				queryString += QueryParameterString.organizationId + encodeURIComponent(searchRequest.registeredBy[i]);
-				if (i != searchRequest.registeredBy.length-1) {
-					queryString += QueryOperatorString.OR;
-				}
-			}
-			queryString += ")"
+			queryString += QueryParameterString.organizationId + encodeURIComponent(searchRequest.registeredBy);
 		}
 		return queryString;
 	}

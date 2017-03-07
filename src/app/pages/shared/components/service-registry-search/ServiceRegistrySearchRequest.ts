@@ -1,5 +1,5 @@
 export interface ServiceRegistrySearchRequest {
 	keywords?: string;
-	registeredBy: Array<string>;
-	endorsedBy: Array<string>;
+	registeredBy: string;
+	endorsedBy: string;
 }
