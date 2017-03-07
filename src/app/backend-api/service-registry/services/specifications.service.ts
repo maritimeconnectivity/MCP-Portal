@@ -102,7 +102,6 @@ export class SpecificationsService implements OnInit {
 	public searchSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
 		let parallelObservables = [];
 
-		// TODO change when search actually works
 		parallelObservables.push(this.getSpecifications(searchRequest).take(1));
 		parallelObservables.push(this.endorsementsService.searchEndorsementsForSpecifications(searchRequest).take(1));
 

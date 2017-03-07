@@ -9,17 +9,85 @@ import {Instance} from "../autogen/model/Instance";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/services/instance-xml-parser.service";
 import {DesignXmlParser} from "../../../pages/org-service-registry/shared/services/design-xml-parser.service";
+import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
+import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
+import {QueryHelper} from "./query-helper";
 
 
 @Injectable()
 export class DesignsService implements OnInit {
   private chosenDesign: Design;
-  constructor(private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlInstanceParser: InstanceXmlParser, private xmlDesignParser: DesignXmlParser) {
+  constructor(private endorsementsService:EndorsementsService, private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlInstanceParser: InstanceXmlParser, private xmlDesignParser: DesignXmlParser) {
   }
 
   ngOnInit() {
 
   }
+
+	public searchDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, version?:string): Observable<Array<Design>> {
+		if (!searchRequest) {
+			return this.getDesignsForSpecification(specificationId, version);
+		}
+
+  	let parallelObservables = [];
+
+		// TODO change when search actually works
+		parallelObservables.push(this.searchAndFilterDesignsForSpecification(searchRequest, specificationId, version).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let designs:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(designs,endorsementResult);
+			});
+	}
+
+	private combineSearchResult(designs:Array<Design>, endorsementResult:EndorsementSearchResult) : Observable<Array<Design>> {
+		if (endorsementResult.shouldFilter) {
+			designs = this.filterDesigns(designs, endorsementResult.endorsements);
+		}
+		return Observable.of(designs);
+	}
+
+	private filterDesigns(designs:Array<Design>, endorsements:Array<Endorsement>) : Array<Design> {
+		let filteredDesigns: Array<Design> = [];
+		designs.forEach(design => {
+			for (let endorsement of endorsements){
+				if (design.designId === endorsement.serviceMrn) {
+					filteredDesigns.push(design);
+					break;
+				}
+			}
+		});
+		return filteredDesigns;
+	}
+
+	private getDesignsForSpecification(specificationId:string, version?:string): Observable<Array<Design>> {
+		return Observable.create(observer => {
+			this.designsApi.getAllDesignsBySpecificationIdUsingGET(specificationId).subscribe(
+				designs => {
+					var designsFiltered: Array<Design> = [];
+					for (let design of designs) {
+						design.description = this.getDescription(design);
+						if (version) {
+							let specificationVersion = this.xmlDesignParser.getVersionForSpecificationInDesign(design.designAsXml)
+							if (version === specificationVersion) {
+								designsFiltered.push(design);
+							}
+						} else {
+							designsFiltered.push(design);
+						}
+					}
+					observer.next(designsFiltered);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   public deleteDesign(design:Design) : Observable<{}> {
     this.chosenDesign = null;
@@ -118,32 +186,78 @@ export class DesignsService implements OnInit {
     });
   }
 
-  public getDesignsForSpecification(specificationId:string, version?:string): Observable<Array<Design>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-      this.designsApi.getAllDesignsBySpecificationIdUsingGET(specificationId).subscribe(
-        designs => {
-	        var designsFiltered: Array<Design> = [];
-          for (let design of designs) {
-	          design.description = this.getDescription(design);
-          	if (version) {
-          		let specificationVersion = this.xmlDesignParser.getVersionForSpecificationInDesign(design.designAsXml)
-		          if (version === specificationVersion) {
-          			designsFiltered.push(design);
-		          }
-	          } else {
-          		designsFiltered.push(design);
-	          }
-
-          }
-          observer.next(designsFiltered);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
+  private searchAndFilterDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, version?:string): Observable<Array<Design>> {
+	  // TODO remove this when search actually works
+	  return this.getAllDesignsForSpecificationAndFilter(searchRequest, specificationId, version);
+/*
+	   // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
+	   return Observable.create(observer => {
+		   // TODO FIXME Hotfix. This pagination should be done the right way
+		   let querySearch = QueryHelper.generateQueryStringForRequest(searchRequest);
+		   let querySpecification = QueryHelper.generateQueryStringForSpecification(specificationId);
+		   var query = querySpecification;
+		   if (querySearch.length > 0) {
+			   query = QueryHelper.combineQueryStringsWithAnd([querySearch,querySpecification]);
+		   }
+		   this.designsApi.searchDesignsUsingGET(query,0,100).subscribe(
+			   designs => {
+				   var designsFiltered: Array<Design> = [];
+				   for (let design of designs) {
+					   design.description = this.getDescription(design);
+					   if (version) {
+						   let specificationVersion = this.xmlDesignParser.getVersionForSpecificationInDesign(design.designAsXml);
+						   if (version === specificationVersion) {
+							   designsFiltered.push(design);
+						   }
+					   } else {
+						   designsFiltered.push(design);
+					   }
+				   }
+				   observer.next(designsFiltered);
+			   },
+			   err => {
+				   observer.error(err);
+			   }
+		   );
+	   });
+*/
   }
+
+	// TODO remove this when search actually works
+	private getAllDesignsForSpecificationAndFilter(searchRequest:ServiceRegistrySearchRequest, specificationId:string, version?:string): Observable<Array<Design>> {
+		// ONLY TEMP method. So just hacking away fast an inefficient ;-)
+
+		return Observable.create(observer => {
+			this.designsApi.getAllDesignsBySpecificationIdUsingGET(specificationId, 0, 100).subscribe(
+				designs => {
+					var designsFiltered: Array<Design> = [];
+					for (let design of designs) {
+						design.description = this.getDescription(design);
+						var shouldAdd = false;
+						if (version) {
+							let specificationVersion = this.xmlDesignParser.getVersionForSpecificationInDesign(design.designAsXml);
+							if (version === specificationVersion) {
+								shouldAdd = true;
+							}
+						} else {
+							shouldAdd = true;
+						}
+						if (shouldAdd) {
+							if (!searchRequest.registeredBy || searchRequest.registeredBy.length == 0) {
+								designsFiltered.push(design);
+							} else if (searchRequest.registeredBy === design.organizationId) {
+								designsFiltered.push(design);
+							}
+						}
+					}
+					observer.next(designsFiltered);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   public getDesign(designId:string, version?:string): Observable<Design> {
     if (this.isChosenDesign(designId, version)) {

@@ -3,7 +3,7 @@
 </a>
 <div class="mc-form-group" *ngIf="!isCollapsed && !isLoading && formGroup">
   <form [formGroup]="formGroup">
-    <div class="row">
+    <div *ngIf="showKeywords" class="row">
       <div class="col-sm-12">
         <div [formGroup]="formGroup" class="form-group mc-form-group">
           <label class="mc-form-label">Keywords

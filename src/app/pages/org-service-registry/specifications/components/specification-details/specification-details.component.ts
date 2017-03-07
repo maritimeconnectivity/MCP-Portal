@@ -13,6 +13,13 @@ import {Instance} from "../../../../../backend-api/service-registry/autogen/mode
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
+import {Observable} from "rxjs";
+import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+
+const SEARCH_KEY = 'SpecificationDetailsComponent';
 
 @Component({
   selector: 'specification-details',
@@ -27,7 +34,7 @@ export class SpecificationDetailsComponent {
   public title:string;
   public labelValues:Array<LabelValueModel>;
   public isLoadingSpecification: boolean;
-  public isLoadingDesigns: boolean;
+	public isLoadingDesigns: boolean;
   public isLoadingInstances: boolean;
   public onCreate: Function;
   public onGotoDesign: Function;
@@ -37,7 +44,20 @@ export class SpecificationDetailsComponent {
 	public modalDescription:string;
 	public modalDescriptionNoDelete:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
+	// Endorsements
+	public isLoadingEndorsements:boolean;
+	public isEndorsing:boolean;
+	public showEndorsements:boolean;
+	public isEndorsedByMyOrg:boolean;
+	public endorsements:Array<Endorsement> = [];
+	public endorseButtonClass:string;
+	public endorseButtonTitle:string;
+
+	// Search
+	public isSearchingDesigns = false;
+	public searchKey = SEARCH_KEY;
+
+  constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -52,7 +72,8 @@ export class SpecificationDetailsComponent {
     this.title = 'Loading ...';
     let specificationId = this.route.snapshot.params['id'];
     let version = this.route.snapshot.queryParams['specificationVersion'];
-    this.loadSpecification(specificationId, version);
+	  this.loadSpecification(specificationId, version);
+	  this.loadEndorsements(specificationId);
   }
 
   public downloadXml() {
@@ -67,27 +88,55 @@ export class SpecificationDetailsComponent {
     this.navigationHelperService.navigateToOrgDesign(this.designs[index].designId, this.designs[index].version);
   }
 
-  private loadSpecification(specificationId:string, version:string) {
-    this.specificationsService.getSpecification(specificationId, version).subscribe(
-      specification => {
-        this.title = specification.name;
-        this.specification = specification;
-        this.loadOrganizationName();
-        this.loadDesigns();
-        //this.loadInstances(); // TODO: this doesn't work atm
+	private loadSpecification(specificationId:string, version:string) {
+		this.specificationsService.getSpecification(specificationId, version).subscribe(
+			specification => {
+				this.title = specification.name;
+				this.specification = specification;
+				this.loadOrganizationName();
+				this.loadDesigns();
+				//this.loadInstances(); // TODO: this doesn't work atm
+			},
+			err => {
+				// TODO: make this as a general component
+				if (err.status == 404) {
+					this.router.navigate(['/error404'], {relativeTo: this.route, replaceUrl: true })
+				}
+				this.title = 'Error while loading';
+				this.isLoadingSpecification = false;
+				this.isLoadingDesigns = false;
+				this.isLoadingInstances = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+  private loadEndorsements(specificationId:string) {
+  	this.isLoadingEndorsements = true;
+	  let parallelObservables = [];
+
+	  parallelObservables.push(this.endorsementsService.isSpecificationEndorsedByMyOrg(specificationId).take(1));
+	  parallelObservables.push(this.endorsementsService.getEndorsementsForSpecification(specificationId).take(1));
+
+	  return Observable.forkJoin(parallelObservables).subscribe(
+      resultArray => {
+	      let isEndorsedByMyOrg:any = resultArray[0];
+	      let endorsements:any = resultArray[1];
+	      this.isLoadingEndorsements = false;
+	      this.showEndorsements = true;
+	      this.setEndorseButtonClassAndTitle();
       },
       err => {
-        // TODO: make this as a general component
-        if (err.status == 404) {
-          this.router.navigate(['/error404'], {relativeTo: this.route, replaceUrl: true })
-        }
-        this.title = 'Error while loading';
-        this.isLoadingSpecification = false;
-        this.isLoadingDesigns = false;
-        this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error, err);
+	      this.showEndorsements = false;
+	      this.isLoadingEndorsements = false;
+        this.notifications.generateNotification('Error', 'Error when trying to get endorsements', MCNotificationType.Error, err);
       }
     );
+  }
+
+  private setEndorseButtonClassAndTitle() {
+	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Dedorse' : 'Endorse');
+	  this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn-danger' : 'btn-success');
   }
 
 	private loadOrganizationName() {
@@ -118,16 +167,46 @@ export class SpecificationDetailsComponent {
   }
 
   private loadDesigns() {
-    this.designsService.getDesignsForSpecification(this.specification.specificationId, this.specification.version).subscribe(
-      designs => {
-        this.designs = designs;
-        this.isLoadingDesigns = false;
-      },
-      err => {
-        this.isLoadingDesigns = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get designs', MCNotificationType.Error, err);
-      }
-    );
+	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+		this.searchDesigns(searchRequest);
+  }
+
+  public endorseToggle() {
+  	if (this.isEndorsedByMyOrg) {
+  		this.removeEndorse();
+	  } else {
+  		this.endorse();
+	  }
+  }
+
+  private endorse() {
+  	this.isEndorsing = true;
+  	this.endorsementsService.endorseSpecification(this.specification.specificationId).subscribe(
+		  _ => {
+		  	this.isEndorsedByMyOrg = true;
+		  	this.setEndorseButtonClassAndTitle();
+			  this.isEndorsing = false;
+		  },
+		  err => {
+			  this.isEndorsing = false;
+			  this.notifications.generateNotification('Error', 'Error when trying endorse specification', MCNotificationType.Error, err);
+		  }
+	  );
+  }
+
+  private removeEndorse() {
+	  this.isEndorsing = true;
+	  this.endorsementsService.removeEndorsementOfSpecification(this.specification.specificationId).subscribe(
+		  _ => {
+			  this.isEndorsedByMyOrg = false;
+			  this.setEndorseButtonClassAndTitle();
+			  this.isEndorsing = false;
+		  },
+		  err => {
+			  this.isEndorsing = false;
+			  this.notifications.generateNotification('Error', 'Error when trying endorse specification', MCNotificationType.Error, err);
+		  }
+	  );
   }
 
   private createDesign() {
@@ -149,6 +228,31 @@ export class SpecificationDetailsComponent {
 	public shouldDisplayDelete():boolean {
 		return this.isAdmin() && !this.isLoadingDesigns;
 	}
+
+	public shouldDisplayEndorsement():boolean {
+		return this.isAdmin() && !this.isLoadingEndorsements && this.showEndorsements;
+	}
+
+	public search(searchRequest: ServiceRegistrySearchRequest) {
+		this.isSearchingDesigns = true;
+		this.searchDesigns(searchRequest);
+	}
+
+	public searchDesigns(searchRequest:ServiceRegistrySearchRequest) {
+		this.designsService.searchDesignsForSpecification(searchRequest, this.specification.specificationId, this.specification.version).subscribe(
+			designs => {
+				this.designs = designs;
+				this.isLoadingDesigns = false;
+				this.isSearchingDesigns = false;
+			},
+			err => {
+				this.isLoadingDesigns = false;
+				this.isSearchingDesigns = false;
+				this.notifications.generateNotification('Error', 'Error when trying to search designs', MCNotificationType.Error, err);
+			}
+		);
+	}
+
 
 	private hasDesigns():boolean {
 		return this.designs && this.designs.length > 0;

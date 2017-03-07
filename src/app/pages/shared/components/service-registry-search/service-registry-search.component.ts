@@ -24,6 +24,7 @@ export class ServiceRegistrySearchComponent {
 	@Input() isSearching: boolean;
 	@Input() preFilterMyOrg: boolean;
 	@Input() showEndorsement: boolean;
+	@Input() showKeywords: boolean = true;
 	@Output() onSearch:EventEmitter<ServiceRegistrySearchRequest> = new EventEmitter<ServiceRegistrySearchRequest>();
 
 	public isLoading: boolean;

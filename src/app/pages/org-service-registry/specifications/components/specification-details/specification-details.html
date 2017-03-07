@@ -12,6 +12,9 @@
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
         </li>
+        <li *ngIf="shouldDisplayEndorsement()">
+          <button type="button" class="btn {{endorseButtonClass}} btn-raised" (click)="endorseToggle()">{{endorseButtonTitle}}</button>
+        </li>
       </ul>
 
       <!-- Doesn't work atm.
@@ -22,6 +25,12 @@
       -->
     </ba-card>
     <ba-card title="Designs implementing this Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
+      <div *ngIf="!isLoadingDesigns">
+        <service-registry-search [showKeywords]="false" [searchTitle]="'Design search filters'" [searchKey]="searchKey" [isSearching]="isSearchingDesigns" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
+
+        <div class="separator"></div>
+      </div>
+
       <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
