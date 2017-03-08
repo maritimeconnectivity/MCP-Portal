@@ -12,8 +12,8 @@
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
         </li>
-        <li *ngIf="shouldDisplayEndorsement()">
-          <button type="button" class="btn {{endorseButtonClass}} btn-raised" (click)="endorseToggle()">{{endorseButtonTitle}}</button>
+        <li *ngIf="shouldDisplayEndorsementButton()">
+          <mc-loading-button [class]="endorseButtonClass" [isLoading]="isEndorsing" [title]="endorseButtonTitle" [onClick]="onEndorse" ></mc-loading-button>
         </li>
       </ul>
 
@@ -34,6 +34,9 @@
       <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
+
+    <endorsed-by-list [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete specification'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>

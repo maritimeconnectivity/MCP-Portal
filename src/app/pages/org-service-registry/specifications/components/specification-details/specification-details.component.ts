@@ -52,6 +52,7 @@ export class SpecificationDetailsComponent {
 	public endorsements:Array<Endorsement> = [];
 	public endorseButtonClass:string;
 	public endorseButtonTitle:string;
+	public onEndorse: Function;
 
 	// Search
 	public isSearchingDesigns = false;
@@ -62,13 +63,14 @@ export class SpecificationDetailsComponent {
   }
 
   ngOnInit() {
+	  this.onEndorse = this.endorseToggle.bind(this);
     this.onCreate = this.createDesign.bind(this);
     this.onGotoDesign = this.gotoDesign.bind(this);
     this.onGotoInstance = this.gotoInstance.bind(this);
 
     this.isLoadingSpecification = true;
     this.isLoadingDesigns = true;
-    this.isLoadingInstances = true;
+	  this.isLoadingInstances = true;
     this.title = 'Loading ...';
     let specificationId = this.route.snapshot.params['id'];
     let version = this.route.snapshot.queryParams['specificationVersion'];
@@ -121,7 +123,8 @@ export class SpecificationDetailsComponent {
 	  return Observable.forkJoin(parallelObservables).subscribe(
       resultArray => {
 	      let isEndorsedByMyOrg:any = resultArray[0];
-	      let endorsements:any = resultArray[1];
+	      let endorsementsResult: any = resultArray[1];
+	      this.endorsements = endorsementsResult;
 	      this.isLoadingEndorsements = false;
 	      this.showEndorsements = true;
 	      this.setEndorseButtonClassAndTitle();
@@ -129,14 +132,14 @@ export class SpecificationDetailsComponent {
       err => {
 	      this.showEndorsements = false;
 	      this.isLoadingEndorsements = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get endorsements', MCNotificationType.Error, err);
+        this.notifications.generateNotification('Error', 'Error when trying to get endorsements for specification', MCNotificationType.Error, err);
       }
     );
   }
 
   private setEndorseButtonClassAndTitle() {
 	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Dedorse' : 'Endorse');
-	  this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn-danger' : 'btn-success');
+	  this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn btn-danger btn-raised' : 'btn btn-success btn-raised');
   }
 
 	private loadOrganizationName() {
@@ -186,6 +189,7 @@ export class SpecificationDetailsComponent {
 		  	this.isEndorsedByMyOrg = true;
 		  	this.setEndorseButtonClassAndTitle();
 			  this.isEndorsing = false;
+			  this.loadEndorsements(this.specification.specificationId);
 		  },
 		  err => {
 			  this.isEndorsing = false;
@@ -201,6 +205,7 @@ export class SpecificationDetailsComponent {
 			  this.isEndorsedByMyOrg = false;
 			  this.setEndorseButtonClassAndTitle();
 			  this.isEndorsing = false;
+			  this.loadEndorsements(this.specification.specificationId);
 		  },
 		  err => {
 			  this.isEndorsing = false;
@@ -229,8 +234,8 @@ export class SpecificationDetailsComponent {
 		return this.isAdmin() && !this.isLoadingDesigns;
 	}
 
-	public shouldDisplayEndorsement():boolean {
-		return this.isAdmin() && !this.isLoadingEndorsements && this.showEndorsements;
+	public shouldDisplayEndorsementButton():boolean {
+		return this.isAdmin() && this.showEndorsements;
 	}
 
 	public search(searchRequest: ServiceRegistrySearchRequest) {

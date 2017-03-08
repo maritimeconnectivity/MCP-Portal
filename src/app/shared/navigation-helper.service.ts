@@ -174,6 +174,14 @@ export class NavigationHelperService {
     }
   }
 
+	public navigateToOrganizationDetails(orgMrn:string):void {
+		this.path = '/' + orgMrn;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('organizations', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
 	public navigateToUpdateMyOrg():void {
 		this.path = '/update';
 		let pagesMenu = PAGES_MENU;
