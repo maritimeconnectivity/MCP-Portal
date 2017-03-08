@@ -46,7 +46,7 @@ export class DesignsService implements OnInit {
 
 	private combineSearchResult(designs:Array<Design>, endorsementResult:EndorsementSearchResult) : Observable<Array<Design>> {
 		if (endorsementResult.shouldFilter) {
-			designs = this.filterDesigns(designs, endorsementResult.endorsements);
+			designs = this.filterDesigns(designs, endorsementResult.pageEndorsement.content);
 		}
 		return Observable.of(designs);
 	}

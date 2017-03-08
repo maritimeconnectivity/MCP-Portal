@@ -115,7 +115,7 @@ export class SpecificationsService implements OnInit {
 
 	private combineSearchResult(specifications:Array<Specification>, endorsementResult:EndorsementSearchResult) : Observable<Array<Specification>> {
 		if (endorsementResult.shouldFilter) {
-			specifications = this.filterSpecifications(specifications, endorsementResult.endorsements);
+			specifications = this.filterSpecifications(specifications, endorsementResult.pageEndorsement.content);
 		}
 		return Observable.of(specifications);
 	}

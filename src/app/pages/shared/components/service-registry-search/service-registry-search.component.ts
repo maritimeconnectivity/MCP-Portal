@@ -111,7 +111,6 @@ export class ServiceRegistrySearchComponent {
 
   private doSearch(keywords:string, registeredBy:string, endorsedBy:string) {
 	  let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
-	  console.log("SSSSSSS: ", searchRequest);
 	  this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
 	  this.onSearch.emit(searchRequest);
   }

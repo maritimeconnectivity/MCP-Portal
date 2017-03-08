@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class EndorsecontrollerApi {
-    protected basePath = 'https://localhost:8870/';
+    protected basePath = 'https://test-endorse.maritimecloud.net/';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -79,7 +79,7 @@ export class EndorsecontrollerApi {
      * @param serviceLevel serviceLevel
      * @param orgMrn orgMrn
      */
-    public getEndormentsByOrgMrnUsingGET(serviceLevel: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Array<models.Endorsement>> {
+    public getEndormentsByOrgMrnUsingGET(serviceLevel: string, orgMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
         return this.getEndormentsByOrgMrnUsingGETWithHttpInfo(serviceLevel, orgMrn, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -96,7 +96,7 @@ export class EndorsecontrollerApi {
      * @param serviceLevel serviceLevel
      * @param serviceMrn serviceMrn
      */
-    public getEndormentsByServiceMrnUsingGET(serviceLevel: string, serviceMrn: string, extraHttpRequestParams?: any): Observable<Array<models.Endorsement>> {
+    public getEndormentsByServiceMrnUsingGET(serviceLevel: string, serviceMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
         return this.getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceLevel, serviceMrn, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {

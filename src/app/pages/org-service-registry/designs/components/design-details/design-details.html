@@ -15,7 +15,7 @@
       </ul>
     </ba-card>
 
-    <ba-card title="Instances implementing this Design ({{design?.name}})" baCardClass="with-scroll table-panel">
+    <ba-card title="Instances implementing the Design ({{design?.name}})" baCardClass="with-scroll table-panel">
       <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
     </ba-card>

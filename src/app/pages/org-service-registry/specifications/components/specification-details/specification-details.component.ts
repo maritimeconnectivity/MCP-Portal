@@ -123,8 +123,8 @@ export class SpecificationDetailsComponent {
 	  return Observable.forkJoin(parallelObservables).subscribe(
       resultArray => {
 	      let isEndorsedByMyOrg:any = resultArray[0];
-	      let endorsementsResult: any = resultArray[1];
-	      this.endorsements = endorsementsResult;
+	      let pageEndorsement: any = resultArray[1];
+	      this.endorsements = pageEndorsement.content;
 	      this.isLoadingEndorsements = false;
 	      this.showEndorsements = true;
 	      this.setEndorseButtonClassAndTitle();
@@ -138,7 +138,7 @@ export class SpecificationDetailsComponent {
   }
 
   private setEndorseButtonClassAndTitle() {
-	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Dedorse' : 'Endorse');
+	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Dedorse Specification' : 'Endorse Specification');
 	  this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn btn-danger btn-raised' : 'btn btn-success btn-raised');
   }
 

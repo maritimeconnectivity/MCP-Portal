@@ -12,7 +12,7 @@
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
         </li>
-        <li *ngIf="shouldDisplayEndorsementButton()">
+        <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingDesigns">
           <mc-loading-button [class]="endorseButtonClass" [isLoading]="isEndorsing" [title]="endorseButtonTitle" [onClick]="onEndorse" ></mc-loading-button>
         </li>
       </ul>
@@ -24,18 +24,20 @@
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
       -->
     </ba-card>
-    <ba-card title="Designs implementing this Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
+    <ba-card title="Designs implementing the Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
       <div *ngIf="!isLoadingDesigns">
         <service-registry-search [showKeywords]="false" [searchTitle]="'Design search filters'" [searchKey]="searchKey" [isSearching]="isSearchingDesigns" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
 
         <div class="separator"></div>
       </div>
-
-      <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
+      <div style="display: flex;">
+        <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
+        <sk-fading-circle-small style="margin-left: 15px;" [isRunning]="isSearchingDesigns"></sk-fading-circle-small>
+      </div>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
 
-    <endorsed-by-list [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+    <endorsed-by-list [title]="'Organizations endorsing the Specification (' + specification?.name + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
 
   </div>
 </div>

@@ -15,7 +15,8 @@ import {OrganizationsService} from "../../../../backend-api/identity-registry/se
 })
 export class EndorsedByListComponent {
 	@Input() endorsements:Array<Endorsement>;
-	@Input() isLoading: boolean;
+	@Input() isLoading:boolean;
+	@Input() title:string;
 
 	private oldEndorsements:Array<Endorsement>;
 	public entityImageList: Array<EntityImageModel>;

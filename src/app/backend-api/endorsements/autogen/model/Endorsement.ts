@@ -19,7 +19,10 @@ export interface Endorsement {
 
     orgName?: string;
 
-    serviceLevel?: string;
+    /**
+     * The level being endorsed
+     */
+    serviceLevel: Endorsement.ServiceLevelEnum;
 
     serviceMrn?: string;
 
@@ -27,4 +30,11 @@ export interface Endorsement {
 
     userMrn?: string;
 
+}
+export namespace Endorsement {
+    export enum ServiceLevelEnum {
+        Specification = <any> 'specification',
+        Design = <any> 'design',
+        Instance = <any> 'instance'
+    }
 }
