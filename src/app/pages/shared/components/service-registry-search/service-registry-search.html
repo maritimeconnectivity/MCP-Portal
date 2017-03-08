@@ -7,7 +7,12 @@
       <div class="col-sm-12">
         <div [formGroup]="formGroup" class="form-group mc-form-group">
           <label class="mc-form-label">Keywords
-            <input type="text" class="form-control mc-form-control" formControlName="keywords">
+            <div class="input-group">
+              <input type="text" class="form-control mc-form-control" formControlName="keywords">
+              <span class="mc-form-control-input-group-btn input-group-btn">
+                <mc-loading-button [type]="'submit'" [class]="'btn btn-primary search-button'" [isLoading]="isSearching" [title]="'Search'" [onClick]="onSearchFunction" ></mc-loading-button>
+              </span>
+            </div>
           </label>
         </div>
       </div>
@@ -36,11 +41,6 @@
         </div>
       </div>
     </div>
-    <ul class="btn-list clearfix">
-      <li style="margin-bottom: 3px !important;">
-        <mc-loading-button [type]="'submit'" [class]="'btn btn-primary btn-raised'" [isLoading]="isSearching" [title]="'Search'" [onClick]="onSearchFunction" ></mc-loading-button>
-      </li>
-    </ul>
   </form>
 </div>
 <div *ngIf="!isCollapsed">

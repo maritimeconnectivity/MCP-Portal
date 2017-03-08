@@ -72,11 +72,50 @@ export class ServiceRegistrySearchComponent {
 	  if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
 		  endorsedBy = endorsedByValue;
 	  }
-
-  	let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
-	  this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
-  	this.onSearch.emit(searchRequest);
+		this.doSearch(keywords, registeredBy, endorsedBy);
   }
+
+  private searchFromRegisteredBy(registeredBy) {
+	  let keywords = this.formGroup.value.keywords;
+
+	  let endorsedBy:string;
+
+	  if (registeredBy && registeredBy.toLowerCase().indexOf('undefined') > -1) {
+		  registeredBy = undefined;
+	  }
+
+	  let endorsedByValue = this.formGroup.value.endorsedBy;
+	  if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
+		  endorsedBy = endorsedByValue;
+	  }
+	  this.doSearch(keywords, registeredBy, endorsedBy);
+  }
+
+  private searchFromEndorsedBy(endorsedBy:string) {
+	  let keywords = this.formGroup.value.keywords;
+
+	  let registeredBy:string;
+
+
+	  let registeredByValue = this.formGroup.value.registeredBy;
+	  if (registeredByValue && registeredByValue.toLowerCase().indexOf('undefined') < 0) {
+		  registeredBy = registeredByValue;
+	  }
+
+	  if (endorsedBy && endorsedBy.toLowerCase().indexOf('undefined') > -1) {
+		  endorsedBy = undefined;
+	  }
+
+	  this.doSearch(keywords, registeredBy, endorsedBy);
+  }
+
+  private doSearch(keywords:string, registeredBy:string, endorsedBy:string) {
+	  let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
+	  console.log("SSSSSSS: ", searchRequest);
+	  this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
+	  this.onSearch.emit(searchRequest);
+  }
+
 	private generateForm() {
 		var formControl = new FormControl('');
 		this.formGroup.addControl('keywords', formControl);
@@ -127,6 +166,9 @@ export class ServiceRegistrySearchComponent {
 		this.formGroup.patchValue({registeredBy: registeredBy});
 		this.formGroup.patchValue({endorsedBy: endorsedBy});
 		this.formGroup.patchValue({keywords: keywords});
+
+		this.formGroup.controls['registeredBy'].valueChanges.subscribe(param => this.searchFromRegisteredBy(param));
+		this.formGroup.controls['endorsedBy'].valueChanges.subscribe(param => this.searchFromEndorsedBy(param));
 
 		this.changeDetector.detectChanges();
 	}

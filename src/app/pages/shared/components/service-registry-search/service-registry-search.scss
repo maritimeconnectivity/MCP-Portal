@@ -10,3 +10,18 @@
     color: $content-text;
   }
 }
+.mc-form-control-input-group-btn {
+  padding-top: 5px;
+}
+
+.search-button {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  &:hover {
+    transform: none;
+  }
+}
+
+.input-group {
+  margin-bottom: 0px !important;
+}
