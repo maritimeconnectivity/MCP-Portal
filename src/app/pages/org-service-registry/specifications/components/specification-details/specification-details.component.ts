@@ -125,6 +125,7 @@ export class SpecificationDetailsComponent {
 	      let isEndorsedByMyOrg:any = resultArray[0];
 	      let pageEndorsement: any = resultArray[1];
 	      this.endorsements = pageEndorsement.content;
+	      this.isEndorsedByMyOrg = isEndorsedByMyOrg;
 	      this.isLoadingEndorsements = false;
 	      this.showEndorsements = true;
 	      this.setEndorseButtonClassAndTitle();

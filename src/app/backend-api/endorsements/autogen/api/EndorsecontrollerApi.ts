@@ -59,11 +59,11 @@ export class EndorsecontrollerApi {
     /**
      * deleteEndorment
      * 
-     * @param serviceLevel serviceLevel
      * @param serviceMrn serviceMrn
+     * @param orgMrn orgMrn
      */
-    public deleteEndormentUsingDELETE(serviceLevel: string, serviceMrn: string, extraHttpRequestParams?: any): Observable<any> {
-        return this.deleteEndormentUsingDELETEWithHttpInfo(serviceLevel, serviceMrn, extraHttpRequestParams)
+    public deleteEndormentUsingDELETE(serviceMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<any> {
+        return this.deleteEndormentUsingDELETEWithHttpInfo(serviceMrn, orgMrn, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -93,11 +93,60 @@ export class EndorsecontrollerApi {
     /**
      * getEndormentsByServiceMrn
      * 
-     * @param serviceLevel serviceLevel
      * @param serviceMrn serviceMrn
      */
-    public getEndormentsByServiceMrnUsingGET(serviceLevel: string, serviceMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
-        return this.getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceLevel, serviceMrn, extraHttpRequestParams)
+    public getEndormentsByServiceMrnUsingGET(serviceMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
+        return this.getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * getEndorsedByParentMrnAndOrgMrn
+     * 
+     * @param parentMrn parentMrn
+     * @param orgMrn orgMrn
+     */
+    public getEndorsedByParentMrnAndOrgMrnUsingGET(parentMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
+        return this.getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn, orgMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * getEndorsedByParentMrn
+     * 
+     * @param parentMrn parentMrn
+     */
+    public getEndorsedByParentMrnUsingGET(parentMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
+        return this.getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * getEndorsment
+     * 
+     * @param serviceMrn serviceMrn
+     * @param orgMrn orgMrn
+     */
+    public getEndorsmentUsingGET(serviceMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<any> {
+        return this.getEndorsmentUsingGETWithHttpInfo(serviceMrn, orgMrn, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -152,21 +201,21 @@ export class EndorsecontrollerApi {
     /**
      * deleteEndorment
      * 
-     * @param serviceLevel serviceLevel
      * @param serviceMrn serviceMrn
+     * @param orgMrn orgMrn
      */
-    public deleteEndormentUsingDELETEWithHttpInfo(serviceLevel: string, serviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsements/${serviceLevel}/${serviceMrn}`;
+    public deleteEndormentUsingDELETEWithHttpInfo(serviceMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/oidc/endorsements/${serviceMrn}/${orgMrn}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'serviceLevel' is not null or undefined
-        if (serviceLevel === null || serviceLevel === undefined) {
-            throw new Error('Required parameter serviceLevel was null or undefined when calling deleteEndormentUsingDELETE.');
-        }
         // verify required parameter 'serviceMrn' is not null or undefined
         if (serviceMrn === null || serviceMrn === undefined) {
             throw new Error('Required parameter serviceMrn was null or undefined when calling deleteEndormentUsingDELETE.');
+        }
+        // verify required parameter 'orgMrn' is not null or undefined
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling deleteEndormentUsingDELETE.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -238,21 +287,140 @@ export class EndorsecontrollerApi {
     /**
      * getEndormentsByServiceMrn
      * 
-     * @param serviceLevel serviceLevel
      * @param serviceMrn serviceMrn
      */
-    public getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceLevel: string, serviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsements/${serviceLevel}/${serviceMrn}`;
+    public getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/oidc/endorsements/${serviceMrn}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'serviceLevel' is not null or undefined
-        if (serviceLevel === null || serviceLevel === undefined) {
-            throw new Error('Required parameter serviceLevel was null or undefined when calling getEndormentsByServiceMrnUsingGET.');
-        }
         // verify required parameter 'serviceMrn' is not null or undefined
         if (serviceMrn === null || serviceMrn === undefined) {
             throw new Error('Required parameter serviceMrn was null or undefined when calling getEndormentsByServiceMrnUsingGET.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getEndorsedByParentMrnAndOrgMrn
+     * 
+     * @param parentMrn parentMrn
+     * @param orgMrn orgMrn
+     */
+    public getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/oidc/endorsed-children/${parentMrn}/${orgMrn}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'parentMrn' is not null or undefined
+        if (parentMrn === null || parentMrn === undefined) {
+            throw new Error('Required parameter parentMrn was null or undefined when calling getEndorsedByParentMrnAndOrgMrnUsingGET.');
+        }
+        // verify required parameter 'orgMrn' is not null or undefined
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling getEndorsedByParentMrnAndOrgMrnUsingGET.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getEndorsedByParentMrn
+     * 
+     * @param parentMrn parentMrn
+     */
+    public getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/oidc/endorsed-children/${parentMrn}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'parentMrn' is not null or undefined
+        if (parentMrn === null || parentMrn === undefined) {
+            throw new Error('Required parameter parentMrn was null or undefined when calling getEndorsedByParentMrnUsingGET.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getEndorsment
+     * 
+     * @param serviceMrn serviceMrn
+     * @param orgMrn orgMrn
+     */
+    public getEndorsmentUsingGETWithHttpInfo(serviceMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/oidc/endorsement-by/${serviceMrn}/${orgMrn}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'serviceMrn' is not null or undefined
+        if (serviceMrn === null || serviceMrn === undefined) {
+            throw new Error('Required parameter serviceMrn was null or undefined when calling getEndorsmentUsingGET.');
+        }
+        // verify required parameter 'orgMrn' is not null or undefined
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling getEndorsmentUsingGET.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [

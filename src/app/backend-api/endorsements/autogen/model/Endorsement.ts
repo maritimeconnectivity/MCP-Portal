@@ -19,6 +19,8 @@ export interface Endorsement {
 
     orgName?: string;
 
+    parentMrn?: string;
+
     /**
      * The level being endorsed
      */

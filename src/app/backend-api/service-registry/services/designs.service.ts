@@ -34,7 +34,7 @@ export class DesignsService implements OnInit {
 
 		// TODO change when search actually works
 		parallelObservables.push(this.searchAndFilterDesignsForSpecification(searchRequest, specificationId, version).take(1));
-		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest, specificationId).take(1));
 
 		return Observable.forkJoin(parallelObservables).flatMap(
 			resultArray => {
