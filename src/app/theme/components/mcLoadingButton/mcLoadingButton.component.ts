@@ -12,6 +12,7 @@ export class McLoadingButton {
 	@Input() type:string = 'button';
   @Input() isLoading:boolean;
 	@Input() disabled:boolean;
+	@Input() buttonIcon:string;
   @Input() onClick:Function;
   constructor() {
   }
