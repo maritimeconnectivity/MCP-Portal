@@ -24,6 +24,9 @@
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
       -->
     </ba-card>
+
+    <endorsed-by-list [title]="'Organizations endorsing the Specification (' + specification?.name + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+
     <ba-card title="Designs implementing the Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
       <div *ngIf="!isLoadingDesigns">
         <service-registry-search [showKeywords]="false" [searchTitle]="'Design search filters'" [searchKey]="searchKey" [isSearching]="isSearchingDesigns" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
@@ -36,9 +39,6 @@
       </div>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>
-
-    <endorsed-by-list [title]="'Organizations endorsing the Specification (' + specification?.name + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
-
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete specification'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>
