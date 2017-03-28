@@ -141,7 +141,7 @@ export class SpecificationDetailsComponent {
 
   private setEndorseButtonClassAndTitle() {
   	// TODO Maybe make an EndorseButton, as this will be used 3 places
-	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Dedorse Specification' : 'Endorse Specification');
+	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Revoke Endorsement' : 'Endorse Specification');
 	  this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn btn-danger btn-raised' : 'btn btn-success btn-raised btn-with-icon');
 	  this.endorseButtonIcon = (this.isEndorsedByMyOrg ? '' : 'ion-android-cloud-done fa-lg');
   }
