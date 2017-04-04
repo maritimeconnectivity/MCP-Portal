@@ -153,7 +153,7 @@ export class ApplyOrgComponent implements OnInit {
 
 		McUtils.generateEmailConfirmGroup(this.formBuilder, this.registerForm, this.formControlModels);
 
-		formControlModel = {formGroup: this.registerForm, elementId: 'url', controlType: McFormControlType.Text, labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid'};
+		formControlModel = {formGroup: this.registerForm, elementId: 'url', controlType: McFormControlType.Text, labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid. E.g. http://www.maritimecp.net'};
 		formControl = new FormControl('', formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
