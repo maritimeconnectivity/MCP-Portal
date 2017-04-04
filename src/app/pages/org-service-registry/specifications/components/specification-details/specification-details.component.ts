@@ -9,7 +9,6 @@ import {Design} from "../../../../../backend-api/service-registry/autogen/model/
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
-import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
@@ -30,15 +29,12 @@ const SEARCH_KEY = 'SpecificationDetailsComponent';
 export class SpecificationDetailsComponent {
   public specification: Specification;
   public designs: Array<Design>;
-  public instances: Array<Instance>;
   public title:string;
   public labelValues:Array<LabelValueModel>;
   public isLoadingSpecification: boolean;
 	public isLoadingDesigns: boolean;
-  public isLoadingInstances: boolean;
   public onCreate: Function;
   public onGotoDesign: Function;
-  public onGotoInstance: Function;
 	public showModal:boolean = false;
 	public showModalNoDelete:boolean = false;
 	public modalDescription:string;
@@ -67,11 +63,9 @@ export class SpecificationDetailsComponent {
 	  this.onEndorse = this.endorseToggle.bind(this);
     this.onCreate = this.createDesign.bind(this);
     this.onGotoDesign = this.gotoDesign.bind(this);
-    this.onGotoInstance = this.gotoInstance.bind(this);
 
     this.isLoadingSpecification = true;
     this.isLoadingDesigns = true;
-	  this.isLoadingInstances = true;
     this.title = 'Loading ...';
     let specificationId = this.route.snapshot.params['id'];
     let version = this.route.snapshot.queryParams['specificationVersion'];
@@ -98,7 +92,6 @@ export class SpecificationDetailsComponent {
 				this.specification = specification;
 				this.loadOrganizationName();
 				this.loadDesigns();
-				//this.loadInstances(); // TODO: this doesn't work atm
 			},
 			err => {
 				// TODO: make this as a general component
@@ -108,7 +101,6 @@ export class SpecificationDetailsComponent {
 				this.title = 'Error while loading';
 				this.isLoadingSpecification = false;
 				this.isLoadingDesigns = false;
-				this.isLoadingInstances = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get specification', MCNotificationType.Error, err);
 			}
 		);
@@ -160,19 +152,6 @@ export class SpecificationDetailsComponent {
 		);
 	}
 
-  private loadInstances() {
-    this.instancesService.getInstancesForSpecification(this.specification.specificationId, this.specification.version).subscribe(
-      instances => {
-        this.instances = instances;
-        this.isLoadingInstances = false;
-      },
-      err => {
-        this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
-      }
-    );
-  }
-
   private loadDesigns() {
 	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
 		this.searchDesigns(searchRequest);
@@ -220,10 +199,6 @@ export class SpecificationDetailsComponent {
 
   private createDesign() {
     this.navigationHelperService.navigateToCreateDesign(this.specification.specificationId, this.specification.version);
-  }
-
-  private gotoInstance(index:number) {
-    this.navigationHelperService.navigateToOrgInstance(this.instances[index].instanceId, this.instances[index].version);
   }
 
 	private isMyOrg():boolean {

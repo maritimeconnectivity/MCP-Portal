@@ -134,9 +134,6 @@ export class SpecificationsService implements OnInit {
 	}
 
 	private getSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
-		// TODO remove this when search actually works
-  	return this.getAllSpecificationsAndFilter(searchRequest);
-  	/*
 		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
 		return Observable.create(observer => {
 			// TODO FIXME Hotfix. This pagination should be done the right way
@@ -148,53 +145,6 @@ export class SpecificationsService implements OnInit {
 						specification.description = this.getDescription(specification);
 					}
 					observer.next(specifications);
-				},
-				err => {
-					observer.error(err);
-				}
-			);
-		});*/
-	}
-
-	// TODO remove this when search actually works
-	private getAllSpecificationsAndFilter(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
-  	// ONLY TEMP method. So just hacking away fast an inefficient ;-)
-		return Observable.create(observer => {
-			this.specificationsApi.getAllSpecificationsUsingGET(0,100).subscribe(
-				specifications => {
-					let filteredSpecification:Array<Specification> = [];
-					for (let specification of specifications) {
-						specification.description = this.getDescription(specification);
-						if (!searchRequest.registeredBy || searchRequest.registeredBy.length == 0) {
-							if (!searchRequest.keywords || searchRequest.keywords.length == 0) {
-								filteredSpecification.push(specification);
-							} else {
-								var keywordArray = searchRequest.keywords.split(' ');
-								for (let keyword of keywordArray) {
-									if (keyword && keyword.length > 0 && specification.keywords.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-										filteredSpecification.push(specification);
-										break;
-									}
-								};
-							}
-						} else {
-							if (searchRequest.registeredBy === specification.organizationId) {
-								if (!searchRequest.keywords || searchRequest.keywords.length == 0) {
-									filteredSpecification.push(specification);
-								} else {
-									var keywordArray = searchRequest.keywords.split(' ');
-									for (let keyword of keywordArray) {
-										if (keyword && keyword.length > 0 && specification.keywords.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-											filteredSpecification.push(specification);
-											break;
-										}
-									};
-								}
-
-							}
-						}
-					}
-					observer.next(filteredSpecification);
 				},
 				err => {
 					observer.error(err);

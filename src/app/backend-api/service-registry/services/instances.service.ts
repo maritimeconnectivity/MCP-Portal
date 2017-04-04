@@ -151,16 +151,17 @@ export class InstancesService implements OnInit {
     });
   }
 
-  public getInstancesForDesign(designId:string, version?:string): Observable<Array<Instance>> {
+  public getInstancesForDesign(designId:string, designVersion?:string): Observable<Array<Instance>> {
     return Observable.create(observer => {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
-	    let query = QueryHelper.generateQueryStringForDesign(designId, version);
+	    let query = QueryHelper.generateQueryStringForDesign(designId);
 	    this.instancesApi.searchInstancesUsingGET(query,0,100).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
 			    for (let instance of instances) {
-				    let implementedDesignId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
-				    if (implementedDesignId === designId) {
+				    let implementedDesignVersion = this.xmlParser.getVersionForDesignInInstance(instance.instanceAsXml);
+
+				    if (implementedDesignVersion === designVersion) {
 					    instance.description = this.getDescription(instance);
 					    instancesFiltered.push(instance);
 				    }
@@ -171,46 +172,6 @@ export class InstancesService implements OnInit {
 			    observer.error(err);
 		    }
 	    );
-      this.instancesApi.getAllInstancesUsingGET(0,100).subscribe(
-        instances => {
-          var instancesFiltered: Array<Instance> = [];
-          for (let instance of instances) {
-	          let implementedDesignId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
-	          let implementedDesignVersion = this.xmlParser.getVersionForDesignInInstance(instance.instanceAsXml);
-	          var versionOK = true;
-	          if (version) {
-	          	versionOK = implementedDesignVersion === version;
-	          }
-            if (implementedDesignId === designId && versionOK) {
-              instance.description = this.getDescription(instance);
-              instancesFiltered.push(instance);
-            }
-          }
-          observer.next(instancesFiltered);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
-  }
-
-  public getInstancesForSpecification(specificationId:string, version?:string): Observable<Array<Instance>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-      // TODO for now just get all instances. Needs to be for this specification only though
-      this.instancesApi.getAllInstancesUsingGET().subscribe(
-        instances => {
-          // TODO delete this again, when description is part of the json
-          for (let instance of instances) {
-            instance.description = this.getDescription(instance);
-          }
-          observer.next(instances);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
     });
   }
 

@@ -14,54 +14,61 @@ enum QueryParameterString {
 }
 export class QueryHelper {
 
-	public static generateQueryStringForRequest(searchRequest:ServiceRegistrySearchRequest) : string {
+	public static generateQueryStringForRequest(searchRequest: ServiceRegistrySearchRequest): string {
+		if (!searchRequest) {
+			return '*';
+		}
 		var queryString = '';
 		var parameterAdded = false;
 		if (searchRequest.keywords && searchRequest.keywords.length > 0) {
-			queryString += QueryParameterString.keywords + encodeURIComponent(searchRequest.keywords);
+			queryString += QueryParameterString.keywords + QueryHelper.escapeQueryString(searchRequest.keywords);
 			parameterAdded = true;
 		}
 		if (searchRequest.registeredBy && searchRequest.registeredBy.length > 0) {
 			if (parameterAdded) {
 				queryString += QueryOperatorString.AND;
 			}
-			queryString += QueryParameterString.organizationId + encodeURIComponent(searchRequest.registeredBy);
+			queryString += QueryParameterString.organizationId + QueryHelper.escapeQueryString(searchRequest.registeredBy);
 		}
-		return queryString;
+		return queryString.length > 0 ? queryString : '*';
 	}
 
-	public static generateQueryStringForDesign(designId:string, version?:string) : string {
-		var queryString:string;
+	public static generateQueryStringForDesign(designId: string, version?: string): string {
+		var queryString: string;
 
 		let versionQuery = '';
-		if (version){
-			versionQuery = QueryOperatorString.AND + QueryParameterString.version + encodeURIComponent(version);
+		if (version) {
+			versionQuery = QueryOperatorString.AND + QueryParameterString.version + QueryHelper.escapeQueryString(version);
 		}
-		queryString = QueryParameterString.designId + encodeURIComponent(designId) + versionQuery;
+		queryString = QueryParameterString.designId + QueryHelper.escapeQueryString(designId) + versionQuery;
 
 		return queryString;
 	}
 
-	public static generateQueryStringForSpecification(specificationId:string, version?:string) : string {
-		var queryString:string;
+	public static generateQueryStringForSpecification(specificationId: string, version?: string): string {
+		var queryString: string;
 
 		let versionQuery = '';
-		if (version){
-			versionQuery = QueryOperatorString.AND + QueryParameterString.version + encodeURIComponent(version);
+		if (version) {
+			versionQuery = QueryOperatorString.AND + QueryParameterString.version + QueryHelper.escapeQueryString(version);
 		}
-		queryString = QueryParameterString.specificationId + encodeURIComponent(specificationId) + versionQuery;
+		queryString = QueryParameterString.specificationId + QueryHelper.escapeQueryString(specificationId) + versionQuery;
 
 		return queryString;
 	}
 
-	public static combineQueryStringsWithAnd(queryStrings:Array<string>) : string {
+	public static combineQueryStringsWithAnd(queryStrings: Array<string>): string {
 		var queryString = '';
-		for (let i=0; i<queryStrings.length; i++) {
-			queryString += '(' + queryStrings[i] + ')'
-			if (i != queryStrings.length-1) {
+		for (let i = 0; i < queryStrings.length; i++) {
+			queryString += '(' + queryStrings[i] + ')';
+			if (i != queryStrings.length - 1) {
 				queryString += QueryOperatorString.AND;
 			}
 		}
 		return queryString;
+	}
+
+	public static escapeQueryString(queryString: string): string {
+		return queryString.replace(/\:/g, '\\:').replace(/\*/g, '\\*');
 	}
 }
