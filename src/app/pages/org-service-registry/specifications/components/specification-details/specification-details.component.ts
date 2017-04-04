@@ -214,7 +214,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return this.isAdmin() && this.showEndorsements;
+		return false;// this.isAdmin() && this.showEndorsements;
 	}
 
 	public search(searchRequest: ServiceRegistrySearchRequest) {

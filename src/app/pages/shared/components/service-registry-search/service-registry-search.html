@@ -29,11 +29,11 @@
           </label>
         </div>
       </div>
-      <div *ngIf="showEndorsement" class="col-sm-6">
+      <div *ngIf="showEndorsement && endorsementMainSwitch" class="col-sm-6">
         <div [formGroup]="formGroup" class="form-group mc-form-group" style="margin-bottom: 0px !important;">
           <label class="mc-form-label">Endorsed by
             <select class="form-control mc-form-control mc-form-control-select" formControlName="endorsedBy">
-              <option *ngFor="let selectValue of selectValuesOrganizations" [ngValue]="selectValue.value">
+              <option *ngFor="let selectValue of selectValuesOrganizationsForEndorsement" [ngValue]="selectValue.value">
                 {{selectValue.label}}
               </option>
             </select>

@@ -26,10 +26,12 @@ export class ServiceRegistrySearchComponent {
 	@Input() showEndorsement: boolean;
 	@Input() showKeywords: boolean = true;
 	@Output() onSearch:EventEmitter<ServiceRegistrySearchRequest> = new EventEmitter<ServiceRegistrySearchRequest>();
+	private endorsementMainSwitch = false;
 
 	public isLoading: boolean;
 	public formGroup: FormGroup;
 	public selectValuesOrganizations:Array<SelectModel>;
+	public selectValuesOrganizationsForEndorsement:Array<SelectModel>;
 	public onSearchFunction: Function;
 	public isCollapsed:boolean;
 	public collapsedClass:string;
@@ -145,9 +147,12 @@ export class ServiceRegistrySearchComponent {
 	private setupSearchRequest(organizations:Array<Organization>) {
 		this.selectValuesOrganizations = [];
 		this.selectValuesOrganizations.push({value:undefined, label:'All'});
+		this.selectValuesOrganizationsForEndorsement = [];
+		this.selectValuesOrganizationsForEndorsement.push({value:undefined, label:'No filter'});
 
 		organizations.forEach(organization => {
 			this.selectValuesOrganizations.push({value:organization.mrn, label:organization.name});
+			this.selectValuesOrganizationsForEndorsement.push({value:organization.mrn, label:organization.name});
 		});
 		var registeredBy:string;
 		var endorsedBy:string;
