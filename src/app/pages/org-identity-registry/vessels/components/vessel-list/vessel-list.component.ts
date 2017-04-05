@@ -43,8 +43,8 @@ export class VesselListComponent implements OnInit {
 
 	private loadVessels() {
 		this.vesselsService.getVessels().subscribe(
-			vessels => {
-				this.vessels = vessels;
+			pageVessel => {
+				this.vessels = pageVessel.content;
 				this.isLoading = false;
 				this.generateEntityImageList();
 			},

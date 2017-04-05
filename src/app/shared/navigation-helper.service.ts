@@ -61,7 +61,7 @@ export class NavigationHelperService {
 		this.router.navigate([this.path], { queryParams: { entityType: entityType, entityMrn: entityMrn, entityTitle:entityTitle}});
 	}
 
-	public navigateToRevokeCertificate(entityType: CertificateEntityType, entityMrn:string, entityTitle: string, certificateId:number) {
+	public navigateToRevokeCertificate(entityType: CertificateEntityType, entityMrn:string, entityTitle: string, certificateId:string) {
 		this.pathBeforeCerticates = this.router.url;
 		this.path = '/revokecert';
 		let pagesMenu = PAGES_MENU;
@@ -214,13 +214,13 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
-	public navigateToUpdateIdService(serviceMrn:string):void {
+	public navigateToUpdateIdService(serviceMrn:string, serviceVersion: string):void {
 		this.pathBeforeUpdateIdService = this.router.url;
 		this.path = '/update-id/' + serviceMrn;
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('instances', pagesMenu[0]);
 
-		this.router.navigate([this.path]);
+		this.router.navigate([this.path], {queryParams: {instanceVersion: serviceVersion}});
 	}
 
 	public navigateToUpdateInstance(instanceMrn:string, version:string):void {
@@ -263,12 +263,12 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
-	public navigateToCreateIdService(mrn:string, name:string) {
+	public navigateToCreateIdService(mrn:string, name:string, instanceVersion:string) {
 		this.pathBeforeCreateIdService = this.router.url;
 		this.path = '/register-id';
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('instances', pagesMenu[0]);
-		this.router.navigate([this.path], { queryParams: { mrn: mrn, name: name }, preserveQueryParams: false});
+		this.router.navigate([this.path], { queryParams: { mrn: mrn, name: name, instanceVersion: instanceVersion }, preserveQueryParams: false});
 	}
 
   public navigateToCreateSpecification() {

@@ -178,6 +178,7 @@ export class InstanceNewComponent implements OnInit {
 		let service:Service = {
 			mrn: this.mrn,
 			name: this.name,
+			instanceVersion: instance.version,
 			permissions: this.registerForm.value.permissions,
 			certDomainName: this.registerForm.value.certDomainName
 		};

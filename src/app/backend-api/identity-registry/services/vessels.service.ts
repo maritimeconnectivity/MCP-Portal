@@ -5,13 +5,14 @@ import {PemCertificate} from "../autogen/model/PemCertificate";
 import {Vessel} from "../autogen/model/Vessel";
 import {VesselcontrollerApi} from "../autogen/api/VesselcontrollerApi";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
+import {PageVessel} from "../autogen/model/PageVessel";
 
 @Injectable()
 export class VesselsService {
   constructor(private vesselApi: VesselcontrollerApi, private authService: AuthService) {
   }
 
-	public getVessels(): Observable<Array<Vessel>> {
+	public getVessels(): Observable<PageVessel> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn);
 	}
@@ -41,7 +42,7 @@ export class VesselsService {
     return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);
   }
 
-	public revokeCertificate(vesselMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+	public revokeCertificate(vesselMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.vesselApi.revokeVesselCertUsingPOST(orgMrn, vesselMrn, certificateId, certicateRevocation);
 	}

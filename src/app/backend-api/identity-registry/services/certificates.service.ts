@@ -50,7 +50,7 @@ export class CertificatesService implements OnInit {
 		});
 	}
 
-	public revokeCertificate(entityType: CertificateEntityType, entityMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+	public revokeCertificate(entityType: CertificateEntityType, entityMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {
 		if (entityType == null || !entityMrn) { // We lost our state data somehow???
 			throw new Error('Internal state lost');
 		}
@@ -92,7 +92,7 @@ export class CertificatesService implements OnInit {
     );
   }
 
-	private revokeCertificateForOrganization(certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+	private revokeCertificateForOrganization(certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
 		this.organizationsService.revokeCertificate(certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);
@@ -114,7 +114,7 @@ export class CertificatesService implements OnInit {
     );
   }
 
-	private revokeCertificateForDevice(deviceMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+	private revokeCertificateForDevice(deviceMrn: string, certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
 		this.devicesService.revokeCertificate(deviceMrn, certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);
@@ -126,7 +126,8 @@ export class CertificatesService implements OnInit {
 	}
 
   private issueNewCertificateForService(serviceMrn: string, observer: Observer<any>) {
-    this.servicesService.issueNewCertificate(serviceMrn).subscribe(
+	  let serviceMrnAndVersion = serviceMrn.split('#¤#');
+    this.servicesService.issueNewCertificate(serviceMrnAndVersion[0], serviceMrnAndVersion[1]).subscribe(
       pemCertificate => {
         observer.next(pemCertificate);
       },
@@ -136,8 +137,9 @@ export class CertificatesService implements OnInit {
     );
   }
 
-	private revokeCertificateForService(serviceMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
-		this.servicesService.revokeCertificate(serviceMrn, certificateId, certicateRevocation).subscribe(
+	private revokeCertificateForService(serviceMrn: string, certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+  	let serviceMrnAndVersion = serviceMrn.split('#¤#');
+		this.servicesService.revokeCertificate(serviceMrnAndVersion[0], serviceMrnAndVersion[1], certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);
 			},
@@ -158,7 +160,7 @@ export class CertificatesService implements OnInit {
     );
   }
 
-	private revokeCertificateForUser(userMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+	private revokeCertificateForUser(userMrn: string, certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
 		this.usersService.revokeCertificate(userMrn, certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);
@@ -180,7 +182,7 @@ export class CertificatesService implements OnInit {
     );
   }
 
-	private revokeCertificateForVessel(vesselMrn: string, certificateId:number, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
+	private revokeCertificateForVessel(vesselMrn: string, certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
 		this.vesselsService.revokeCertificate(vesselMrn, certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);

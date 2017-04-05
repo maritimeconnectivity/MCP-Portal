@@ -49,9 +49,10 @@ export class OrganizationsService implements OnInit {
 		}
 		// Should never come to this
 		return Observable.create(observer => {
-			this.organizationApi.getUnapprovedOrganizationsUsingGET().subscribe(
-				organizations => {
-					this.unapprovedOrganizations = organizations;
+			// TODO: do paging properly
+			this.organizationApi.getUnapprovedOrganizationsUsingGET(0,100).subscribe(
+				pageOrganization => {
+					this.unapprovedOrganizations = pageOrganization.content;
 					var foundOrganization = null;
 					this.unapprovedOrganizations.forEach(organization => {
 						if (organization.mrn === orgMrn) {
@@ -73,10 +74,11 @@ export class OrganizationsService implements OnInit {
 
 	public getUnapprovedOrganizations () : Observable<Array<Organization>> {
 		return Observable.create(observer => {
-			this.organizationApi.getUnapprovedOrganizationsUsingGET().subscribe(
-				organizations => {
-					this.unapprovedOrganizations = organizations;
-					observer.next(organizations);
+			// TODO: do paging properly
+			this.organizationApi.getUnapprovedOrganizationsUsingGET(0, 100).subscribe(
+				pageOrganization => {
+					this.unapprovedOrganizations = pageOrganization.content;
+					observer.next(pageOrganization.content);
 				},
 				err => {
 					observer.error(err);
@@ -119,7 +121,7 @@ export class OrganizationsService implements OnInit {
 		});
 	}
 
-	public revokeCertificate(certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+	public revokeCertificate(certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {
 		return Observable.create(observer => {
 			let orgMrn = this.authService.authState.orgMrn;
 			this.organizationApi.revokeOrgCertUsingPOST(orgMrn, certificateId, certicateRevocation).subscribe(
@@ -165,10 +167,11 @@ export class OrganizationsService implements OnInit {
 		}
 
 		return Observable.create(observer => {
-			this.organizationApi.getOrganizationUsingGET2().subscribe(
-				organizations => {
-					this.organizations = organizations;
-					observer.next(organizations);
+			// TODO: do paging properly
+			this.organizationApi.getOrganizationUsingGET2(0, 100).subscribe(
+				pageOrganization => {
+					this.organizations = pageOrganization.content;
+					observer.next(pageOrganization.content);
 				},
 				err => {
 					observer.error(err);
@@ -183,9 +186,10 @@ export class OrganizationsService implements OnInit {
 		}
 
 		return Observable.create(observer => {
-			this.organizationApi.getOrganizationUsingGET2().subscribe(
-				organizations => {
-					this.organizations = organizations;
+			// TODO: This should always get all organizations. So make pagesize unlimited. OR maybe build in fetch of next page if searchOrganizationNameFromList returns nothing
+			this.organizationApi.getOrganizationUsingGET2(0, 100).subscribe(
+				pageOrganization => {
+					this.organizations = pageOrganization.content;
 					observer.next(this.searchOrganizationNameFromList(orgMrn));
 				},
 				err => {

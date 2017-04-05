@@ -18,6 +18,6 @@
 
 <div *ngIf="service">
   <ba-card title="Certificates for {{service.name}}" baCardClass="with-scroll table-panel">
-    <certificates-table [entityMrn]="service.mrn" [isLoading]="isLoading" [certificateTitle]="service.name" [certificateEntityType]="entityType" [certificates]="service.certificates"></certificates-table>
+    <certificates-table [entityMrn]="entityMrn" [isLoading]="isLoading" [certificateTitle]="service.name" [certificateEntityType]="entityType" [certificates]="service.certificates"></certificates-table>
   </ba-card>
 </div>

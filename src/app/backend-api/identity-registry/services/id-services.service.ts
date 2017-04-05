@@ -5,6 +5,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {Service} from "../autogen/model/Service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
+import {PageService} from "../autogen/model/PageService";
 
 @Injectable()
 export class IdServicesService implements OnInit {
@@ -15,41 +16,41 @@ export class IdServicesService implements OnInit {
 
   }
 
-	public getIdServiceJbossXml(serviceMrn:string): Observable<string> {
+	public getIdServiceJbossXml(serviceMrn:string, serviceVersion:string): Observable<string> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.getServiceJbossXmlUsingGET(orgMrn, serviceMrn);
+		return this.servicesApi.getServiceJbossXmlUsingGET(orgMrn, serviceMrn, serviceVersion);
 	}
 
-	public getServiceKeycloakJson(serviceMrn:string): Observable<string> {
+	public getServiceKeycloakJson(serviceMrn:string, serviceVersion:string): Observable<string> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.getServiceKeycloakJsonUsingGET(orgMrn, serviceMrn);
+		return this.servicesApi.getServiceKeycloakJsonUsingGET(orgMrn, serviceMrn, serviceVersion);
 	}
 
-	public deleteIdService(serviceMrn:string):Observable<any> {
+	public deleteIdService(serviceMrn:string, serviceVersion:string):Observable<any> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.deleteServiceUsingDELETE(orgMrn, serviceMrn);
+		return this.servicesApi.deleteServiceUsingDELETE(orgMrn, serviceMrn, serviceVersion);
 	}
 
-	public getIdService(serviceMrn:string, orgMrn?:string): Observable<Service> {
+	public getIdService(serviceMrn:string, serviceVersion:string, orgMrn?:string): Observable<Service> {
   	if (!orgMrn) {
 		  orgMrn = this.authService.authState.orgMrn;
 	  }
-		return this.servicesApi.getServiceUsingGET(orgMrn, serviceMrn);
+		return this.servicesApi.getServiceVersionUsingGET(orgMrn, serviceMrn, serviceVersion);
 	}
 
-	public getIdServices(): Observable<Array<Service>> {
+	public getIdServices(): Observable<PageService> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.servicesApi.getOrganizationServicesUsingGET(orgMrn);
 	}
 
-	public issueNewCertificate(serviceMrn:string) : Observable<PemCertificate> {
+	public issueNewCertificate(serviceMrn:string, serviceVersion:string) : Observable<PemCertificate> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn);
+		return this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn, serviceVersion);
 	}
 
-	public revokeCertificate(serviceMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+	public revokeCertificate(serviceMrn:string, serviceVersion:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.revokeServiceCertUsingPOST(orgMrn, serviceMrn, certificateId, certicateRevocation);
+		return this.servicesApi.revokeServiceCertUsingPOST(orgMrn, serviceMrn, serviceVersion, certificateId, certicateRevocation);
 	}
 
 	public createIdService(service:Service):Observable<Service>{
@@ -59,6 +60,6 @@ export class IdServicesService implements OnInit {
 
 	public updateIdService(service:Service):Observable<Service>{
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.updateServiceUsingPUT(orgMrn, service.mrn, service);
+		return this.servicesApi.updateServiceUsingPUT(orgMrn, service.mrn, service.instanceVersion, service);
 	}
 }

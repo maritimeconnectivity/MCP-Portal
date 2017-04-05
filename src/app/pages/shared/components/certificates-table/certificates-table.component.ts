@@ -144,7 +144,7 @@ export class CertificatesTableComponent implements OnChanges{
   }
 
   public revoke(certificate:Certificate) {
-  	this.navigationHelper.navigateToRevokeCertificate(this.certificateEntityType, this.entityMrn, this.certificateTitle, certificate.id);
+  	this.navigationHelper.navigateToRevokeCertificate(this.certificateEntityType, this.entityMrn, this.certificateTitle, certificate.serialNumber);
   }
 
   public download(certificate:Certificate) {

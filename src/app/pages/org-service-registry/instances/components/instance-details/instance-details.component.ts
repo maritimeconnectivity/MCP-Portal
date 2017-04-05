@@ -62,7 +62,7 @@ export class InstanceDetailsComponent {
   }
 
   public createIdService() {
-		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name);
+		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name, this.instance.version);
   }
 
   private isMyOrg():boolean {
@@ -115,7 +115,7 @@ export class InstanceDetailsComponent {
 	}
 
   private loadIdService(mrn:string) {
-	  this.servicesService.getIdService(mrn, this.instance.organizationId).subscribe(
+	  this.servicesService.getIdService(mrn, this.instance.version, this.instance.organizationId).subscribe(
 		  service => {
 			  this.idService = service;
 			  this.showUpdateIdService = (this.isMyOrg() && this.isServiceAdminForOrg()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
@@ -154,7 +154,7 @@ export class InstanceDetailsComponent {
   }
 
 	public updateIdService() {
-		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn);
+		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn, this.instance.version);
 	}
 
   private gotoDesign(linkValue:any) {
@@ -205,7 +205,7 @@ export class InstanceDetailsComponent {
 
 	private deleteIdService() {
   	if (this.idService) {
-			this.servicesService.deleteIdService(this.idService.mrn).subscribe(
+			this.servicesService.deleteIdService(this.idService.mrn, this.instance.version).subscribe(
 				() => {
 					this.navigationHelperService.navigateToOrgInstance('', '');
 				},

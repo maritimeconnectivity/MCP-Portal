@@ -12,11 +12,23 @@
 
 import * as models from './models';
 
-export interface BugReportAttachment {
-    data?: string;
+export interface PageVessel {
+    content?: Array<models.Vessel>;
 
-    mimetype?: string;
+    first?: boolean;
 
-    name?: string;
+    last?: boolean;
+
+    number?: number;
+
+    numberOfElements?: number;
+
+    size?: number;
+
+    sort?: models.Sort;
+
+    totalElements?: number;
+
+    totalPages?: number;
 
 }

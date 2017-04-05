@@ -48,7 +48,8 @@ export class ServiceUpdateComponent implements OnInit {
 
 	private loadIdService() {
 		let mrn = this.activatedRoute.snapshot.params['id'];
-		this.servicesService.getIdService(mrn).subscribe(
+		let version = this.activatedRoute.snapshot.queryParams['instanceVersion'];
+		this.servicesService.getIdService(mrn, version).subscribe(
 			idService => {
 				this.idService = idService;
 				this.useOIDC = this.idService.oidcAccessType != undefined;

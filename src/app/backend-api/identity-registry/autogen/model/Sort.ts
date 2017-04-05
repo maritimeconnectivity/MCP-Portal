@@ -12,11 +12,5 @@
 
 import * as models from './models';
 
-export interface BugReportAttachment {
-    data?: string;
-
-    mimetype?: string;
-
-    name?: string;
-
+export interface Sort {
 }
