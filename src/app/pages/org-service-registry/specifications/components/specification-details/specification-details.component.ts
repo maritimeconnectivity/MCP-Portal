@@ -70,7 +70,7 @@ export class SpecificationDetailsComponent {
     let specificationId = this.route.snapshot.params['id'];
     let version = this.route.snapshot.queryParams['specificationVersion'];
 	  this.loadSpecification(specificationId, version);
-	  this.loadEndorsements(specificationId);
+	//  this.loadEndorsements(specificationId);
   }
 
   public downloadXml() {

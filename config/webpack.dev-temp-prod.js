@@ -75,24 +75,24 @@ module.exports = function(options) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-filename
        */
-      filename: '[name].bundle.js',
+      filename: '[name].[hash].bundle.js',
 
-      /**
-       * The filename of the SourceMaps for the JavaScript files.
-       * They are inside the output.path directory.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
-       */
-      sourceMapFilename: '[name].map',
+        /**
+         * The filename of the SourceMaps for the JavaScript files.
+         * They are inside the output.path directory.
+         *
+         * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
+         */
+        sourceMapFilename: '[name].[hash].map',
 
-      /** The filename of non-entry chunks as relative path
-       * inside the output.path directory.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
-       */
-      chunkFilename: '[id].chunk.js',
+        /** The filename of non-entry chunks as relative path
+         * inside the output.path directory.
+         *
+         * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
+         */
+        chunkFilename: '[id].[chunkhash].chunk.js',
 
-      library: 'ac_[name]',
+        library: 'ac_[name]',
       libraryTarget: 'var',
     },
 

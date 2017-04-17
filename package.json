@@ -1,6 +1,6 @@
 {
   "name": "maritime-cloud-management-portal",
-  "version": "0.4.2-b.4",
+  "version": "0.4.2-b.6",
   "description": "Management Portal for the Maritime Cloud",
   "author": "Danish Maritime Authority",
   "homepage": "http://maritimecloud.net",
@@ -128,6 +128,7 @@
     "watch:dev:hmr": "npm run watch:dev -- --hot",
     "watch:prod": "npm run build:prod -- --watch",
     "build": "npm run build:dev",
+    "prebuild": "npm run clean:dist",
     "prebuild:dev": "npm run clean:dist",
     "build:test": "webpack --config config/webpack.test.js --progress --profile",
     "build:staging": "webpack --config config/webpack.staging.js --progress --profile",

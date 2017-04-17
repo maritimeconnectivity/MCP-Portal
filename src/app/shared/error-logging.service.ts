@@ -2,6 +2,7 @@ import {Injectable, Inject} from "@angular/core";
 import {NotificationsService} from "angular2-notifications";
 import {BugReportingService} from "../backend-api/identity-registry/services/bug-reporting.service";
 import {BugReport} from "../backend-api/identity-registry/autogen/model/BugReport";
+import {AuthService} from "../authentication/services/auth.service";
 
 export interface MCErrorLoggerOptions {
 	makeBugReportFromError: boolean;
@@ -23,6 +24,10 @@ export class ErrorLoggingService {
     this.logErrorWithMessage(null, error, showToUser);
   }
 	public logErrorWithMessage(message:string, error: any, showToUser:boolean ) : void {
+  	if (this.isCachingError(message, error)) {
+		  AuthService.handle401();
+		  return;
+	  }
 		this.sendToConsole(error);
 		if (showToUser) {
 			this.sendToUser(error);
@@ -31,6 +36,25 @@ export class ErrorLoggingService {
 		if (this.options.makeBugReportFromError && !IS_DEV && !isXmlError) {
 			this.sendToServer(message, error);
 		}
+	}
+
+	private isCachingError(message?:string, error?:any) : boolean {
+  	try {
+	    if (message && message.indexOf("Error: Loading chunk") > -1) {
+	      return true;
+		  }
+			if (error) {
+	      if (error.message && error.message.indexOf("Error: Loading chunk") > -1) {
+				  return true;
+			  }
+				if (error.stack && error.stack.indexOf("Error: Loading chunk") > -1) {
+					return true;
+				}
+			}
+	    return false;
+	  } catch (e) {
+  		return false;
+	  }
 	}
 
 	private sendToConsole(error: any): void {
