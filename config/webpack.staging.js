@@ -11,7 +11,7 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'prod-development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
