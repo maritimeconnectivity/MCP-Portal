@@ -1,0 +1,48 @@
+<a class="search-link" (click)="toggle()">
+  <h4>{{searchTitle}} <i style="margin-left:2px;color: white; font-size: 16px;" class="{{toggleClass}}" aria-hidden="true"></i></h4>
+</a>
+<div class="mc-form-group" style="margin-bottom: 0px !important;" *ngIf="!isCollapsed && !isLoading && formGroup">
+  <form [formGroup]="formGroup">
+    <div *ngIf="showKeywords" class="row">
+      <div class="col-sm-12">
+        <div [formGroup]="formGroup" class="form-group mc-form-group">
+          <label class="mc-form-label">Keywords
+            <div class="input-group">
+              <input type="text" class="form-control mc-form-control" formControlName="keywords">
+              <span class="mc-form-control-input-group-btn input-group-btn">
+                <mc-loading-button [type]="'submit'" [class]="'btn btn-primary search-button'" [isLoading]="isSearching" [title]="'Search'" [onClick]="onSearchFunction" ></mc-loading-button>
+              </span>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div [formGroup]="formGroup" class="form-group mc-form-group" style="margin-bottom: 0px !important;">
+          <label class="mc-form-label">Registered by
+            <select class="form-control mc-form-control mc-form-control-select" formControlName="registeredBy">
+              <option *ngFor="let selectValue of selectValuesOrganizations" [ngValue]="selectValue.value">
+                {{selectValue.label}}
+              </option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div *ngIf="showEndorsement && endorsementMainSwitch" class="col-sm-6">
+        <div [formGroup]="formGroup" class="form-group mc-form-group" style="margin-bottom: 0px !important;">
+          <label class="mc-form-label">Endorsed by
+            <select class="form-control mc-form-control mc-form-control-select" formControlName="endorsedBy">
+              <option *ngFor="let selectValue of selectValuesOrganizationsForEndorsement" [ngValue]="selectValue.value">
+                {{selectValue.label}}
+              </option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div *ngIf="!isCollapsed">
+  <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
+</div>

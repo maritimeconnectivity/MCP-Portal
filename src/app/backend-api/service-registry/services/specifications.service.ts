@@ -8,11 +8,16 @@ import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
 import {Design} from "../autogen/model/Design";
 import {XmlParserService} from "../../../shared/xml-parser.service";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
+import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {QueryHelper} from "./query-helper";
+import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
+import {forEach} from "@angular/router/src/utils/collection";
+import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
   private chosenSpecification: Specification;
-  constructor(private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
+  constructor(private endorsementsService:EndorsementsService, private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
   }
 
   ngOnInit() {
@@ -69,24 +74,84 @@ export class SpecificationsService implements OnInit {
     );
   }
 
-  public getAllSpecifications(): Observable<Array<Specification>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-	    // TODO FIXME Hotfix. This pagination should be done the right way
-      this.specificationsApi.getAllSpecificationsUsingGET(0,100).subscribe(
-        specifications => {
-          // TODO delete this again, when description is part of the json
-          for (let specification of specifications) {
-            specification.description = this.getDescription(specification);
-          }
-          observer.next(specifications);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
-  }
+	public getAllSpecifications(): Observable<Array<Specification>> {
+		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
+		return Observable.create(observer => {
+			// TODO FIXME Hotfix. This pagination should be done the right way
+			this.specificationsApi.getAllSpecificationsUsingGET(0,100).subscribe(
+				specifications => {
+					// TODO delete this again, when description is part of the json
+					for (let specification of specifications) {
+						specification.description = this.getDescription(specification);
+					}
+					observer.next(specifications);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
+	public getSpecificationsForMyOrg(): Observable<Array<Specification>> {
+		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
+
+		return this.getSpecifications(searchRequest);
+	}
+
+	public searchSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
+		let parallelObservables = [];
+
+		parallelObservables.push(this.getSpecifications(searchRequest).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForSpecifications(searchRequest).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let specifications:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(specifications,endorsementResult);
+			});
+	}
+
+	private combineSearchResult(specifications:Array<Specification>, endorsementResult:EndorsementSearchResult) : Observable<Array<Specification>> {
+		if (endorsementResult.shouldFilter) {
+			specifications = this.filterSpecifications(specifications, endorsementResult.pageEndorsement.content);
+		}
+		return Observable.of(specifications);
+	}
+
+	private filterSpecifications(specifications:Array<Specification>, endorsements:Array<Endorsement>) : Array<Specification> {
+  	let filteredSpecifications: Array<Specification> = [];
+  	specifications.forEach(specification => {
+  		for (let endorsement of endorsements){
+  			if (specification.specificationId === endorsement.serviceMrn) {
+					filteredSpecifications.push(specification);
+					break;
+			  }
+		  }
+	  });
+  	return filteredSpecifications;
+	}
+
+	private getSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
+		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
+		return Observable.create(observer => {
+			// TODO FIXME Hotfix. This pagination should be done the right way
+			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
+			this.specificationsApi.searchSpecificationsUsingGET(query,0,100).subscribe(
+				specifications => {
+					// TODO delete this again, when description is part of the json
+					for (let specification of specifications) {
+						specification.description = this.getDescription(specification);
+					}
+					observer.next(specifications);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   public getSpecification(specificationId:string, version?:string): Observable<Specification> {
     var found = false;

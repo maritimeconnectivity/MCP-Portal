@@ -31,14 +31,16 @@ export class BugReportingService {
 	  let organization = authUser.organization;
 	  let permissions = authUser.keycloakPermissions;
 
+	  let userAgent = window.navigator.userAgent;
 	  let userString =
 		  "**USER INFO**: \n" +
-		  "*mrn*: " + mrn + "\n" +
-		  "*Name*: " + fullName + "\n" +
-		  "*Email*: " + email + "\n" +
-		  "*Keycloak permissions*: " + permissions + "\n" +
-		  "*Preferred username*: " + userName + "\n" +
-		  "*Organization mrn*: " + organization + "\n\n" +
+		  "*Agent*: " + userAgent + " \n \n" +
+		  "*mrn*: " + mrn + " \n" +
+		  "*Name*: " + fullName + " \n" +
+		  "*Email*: " + email + " \n" +
+		  "*Keycloak permissions*: " + permissions + " \n" +
+		  "*Preferred username*: " + userName + " \n" +
+		  "*Organization mrn*: " + organization + " \n\n" +
 		  "**BUG REPORT MESSAGE**: \n";
 
 	  bugReport.description = userString + bugReport.description;

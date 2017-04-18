@@ -75,7 +75,7 @@ module.exports = function(options) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-filename
        */
-      filename: '[name].bundle.js',
+      filename: '[name].[hash].bundle.js',
 
       /**
        * The filename of the SourceMaps for the JavaScript files.
@@ -83,14 +83,14 @@ module.exports = function(options) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
        */
-      sourceMapFilename: '[name].map',
+      sourceMapFilename: '[name].[hash].map',
 
       /** The filename of non-entry chunks as relative path
        * inside the output.path directory.
        *
        * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
        */
-      chunkFilename: '[id].chunk.js',
+      chunkFilename: '[id].[chunkhash].chunk.js',
 
       library: 'ac_[name]',
       libraryTarget: 'var',
@@ -111,6 +111,7 @@ module.exports = function(options) {
       new DefinePlugin({
           'IR_BASE_PATH':JSON.stringify('https://test-api.maritimecloud.net'),
           'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimecloud.net'),
+          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://test-endorse.maritimecloud.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-test-keycloak.json'),
           'ERROR_TAG_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': true,

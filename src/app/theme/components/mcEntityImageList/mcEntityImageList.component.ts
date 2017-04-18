@@ -9,7 +9,8 @@ import {EntityImageModel} from "../mcEntityImage/mcEntityImage.component";
 })
 export class McEntityImageList {
   @Input() entityImageList: Array<EntityImageModel>;
-  @Input() isLoading: boolean;
+	@Input() isLoading: boolean;
+	@Input() noDataText: string = "No data";
 	@Output() onClick: EventEmitter<EntityImageModel> = new EventEmitter<EntityImageModel>();
   constructor() {
   }

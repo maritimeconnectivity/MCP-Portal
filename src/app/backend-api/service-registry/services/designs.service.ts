@@ -8,17 +8,63 @@ import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
 import {Instance} from "../autogen/model/Instance";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {InstanceXmlParser} from "../../../pages/org-service-registry/shared/services/instance-xml-parser.service";
+import {DesignXmlParser} from "../../../pages/org-service-registry/shared/services/design-xml-parser.service";
+import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
+import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
+import {QueryHelper} from "./query-helper";
 
 
 @Injectable()
 export class DesignsService implements OnInit {
   private chosenDesign: Design;
-  constructor(private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: InstanceXmlParser) {
+  constructor(private endorsementsService:EndorsementsService, private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlInstanceParser: InstanceXmlParser, private xmlDesignParser: DesignXmlParser) {
   }
 
   ngOnInit() {
 
   }
+
+	public searchDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, version?:string): Observable<Array<Design>> {
+		if (!searchRequest) {
+			return this.getDesignsForSpecification(specificationId, version);
+		}
+
+  	let parallelObservables = [];
+		parallelObservables.push(this.searchAndFilterDesignsForSpecification(searchRequest, specificationId, version).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest, specificationId).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let designs:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(designs,endorsementResult);
+			});
+	}
+
+	private combineSearchResult(designs:Array<Design>, endorsementResult:EndorsementSearchResult) : Observable<Array<Design>> {
+		if (endorsementResult.shouldFilter) {
+			designs = this.filterDesigns(designs, endorsementResult.pageEndorsement.content);
+		}
+		return Observable.of(designs);
+	}
+
+	private filterDesigns(designs:Array<Design>, endorsements:Array<Endorsement>) : Array<Design> {
+		let filteredDesigns: Array<Design> = [];
+		designs.forEach(design => {
+			for (let endorsement of endorsements){
+				if (design.designId === endorsement.serviceMrn) {
+					filteredDesigns.push(design);
+					break;
+				}
+			}
+		});
+		return filteredDesigns;
+	}
+
+	private getDesignsForSpecification(specificationId:string, specificationVersion?:string): Observable<Array<Design>> {
+		return this.searchAndFilterDesignsForSpecification(null, specificationId, specificationVersion);
+	}
 
   public deleteDesign(design:Design) : Observable<{}> {
     this.chosenDesign = null;
@@ -91,8 +137,8 @@ export class DesignsService implements OnInit {
 
   public getDesignForInstance(instance:Instance): Observable<Design> {
 
-	  let designId = this.xmlParser.getMrnForDesignInInstance(instance.instanceAsXml);
-	  let version = this.xmlParser.getVersionForDesignInInstance(instance.instanceAsXml);
+	  let designId = this.xmlInstanceParser.getMrnForDesignInInstance(instance.instanceAsXml);
+	  let version = this.xmlInstanceParser.getVersionForDesignInInstance(instance.instanceAsXml);
 	  // TODO: change when data is actually there
 	  //let designId = instance.designId;
 	  //let version = instance.version;
@@ -117,21 +163,37 @@ export class DesignsService implements OnInit {
     });
   }
 
-  public getDesignsForSpecification(specificationId:string, version?:string): Observable<Array<Design>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-      this.designsApi.getAllDesignsBySpecificationIdUsingGET(specificationId).subscribe(
-        designs => {
-          for (let design of designs) {
-              design.description = this.getDescription(design);
-          }
-          observer.next(designs);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
+  private searchAndFilterDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, specVersion?:string): Observable<Array<Design>> {
+	   return Observable.create(observer => {
+		   let querySearch = QueryHelper.generateQueryStringForRequest(searchRequest);
+		   let querySpecification = QueryHelper.generateQueryStringForSpecification(specificationId);
+		   var query = querySpecification;
+		   if (querySearch.length > 0) {
+			   query = QueryHelper.combineQueryStringsWithAnd([querySearch,querySpecification]);
+		   }
+		   // TODO FIXME Hotfix. This pagination should be done the right way
+		   this.designsApi.searchDesignsUsingGET(query,0,100).subscribe(
+			   designs => {
+				   var designsFiltered: Array<Design> = [];
+				   for (let design of designs) {
+					   design.description = this.getDescription(design);
+					   if (specVersion) {
+						   let specificationVersion = this.xmlDesignParser.getVersionForSpecificationInDesign(design.designAsXml);
+						   if (specVersion === specificationVersion) {
+							   designsFiltered.push(design);
+						   }
+					   } else {
+						   designsFiltered.push(design);
+					   }
+				   }
+				   observer.next(designsFiltered);
+			   },
+			   err => {
+				   observer.error(err);
+			   }
+		   );
+	   });
+
   }
 
   public getDesign(designId:string, version?:string): Observable<Design> {

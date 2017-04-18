@@ -7,6 +7,7 @@ import {ServiceNewComponent} from "../../org-identity-registry/services/componen
 import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
 import {ServiceUpdateComponent} from "../../org-identity-registry/services/components/service-update/service-update.component";
 import {CertificateRevokeComponent} from "../../shared/components/certificate-revoke/certificate-revoke.component";
+import {InstanceUpdateComponent} from "./components/instance-update/instance-update.component";
 
 // noinspection TypeScriptValidateTypes
 export const routes: Routes = [
@@ -51,6 +52,11 @@ export const routes: Routes = [
 	    {
 		    path: 'update-id/:id',
 		    component: ServiceUpdateComponent,
+		    data:{breadcrumb: 'Update ID'}
+	    },
+	    {
+		    path: 'update/:id',
+		    component: InstanceUpdateComponent,
 		    data:{breadcrumb: 'Update'}
 	    }
     ]

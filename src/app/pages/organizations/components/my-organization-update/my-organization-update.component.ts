@@ -104,7 +104,7 @@ export class MyOrganizationUpdateComponent implements OnInit {
 
 		McUtils.generateEmailConfirmGroup(this.formBuilder, this.updateForm, this.formControlModels, this.organization.email);
 
-		formControlModel = {formGroup: this.updateForm, elementId: 'url', controlType: McFormControlType.Text, labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid'};
+		formControlModel = {formGroup: this.updateForm, elementId: 'url', controlType: McFormControlType.Text, labelName: 'URL to homepage', placeholder: 'URL is required', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'Url not valid. E.g. http://www.maritimecp.net'};
 		formControl = new FormControl(this.organization.url, formControlModel.validator);
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);

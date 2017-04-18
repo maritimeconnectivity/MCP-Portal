@@ -64,6 +64,9 @@ $card-header-font-size: 16px;
   > .card-footer {
     color: $default-text;
   }
+  > .collapsed {
+     border-bottom: 0px !important;
+   }
 }
 
 .card-header, .card-footer {
@@ -82,6 +85,10 @@ $card-header-font-size: 16px;
   margin-bottom: 0px;
   opacity: 0.9;
   color: $content-text;
+}
+
+.card-title-right {
+  float: right;
 }
 
 .card-primary {

@@ -18,4 +18,13 @@ export class DocsService implements OnInit {
   //      return this.docsApi.getDocUsingGET(???)
 	return null;
   }
+
+  public updateDoc(doc:Doc) : Observable<Doc> {
+  	return this.docsApi.updateDocUsingPUT(doc);
+  }
+
+	public createDoc(doc:Doc) : Observable<Doc> {
+		doc.comment = '';
+		return this.docsApi.createDocUsingPOST(doc);
+	}
 }

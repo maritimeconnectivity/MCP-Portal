@@ -62,7 +62,7 @@ export class InstanceDetailsComponent {
   }
 
   public createIdService() {
-		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name);
+		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name, this.instance.version);
   }
 
   private isMyOrg():boolean {
@@ -115,16 +115,16 @@ export class InstanceDetailsComponent {
 	}
 
   private loadIdService(mrn:string) {
-	  this.servicesService.getIdService(mrn, this.instance.organizationId).subscribe(
+	  this.servicesService.getIdService(mrn, this.instance.version, this.instance.organizationId).subscribe(
 		  service => {
 			  this.idService = service;
-			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
+			  this.showUpdateIdService = (this.isMyOrg() && this.isServiceAdminForOrg()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
 			  this.isLoadingIdService = false;
 		  },
 		  err => {
 			  if (err.status == 404) {
 				  this.shouldDisplayIdService = false;
-				  this.shouldDisplayCreateButton = this.isAdmin();
+				  this.shouldDisplayCreateButton = this.isServiceAdminForOrg();
 			  } else {
 			    this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
 			  }
@@ -154,7 +154,7 @@ export class InstanceDetailsComponent {
   }
 
 	public updateIdService() {
-		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn);
+		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn, this.instance.version);
 	}
 
   private gotoDesign(linkValue:any) {
@@ -165,15 +165,23 @@ export class InstanceDetailsComponent {
     }
   }
 
-	private isAdmin():boolean {
+	private isServiceAdminForOrg():boolean {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
-	public showDelete():boolean {
-		return this.isAdmin();
+	public showUpdate():boolean {
+		return this.isServiceAdminForOrg();
 	}
 
-	private delete() {
+	public showDelete():boolean {
+		return this.isServiceAdminForOrg();
+	}
+
+	public update() {
+		this.navigationHelperService.navigateToUpdateInstance(this.instance.instanceId, this.instance.version);
+	}
+
+	public delete() {
 		this.modalDescription = 'Do you want to delete the instance?';
 		this.showModal = true;
 	}
@@ -197,7 +205,7 @@ export class InstanceDetailsComponent {
 
 	private deleteIdService() {
   	if (this.idService) {
-			this.servicesService.deleteIdService(this.idService.mrn).subscribe(
+			this.servicesService.deleteIdService(this.idService.mrn, this.instance.version).subscribe(
 				() => {
 					this.navigationHelperService.navigateToOrgInstance('', '');
 				},

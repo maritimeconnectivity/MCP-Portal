@@ -16,7 +16,24 @@ export class McHttpService extends Http {
   }
 
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    return this.prepareService(options).flatMap(optionsMap => { return this.interceptError(super.request(url, optionsMap))}).flatMap(response => { return this.interceptResponse(response)});
+	  var requestUrl = url;
+	  try {
+	  	// We will try to url encode the params of the url
+	    if (typeof url === "string"){
+			  let indexDotSlashSlash = url.indexOf("://");
+			  if (indexDotSlashSlash > -1) {
+				  let urlProtocol = url.substring(0,indexDotSlashSlash+3);
+				  let urlParams = url.substring(indexDotSlashSlash+3).split("/");
+				  requestUrl = urlProtocol + urlParams[0];
+				  for(let i=1; i<urlParams.length; i++) {
+					  requestUrl += "/" + encodeURIComponent(urlParams[i]);
+				  }
+			  }
+		  }
+	  }catch(err){
+	  	// So many things can go wrong, so we dont url encode
+	  }
+    return this.prepareService(options).flatMap(optionsMap => { return this.interceptError(super.request(requestUrl, optionsMap))}).flatMap(response => { return this.interceptResponse(response)});
   }
 
   // Setting the http headers and if needed refreshes the access token

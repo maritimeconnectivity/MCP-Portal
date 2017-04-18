@@ -179,6 +179,22 @@ h5 {
   padding-left: 11px;
   border-left: 4px solid $warning-bg;
 }
+
+.important-notice-big {
+  font-weight: $font-normal;
+  border-left: 4px solid $warning-bg;
+  color: $default-text;
+  margin-top: 20px;
+  max-width: 440px;
+  line-height: 18px;
+  font-size: 18px;
+  padding-left: 11px;
+  & > span {
+    font-style: italic;
+    font-weight: bold;
+  }
+}
+
 .error-notice {
   font-weight: $font-normal;
   margin-top: 20px;

@@ -1,10 +1,14 @@
-<button *ngIf="!isLoading" [disabled]="disabled" type="button" (click)="clickHandler()" class="{{class}}">{{title}}
+<button *ngIf="!isLoading" [disabled]="disabled" type="{{type}}" (click)="clickHandler()" class="{{class}}">
+  <i *ngIf="buttonIcon" class="{{buttonIcon}}" aria-hidden="true"></i>
+  {{title}}
+</button>
+
+<button *ngIf="isLoading" style="height:0px; visibility:hidden;" type="button" class="{{class}}">
+  <i *ngIf="buttonIcon" class="{{buttonIcon}}" aria-hidden="true"></i>
+  {{title}}
 </button>
 <div *ngIf="isLoading" class="loading-wrapper">
   <sk-fading-circle-small [isRunning]="isLoading" ></sk-fading-circle-small>
 </div>
-
-<button *ngIf="isLoading" style="height:1px; visibility:hidden;" type="button" class="{{class}}">{{title}}
-</button>
 
 

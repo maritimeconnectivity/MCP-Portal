@@ -16,7 +16,7 @@ export class XmlParserService {
       let innerXmlData = xmlData.getElementsByTagName(outerField)[0];
       return innerXmlData.getElementsByTagName(fieldToFind)[0].childNodes[0].nodeValue;
     } catch ( error ) {
-      throw new Error("Error trying to parse required field: " + fieldToFind);
+      throw new Error("Error trying to parse required field: " + outerField + " -> " + fieldToFind);
     }
   }
 

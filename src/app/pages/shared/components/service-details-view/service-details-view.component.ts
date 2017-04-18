@@ -26,6 +26,7 @@ export class ServiceDetailsViewComponent {
 
 	public labelValues:Array<LabelValueModel>;
 	public entityType: CertificateEntityType;
+	public entityMrn:string;
 	constructor(private fileHelperService:FileHelperService, private authService: AuthService, private servicesService: IdServicesService, private notifications:MCNotificationsService) {
 
 	}
@@ -36,6 +37,7 @@ export class ServiceDetailsViewComponent {
 
 	ngOnChanges() {
 		if (this.service) {
+			this.entityMrn = this.service.mrn + '#¤#' + this.service.instanceVersion;
 			this.generateLabelValues();
 		}
 	}
@@ -45,7 +47,7 @@ export class ServiceDetailsViewComponent {
 	}
 
 	public downloadXML() {
-		this.servicesService.getIdServiceJbossXml(this.service.mrn).subscribe(
+		this.servicesService.getIdServiceJbossXml(this.service.mrn, this.service.instanceVersion).subscribe(
 			xmlString => {
 				this.fileHelperService.downloadFile(xmlString, 'text/xml', 'keycloak-oidc-subsystem.xml');
 			},
@@ -57,7 +59,7 @@ export class ServiceDetailsViewComponent {
 	}
 
 	public downloadJSON() {
-		this.servicesService.getServiceKeycloakJson(this.service.mrn).subscribe(
+		this.servicesService.getServiceKeycloakJson(this.service.mrn, this.service.instanceVersion).subscribe(
 			jsonString => {
 				this.fileHelperService.downloadFile(jsonString, 'text/json', 'keycloak.json');
 			},
