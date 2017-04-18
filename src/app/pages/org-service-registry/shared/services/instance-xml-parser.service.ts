@@ -17,4 +17,8 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 	public getMrnForDesignInInstance(xml: Xml): string {
 		return this.xmlParserService.getVauleFromEmbeddedField('implementsServiceDesign', 'id', xml);
 	}
+
+	public getEndpoint(xml: Xml): string {
+		return this.xmlParserService.getValueFromField('URL', xml);
+	}
 }

@@ -34,6 +34,7 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
   template: require('./instance-new.html'),
   styles: []
 })
+
 export class InstanceNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
 	public hasError: boolean = false;
@@ -62,6 +63,7 @@ export class InstanceNewComponent implements OnInit {
 	private useOIDCRedirect:boolean = true;
 	private mrn:string = '';
 	private name:string = '';
+	private endpoint:string = '';
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
@@ -96,10 +98,12 @@ export class InstanceNewComponent implements OnInit {
 	  }else {
 		  this.mrn = '';
 		  this.name = '';
+		  this.endpoint = '';
 		  this.xml = null;
 		  this.fileUploadXml.resetFileSelection();
 		  this.registerForm.patchValue({mrn: this.mrn});
 		  this.registerForm.patchValue({name: this.name});
+		  this.registerForm.patchValue({certDomainName: this.endpoint});
 	  }
   }
 
@@ -115,6 +119,13 @@ export class InstanceNewComponent implements OnInit {
 				if (isValid) {
 					this.mrn = mrn;
 					this.name = this.xmlParser.getName(file);
+					try {
+						let urlString = this.xmlParser.getEndpoint(file);
+						let url:URL = new URL(urlString);
+						this.endpoint = url.hostname;
+					}catch (e) {
+						// Failed to construct url. Do nothing
+					}
 				} else {
 					this.errorText  = "The MRN and/or version referencing the Design in the XML, doesn't match the MRN and/or version of the chosen Design.<BR><BR>"
 						+ "Chosen Design: " + this.design.designId + ", version: " + this.design.version + "<BR>"
@@ -123,12 +134,14 @@ export class InstanceNewComponent implements OnInit {
 			} else {
 				this.mrn = '';
 				this.name = '';
+				this.endpoint = '';
 				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			}
 			this.registerForm.patchValue({mrn: this.mrn});
 			this.registerForm.patchValue({name: this.name});
+			this.registerForm.patchValue({certDomainName: this.endpoint});
 			this.hasError = !isValid;
 			return isValid;
 		} catch ( error ) {
