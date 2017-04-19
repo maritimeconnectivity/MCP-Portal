@@ -105,31 +105,6 @@ export class SpecificationDetailsComponent {
 		);
 	}
 
-  private loadEndorsements(specificationId:string) {
-  	this.isLoadingEndorsements = true;
-	  let parallelObservables = [];
-
-	  parallelObservables.push(this.endorsementsService.isSpecificationEndorsedByMyOrg(specificationId).take(1));
-	  parallelObservables.push(this.endorsementsService.getEndorsementsForSpecification(specificationId).take(1));
-
-	  return Observable.forkJoin(parallelObservables).subscribe(
-      resultArray => {
-	      let isEndorsedByMyOrg:any = resultArray[0];
-	      let pageEndorsement: any = resultArray[1];
-	      this.endorsements = pageEndorsement.content;
-	      this.isEndorsedByMyOrg = isEndorsedByMyOrg;
-	      this.isLoadingEndorsements = false;
-	      this.showEndorsements = true;
-      },
-      err => {
-	      this.showEndorsements = false;
-	      this.isLoadingEndorsements = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get endorsements for specification', MCNotificationType.Error, err);
-      }
-    );
-  }
-
-
 	private loadOrganizationName() {
 		this.orgsService.getOrganizationName(this.specification.organizationId).subscribe(
 			organizationName => {
@@ -149,44 +124,6 @@ export class SpecificationDetailsComponent {
 		this.searchDesigns(searchRequest);
   }
 
-  public endorseToggle() {
-  	if (this.isEndorsedByMyOrg) {
-  		this.removeEndorse();
-	  } else {
-  		this.endorse();
-	  }
-  }
-
-  private endorse() {
-  	this.isEndorsing = true;
-  	this.endorsementsService.endorseSpecification(this.specification.specificationId).subscribe(
-		  _ => {
-		  	this.isEndorsedByMyOrg = true;
-			  this.isEndorsing = false;
-			  this.loadEndorsements(this.specification.specificationId);
-		  },
-		  err => {
-			  this.isEndorsing = false;
-			  this.notifications.generateNotification('Error', 'Error when trying endorse specification', MCNotificationType.Error, err);
-		  }
-	  );
-  }
-
-  private removeEndorse() {
-	  this.isEndorsing = true;
-	  this.endorsementsService.removeEndorsementOfSpecification(this.specification.specificationId).subscribe(
-		  _ => {
-			  this.isEndorsedByMyOrg = false;
-			  this.isEndorsing = false;
-			  this.loadEndorsements(this.specification.specificationId);
-		  },
-		  err => {
-			  this.isEndorsing = false;
-			  this.notifications.generateNotification('Error', 'Error when trying endorse specification', MCNotificationType.Error, err);
-		  }
-	  );
-  }
-
   private createDesign() {
     this.navigationHelperService.navigateToCreateDesign(this.specification.specificationId, this.specification.version);
   }
@@ -202,31 +139,6 @@ export class SpecificationDetailsComponent {
 	public shouldDisplayDelete():boolean {
 		return this.isAdmin() && !this.isLoadingDesigns;
 	}
-
-	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
-	}
-
-	public search(searchRequest: ServiceRegistrySearchRequest) {
-		this.isSearchingDesigns = true;
-		this.searchDesigns(searchRequest);
-	}
-
-	public searchDesigns(searchRequest:ServiceRegistrySearchRequest) {
-		this.designsService.searchDesignsForSpecification(searchRequest, this.specification.specificationId, this.specification.version).subscribe(
-			designs => {
-				this.designs = designs;
-				this.isLoadingDesigns = false;
-				this.isSearchingDesigns = false;
-			},
-			err => {
-				this.isLoadingDesigns = false;
-				this.isSearchingDesigns = false;
-				this.notifications.generateNotification('Error', 'Error when trying to search designs', MCNotificationType.Error, err);
-			}
-		);
-	}
-
 
 	private hasDesigns():boolean {
 		return this.designs && this.designs.length > 0;
@@ -256,6 +168,94 @@ export class SpecificationDetailsComponent {
 			err => {
 				this.isLoadingSpecification = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete specification', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	// Endorsement
+
+	private loadEndorsements(specificationId:string) {
+		this.isLoadingEndorsements = true;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.endorsementsService.isSpecificationEndorsedByMyOrg(specificationId).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForSpecification(specificationId).take(1));
+
+		return Observable.forkJoin(parallelObservables).subscribe(
+			resultArray => {
+				let isEndorsedByMyOrg:any = resultArray[0];
+				let pageEndorsement: any = resultArray[1];
+				this.endorsements = pageEndorsement.content;
+				this.isEndorsedByMyOrg = isEndorsedByMyOrg;
+				this.isLoadingEndorsements = false;
+				this.showEndorsements = true;
+			},
+			err => {
+				this.showEndorsements = false;
+				this.isLoadingEndorsements = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get endorsements for specification', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public endorseToggle() {
+		if (this.isEndorsedByMyOrg) {
+			this.removeEndorse();
+		} else {
+			this.endorse();
+		}
+	}
+
+	private endorse() {
+		this.isEndorsing = true;
+		this.endorsementsService.endorseSpecification(this.specification.specificationId).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = true;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.specification.specificationId);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to endorse specification', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private removeEndorse() {
+		this.isEndorsing = true;
+		this.endorsementsService.removeEndorsementOfSpecification(this.specification.specificationId).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = false;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.specification.specificationId);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to remove endorse of specification', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public shouldDisplayEndorsementButton():boolean {
+		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
+	}
+	// Search
+	public search(searchRequest: ServiceRegistrySearchRequest) {
+		this.isSearchingDesigns = true;
+		this.searchDesigns(searchRequest);
+	}
+
+	public searchDesigns(searchRequest:ServiceRegistrySearchRequest) {
+		this.designsService.searchDesignsForSpecification(searchRequest, this.specification.specificationId, this.specification.version).subscribe(
+			designs => {
+				this.designs = designs;
+				this.isLoadingDesigns = false;
+				this.isSearchingDesigns = false;
+			},
+			err => {
+				this.isLoadingDesigns = false;
+				this.isSearchingDesigns = false;
+				this.notifications.generateNotification('Error', 'Error when trying to search designs', MCNotificationType.Error, err);
 			}
 		);
 	}

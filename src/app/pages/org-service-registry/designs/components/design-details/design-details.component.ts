@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
@@ -15,6 +14,10 @@ import {SrViewModelService} from "../../../shared/services/sr-view-model.service
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
 import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
+import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
+import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import {Observable} from "rxjs/Observable";
 
 const SEARCH_KEY = 'DesignDetailsComponent';
 
@@ -39,11 +42,19 @@ export class DesignDetailsComponent {
 	public showModalNoDelete:boolean = false;
 	public modalDescriptionNoDelete:string;
 
+	// Endorsements
+	public isLoadingEndorsements:boolean;
+	public isEndorsing:boolean;
+	public showEndorsements:boolean;
+	public isEndorsedByMyOrg:boolean;
+	public endorsements:Array<Endorsement> = [];
+	public endorseMainSwitch = SHOW_ENDORSEMENTS;
+
 	// Search
 	public isSearchingInstances = false;
 	public searchKey = SEARCH_KEY;
 
-  constructor(private searchRequestsService:SrSearchRequestsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
+  constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -54,7 +65,12 @@ export class DesignDetailsComponent {
     this.isLoadingDesign = true;
     this.isLoadingInstances = true;
     this.title = 'Loading ...';
-    this.loadDesign();
+	  let designId = this.route.snapshot.params['id'];
+	  let version = this.route.snapshot.queryParams['designVersion'];
+    this.loadDesign(designId, version);
+	  if (SHOW_ENDORSEMENTS) {
+		  this.loadEndorsements(designId);
+	  }
   }
 
   public downloadXml() {
@@ -65,9 +81,7 @@ export class DesignDetailsComponent {
     this.fileHelperService.downloadDoc(this.design.designAsDoc);
   }
 
-  private loadDesign() {
-    let designId = this.route.snapshot.params['id'];
-    let version = this.route.snapshot.queryParams['designVersion'];
+  private loadDesign(designId:string, version:string) {
     this.designsService.getDesign(designId, version).subscribe(
       design => {
         this.title = design.name;
@@ -178,6 +192,78 @@ export class DesignDetailsComponent {
 				this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
 			}
 		);
+	}
+
+	// Endorsements
+	private loadEndorsements(designId:string) {
+		this.isLoadingEndorsements = true;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.endorsementsService.isDesignEndorsedByMyOrg(designId).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForDesign(designId).take(1));
+
+		return Observable.forkJoin(parallelObservables).subscribe(
+			resultArray => {
+				let isEndorsedByMyOrg:any = resultArray[0];
+				let pageEndorsement: any = resultArray[1];
+				this.endorsements = pageEndorsement.content;
+				this.isEndorsedByMyOrg = isEndorsedByMyOrg;
+				this.isLoadingEndorsements = false;
+				this.showEndorsements = true;
+			},
+			err => {
+				this.showEndorsements = false;
+				this.isLoadingEndorsements = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get endorsements for design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public endorseToggle() {
+		if (this.isEndorsedByMyOrg) {
+			this.removeEndorse();
+		} else {
+			this.endorse();
+		}
+	}
+
+	private endorse() {
+		this.isEndorsing = true;
+		var specificationId = '';
+		if (this.design.specifications && this.design.specifications.length > 0) {
+			// TODO handle more specifications when endorse api has the functionality
+			specificationId = this.design.specifications[0].specificationId;
+		}
+		this.endorsementsService.endorseDesign(this.design.designId, specificationId).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = true;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.design.designId);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to endorse design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private removeEndorse() {
+		this.isEndorsing = true;
+		this.endorsementsService.removeEndorsementOfDesign(this.design.designId).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = false;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.design.designId);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to remove endorse of design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public shouldDisplayEndorsementButton():boolean {
+		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
 	}
 
 	// Search

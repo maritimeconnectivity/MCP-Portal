@@ -12,8 +12,15 @@
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Design</button>
         </li>
+        <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingInstances">
+          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing" (onEndorse)="endorseToggle()"></mc-endorse-button>
+        </li>
       </ul>
     </ba-card>
+
+    <div *ngIf="endorseMainSwitch">
+      <endorsed-by-list [title]="'Organizations endorsing the Design (' + title + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+    </div>
 
     <ba-card title="Instances implementing the Design ({{design?.name}})" baCardClass="with-scroll table-panel">
       <div *ngIf="!isLoadingInstances">
