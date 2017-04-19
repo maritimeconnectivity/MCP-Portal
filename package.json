@@ -1,6 +1,6 @@
 {
   "name": "maritime-cloud-management-portal",
-  "version": "0.4.2-b.7",
+  "version": "0.4.2-b.8",
   "description": "Management Portal for the Maritime Cloud",
   "author": "Danish Maritime Authority",
   "homepage": "http://maritimecloud.net",
@@ -117,7 +117,7 @@
     "webpack": "webpack",
     "webpack-dev-server": "webpack-dev-server",
     "webdriver-manager": "webdriver-manager",
-    "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist",
+    "clean:dontuse": "npm cache clean && npm run rimraf -- node_modules doc coverage dist",
     "clean:dist": "npm run rimraf -- dist",
     "preclean:install": "npm run clean",
     "clean:install": "npm set progress=false && npm install",

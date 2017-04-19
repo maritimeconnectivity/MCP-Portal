@@ -18,8 +18,8 @@ const SEARCH_KEY = 'SpecificationListComponent';
 })
 export class SpecificationListComponent implements OnInit {
 	public searchKey = SEARCH_KEY;
-	public organization: Organization;
 	public isSearching = false;
+	public organization: Organization;
   public specifications: Array<Specification>;
   public isLoading: boolean;
   public onCreate: Function;

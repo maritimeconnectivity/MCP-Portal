@@ -12,11 +12,15 @@ import {XmlsService} from "./xmls.service";
 import {Xml} from "../autogen/model/Xml";
 import {QueryHelper} from "./query-helper";
 import {SortingHelper} from "../../shared/SortingHelper";
+import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {EndorsementSearchResult, EndorsementsService} from "../../endorsements/services/endorsements.service";
+import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
+import {AuthService} from "../../../authentication/services/auth.service";
 
 @Injectable()
 export class InstancesService implements OnInit {
   private chosenInstance: Instance;
-  constructor(private docsService:DocsService, private xmlsService:XmlsService, private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
+  constructor(private authService: AuthService, private endorsementsService:EndorsementsService, private docsService:DocsService, private xmlsService:XmlsService, private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
   }
 
   ngOnInit() {
@@ -133,25 +137,66 @@ export class InstancesService implements OnInit {
     );
   }
 
-  public getAllInstances(): Observable<Array<Instance>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-	    // TODO FIXME Hotfix. This pagination should be done the right way
-	    let sort = SortingHelper.sortingForInstances();
-      this.instancesApi.getAllInstancesUsingGET(0, 100, undefined, undefined, sort).subscribe(
-        instances => {
-          // TODO delete this again, when description is part of the json
-          for (let instance of instances) {
-            instance.description = this.getDescription(instance);
-          }
-          observer.next(instances);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
-  }
+	public getInstancesForMyOrg(): Observable<Array<Instance>> {
+		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
+
+		return this.getInstances(searchRequest);
+	}
+
+	public searchInstances(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Instance>> {
+		let parallelObservables = [];
+
+		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=Id=<firstId> OR id=<secondId> OR ...
+		parallelObservables.push(this.getInstances(searchRequest).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForInstances(searchRequest).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let instances:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(instances,endorsementResult);
+			});
+	}
+
+	private combineSearchResult(instances:Array<Instance>, endorsementResult:EndorsementSearchResult) : Observable<Array<Instance>> {
+		if (endorsementResult.shouldFilter) {
+			instances = this.filterInstances(instances, endorsementResult.pageEndorsement.content);
+		}
+		return Observable.of(instances);
+	}
+
+	private filterInstances(instances:Array<Instance>, endorsements:Array<Endorsement>) : Array<Instance> {
+		let filteredInstances: Array<Instance> = [];
+		instances.forEach(instance => {
+			for (let endorsement of endorsements){
+				if (instance.instanceId === endorsement.serviceMrn) {
+					filteredInstances.push(instance);
+					break;
+				}
+			}
+		});
+		return filteredInstances;
+	}
+
+	private getInstances(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Instance>> {
+		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
+		return Observable.create(observer => {
+			// TODO FIXME Hotfix. This pagination should be done the right way
+			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
+			let sort = SortingHelper.sortingForInstances();
+			this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+				instances => {
+					for (let instance of instances) {
+						instance.description = this.getDescription(instance);
+					}
+					observer.next(instances);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   public getInstancesForDesign(designId:string, designVersion?:string): Observable<Array<Instance>> {
     return Observable.create(observer => {

@@ -26,6 +26,27 @@ export class DesignsService implements OnInit {
 
   }
 
+	public searchDesigns(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Design>> {
+		let parallelObservables = [];
+
+		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=specificationId=<firstId> OR specificationId=<secondId> OR ...
+		parallelObservables.push(this.getDesigns(searchRequest).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let designs:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(designs,endorsementResult);
+			});
+	}
+
+	public getDesignsForMyOrg(): Observable<Array<Design>> {
+		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
+
+		return this.getDesigns(searchRequest);
+	}
+
 	public searchDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, version?:string): Observable<Array<Design>> {
 		if (!searchRequest) {
 			return this.getDesignsForSpecification(specificationId, version);
@@ -62,6 +83,25 @@ export class DesignsService implements OnInit {
 			}
 		});
 		return filteredDesigns;
+	}
+
+	private getDesigns(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Design>> {
+		return Observable.create(observer => {
+			// TODO FIXME Hotfix. This pagination should be done the right way
+			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
+			let sort = SortingHelper.sortingForDesigns();
+			this.designsApi.searchDesignsUsingGET(query,0,100, sort).subscribe(
+				designs => {
+					for (let design of designs) {
+						design.description = this.getDescription(design);
+					}
+					observer.next(designs);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
 	}
 
 	private getDesignsForSpecification(specificationId:string, specificationVersion?:string): Observable<Array<Design>> {
@@ -116,26 +156,6 @@ export class DesignsService implements OnInit {
         observer.error(err);
       }
     );
-  }
-
-  public getAllDesigns(): Observable<Array<Design>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-	    // TODO FIXME Hotfix. This pagination should be done the right way
-	    let sort = SortingHelper.sortingForDesigns();
-      this.designsApi.getAllDesignsUsingGET(0, 100, sort).subscribe(
-        designs => {
-          // TODO delete this again, when description is part of the json
-          for (let design of designs) {
-            design.description = this.getDescription(design);
-          }
-          observer.next(designs);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
   }
 
   public getDesignForInstance(instance:Instance): Observable<Design> {

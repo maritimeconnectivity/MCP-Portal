@@ -75,26 +75,6 @@ export class SpecificationsService implements OnInit {
     );
   }
 
-	public getAllSpecifications(): Observable<Array<Specification>> {
-		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-		return Observable.create(observer => {
-			// TODO FIXME Hotfix. This pagination should be done the right way
-			let sort = SortingHelper.sortingForSpecifications();
-			this.specificationsApi.getAllSpecificationsUsingGET(0,100, sort).subscribe(
-				specifications => {
-					// TODO delete this again, when description is part of the json
-					for (let specification of specifications) {
-						specification.description = this.getDescription(specification);
-					}
-					observer.next(specifications);
-				},
-				err => {
-					observer.error(err);
-				}
-			);
-		});
-	}
-
 	public getSpecificationsForMyOrg(): Observable<Array<Specification>> {
 		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
 
