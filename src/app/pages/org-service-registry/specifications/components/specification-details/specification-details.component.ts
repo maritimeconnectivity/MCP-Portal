@@ -47,10 +47,6 @@ export class SpecificationDetailsComponent {
 	public showEndorsements:boolean;
 	public isEndorsedByMyOrg:boolean;
 	public endorsements:Array<Endorsement> = [];
-	public endorseButtonClass:string;
-	public endorseButtonIcon:string;
-	public endorseButtonTitle:string;
-	public onEndorse: Function;
 	public endorseMainSwitch = SHOW_ENDORSEMENTS;
 
 	// Search
@@ -62,7 +58,6 @@ export class SpecificationDetailsComponent {
   }
 
   ngOnInit() {
-	  this.onEndorse = this.endorseToggle.bind(this);
     this.onCreate = this.createDesign.bind(this);
     this.onGotoDesign = this.gotoDesign.bind(this);
 
@@ -125,7 +120,6 @@ export class SpecificationDetailsComponent {
 	      this.isEndorsedByMyOrg = isEndorsedByMyOrg;
 	      this.isLoadingEndorsements = false;
 	      this.showEndorsements = true;
-	      this.setEndorseButtonClassAndTitle();
       },
       err => {
 	      this.showEndorsements = false;
@@ -135,12 +129,6 @@ export class SpecificationDetailsComponent {
     );
   }
 
-  private setEndorseButtonClassAndTitle() {
-  	// TODO Maybe make an EndorseButton, as this will be used 3 places
-	  this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Revoke Endorsement' : 'Endorse Specification');
-	  this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn btn-danger btn-raised' : 'btn btn-success btn-raised btn-with-icon');
-	  this.endorseButtonIcon = (this.isEndorsedByMyOrg ? '' : 'ion-android-cloud-done fa-lg');
-  }
 
 	private loadOrganizationName() {
 		this.orgsService.getOrganizationName(this.specification.organizationId).subscribe(
@@ -174,7 +162,6 @@ export class SpecificationDetailsComponent {
   	this.endorsementsService.endorseSpecification(this.specification.specificationId).subscribe(
 		  _ => {
 		  	this.isEndorsedByMyOrg = true;
-		  	this.setEndorseButtonClassAndTitle();
 			  this.isEndorsing = false;
 			  this.loadEndorsements(this.specification.specificationId);
 		  },
@@ -190,7 +177,6 @@ export class SpecificationDetailsComponent {
 	  this.endorsementsService.removeEndorsementOfSpecification(this.specification.specificationId).subscribe(
 		  _ => {
 			  this.isEndorsedByMyOrg = false;
-			  this.setEndorseButtonClassAndTitle();
 			  this.isEndorsing = false;
 			  this.loadEndorsements(this.specification.specificationId);
 		  },

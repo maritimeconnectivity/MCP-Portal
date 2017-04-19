@@ -13,7 +13,7 @@
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
         </li>
         <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingDesigns">
-          <mc-loading-button [buttonIcon]="endorseButtonIcon" [class]="endorseButtonClass" [isLoading]="isEndorsing" [title]="endorseButtonTitle" [onClick]="onEndorse" ></mc-loading-button>
+          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing" (onEndorse)="endorseToggle()"></mc-endorse-button>
         </li>
       </ul>
     </ba-card>
