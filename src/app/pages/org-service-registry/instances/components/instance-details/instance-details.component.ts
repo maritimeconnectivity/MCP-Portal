@@ -15,6 +15,10 @@ import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {DocsService} from "../../../../../backend-api/service-registry/services/docs.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
+import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'instance-details',
@@ -39,7 +43,15 @@ export class InstanceDetailsComponent {
 	public shouldDisplayCreateButton:boolean = false;
 	public showUpdateIdService:boolean = false;
 
-  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService) {
+	// Endorsements
+	public isLoadingEndorsements:boolean;
+	public isEndorsing:boolean;
+	public showEndorsements:boolean;
+	public isEndorsedByMyOrg:boolean;
+	public endorsements:Array<Endorsement> = [];
+	public endorseMainSwitch = SHOW_ENDORSEMENTS;
+
+  constructor(private servicesService:IdServicesService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService) {
 
   }
 
@@ -50,7 +62,12 @@ export class InstanceDetailsComponent {
 	  this.isLoadingIdService = true;
     this.title = 'Loading ...';
 	  this.titleIdService = 'ID information';
-    this.loadInstance();
+	  let instanceId = this.route.snapshot.params['id'];
+	  let version = this.route.snapshot.queryParams['instanceVersion'];
+    this.loadInstance(instanceId, version);
+	  if (SHOW_ENDORSEMENTS) {
+		  this.loadEndorsements(instanceId);
+	  }
   }
 
   public downloadXml() {
@@ -70,9 +87,7 @@ export class InstanceDetailsComponent {
   }
 
 
-  private loadInstance() {
-    let instanceId = this.route.snapshot.params['id'];
-    let version = this.route.snapshot.queryParams['instanceVersion'];
+  private loadInstance(instanceId:string, version:string) {
     this.instancesService.getInstance(instanceId, version).subscribe(
       instance => {
         this.title = instance.name;
@@ -216,5 +231,77 @@ export class InstanceDetailsComponent {
 	  } else {
 		  this.navigationHelperService.navigateToOrgInstance('', '');
 	  }
+	}
+
+	private isAdmin():boolean {
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
+	}
+
+	// Endorsements
+	private loadEndorsements(instanceId:string) {
+		this.isLoadingEndorsements = true;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.endorsementsService.isInstanceEndorsedByMyOrg(instanceId).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForInstance(instanceId).take(1));
+
+		return Observable.forkJoin(parallelObservables).subscribe(
+			resultArray => {
+				let isEndorsedByMyOrg:any = resultArray[0];
+				let pageEndorsement: any = resultArray[1];
+				this.endorsements = pageEndorsement.content;
+				this.isEndorsedByMyOrg = isEndorsedByMyOrg;
+				this.isLoadingEndorsements = false;
+				this.showEndorsements = true;
+			},
+			err => {
+				this.showEndorsements = false;
+				this.isLoadingEndorsements = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get endorsements for instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public endorseToggle() {
+		if (this.isEndorsedByMyOrg) {
+			this.removeEndorse();
+		} else {
+			this.endorse();
+		}
+	}
+
+	private endorse() {
+		this.isEndorsing = true;
+
+		this.endorsementsService.endorseInstance(this.instance.instanceId, this.design.designId).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = true;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.instance.instanceId);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to endorse instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private removeEndorse() {
+		this.isEndorsing = true;
+		this.endorsementsService.removeEndorsementOfInstance(this.instance.instanceId).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = false;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.instance.instanceId);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to remove endorse of instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public shouldDisplayEndorsementButton():boolean {
+		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
 	}
 }

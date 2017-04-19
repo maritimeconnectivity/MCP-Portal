@@ -15,6 +15,9 @@
         <li *ngIf="showDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Instance</button>
         </li>
+        <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingInstance">
+          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing" (onEndorse)="endorseToggle()"></mc-endorse-button>
+        </li>
       </ul>
     </ba-card>
 
@@ -30,6 +33,10 @@
           </li>
         </ul>
       </ba-card>
+    </div>
+
+    <div *ngIf="endorseMainSwitch">
+      <endorsed-by-list [title]="'Organizations endorsing the Instance (' + title + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
     </div>
   </div>
 </div>
