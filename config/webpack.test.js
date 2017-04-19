@@ -115,6 +115,7 @@ module.exports = function(options) {
           'KEYCLOAK_JSON':JSON.stringify('assets/test-keycloak.json'),
           'ERROR_TAG_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': false,
+          'CAN_JOIN': false,
           'ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
           'process.env': {

@@ -57,6 +57,7 @@ declare var SR_BASE_PATH: string;
 declare var KEYCLOAK_JSON: string;
 declare var ERROR_TAG_TEXT: string;
 declare var IS_DEV: boolean;
+declare var CAN_JOIN: boolean;
 declare var HMR: boolean;
 declare var System: SystemJS;
 

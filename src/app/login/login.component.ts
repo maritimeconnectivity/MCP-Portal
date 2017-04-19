@@ -12,6 +12,8 @@ export class LoginComponent implements OnInit {
 
 	public version = require("../../../package.json").version;
 
+	public canJoin:boolean = CAN_JOIN;
+
   constructor(private authService: AuthService, private notificationService: MCNotificationsService, private route: ActivatedRoute) {
   }
 

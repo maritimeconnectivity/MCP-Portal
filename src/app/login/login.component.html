@@ -11,8 +11,10 @@
         <button type="button" class="btn btn-primary btn-lg" (click)="logIn()">Log in</button>
         <a style="position: absolute;margin-top: 17px; margin-left: 17px;" href="http://manual.maritimecloud.net" target="_blank">I need help</a>
       </div>
-      <div class="auth-sep"><span><a href="/#/apply">Join</a> my organization to the Maritime Cloud.</span></div>
-      <br>
+      <div *ngIf="canJoin" class="auth-sep">
+        <span><a href="/#/apply">Join</a> my organization to the Maritime Cloud.</span>
+        <br>
+      </div>
       <div class="auth-sep"><span><b>Disclaimer</b>: This is currently a beta release and it should be expected to contain minor bugs.<br>
       If you encounter any bugs please create a <a href="/#/report">Bug Report</a>.</span></div>
       <br>
