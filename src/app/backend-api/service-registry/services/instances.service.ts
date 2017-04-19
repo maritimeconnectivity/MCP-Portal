@@ -11,6 +11,7 @@ import {DocsService} from "./docs.service";
 import {XmlsService} from "./xmls.service";
 import {Xml} from "../autogen/model/Xml";
 import {QueryHelper} from "./query-helper";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 @Injectable()
 export class InstancesService implements OnInit {
@@ -136,7 +137,8 @@ export class InstancesService implements OnInit {
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
-      this.instancesApi.getAllInstancesUsingGET(0, 100).subscribe(
+	    let sort = SortingHelper.sortingForInstances();
+      this.instancesApi.getAllInstancesUsingGET(0, 100, undefined, undefined, sort).subscribe(
         instances => {
           // TODO delete this again, when description is part of the json
           for (let instance of instances) {
@@ -155,7 +157,8 @@ export class InstancesService implements OnInit {
     return Observable.create(observer => {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
 	    let query = QueryHelper.generateQueryStringForDesign(designId);
-	    this.instancesApi.searchInstancesUsingGET(query,0,100).subscribe(
+	    let sort = SortingHelper.sortingForInstances();
+	    this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
 			    for (let instance of instances) {

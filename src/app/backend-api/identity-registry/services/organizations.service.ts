@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 @Injectable()
 export class OrganizationsService implements OnInit {
@@ -167,8 +168,9 @@ export class OrganizationsService implements OnInit {
 		}
 
 		return Observable.create(observer => {
+			let sort = SortingHelper.sortingForOrganizations();
 			// TODO: do paging properly
-			this.organizationApi.getOrganizationUsingGET2(0, 100).subscribe(
+			this.organizationApi.getOrganizationUsingGET2(0, 100, sort).subscribe(
 				pageOrganization => {
 					this.organizations = pageOrganization.content;
 					observer.next(pageOrganization.content);

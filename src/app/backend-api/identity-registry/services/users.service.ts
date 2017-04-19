@@ -6,6 +6,7 @@ import {User} from "../autogen/model/User";
 import {UsercontrollerApi} from "../autogen/api/UsercontrollerApi";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 import {PageUser} from "../autogen/model/PageUser";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 @Injectable()
 export class UsersService implements OnInit {
@@ -33,7 +34,9 @@ export class UsersService implements OnInit {
 
 	public getUsers(): Observable<PageUser> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.userApi.getOrganizationUsersUsingGET(orgMrn);
+		let sort = SortingHelper.sortingForUsers();
+		// TODO: do paging properly
+		return this.userApi.getOrganizationUsersUsingGET(orgMrn, 0, 100, sort);
 	}
 
 	public createUserForOrg(orgMrn: string, user: User) : Observable<User> {

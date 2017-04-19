@@ -13,6 +13,7 @@ import {QueryHelper} from "./query-helper";
 import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
 import {forEach} from "@angular/router/src/utils/collection";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
@@ -78,7 +79,8 @@ export class SpecificationsService implements OnInit {
 		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
 		return Observable.create(observer => {
 			// TODO FIXME Hotfix. This pagination should be done the right way
-			this.specificationsApi.getAllSpecificationsUsingGET(0,100).subscribe(
+			let sort = SortingHelper.sortingForSpecifications();
+			this.specificationsApi.getAllSpecificationsUsingGET(0,100, sort).subscribe(
 				specifications => {
 					// TODO delete this again, when description is part of the json
 					for (let specification of specifications) {
@@ -102,6 +104,7 @@ export class SpecificationsService implements OnInit {
 	public searchSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
 		let parallelObservables = [];
 
+		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=specificationId=<firstId> OR specificationId=<secondId> OR ...
 		parallelObservables.push(this.getSpecifications(searchRequest).take(1));
 		parallelObservables.push(this.endorsementsService.searchEndorsementsForSpecifications(searchRequest).take(1));
 
@@ -138,7 +141,8 @@ export class SpecificationsService implements OnInit {
 		return Observable.create(observer => {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
-			this.specificationsApi.searchSpecificationsUsingGET(query,0,100).subscribe(
+			let sort = SortingHelper.sortingForSpecifications();
+			this.specificationsApi.searchSpecificationsUsingGET(query,0,100, sort).subscribe(
 				specifications => {
 					// TODO delete this again, when description is part of the json
 					for (let specification of specifications) {

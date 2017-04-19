@@ -13,6 +13,7 @@ import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/ser
 import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {QueryHelper} from "./query-helper";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class DesignsService implements OnInit {
 		}
 
   	let parallelObservables = [];
+		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=specificationId=<firstId> OR specificationId=<secondId> OR ...
 		parallelObservables.push(this.searchAndFilterDesignsForSpecification(searchRequest, specificationId, version).take(1));
 		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest, specificationId).take(1));
 
@@ -120,7 +122,8 @@ export class DesignsService implements OnInit {
     // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
     return Observable.create(observer => {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
-      this.designsApi.getAllDesignsUsingGET(0, 100).subscribe(
+	    let sort = SortingHelper.sortingForDesigns();
+      this.designsApi.getAllDesignsUsingGET(0, 100, sort).subscribe(
         designs => {
           // TODO delete this again, when description is part of the json
           for (let design of designs) {
@@ -172,7 +175,8 @@ export class DesignsService implements OnInit {
 			   query = QueryHelper.combineQueryStringsWithAnd([querySearch,querySpecification]);
 		   }
 		   // TODO FIXME Hotfix. This pagination should be done the right way
-		   this.designsApi.searchDesignsUsingGET(query,0,100).subscribe(
+		   let sort = SortingHelper.sortingForDesigns();
+		   this.designsApi.searchDesignsUsingGET(query,0,100, sort).subscribe(
 			   designs => {
 				   var designsFiltered: Array<Design> = [];
 				   for (let design of designs) {

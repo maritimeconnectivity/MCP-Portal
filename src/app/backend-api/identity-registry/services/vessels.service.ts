@@ -6,6 +6,7 @@ import {Vessel} from "../autogen/model/Vessel";
 import {VesselcontrollerApi} from "../autogen/api/VesselcontrollerApi";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 import {PageVessel} from "../autogen/model/PageVessel";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 @Injectable()
 export class VesselsService {
@@ -14,7 +15,9 @@ export class VesselsService {
 
 	public getVessels(): Observable<PageVessel> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn);
+		let sort = SortingHelper.sortingForVessels();
+		// TODO: do paging properly
+		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn, 0, 100, sort);
 	}
 
 	public deleteVessel(vesselMrn:string):Observable<any> {

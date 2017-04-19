@@ -66,6 +66,7 @@ export class EndorsementsService {
 	}
 
 	private getEndorsements(serviceMrn:string) : Observable<PageEndorsement> {
+		// TODO: Maybe some paging? remember that the methods depending on this method is expecting to get ALL endorsements. So remember paging in those methods as well. Note that some methods may need the full list so maaybe a getAll method is needed. For example when used in a search for filtering. Some methods still need the pagination, for example the list of endorsing organizations
 		return this.endorsementApi.getEndormentsByServiceMrnUsingGET(serviceMrn);
 	}
 
@@ -134,6 +135,7 @@ export class EndorsementsService {
 
 	private getEndormentsByOrgMrn(serviceLevel:ServiceLevelEnum, endorsedBy:string): Observable<EndorsementSearchResult> {
 		return Observable.create(observer => {
+			// TODO: Maybe some paging? remember that the methods depending on this method is expecting to get ALL endorsements. So remember paging in those methods as well. Note that some methods may need the full list so maaybe a getAll method is needed. For example when used in a search for filtering. Some methods still need the pagination, for example the list of endorsing organizations
 			this.endorsementApi.getEndormentsByOrgMrnUsingGET(serviceLevel+'', endorsedBy).subscribe(
 				pageEndorsement => {
 					let endorsementResult:EndorsementSearchResult = {shouldFilter:true, pageEndorsement:pageEndorsement};
@@ -150,6 +152,7 @@ export class EndorsementsService {
   	return Observable.create(observer => {
 			this.endorsementApi.getEndorsedByParentMrnAndOrgMrnUsingGET(parentMrn, endorsedBy).subscribe(
 				pageEndorsement => {
+					// TODO: Maybe some paging? remember that the methods depending on this method is expecting to get ALL endorsements. So remember paging in those methods as well. Note that some methods may need the full list so maaybe a getAll method is needed. For example when used in a search for filtering. Some methods still need the pagination, for example the list of endorsing organizations
 					let endorsementResult:EndorsementSearchResult = {shouldFilter:true, pageEndorsement:pageEndorsement};
 					observer.next(endorsementResult);
 				},
