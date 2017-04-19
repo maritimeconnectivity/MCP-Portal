@@ -13,6 +13,10 @@ import {InstancesService} from "../../../../../backend-api/service-registry/serv
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+
+const SEARCH_KEY = 'DesignDetailsComponent';
 
 @Component({
   selector: 'design-details',
@@ -35,7 +39,11 @@ export class DesignDetailsComponent {
 	public showModalNoDelete:boolean = false;
 	public modalDescriptionNoDelete:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
+	// Search
+	public isSearchingInstances = false;
+	public searchKey = SEARCH_KEY;
+
+  constructor(private searchRequestsService:SrSearchRequestsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -98,16 +106,8 @@ export class DesignDetailsComponent {
 	}
 
   private loadInstances() {
-    this.instancesService.getInstancesForDesign(this.design.designId, this.design.version).subscribe(
-      instances => {
-        this.instances = instances;
-        this.isLoadingInstances = false;
-      },
-      err => {
-        this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
-      }
-    );
+	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  this.searchDesigns(searchRequest);
   }
 
   private generateLabelValuesForSpecification() {
@@ -176,6 +176,27 @@ export class DesignDetailsComponent {
 			err => {
 				this.isLoadingDesign = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	// Search
+	public search(searchRequest: ServiceRegistrySearchRequest) {
+		this.isSearchingInstances = true;
+		this.searchDesigns(searchRequest);
+	}
+
+	public searchDesigns(searchRequest:ServiceRegistrySearchRequest) {
+		this.instancesService.searchInstancesForDesign(searchRequest, this.design.designId, this.design.version).subscribe(
+			instances => {
+				this.instances = instances;
+				this.isLoadingInstances = false;
+				this.isSearchingInstances = false;
+			},
+			err => {
+				this.isLoadingInstances = false;
+				this.isSearchingInstances = false;
+				this.notifications.generateNotification('Error', 'Error when trying to search instances', MCNotificationType.Error, err);
 			}
 		);
 	}

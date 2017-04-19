@@ -28,9 +28,9 @@
 
         <div class="separator"></div>
       </div>
-      <div style="display: flex;">
+      <div class="create-loading-wrapper">
         <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
-        <sk-fading-circle-small style="margin-left: 15px;" [isRunning]="isSearchingDesigns"></sk-fading-circle-small>
+        <sk-fading-circle-small class="create-loading" [isRunning]="isSearchingDesigns"></sk-fading-circle-small>
       </div>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
     </ba-card>

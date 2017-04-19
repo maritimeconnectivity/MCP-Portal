@@ -20,7 +20,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
 @Injectable()
 export class InstancesService implements OnInit {
   private chosenInstance: Instance;
-  constructor(private authService: AuthService, private endorsementsService:EndorsementsService, private docsService:DocsService, private xmlsService:XmlsService, private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
+  constructor(private xmlInstanceParser: InstanceXmlParser, private authService: AuthService, private endorsementsService:EndorsementsService, private docsService:DocsService, private xmlsService:XmlsService, private instancesApi: ServiceinstanceresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private xmlParser: InstanceXmlParser) {
   }
 
   ngOnInit() {
@@ -158,6 +158,57 @@ export class InstancesService implements OnInit {
 			});
 	}
 
+	public searchInstancesForDesign(searchRequest:ServiceRegistrySearchRequest, designId:string, version?:string): Observable<Array<Instance>> {
+		if (!searchRequest) {
+			return this.getInstancesForDesign(designId, version);
+		}
+
+		let parallelObservables = [];
+		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=id=<firstId> OR id=<secondId> OR ...
+		parallelObservables.push(this.searchAndFilterInstancesForDesign(searchRequest, designId, version).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForInstances(searchRequest, designId).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let instances:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(instances,endorsementResult);
+			});
+	}
+
+	private searchAndFilterInstancesForDesign(searchRequest:ServiceRegistrySearchRequest, designId:string, designVersion?:string): Observable<Array<Instance>> {
+		return Observable.create(observer => {
+			let querySearch = QueryHelper.generateQueryStringForRequest(searchRequest);
+			let queryDesign = QueryHelper.generateQueryStringForDesign(designId);
+			var query = queryDesign;
+			if (querySearch.length > 0) {
+				query = QueryHelper.combineQueryStringsWithAnd([querySearch,queryDesign]);
+			}
+			// TODO FIXME Hotfix. This pagination should be done the right way
+			let sort = SortingHelper.sortingForInstances();
+			this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+				instances => {
+					var instancesFiltered: Array<Instance> = [];
+					for (let instance of instances) {
+						instance.description = this.getDescription(instance);
+						if (designVersion) {
+							let designXmlVersion = this.xmlInstanceParser.getVersionForDesignInInstance(instance.instanceAsXml);
+							if (designVersion === designXmlVersion) {
+								instancesFiltered.push(instance);
+							}
+						} else {
+							instancesFiltered.push(instance);
+						}
+					}
+					observer.next(instancesFiltered);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
+
 	private combineSearchResult(instances:Array<Instance>, endorsementResult:EndorsementSearchResult) : Observable<Array<Instance>> {
 		if (endorsementResult.shouldFilter) {
 			instances = this.filterInstances(instances, endorsementResult.pageEndorsement.content);
@@ -198,7 +249,7 @@ export class InstancesService implements OnInit {
 		});
 	}
 
-  public getInstancesForDesign(designId:string, designVersion?:string): Observable<Array<Instance>> {
+  private getInstancesForDesign(designId:string, designVersion?:string): Observable<Array<Instance>> {
     return Observable.create(observer => {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
 	    let query = QueryHelper.generateQueryStringForDesign(designId);

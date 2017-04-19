@@ -13,6 +13,14 @@ html, body {
   min-width: $resMin;
 }
 
+.create-loading-wrapper {
+  display: flex;
+}
+
+.create-loading {
+  margin-left: 15px;
+}
+
 .test-banner:after {
   pointer-events: none;
   content: attr(data-title);

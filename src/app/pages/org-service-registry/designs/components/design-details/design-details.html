@@ -16,7 +16,15 @@
     </ba-card>
 
     <ba-card title="Instances implementing the Design ({{design?.name}})" baCardClass="with-scroll table-panel">
-      <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
+      <div *ngIf="!isLoadingInstances">
+        <service-registry-search [showKeywords]="false" [searchTitle]="'Instance search filters'" [searchKey]="searchKey" [isSearching]="isSearchingInstances" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
+
+        <div class="separator"></div>
+      </div>
+      <div class="create-loading-wrapper">
+        <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
+        <sk-fading-circle-small class="create-loading" [isRunning]="isSearchingInstances"></sk-fading-circle-small>
+      </div>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
     </ba-card>
   </div>

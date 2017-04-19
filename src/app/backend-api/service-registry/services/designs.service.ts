@@ -217,7 +217,6 @@ export class DesignsService implements OnInit {
 			   }
 		   );
 	   });
-
   }
 
   public getDesign(designId:string, version?:string): Observable<Design> {
