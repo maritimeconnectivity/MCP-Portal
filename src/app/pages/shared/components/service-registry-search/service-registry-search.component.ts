@@ -6,6 +6,7 @@ import {FormGroup, FormBuilder, FormControl} from "@angular/forms";
 import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import {AuthService} from "../../../../authentication/services/auth.service";
 import {SrSearchRequestsService} from "../../../org-service-registry/shared/services/sr-search-requests.service";
+import {SHOW_ENDORSEMENTS} from "../../../../shared/app.constants";
 
 interface SelectModel {
 	label:string;
@@ -26,7 +27,7 @@ export class ServiceRegistrySearchComponent {
 	@Input() showEndorsement: boolean;
 	@Input() showKeywords: boolean = true;
 	@Output() onSearch:EventEmitter<ServiceRegistrySearchRequest> = new EventEmitter<ServiceRegistrySearchRequest>();
-	private endorsementMainSwitch = false;
+	private endorsementMainSwitch = SHOW_ENDORSEMENTS;
 
 	public isLoading: boolean;
 	public formGroup: FormGroup;

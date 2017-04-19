@@ -18,7 +18,9 @@
       </ul>
     </ba-card>
 
-<!--    <endorsed-by-list [title]="'Organizations endorsing the Specification (' + title + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list> -->
+    <div *ngIf="endorseMainSwitch">
+      <endorsed-by-list [title]="'Organizations endorsing the Specification (' + title + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+    </div>
 
     <ba-card title="Designs implementing the Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
       <div *ngIf="!isLoadingDesigns">

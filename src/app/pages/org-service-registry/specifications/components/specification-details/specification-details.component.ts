@@ -17,6 +17,7 @@ import {Observable} from "rxjs";
 import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
 import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
 import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
 
 const SEARCH_KEY = 'SpecificationDetailsComponent';
 
@@ -50,6 +51,7 @@ export class SpecificationDetailsComponent {
 	public endorseButtonIcon:string;
 	public endorseButtonTitle:string;
 	public onEndorse: Function;
+	public endorseMainSwitch = SHOW_ENDORSEMENTS;
 
 	// Search
 	public isSearchingDesigns = false;
@@ -70,7 +72,9 @@ export class SpecificationDetailsComponent {
     let specificationId = this.route.snapshot.params['id'];
     let version = this.route.snapshot.queryParams['specificationVersion'];
 	  this.loadSpecification(specificationId, version);
-	//  this.loadEndorsements(specificationId);
+	  if (SHOW_ENDORSEMENTS) {
+			this.loadEndorsements(specificationId);
+	  }
   }
 
   public downloadXml() {
@@ -214,7 +218,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return false;// this.isAdmin() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
 	}
 
 	public search(searchRequest: ServiceRegistrySearchRequest) {

@@ -1,2 +1,3 @@
 export const MC_ADMIN = 'MCADMIN';
 export const DONT_OVERWRITE_CONTENT_TYPE = 'DONT_OVERWRITE_CONTENT_TYPE';
+export const SHOW_ENDORSEMENTS = false;
