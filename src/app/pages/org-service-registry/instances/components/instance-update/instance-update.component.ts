@@ -157,9 +157,11 @@ export class InstanceUpdateComponent implements OnInit {
 		this.name = this.xmlParser.getName(file);
 		this.status = this.xmlParser.getStatus(file);
 		let parsedMrn = this.xmlParser.getMrn(file);
-		if (parsedMrn != this.instance.instanceId) {
-			this.errorText  = "The MRN in the XML is not the same as the MRN of this Instance. If the MRN needs to be changed, please create a NEW Instance instead of updating an existing.<BR><BR>"
-				+ "Xml-parsed MRN: " + parsedMrn + "<BR>";
+		let parsedVersion = this.xmlParser.getVersion(file);
+		if (parsedMrn != this.instance.instanceId || parsedVersion != this.instance.version) {
+			this.errorText  = "The MRN and Version in the XML are not the same as the MRN and Version of this Instance. If the MRN or Version needs to be changed, please create a NEW Instance instead of updating an existing.<BR><BR>"
+				+ "Xml-parsed MRN: " + parsedMrn + "<BR>"
+				+ "Xml-parsed Version: " + parsedVersion + "<BR>";
 			return false;
 		} else {
 			return true;
@@ -272,6 +274,7 @@ export class InstanceUpdateComponent implements OnInit {
 		this.labelValues = [];
 		this.labelValues.push({label: 'MRN', valueHtml: this.instance.instanceId});
 		this.labelValues.push({label: 'Name', valueHtml: this.instance.name});
+		this.labelValues.push({label: 'Version', valueHtml: this.instance.version});
 	}
 
 	private setStatus(status:string) {
