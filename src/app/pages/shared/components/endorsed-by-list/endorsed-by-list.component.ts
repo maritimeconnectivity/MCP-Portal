@@ -50,8 +50,7 @@ export class EndorsedByListComponent {
 				this.oldEndorsements = this.endorsements;
 			  this.entityImageList = [];
 			  this.endorsements.forEach(endorsement => {
-				    var htmlContent = '&nbsp;';
-						let entityImage:EntityImageModel = {imageSourceObservable:this.createImgObservable(endorsement.orgMrn), entityId:endorsement.orgMrn, title:endorsement.orgName, htmlContent:htmlContent};
+						let entityImage:EntityImageModel = {imageSourceObservable:this.createImgObservable(endorsement.orgMrn), entityId:endorsement.orgMrn, title:endorsement.orgName};
 
 				    this.entityImageList.push(entityImage);
 				  }
