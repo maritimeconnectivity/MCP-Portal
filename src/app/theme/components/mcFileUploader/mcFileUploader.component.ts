@@ -94,7 +94,6 @@ export class McFileUploader {
 		let fileReader:FileReader = new FileReader();
 		fileReader.onload = (fileRef) => {
 			let data = btoa(fileReader.result);
-			// TODO: content should not be Array with next update
 			let docFile: Doc = {filecontent: data, filecontentContentType:file.type, mimetype:file.type, name: file.name};
 			this.onUpload.emit(docFile);
 		}

@@ -149,6 +149,7 @@ export class DesignsService implements OnInit {
   private createActualDesign(design:Design, observer:Observer<any>) {
     this.designsApi.createDesignUsingPOST(design).subscribe(
       createdDesign => {
+	      createdDesign.description = this.getDescription(createdDesign);
 	      this.chosenDesign = createdDesign;
         observer.next(createdDesign);
       },

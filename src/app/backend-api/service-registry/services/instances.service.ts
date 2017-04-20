@@ -128,6 +128,7 @@ export class InstancesService implements OnInit {
   private createActualInstance(instance:Instance, observer:Observer<any>) {
     this.instancesApi.createInstanceUsingPOST(instance).subscribe(
       createdInstance => {
+	      createdInstance.description = this.getDescription(createdInstance);
 	      this.chosenInstance = createdInstance;
         observer.next(createdInstance);
       },

@@ -66,6 +66,7 @@ export class SpecificationsService implements OnInit {
   private createActualSpecification(specification:Specification, observer:Observer<any>) {
     this.specificationsApi.createSpecificationUsingPOST(specification).subscribe(
       createdSpecification => {
+	      createdSpecification.description = this.getDescription(createdSpecification);
 	      this.chosenSpecification = createdSpecification;
         observer.next(createdSpecification);
       },

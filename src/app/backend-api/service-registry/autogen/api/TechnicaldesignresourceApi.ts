@@ -19,7 +19,7 @@ import { Observable }                                        from 'rxjs/Observab
 import 'rxjs/add/operator/map';
 
 import * as models                                           from '../model/models';
-import { BASE_PATH }                                         from '../variables';
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 /* tslint:disable:no-unused-variable member-ordering */
@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class TechnicaldesignresourceApi {
-    protected basePath = 'https://sr-test.maritimecloud.net/';
+    protected basePath = 'https://sr-test.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -41,27 +41,13 @@ export class TechnicaldesignresourceApi {
     }
 
     /**
-     * 
-     * Extends object by coping non-existing properties.
-     * @param objA object to be extended
-     * @param objB source object
-     */
-    private extendObj<T1,T2>(objA: T1, objB: T2) {
-        for(let key in objB){
-            if(objB.hasOwnProperty(key)){
-                (objA as any)[key] = (objB as any)[key];
-            }
-        }
-        return <T1&T2>objA;
-    }
-
-    /**
      * createDesign
      * 
      * @param design design
+     * @param authorization Authorization
      */
-    public createDesignUsingPOST(design: models.Design, extraHttpRequestParams?: any): Observable<models.Design> {
-        return this.createDesignUsingPOSTWithHttpInfo(design, extraHttpRequestParams)
+    public createDesignUsingPOST(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<models.Design> {
+        return this.createDesignUsingPOSTWithHttpInfo(design, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -76,9 +62,10 @@ export class TechnicaldesignresourceApi {
      * 
      * @param id id
      * @param version version
+     * @param authorization Authorization
      */
-    public deleteDesignUsingDELETE(id: string, version: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteDesignUsingDELETEWithHttpInfo(id, version, extraHttpRequestParams)
+    public deleteDesignUsingDELETE(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteDesignUsingDELETEWithHttpInfo(id, version, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -186,9 +173,10 @@ export class TechnicaldesignresourceApi {
      * @param id id
      * @param version version
      * @param status status
+     * @param authorization Authorization
      */
-    public updateDesignStatusUsingPUT(id: string, version: string, status: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.updateDesignStatusUsingPUTWithHttpInfo(id, version, status, extraHttpRequestParams)
+    public updateDesignStatusUsingPUT(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.updateDesignStatusUsingPUTWithHttpInfo(id, version, status, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -202,9 +190,10 @@ export class TechnicaldesignresourceApi {
      * updateDesign
      * 
      * @param design design
+     * @param authorization Authorization
      */
-    public updateDesignUsingPUT(design: models.Design, extraHttpRequestParams?: any): Observable<models.Design> {
-        return this.updateDesignUsingPUTWithHttpInfo(design, extraHttpRequestParams)
+    public updateDesignUsingPUT(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<models.Design> {
+        return this.updateDesignUsingPUTWithHttpInfo(design, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -219,9 +208,10 @@ export class TechnicaldesignresourceApi {
      * createDesign
      * 
      * @param design design
+     * @param authorization Authorization
      */
-    public createDesignUsingPOSTWithHttpInfo(design: models.Design, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign`;
+    public createDesignUsingPOSTWithHttpInfo(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/technicalDesign';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -229,7 +219,7 @@ export class TechnicaldesignresourceApi {
         if (design === null || design === undefined) {
             throw new Error('Required parameter design was null or undefined when calling createDesignUsingPOST.');
         }
-
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -240,11 +230,8 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
@@ -252,10 +239,10 @@ export class TechnicaldesignresourceApi {
             body: design == null ? '' : JSON.stringify(design), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -266,9 +253,12 @@ export class TechnicaldesignresourceApi {
      * 
      * @param id id
      * @param version version
+     * @param authorization Authorization
      */
-    public deleteDesignUsingDELETEWithHttpInfo(id: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign/${id}/${version}/`;
+    public deleteDesignUsingDELETEWithHttpInfo(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/technicalDesign/${id}/${version}/'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -280,6 +270,7 @@ export class TechnicaldesignresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling deleteDesignUsingDELETE.');
         }
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -291,16 +282,15 @@ export class TechnicaldesignresourceApi {
             'application/json'
         ];
 
-
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Delete,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -315,7 +305,8 @@ export class TechnicaldesignresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllDesignsByIdUsingGETWithHttpInfo(id: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign/${id}`;
+        const path = this.basePath + '/api/technicalDesign/${id}'
+                    .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -326,13 +317,16 @@ export class TechnicaldesignresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -343,20 +337,16 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -371,7 +361,7 @@ export class TechnicaldesignresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllDesignsBySpecificationIdUsingGETWithHttpInfo(id: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_searchSpecificationId/technicalDesign`;
+        const path = this.basePath + '/api/_searchSpecificationId/technicalDesign';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -382,16 +372,20 @@ export class TechnicaldesignresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (id !== undefined) {
             queryParameters.set('id', <any>id);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -402,20 +396,16 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -429,20 +419,23 @@ export class TechnicaldesignresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllDesignsUsingGETWithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign`;
+        const path = this.basePath + '/api/technicalDesign';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -453,20 +446,16 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -479,7 +468,9 @@ export class TechnicaldesignresourceApi {
      * @param version version
      */
     public getDesignUsingGETWithHttpInfo(id: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign/${id}/${version}/`;
+        const path = this.basePath + '/api/technicalDesign/${id}/${version}/'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -491,8 +482,6 @@ export class TechnicaldesignresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling getDesignUsingGET.');
         }
-
-
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -502,20 +491,16 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -530,7 +515,7 @@ export class TechnicaldesignresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchDesignsUsingGETWithHttpInfo(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_search/technicalDesign`;
+        const path = this.basePath + '/api/_search/technicalDesign';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -541,16 +526,20 @@ export class TechnicaldesignresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -561,20 +550,16 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -586,9 +571,12 @@ export class TechnicaldesignresourceApi {
      * @param id id
      * @param version version
      * @param status status
+     * @param authorization Authorization
      */
-    public updateDesignStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign/${id}/${version}/status`;
+    public updateDesignStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/technicalDesign/${id}/${version}/status'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -604,11 +592,11 @@ export class TechnicaldesignresourceApi {
         if (status === null || status === undefined) {
             throw new Error('Required parameter status was null or undefined when calling updateDesignStatusUsingPUT.');
         }
-
         if (status !== undefined) {
             queryParameters.set('status', <any>status);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -619,20 +607,16 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -642,9 +626,10 @@ export class TechnicaldesignresourceApi {
      * updateDesign
      * 
      * @param design design
+     * @param authorization Authorization
      */
-    public updateDesignUsingPUTWithHttpInfo(design: models.Design, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/technicalDesign`;
+    public updateDesignUsingPUTWithHttpInfo(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/technicalDesign';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -652,6 +637,7 @@ export class TechnicaldesignresourceApi {
         if (design === null || design === undefined) {
             throw new Error('Required parameter design was null or undefined when calling updateDesignUsingPUT.');
         }
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -662,11 +648,8 @@ export class TechnicaldesignresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
@@ -674,10 +657,10 @@ export class TechnicaldesignresourceApi {
             body: design == null ? '' : JSON.stringify(design), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
