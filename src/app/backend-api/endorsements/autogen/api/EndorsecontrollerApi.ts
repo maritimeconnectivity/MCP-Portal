@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class EndorsecontrollerApi {
-    protected basePath = 'https://test-endorse.maritimecloud.net/';
+    protected basePath = 'https://test-endorse.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -107,6 +107,22 @@ export class EndorsecontrollerApi {
     }
 
     /**
+     * getEndormentsByServiceMrns
+     * 
+     * @param serviceMrns serviceMrns
+     */
+    public getEndormentsByServiceMrnsUsingPOST(serviceMrns: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.EndorsementList>> {
+        return this.getEndormentsByServiceMrnsUsingPOSTWithHttpInfo(serviceMrns, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * getEndorsedByParentMrnAndOrgMrn
      * 
      * @param parentMrn parentMrn
@@ -163,7 +179,7 @@ export class EndorsecontrollerApi {
      * @param input input
      */
     public createEndormentUsingPOSTWithHttpInfo(input: models.Endorsement, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsements`;
+        const path = this.basePath + '/oidc/endorsements';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -173,7 +189,7 @@ export class EndorsecontrollerApi {
         }
         // to determine the Content-Type header
         let consumes: string[] = [
-            'application/json'
+            'application/json;charset=UTF-8'
         ];
 
         // to determine the Accept header
@@ -205,7 +221,9 @@ export class EndorsecontrollerApi {
      * @param orgMrn orgMrn
      */
     public deleteEndormentUsingDELETEWithHttpInfo(serviceMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsements/${serviceMrn}/${orgMrn}`;
+        const path = this.basePath + '/oidc/endorsements/${serviceMrn}/${orgMrn}'
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -248,7 +266,9 @@ export class EndorsecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getEndormentsByOrgMrnUsingGETWithHttpInfo(serviceLevel: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsements-by/${serviceLevel}/${orgMrn}`;
+        const path = this.basePath + '/oidc/endorsements-by/${serviceLevel}/${orgMrn}'
+                    .replace('${' + 'serviceLevel' + '}', String(serviceLevel))
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -290,7 +310,8 @@ export class EndorsecontrollerApi {
      * @param serviceMrn serviceMrn
      */
     public getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsements/${serviceMrn}`;
+        const path = this.basePath + '/oidc/endorsements/${serviceMrn}'
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -323,13 +344,56 @@ export class EndorsecontrollerApi {
     }
 
     /**
+     * getEndormentsByServiceMrns
+     * 
+     * @param serviceMrns serviceMrns
+     */
+    public getEndormentsByServiceMrnsUsingPOSTWithHttpInfo(serviceMrns: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/oidc/endorsement-list';
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'serviceMrns' is not null or undefined
+        if (serviceMrns === null || serviceMrns === undefined) {
+            throw new Error('Required parameter serviceMrns was null or undefined when calling getEndormentsByServiceMrnsUsingPOST.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: serviceMrns == null ? '' : JSON.stringify(serviceMrns), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
      * getEndorsedByParentMrnAndOrgMrn
      * 
      * @param parentMrn parentMrn
      * @param orgMrn orgMrn
      */
     public getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsed-children/${parentMrn}/${orgMrn}`;
+        const path = this.basePath + '/oidc/endorsed-children/${parentMrn}/${orgMrn}'
+                    .replace('${' + 'parentMrn' + '}', String(parentMrn))
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -371,7 +435,8 @@ export class EndorsecontrollerApi {
      * @param parentMrn parentMrn
      */
     public getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsed-children/${parentMrn}`;
+        const path = this.basePath + '/oidc/endorsed-children/${parentMrn}'
+                    .replace('${' + 'parentMrn' + '}', String(parentMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -410,7 +475,9 @@ export class EndorsecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getEndorsmentUsingGETWithHttpInfo(serviceMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/endorsement-by/${serviceMrn}/${orgMrn}`;
+        const path = this.basePath + '/oidc/endorsement-by/${serviceMrn}/${orgMrn}'
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
