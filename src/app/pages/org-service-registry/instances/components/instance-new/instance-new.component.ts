@@ -37,11 +37,15 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 export class InstanceNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+
+	public labelValuesParsed:Array<LabelValueModel>;
+	private parsedInstance:Instance;
+
 	public hasError: boolean = false;
 	public errorText: string;
 
   public organization: Organization;
-  public labelValues:Array<LabelValueModel>;
+  public labelValuesDesign:Array<LabelValueModel>;
   public captionXml = 'Upload Instance XML file';
   public captionDoc = 'Upload Instance Document file';
   public fileTypeXml = FileUploadType.Xml;
@@ -61,9 +65,6 @@ export class InstanceNewComponent implements OnInit {
   private oidcAccessType:OidcAccessTypeEnum = null;
   private useOIDC:boolean = false;
 	private useOIDCRedirect:boolean = true;
-	private mrn:string = '';
-	private name:string = '';
-	private endpoint:string = '';
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
@@ -77,6 +78,7 @@ export class InstanceNewComponent implements OnInit {
     this.generateForm();
     this.loadMyOrganization();
     this.loadDesign();
+	  this.updateUI();
   }
 
   public isFormValid() {
@@ -95,16 +97,17 @@ export class InstanceNewComponent implements OnInit {
   public onUploadXml(file: Xml) {
 	  if (file && this.isXmlValid(file)) {
 		  this.xml = file;
+		  try {
+			  let urlString = this.xmlParser.getEndpoint(file);
+			  let url:URL = new URL(urlString);
+			  this.registerForm.patchValue({certDomainName: url.hostname});
+		  }catch (e) {
+			  // Failed to construct url. Do nothing
+		  }
 	  }else {
-		  this.mrn = '';
-		  this.name = '';
-		  this.endpoint = '';
-		  this.xml = null;
-		  this.fileUploadXml.resetFileSelection();
-		  this.registerForm.patchValue({mrn: this.mrn});
-		  this.registerForm.patchValue({name: this.name});
-		  this.registerForm.patchValue({certDomainName: this.endpoint});
+		  this.resetXmlFile();
 	  }
+	  this.updateUI();
   }
 
 	private isXmlValid(file: Xml) : boolean {
@@ -116,37 +119,66 @@ export class InstanceNewComponent implements OnInit {
 				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
 				isValid = (designMrn === this.design.designId) && (designVersion === this.design.version);
 
-				if (isValid) {
-					this.mrn = mrn;
-					this.name = this.xmlParser.getName(file);
-					try {
-						let urlString = this.xmlParser.getEndpoint(file);
-						let url:URL = new URL(urlString);
-						this.endpoint = url.hostname;
-					}catch (e) {
-						// Failed to construct url. Do nothing
-					}
-				} else {
+				if (!isValid) {
 					this.errorText  = "The MRN and/or version referencing the Design in the XML, doesn't match the MRN and/or version of the chosen Design.<BR><BR>"
 						+ "Chosen Design: " + this.design.designId + ", version: " + this.design.version + "<BR>"
 						+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
 				}
 			} else {
-				this.mrn = '';
-				this.name = '';
-				this.endpoint = '';
 				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			}
-			this.registerForm.patchValue({mrn: this.mrn});
-			this.registerForm.patchValue({name: this.name});
-			this.registerForm.patchValue({certDomainName: this.endpoint});
 			this.hasError = !isValid;
 			return isValid;
 		} catch ( error ) {
 			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
 			return false;
+		}
+	}
+
+	private resetXmlFile(){
+		this.xml = null;
+		this.fileUploadXml.resetFileSelection();
+	}
+
+	private updateUI() {
+		if (this.xml) {
+			this.parseInstance();
+		} else {
+			this.parsedInstance = null;
+			this.setupLableValuesParsed();
+		}
+	}
+	private parseInstance() {
+		this.parsedInstance = null;
+		try {
+			var instance:Instance = {};
+			instance.instanceAsXml = this.xml;
+			instance.name = this.xmlParser.getName(this.xml);
+			instance.description = this.xmlParser.getDescription(this.xml);
+			instance.instanceId = this.xmlParser.getMrn(this.xml);
+			instance.keywords = this.xmlParser.getKeywords(this.xml);
+			instance.status = this.xmlParser.getStatus(this.xml);
+			instance.organizationId = this.organization.mrn;
+			instance.version = this.xmlParser.getVersion(this.xml);
+			instance.designId = this.design.designId;
+
+			this.parsedInstance = instance;
+		} catch ( error ) {
+			this.isRegistering = false;
+			this.resetXmlFile();
+			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+		} finally {
+			this.setupLableValuesParsed();
+		}
+	}
+
+	private setupLableValuesParsed() {
+		this.labelValuesParsed = [];
+		this.labelValuesParsed.push({label: 'Upload XML', valueHtml: ''});
+		if (this.organization && this.parsedInstance) {
+			this.labelValuesParsed = this.viewModelService.generateLabelValuesForDesign(this.parsedInstance, this.organization.name);
 		}
 	}
 
@@ -156,23 +188,7 @@ export class InstanceNewComponent implements OnInit {
 
   public register() {
     this.isRegistering = true;
-    try {
-      var instance:Instance = {};
-      instance.instanceAsXml = this.xml;
-	    instance.name = this.xmlParser.getName(this.xml);
-	    instance.description = this.xmlParser.getDescription(this.xml);
-	    instance.instanceId = this.xmlParser.getMrn(this.xml);
-	    instance.keywords = this.xmlParser.getKeywords(this.xml);
-	    instance.status = this.xmlParser.getStatus(this.xml);
-	    instance.organizationId = this.organization.mrn;
-	    instance.version = this.xmlParser.getVersion(this.xml);
-      instance.designId = this.design.designId;
-
-      this.createInstance(instance);
-    } catch ( error ) {
-      this.isRegistering = false;
-      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
-    }
+	  this.createInstance(this.parsedInstance);
   }
 
   private createInstance(instance:Instance) {
@@ -189,8 +205,8 @@ export class InstanceNewComponent implements OnInit {
 
 	public registerIdService(instance:Instance) {
 		let service:Service = {
-			mrn: this.mrn,
-			name: this.name,
+			mrn: instance.instanceId,
+			name: instance.name,
 			instanceVersion: instance.version,
 			permissions: this.registerForm.value.permissions,
 			certDomainName: this.registerForm.value.certDomainName
@@ -252,11 +268,11 @@ export class InstanceNewComponent implements OnInit {
 	private loadOrganizationName() {
 		this.orgService.getOrganizationName(this.design.organizationId).subscribe(
 			organizationName => {
-				this.labelValues = this.viewModelService.generateLabelValuesForDesign(this.design, organizationName);
+				this.labelValuesDesign = this.viewModelService.generateLabelValuesForDesign(this.design, organizationName);
 				this.isLoading = false;
 			},
 			err => {
-				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.design, '');
+				this.labelValuesDesign = this.viewModelService.generateLabelValuesForDesign(this.design, '');
 				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
 			}
@@ -284,19 +300,8 @@ export class InstanceNewComponent implements OnInit {
 		}
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: 'Upload Instance Xml', isDisabled: true};
-		var formControl = new FormControl(this.mrn, formControlModel.validator);
-		this.registerForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
-
-		formControlModel = {formGroup: this.registerForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Upload Instance XML', isDisabled: true};
-		formControl = new FormControl(this.name, formControlModel.validator);
-
-		this.registerForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
-
-		formControlModel = {formGroup: this.registerForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
-		formControl = new FormControl(oldForm.value.permissions, formControlModel.validator);
+		var formControlModel:McFormControlModel = {formGroup: this.registerForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
+		var formControl = new FormControl(oldForm.value.permissions, formControlModel.validator);
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 

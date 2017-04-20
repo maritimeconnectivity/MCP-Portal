@@ -11,6 +11,8 @@ import {Specification} from "../../../../../backend-api/service-registry/autogen
 import * as _ from 'lodash';
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {SpecificationXmlParser} from "../../../shared/services/specification-xml-parser.service";
+import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 
 @Component({
   selector: 'specification-new',
@@ -20,6 +22,9 @@ import {SpecificationXmlParser} from "../../../shared/services/specification-xml
 })
 export class SpecificationNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+
+	public labelValues:Array<LabelValueModel>;
+	private parsedSpecification:Specification;
 
 	public hasMrnError: boolean = false;
 	public mrnErrorText: string;
@@ -41,7 +46,7 @@ export class SpecificationNewComponent implements OnInit {
   private xml:Xml;
   private doc:Doc;
 
-  constructor(private xmlParser: SpecificationXmlParser, private mrnHelper: MrnHelperService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private orgService: OrganizationsService) {
+  constructor(private viewModelService: SrViewModelService, private xmlParser: SpecificationXmlParser, private mrnHelper: MrnHelperService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private orgService: OrganizationsService) {
   }
 
   ngOnInit() {
@@ -49,6 +54,7 @@ export class SpecificationNewComponent implements OnInit {
     this.isRegistering = false;
     this.loadMyOrganization();
     this.calculateFormValid();
+    this.updateUI();
   }
 
   public calculateFormValid() {
@@ -64,10 +70,10 @@ export class SpecificationNewComponent implements OnInit {
 	  if (file && this.isXmlValid(file)) {
 	    this.xml = file;
     } else {
-		  this.xml = null;
-	  	this.fileUploadXml.resetFileSelection();
+		  this.resetXmlFile();
 	  }
     this.calculateFormValid();
+	  this.updateUI();
   }
 
   private isXmlValid(file: Xml) : boolean {
@@ -93,22 +99,7 @@ export class SpecificationNewComponent implements OnInit {
 
   public register() {
     this.isRegistering = true;
-    try {
-      var specification:Specification = {};
-      specification.specAsXml = _.cloneDeep(this.xml);
-      specification.specAsDoc = this.doc;
-      specification.name = this.xmlParser.getName(this.xml);
-      specification.description = this.xmlParser.getDescription(this.xml);
-      specification.specificationId = this.xmlParser.getMrn(this.xml);
-      specification.keywords = this.xmlParser.getKeywords(this.xml);
-      specification.status = this.xmlParser.getStatus(this.xml);
-      specification.organizationId = this.organization.mrn;
-      specification.version = this.xmlParser.getVersion(this.xml);
-      this.createSpecification(specification);
-    } catch ( error ) {
-      this.isRegistering = false;
-      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
-    }
+	  this.createSpecification(this.parsedSpecification);
   }
 
   private createSpecification(specification:Specification) {
@@ -136,5 +127,51 @@ export class SpecificationNewComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  private resetXmlFile(){
+	  this.xml = null;
+	  this.fileUploadXml.resetFileSelection();
+  }
+
+  private updateUI() {
+	  if (this.xml) {
+		  this.parseSpecification();
+	  } else {
+		  this.parsedSpecification = null;
+		  this.setupLableValues();
+	  }
+  }
+
+  private parseSpecification() {
+	  this.parsedSpecification = null;
+    try {
+		  var specification:Specification = {};
+		  specification.specAsXml = _.cloneDeep(this.xml);
+		  specification.specAsDoc = this.doc;
+		  specification.name = this.xmlParser.getName(this.xml);
+		  specification.description = this.xmlParser.getDescription(this.xml);
+		  specification.specificationId = this.xmlParser.getMrn(this.xml);
+		  specification.keywords = this.xmlParser.getKeywords(this.xml);
+		  specification.status = this.xmlParser.getStatus(this.xml);
+		  specification.organizationId = this.organization.mrn;
+		  specification.version = this.xmlParser.getVersion(this.xml);
+
+	    this.parsedSpecification = specification;
+	  } catch ( error ) {
+		  this.isRegistering = false;
+		  this.resetXmlFile();
+		  this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+	  } finally {
+	    this.setupLableValues();
+	  }
+  }
+
+  private setupLableValues() {
+	  this.labelValues = [];
+	  this.labelValues.push({label: 'Upload XML', valueHtml: ''});
+  	if (this.organization && this.parsedSpecification) {
+		  this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.parsedSpecification, this.organization.name);
+	  }
   }
 }

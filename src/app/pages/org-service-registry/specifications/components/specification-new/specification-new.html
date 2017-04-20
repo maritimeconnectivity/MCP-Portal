@@ -15,6 +15,10 @@
             </li>
           </ul>
         </form>
+
+        <div class="separator"></div>
+
+        <mc-label-value-table [isLoading]="false" [labelValues]="labelValues"></mc-label-value-table>
       </div>
       <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
       <div class="no-data" *ngIf="!organization?.mrn && !isLoading">No data</div>
