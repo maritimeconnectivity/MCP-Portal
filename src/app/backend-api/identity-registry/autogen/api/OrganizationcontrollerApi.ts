@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class OrganizationcontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -297,7 +297,7 @@ export class OrganizationcontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeOrgCertUsingPOST1(orgMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
+    public revokeOrgCertUsingPOST1(orgMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
         return this.revokeOrgCertUsingPOST1WithHttpInfo(orgMrn, certId, input, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -349,7 +349,7 @@ export class OrganizationcontrollerApi {
      * @param input input
      */
     public applyOrganizationUsingPOSTWithHttpInfo(input: models.Organization, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/apply`;
+        const path = this.basePath + '/oidc/api/org/apply';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -390,7 +390,7 @@ export class OrganizationcontrollerApi {
      * @param input input
      */
     public applyOrganizationUsingPOST1WithHttpInfo(input: models.Organization, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/apply`;
+        const path = this.basePath + '/x509/api/org/apply';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -431,7 +431,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public approveOrganizationUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/approve`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/approve'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -469,7 +470,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public approveOrganizationUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/approve`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/approve'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -507,7 +509,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public deleteOrgUsingDELETEWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -545,7 +548,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public deleteOrgUsingDELETE1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -583,7 +587,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public getOrganizationUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -621,7 +626,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public getOrganizationUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -661,18 +667,16 @@ export class OrganizationcontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationUsingGET2WithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/orgs`;
+        const path = this.basePath + '/oidc/api/orgs';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -713,18 +717,16 @@ export class OrganizationcontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationUsingGET3WithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/orgs`;
+        const path = this.basePath + '/x509/api/orgs';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -765,18 +767,16 @@ export class OrganizationcontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getUnapprovedOrganizationsUsingGETWithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/unapprovedorgs`;
+        const path = this.basePath + '/oidc/api/org/unapprovedorgs';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -817,18 +817,16 @@ export class OrganizationcontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getUnapprovedOrganizationsUsingGET1WithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/unapprovedorgs`;
+        const path = this.basePath + '/x509/api/org/unapprovedorgs';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -867,7 +865,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public newOrgCertUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/certificate/issue-new`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -905,7 +904,8 @@ export class OrganizationcontrollerApi {
      * @param orgMrn orgMrn
      */
     public newOrgCertUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/certificate/issue-new`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -945,7 +945,9 @@ export class OrganizationcontrollerApi {
      * @param input input
      */
     public revokeOrgCertUsingPOSTWithHttpInfo(orgMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/certificate/${certId}/revoke`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -995,8 +997,10 @@ export class OrganizationcontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeOrgCertUsingPOST1WithHttpInfo(orgMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/certificate/${certId}/revoke`;
+    public revokeOrgCertUsingPOST1WithHttpInfo(orgMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/org/${orgMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1046,7 +1050,8 @@ export class OrganizationcontrollerApi {
      * @param input input
      */
     public updateOrganizationUsingPUTWithHttpInfo(orgMrn: string, input: models.Organization, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1092,7 +1097,8 @@ export class OrganizationcontrollerApi {
      * @param input input
      */
     public updateOrganizationUsingPUT1WithHttpInfo(orgMrn: string, input: models.Organization, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

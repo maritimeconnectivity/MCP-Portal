@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class CertificatecontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -76,10 +76,9 @@ export class CertificatecontrollerApi {
      * getOCSP
      * 
      * @param caAlias caAlias
-     * @param encodedOCSP encodedOCSP
      */
-    public getOCSPUsingGET(caAlias: string, encodedOCSP: string, extraHttpRequestParams?: any): Observable<any> {
-        return this.getOCSPUsingGETWithHttpInfo(caAlias, encodedOCSP, extraHttpRequestParams)
+    public getOCSPUsingGET(caAlias: string, extraHttpRequestParams?: any): Observable<any> {
+        return this.getOCSPUsingGETWithHttpInfo(caAlias, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -93,10 +92,9 @@ export class CertificatecontrollerApi {
      * getOCSP
      * 
      * @param caAlias caAlias
-     * @param encodedOCSP encodedOCSP
      */
-    public getOCSPUsingGET1(caAlias: string, encodedOCSP: string, extraHttpRequestParams?: any): Observable<any> {
-        return this.getOCSPUsingGET1WithHttpInfo(caAlias, encodedOCSP, extraHttpRequestParams)
+    public getOCSPUsingGET1(caAlias: string, extraHttpRequestParams?: any): Observable<any> {
+        return this.getOCSPUsingGET1WithHttpInfo(caAlias, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -147,7 +145,8 @@ export class CertificatecontrollerApi {
      * @param caAlias caAlias
      */
     public getCRLUsingGETWithHttpInfo(caAlias: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/certificates/crl/${caAlias}`;
+        const path = this.basePath + '/oidc/api/certificates/crl/${caAlias}'
+                    .replace('${' + 'caAlias' + '}', String(caAlias));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -185,7 +184,8 @@ export class CertificatecontrollerApi {
      * @param caAlias caAlias
      */
     public getCRLUsingGET1WithHttpInfo(caAlias: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/certificates/crl/${caAlias}`;
+        const path = this.basePath + '/x509/api/certificates/crl/${caAlias}'
+                    .replace('${' + 'caAlias' + '}', String(caAlias));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -221,20 +221,16 @@ export class CertificatecontrollerApi {
      * getOCSP
      * 
      * @param caAlias caAlias
-     * @param encodedOCSP encodedOCSP
      */
-    public getOCSPUsingGETWithHttpInfo(caAlias: string, encodedOCSP: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/certificates/ocsp/${caAlias}/${encodedOCSP}`;
+    public getOCSPUsingGETWithHttpInfo(caAlias: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/oidc/api/certificates/ocsp/${caAlias}/**'
+                    .replace('${' + 'caAlias' + '}', String(caAlias));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'caAlias' is not null or undefined
         if (caAlias === null || caAlias === undefined) {
             throw new Error('Required parameter caAlias was null or undefined when calling getOCSPUsingGET.');
-        }
-        // verify required parameter 'encodedOCSP' is not null or undefined
-        if (encodedOCSP === null || encodedOCSP === undefined) {
-            throw new Error('Required parameter encodedOCSP was null or undefined when calling getOCSPUsingGET.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -264,20 +260,16 @@ export class CertificatecontrollerApi {
      * getOCSP
      * 
      * @param caAlias caAlias
-     * @param encodedOCSP encodedOCSP
      */
-    public getOCSPUsingGET1WithHttpInfo(caAlias: string, encodedOCSP: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/certificates/ocsp/${caAlias}/${encodedOCSP}`;
+    public getOCSPUsingGET1WithHttpInfo(caAlias: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/certificates/ocsp/${caAlias}/**'
+                    .replace('${' + 'caAlias' + '}', String(caAlias));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'caAlias' is not null or undefined
         if (caAlias === null || caAlias === undefined) {
             throw new Error('Required parameter caAlias was null or undefined when calling getOCSPUsingGET1.');
-        }
-        // verify required parameter 'encodedOCSP' is not null or undefined
-        if (encodedOCSP === null || encodedOCSP === undefined) {
-            throw new Error('Required parameter encodedOCSP was null or undefined when calling getOCSPUsingGET1.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -310,7 +302,8 @@ export class CertificatecontrollerApi {
      * @param input input
      */
     public postOCSPUsingPOSTWithHttpInfo(caAlias: string, input: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/certificates/ocsp/${caAlias}`;
+        const path = this.basePath + '/oidc/api/certificates/ocsp/${caAlias}'
+                    .replace('${' + 'caAlias' + '}', String(caAlias));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -356,7 +349,8 @@ export class CertificatecontrollerApi {
      * @param input input
      */
     public postOCSPUsingPOST1WithHttpInfo(caAlias: string, input: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/certificates/ocsp/${caAlias}`;
+        const path = this.basePath + '/x509/api/certificates/ocsp/${caAlias}'
+                    .replace('${' + 'caAlias' + '}', String(caAlias));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

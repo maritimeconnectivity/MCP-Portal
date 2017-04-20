@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class UsercontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -241,7 +241,7 @@ export class UsercontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeUserCertUsingPOST1(orgMrn: string, userMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
+    public revokeUserCertUsingPOST1(orgMrn: string, userMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
         return this.revokeUserCertUsingPOST1WithHttpInfo(orgMrn, userMrn, certId, input, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -296,7 +296,8 @@ export class UsercontrollerApi {
      * @param input input
      */
     public createUserUsingPOSTWithHttpInfo(orgMrn: string, input: models.User, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/user`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/user'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -342,7 +343,8 @@ export class UsercontrollerApi {
      * @param input input
      */
     public createUserUsingPOST1WithHttpInfo(orgMrn: string, input: models.User, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/user`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/user'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -388,7 +390,9 @@ export class UsercontrollerApi {
      * @param userMrn userMrn
      */
     public deleteUserUsingDELETEWithHttpInfo(orgMrn: string, userMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/user/${userMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/user/${userMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -431,7 +435,9 @@ export class UsercontrollerApi {
      * @param userMrn userMrn
      */
     public deleteUserUsingDELETE1WithHttpInfo(orgMrn: string, userMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/user/${userMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/user/${userMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -476,7 +482,8 @@ export class UsercontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationUsersUsingGETWithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/users`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/users'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -485,13 +492,11 @@ export class UsercontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationUsersUsingGET.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -533,7 +538,8 @@ export class UsercontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationUsersUsingGET1WithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/users`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/users'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -542,13 +548,11 @@ export class UsercontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationUsersUsingGET1.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -588,7 +592,9 @@ export class UsercontrollerApi {
      * @param userMrn userMrn
      */
     public getUserUsingGETWithHttpInfo(orgMrn: string, userMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/user/${userMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/user/${userMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -631,7 +637,9 @@ export class UsercontrollerApi {
      * @param userMrn userMrn
      */
     public getUserUsingGET1WithHttpInfo(orgMrn: string, userMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/user/${userMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/user/${userMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -674,7 +682,9 @@ export class UsercontrollerApi {
      * @param userMrn userMrn
      */
     public newUserCertUsingGETWithHttpInfo(orgMrn: string, userMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/user/${userMrn}/certificate/issue-new`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/user/${userMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -717,7 +727,9 @@ export class UsercontrollerApi {
      * @param userMrn userMrn
      */
     public newUserCertUsingGET1WithHttpInfo(orgMrn: string, userMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/user/${userMrn}/certificate/issue-new`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/user/${userMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -762,7 +774,10 @@ export class UsercontrollerApi {
      * @param input input
      */
     public revokeUserCertUsingPOSTWithHttpInfo(orgMrn: string, userMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/user/${userMrn}/certificate/${certId}/revoke`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/user/${userMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -817,8 +832,11 @@ export class UsercontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeUserCertUsingPOST1WithHttpInfo(orgMrn: string, userMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/user/${userMrn}/certificate/${certId}/revoke`;
+    public revokeUserCertUsingPOST1WithHttpInfo(orgMrn: string, userMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/org/${orgMrn}/user/${userMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -873,7 +891,9 @@ export class UsercontrollerApi {
      * @param input input
      */
     public updateUserUsingPUTWithHttpInfo(orgMrn: string, userMrn: string, input: models.User, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/user/${userMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/user/${userMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -924,7 +944,9 @@ export class UsercontrollerApi {
      * @param input input
      */
     public updateUserUsingPUT1WithHttpInfo(orgMrn: string, userMrn: string, input: models.User, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/user/${userMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/user/${userMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'userMrn' + '}', String(userMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

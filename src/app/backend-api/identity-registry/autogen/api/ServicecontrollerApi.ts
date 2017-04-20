@@ -28,7 +28,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class ServicecontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -364,7 +364,7 @@ export class ServicecontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeServiceCertUsingPOST1(orgMrn: string, serviceMrn: string, version: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
+    public revokeServiceCertUsingPOST1(orgMrn: string, serviceMrn: string, version: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
         return this.revokeServiceCertUsingPOST1WithHttpInfo(orgMrn, serviceMrn, version, certId, input, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -421,7 +421,8 @@ export class ServicecontrollerApi {
      * @param input input
      */
     public createServiceUsingPOSTWithHttpInfo(orgMrn: string, input: models.Service, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -467,7 +468,8 @@ export class ServicecontrollerApi {
      * @param input input
      */
     public createServiceUsingPOST1WithHttpInfo(orgMrn: string, input: models.Service, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -514,7 +516,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public deleteServiceUsingDELETEWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -562,7 +567,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public deleteServiceUsingDELETE1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -611,7 +619,8 @@ export class ServicecontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationServicesUsingGETWithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/services`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/services'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -620,13 +629,11 @@ export class ServicecontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationServicesUsingGET.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -668,7 +675,8 @@ export class ServicecontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationServicesUsingGET1WithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/services`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/services'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -677,13 +685,11 @@ export class ServicecontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationServicesUsingGET1.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -724,7 +730,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public getServiceJbossXmlUsingGETWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/jbossxml`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/jbossxml'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -772,7 +781,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public getServiceJbossXmlUsingGET1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/jbossxml`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/jbossxml'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -820,7 +832,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public getServiceKeycloakJsonUsingGETWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/keycloakjson`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/keycloakjson'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -868,7 +883,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public getServiceKeycloakJsonUsingGET1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/keycloakjson`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/keycloakjson'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -918,7 +936,9 @@ export class ServicecontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getServiceUsingGETWithHttpInfo(orgMrn: string, serviceMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -931,13 +951,11 @@ export class ServicecontrollerApi {
             throw new Error('Required parameter serviceMrn was null or undefined when calling getServiceUsingGET.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -980,7 +998,9 @@ export class ServicecontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getServiceUsingGET1WithHttpInfo(orgMrn: string, serviceMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -993,13 +1013,11 @@ export class ServicecontrollerApi {
             throw new Error('Required parameter serviceMrn was null or undefined when calling getServiceUsingGET1.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -1040,7 +1058,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public getServiceVersionUsingGETWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1088,7 +1109,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public getServiceVersionUsingGET1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1136,7 +1160,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public newServiceCertUsingGETWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/issue-new`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1184,7 +1211,10 @@ export class ServicecontrollerApi {
      * @param version version
      */
     public newServiceCertUsingGET1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/issue-new`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1234,7 +1264,11 @@ export class ServicecontrollerApi {
      * @param input input
      */
     public revokeServiceCertUsingPOSTWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/${certId}/revoke`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1294,8 +1328,12 @@ export class ServicecontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeServiceCertUsingPOST1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/${certId}/revoke`;
+    public revokeServiceCertUsingPOST1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1355,7 +1393,10 @@ export class ServicecontrollerApi {
      * @param input input
      */
     public updateServiceUsingPUTWithHttpInfo(orgMrn: string, serviceMrn: string, version: string, input: models.Service, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/service/${serviceMrn}/${version}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1411,7 +1452,10 @@ export class ServicecontrollerApi {
      * @param input input
      */
     public updateServiceUsingPUT1WithHttpInfo(orgMrn: string, serviceMrn: string, version: string, input: models.Service, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/service/${serviceMrn}/${version}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

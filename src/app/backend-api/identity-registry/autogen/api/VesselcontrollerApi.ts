@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class VesselcontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -241,7 +241,7 @@ export class VesselcontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeVesselCertUsingPOST1(orgMrn: string, vesselMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
+    public revokeVesselCertUsingPOST1(orgMrn: string, vesselMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
         return this.revokeVesselCertUsingPOST1WithHttpInfo(orgMrn, vesselMrn, certId, input, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -296,7 +296,8 @@ export class VesselcontrollerApi {
      * @param input input
      */
     public createVesselUsingPOSTWithHttpInfo(orgMrn: string, input: models.Vessel, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessel`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -342,7 +343,8 @@ export class VesselcontrollerApi {
      * @param input input
      */
     public createVesselUsingPOST1WithHttpInfo(orgMrn: string, input: models.Vessel, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessel`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -388,7 +390,9 @@ export class VesselcontrollerApi {
      * @param vesselMrn vesselMrn
      */
     public deleteVesselUsingDELETEWithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessel/${vesselMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -431,7 +435,9 @@ export class VesselcontrollerApi {
      * @param vesselMrn vesselMrn
      */
     public deleteVesselUsingDELETE1WithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessel/${vesselMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel/${vesselMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -476,7 +482,8 @@ export class VesselcontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationVesselsUsingGETWithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessels`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessels'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -485,13 +492,11 @@ export class VesselcontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationVesselsUsingGET.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -533,7 +538,8 @@ export class VesselcontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationVesselsUsingGET1WithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessels`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessels'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -542,13 +548,11 @@ export class VesselcontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationVesselsUsingGET1.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -588,7 +592,9 @@ export class VesselcontrollerApi {
      * @param vesselMrn vesselMrn
      */
     public getVesselUsingGETWithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessel/${vesselMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -631,7 +637,9 @@ export class VesselcontrollerApi {
      * @param vesselMrn vesselMrn
      */
     public getVesselUsingGET1WithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessel/${vesselMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel/${vesselMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -674,7 +682,9 @@ export class VesselcontrollerApi {
      * @param vesselMrn vesselMrn
      */
     public newVesselCertUsingGETWithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/issue-new`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -717,7 +727,9 @@ export class VesselcontrollerApi {
      * @param vesselMrn vesselMrn
      */
     public newVesselCertUsingGET1WithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/issue-new`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -762,7 +774,10 @@ export class VesselcontrollerApi {
      * @param input input
      */
     public revokeVesselCertUsingPOSTWithHttpInfo(orgMrn: string, vesselMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/${certId}/revoke`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -817,8 +832,11 @@ export class VesselcontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeVesselCertUsingPOST1WithHttpInfo(orgMrn: string, vesselMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/${certId}/revoke`;
+    public revokeVesselCertUsingPOST1WithHttpInfo(orgMrn: string, vesselMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel/${vesselMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -873,7 +891,9 @@ export class VesselcontrollerApi {
      * @param input input
      */
     public updateVesselUsingPUTWithHttpInfo(orgMrn: string, vesselMrn: string, input: models.Vessel, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/vessel/${vesselMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -924,7 +944,9 @@ export class VesselcontrollerApi {
      * @param input input
      */
     public updateVesselUsingPUT1WithHttpInfo(orgMrn: string, vesselMrn: string, input: models.Vessel, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/vessel/${vesselMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel/${vesselMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

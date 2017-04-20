@@ -28,7 +28,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class LogocontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -53,7 +53,7 @@ export class LogocontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-	                 return response.json();
+                    return response.json();
                 }
             });
     }
@@ -70,7 +70,7 @@ export class LogocontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-	                 return response.json();
+                    return response.json();
                 }
             });
     }
@@ -87,7 +87,7 @@ export class LogocontrollerApi {
                 if (response.status === 204) {
                     return undefined;
                 } else {
-	                 return response.json();
+                    return response.json();
                 }
             });
     }
@@ -182,7 +182,8 @@ export class LogocontrollerApi {
      * @param logo logo
      */
     public createLogoPostUsingPOSTWithHttpInfo(orgMrn: string, logo: any, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -234,7 +235,8 @@ export class LogocontrollerApi {
      * @param logo logo
      */
     public createLogoPostUsingPOST1WithHttpInfo(orgMrn: string, logo: any, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -286,7 +288,8 @@ export class LogocontrollerApi {
      * @param logo logo
      */
     public createLogoPutUsingPUTWithHttpInfo(orgMrn: string, logo: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -335,7 +338,8 @@ export class LogocontrollerApi {
      * @param logo logo
      */
     public createLogoPutUsingPUT1WithHttpInfo(orgMrn: string, logo: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -380,7 +384,8 @@ export class LogocontrollerApi {
      * @param orgMrn orgMrn
      */
     public deleteLogoUsingDELETEWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -418,7 +423,8 @@ export class LogocontrollerApi {
      * @param orgMrn orgMrn
      */
     public deleteLogoUsingDELETE1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -456,7 +462,8 @@ export class LogocontrollerApi {
      * @param orgMrn orgMrn
      */
     public getLogoUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -486,6 +493,7 @@ export class LogocontrollerApi {
         }
 	    // NOTE: be carefull when autogenerating. This file is changed manually
 	    requestOptions.responseType = ResponseContentType.Blob;
+
         return this.http.request(path, requestOptions);
     }
 
@@ -495,7 +503,8 @@ export class LogocontrollerApi {
      * @param orgMrn orgMrn
      */
     public getLogoUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/logo`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/logo'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

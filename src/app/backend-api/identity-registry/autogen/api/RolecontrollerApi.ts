@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class RolecontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -282,7 +282,8 @@ export class RolecontrollerApi {
      * @param input input
      */
     public createRoleUsingPOSTWithHttpInfo(orgMrn: string, input: models.Role, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/role`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/role'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -328,7 +329,8 @@ export class RolecontrollerApi {
      * @param input input
      */
     public createRoleUsingPOST1WithHttpInfo(orgMrn: string, input: models.Role, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/role`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/role'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -374,7 +376,9 @@ export class RolecontrollerApi {
      * @param roleId roleId
      */
     public deleteRoleUsingDELETEWithHttpInfo(orgMrn: string, roleId: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/role/${roleId}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/role/${roleId}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'roleId' + '}', String(roleId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -417,7 +421,9 @@ export class RolecontrollerApi {
      * @param roleId roleId
      */
     public deleteRoleUsingDELETE1WithHttpInfo(orgMrn: string, roleId: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/role/${roleId}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/role/${roleId}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'roleId' + '}', String(roleId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -459,7 +465,8 @@ export class RolecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getAvailableRolesUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/role/available-roles`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/role/available-roles'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -497,7 +504,8 @@ export class RolecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getAvailableRolesUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/role/available-roles`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/role/available-roles'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -535,7 +543,8 @@ export class RolecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getMyRoleUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/role/myroles`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/role/myroles'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -573,7 +582,8 @@ export class RolecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getMyRoleUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/role/myroles`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/role/myroles'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -612,7 +622,9 @@ export class RolecontrollerApi {
      * @param roleId roleId
      */
     public getRoleUsingGETWithHttpInfo(orgMrn: string, roleId: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/role/${roleId}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/role/${roleId}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'roleId' + '}', String(roleId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -655,7 +667,9 @@ export class RolecontrollerApi {
      * @param roleId roleId
      */
     public getRoleUsingGET1WithHttpInfo(orgMrn: string, roleId: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/role/${roleId}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/role/${roleId}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'roleId' + '}', String(roleId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -697,7 +711,8 @@ export class RolecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getRolesUsingGETWithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/roles`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/roles'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -735,7 +750,8 @@ export class RolecontrollerApi {
      * @param orgMrn orgMrn
      */
     public getRolesUsingGET1WithHttpInfo(orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/roles`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/roles'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -775,7 +791,9 @@ export class RolecontrollerApi {
      * @param input input
      */
     public updateRoleUsingPUTWithHttpInfo(orgMrn: string, roleId: number, input: models.Role, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/role/${roleId}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/role/${roleId}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'roleId' + '}', String(roleId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -826,7 +844,9 @@ export class RolecontrollerApi {
      * @param input input
      */
     public updateRoleUsingPUT1WithHttpInfo(orgMrn: string, roleId: number, input: models.Role, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/role/${roleId}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/role/${roleId}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'roleId' + '}', String(roleId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

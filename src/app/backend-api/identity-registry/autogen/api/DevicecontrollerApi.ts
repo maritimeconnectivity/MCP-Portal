@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class DevicecontrollerApi {
-    protected basePath = 'https://localhost:8443/';
+    protected basePath = 'https://test-api.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -241,7 +241,7 @@ export class DevicecontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeDeviceCertUsingPOST1(orgMrn: string, deviceMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
+    public revokeDeviceCertUsingPOST1(orgMrn: string, deviceMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<any> {
         return this.revokeDeviceCertUsingPOST1WithHttpInfo(orgMrn, deviceMrn, certId, input, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -296,7 +296,8 @@ export class DevicecontrollerApi {
      * @param input input
      */
     public createDeviceUsingPOSTWithHttpInfo(orgMrn: string, input: models.Device, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/device`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/device'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -342,7 +343,8 @@ export class DevicecontrollerApi {
      * @param input input
      */
     public createDeviceUsingPOST1WithHttpInfo(orgMrn: string, input: models.Device, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/device`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/device'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -388,7 +390,9 @@ export class DevicecontrollerApi {
      * @param deviceMrn deviceMrn
      */
     public deleteDeviceUsingDELETEWithHttpInfo(orgMrn: string, deviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/device/${deviceMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/device/${deviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -431,7 +435,9 @@ export class DevicecontrollerApi {
      * @param deviceMrn deviceMrn
      */
     public deleteDeviceUsingDELETE1WithHttpInfo(orgMrn: string, deviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/device/${deviceMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/device/${deviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -474,7 +480,9 @@ export class DevicecontrollerApi {
      * @param deviceMrn deviceMrn
      */
     public getDeviceUsingGETWithHttpInfo(orgMrn: string, deviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/device/${deviceMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/device/${deviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -517,7 +525,9 @@ export class DevicecontrollerApi {
      * @param deviceMrn deviceMrn
      */
     public getDeviceUsingGET1WithHttpInfo(orgMrn: string, deviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/device/${deviceMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/device/${deviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -562,7 +572,8 @@ export class DevicecontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationDevicesUsingGETWithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/devices`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/devices'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -571,13 +582,11 @@ export class DevicecontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationDevicesUsingGET.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -619,7 +628,8 @@ export class DevicecontrollerApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getOrganizationDevicesUsingGET1WithHttpInfo(orgMrn: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/devices`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/devices'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -628,13 +638,11 @@ export class DevicecontrollerApi {
             throw new Error('Required parameter orgMrn was null or undefined when calling getOrganizationDevicesUsingGET1.');
         }
         if (page !== undefined) {
-                queryParameters.set('page', <any>page);
-
+            queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
-                queryParameters.set('size', <any>size);
-
+            queryParameters.set('size', <any>size);
         }
 
         if (sort) {
@@ -674,7 +682,9 @@ export class DevicecontrollerApi {
      * @param deviceMrn deviceMrn
      */
     public newDeviceCertUsingGETWithHttpInfo(orgMrn: string, deviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/device/${deviceMrn}/certificate/issue-new`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/device/${deviceMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -717,7 +727,9 @@ export class DevicecontrollerApi {
      * @param deviceMrn deviceMrn
      */
     public newDeviceCertUsingGET1WithHttpInfo(orgMrn: string, deviceMrn: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/device/${deviceMrn}/certificate/issue-new`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/device/${deviceMrn}/certificate/issue-new'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -762,7 +774,10 @@ export class DevicecontrollerApi {
      * @param input input
      */
     public revokeDeviceCertUsingPOSTWithHttpInfo(orgMrn: string, deviceMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/device/${deviceMrn}/certificate/${certId}/revoke`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/device/${deviceMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -817,8 +832,11 @@ export class DevicecontrollerApi {
      * @param certId certId
      * @param input input
      */
-    public revokeDeviceCertUsingPOST1WithHttpInfo(orgMrn: string, deviceMrn: string, certId: number, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/device/${deviceMrn}/certificate/${certId}/revoke`;
+    public revokeDeviceCertUsingPOST1WithHttpInfo(orgMrn: string, deviceMrn: string, certId: string, input: models.CertificateRevocation, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/org/${orgMrn}/device/${deviceMrn}/certificate/${certId}/revoke'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn))
+                    .replace('${' + 'certId' + '}', String(certId));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -873,7 +891,9 @@ export class DevicecontrollerApi {
      * @param input input
      */
     public updateDeviceUsingPUTWithHttpInfo(orgMrn: string, deviceMrn: string, input: models.Device, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/oidc/api/org/${orgMrn}/device/${deviceMrn}`;
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/device/${deviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -924,7 +944,9 @@ export class DevicecontrollerApi {
      * @param input input
      */
     public updateDeviceUsingPUT1WithHttpInfo(orgMrn: string, deviceMrn: string, input: models.Device, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/x509/api/org/${orgMrn}/device/${deviceMrn}`;
+        const path = this.basePath + '/x509/api/org/${orgMrn}/device/${deviceMrn}'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'deviceMrn' + '}', String(deviceMrn));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
