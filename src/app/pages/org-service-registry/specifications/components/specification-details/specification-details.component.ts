@@ -163,7 +163,7 @@ export class SpecificationDetailsComponent {
 		this.isLoadingSpecification = true;
 		this.specificationsService.deleteSpecification(this.specification).subscribe(
 			() => {
-				this.navigationHelperService.navigateToOrgSpecification('', '');
+				this.deleteEndorsements();
 			},
 			err => {
 				this.isLoadingSpecification = false;
@@ -173,6 +173,21 @@ export class SpecificationDetailsComponent {
 	}
 
 	// Endorsement
+	private deleteEndorsements() {
+		if (this.endorsements && this.endorsements.length > 0) {
+			this.endorsementsService.removeAllEndorsementsOfDesign(this.specification.specificationId).subscribe(
+				() => {
+					this.navigationHelperService.navigateToOrgSpecification('', '');
+				},
+				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete endorsements of specification', MCNotificationType.Error, err);
+					this.navigationHelperService.navigateToOrgSpecification('', '');
+				}
+			);
+		} else {
+			this.navigationHelperService.navigateToOrgSpecification('', '');
+		}
+	}
 
 	private loadEndorsements(specificationId:string) {
 		this.isLoadingEndorsements = true;

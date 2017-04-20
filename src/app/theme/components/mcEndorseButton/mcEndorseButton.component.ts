@@ -10,6 +10,7 @@ import {AuthService} from "../../../authentication/services/auth.service";
 export class McEndorseButton {
 	@Input() isEndorsing:boolean;
 	@Input() isEndorsedByMyOrg:boolean;
+	@Input() title:string = '';
 	@Output() onEndorse: EventEmitter<any> = new EventEmitter<any>();
 
 	public endorseButtonClass:string;
@@ -39,7 +40,7 @@ export class McEndorseButton {
 
 
 	private setEndorseButtonClassAndTitle() {
-		this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Revoke Endorsement' : 'Endorse Specification');
+		this.endorseButtonTitle = (this.isEndorsedByMyOrg ? 'Revoke Endorsement' : 'Endorse ' + this.title);
 		this.endorseButtonClass = (this.isEndorsedByMyOrg ? 'btn btn-danger btn-raised' : 'btn btn-success btn-raised btn-with-icon');
 		this.endorseButtonIcon = (this.isEndorsedByMyOrg ? '' : 'ion-android-cloud-done fa-lg');
 	}

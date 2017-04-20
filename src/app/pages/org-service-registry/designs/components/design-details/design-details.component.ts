@@ -185,7 +185,7 @@ export class DesignDetailsComponent {
 		this.showModal = false;
 		this.designsService.deleteDesign(this.design).subscribe(
 			() => {
-				this.navigationHelperService.navigateToOrgDesign('', '');
+				this.deleteEndorsements();
 			},
 			err => {
 				this.isLoadingDesign = false;
@@ -195,6 +195,22 @@ export class DesignDetailsComponent {
 	}
 
 	// Endorsements
+	private deleteEndorsements() {
+		if (this.endorsements && this.endorsements.length > 0) {
+			this.endorsementsService.removeAllEndorsementsOfDesign(this.design.designId).subscribe(
+				() => {
+					this.navigationHelperService.navigateToOrgDesign('', '');
+				},
+				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete endorsements of design', MCNotificationType.Error, err);
+					this.navigationHelperService.navigateToOrgDesign('', '');
+				}
+			);
+		} else {
+			this.navigationHelperService.navigateToOrgDesign('', '');
+		}
+	}
+
 	private loadEndorsements(designId:string) {
 		this.isLoadingEndorsements = true;
 		let parallelObservables = [];

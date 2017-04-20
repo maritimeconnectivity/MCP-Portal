@@ -13,7 +13,7 @@
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Design</button>
         </li>
         <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingInstances">
-          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing" (onEndorse)="endorseToggle()"></mc-endorse-button>
+          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing"[title]="'Design'" (onEndorse)="endorseToggle()"></mc-endorse-button>
         </li>
       </ul>
     </ba-card>

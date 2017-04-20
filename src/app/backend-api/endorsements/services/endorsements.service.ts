@@ -91,6 +91,25 @@ export class EndorsementsService {
 	  });
   }
 
+	public removeAllEndorsementsOfSpecification(specificationMrn:string): Observable<any> {
+		return this.removeAllEndorsementsOfService(ServiceLevelEnum.Specification, specificationMrn);
+	}
+
+	public removeAllEndorsementsOfDesign(designMrn:string): Observable<any> {
+		return this.removeAllEndorsementsOfService(ServiceLevelEnum.Design, designMrn);
+	}
+
+	public removeAllEndorsementsOfInstance(instanceMrn:string): Observable<any> {
+		return this.removeAllEndorsementsOfService(ServiceLevelEnum.Instance, instanceMrn);
+	}
+
+	public removeAllEndorsementsOfService(serviceLevel:ServiceLevelEnum, serviceMrn:string): Observable<any> {
+		// TODO: fix when api call is there
+		return Observable.create(observer => {
+			observer.next('');
+		});
+	}
+
 	public removeEndorsementOfSpecification(specificationMrn:string): Observable<any> {
 		return this.removeEndorsementOfService(ServiceLevelEnum.Specification, specificationMrn);
 	}

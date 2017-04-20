@@ -209,7 +209,7 @@ export class InstanceDetailsComponent {
 		this.showModal = false;
 		this.instancesService.deleteInstance(this.instance).subscribe(
 			() => {
-				this.deleteIdService();
+				this.deleteEndorsements();
 			},
 			err => {
 				this.isLoadingInstance = false;
@@ -225,6 +225,7 @@ export class InstanceDetailsComponent {
 					this.navigationHelperService.navigateToOrgInstance('', '');
 				},
 				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete ID', MCNotificationType.Error, err);
 					this.navigationHelperService.navigateToOrgInstance('', '');
 				}
 			);
@@ -238,6 +239,22 @@ export class InstanceDetailsComponent {
 	}
 
 	// Endorsements
+	private deleteEndorsements() {
+		if (this.endorsements && this.endorsements.length > 0) {
+			this.endorsementsService.removeAllEndorsementsOfInstance(this.instance.instanceId).subscribe(
+				() => {
+					this.deleteIdService();
+				},
+				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete endorsements of instance', MCNotificationType.Error, err);
+					this.deleteIdService();
+				}
+			);
+		} else {
+			this.deleteIdService();
+		}
+	}
+
 	private loadEndorsements(instanceId:string) {
 		this.isLoadingEndorsements = true;
 		let parallelObservables = [];
