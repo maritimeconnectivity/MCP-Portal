@@ -14,17 +14,61 @@ import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/s
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {QueryHelper} from "./query-helper";
 import {SortingHelper} from "../../shared/SortingHelper";
+import {Xml} from "../autogen/model/Xml";
+import {Doc} from "../autogen/model/Doc";
+import {XmlsService} from "./xmls.service";
+import {DocsService} from "./docs.service";
 
 
 @Injectable()
 export class DesignsService implements OnInit {
   private chosenDesign: Design;
-  constructor(private endorsementsService:EndorsementsService, private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlInstanceParser: InstanceXmlParser, private xmlDesignParser: DesignXmlParser) {
+  constructor(private docsService:DocsService, private xmlsService:XmlsService, private endorsementsService:EndorsementsService, private designsApi: TechnicaldesignresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlInstanceParser: InstanceXmlParser, private xmlDesignParser: DesignXmlParser) {
   }
 
   ngOnInit() {
 
   }
+
+	public updateStatus(design:Design, newStatus:string) : Observable<{}> {
+		this.chosenDesign = null;
+		return this.designsApi.updateDesignStatusUsingPUT(design.designId, design.version, newStatus);
+	}
+
+	public updateDesign(design:Design, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
+		this.chosenDesign = null;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.xmlsService.updateOrCreateXml(updateXml?design.designAsXml:null).take(1));
+		parallelObservables.push(this.docsService.updateOrCreateDoc(updateDoc?design.designAsDoc:null).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let xml:Xml = resultArray[0];
+				let doc:Doc = resultArray[1];
+
+				var shouldUpdateDesign = false;
+				if (doc) {
+					if (design.designAsDoc) {
+						shouldUpdateDesign = design.designAsDoc.id !== doc.id; // update the design if the id isn't the same
+					} else { // No doc before, but one now, so we need to update design
+						shouldUpdateDesign = true;
+					}
+					design.designAsDoc = doc;
+				}
+
+				if (xml) { // If xml has changed we need to update the design
+					design.designAsXml = xml;
+					shouldUpdateDesign = true;
+				}
+
+				if (shouldUpdateDesign) {
+					return this.designsApi.updateDesignUsingPUT(design);
+				} else {
+					return Observable.of({});
+				}
+			});
+	}
 
 	public searchDesigns(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Design>> {
 		let parallelObservables = [];

@@ -13,6 +13,16 @@ export class XmlsService implements OnInit {
 
   }
 
+	public updateOrCreateXml(xml:Xml) : Observable<Xml> {
+		if (!xml) {
+			return Observable.of(null);
+		} else if (xml.id) { // If xml has an ID then it has already been created and needs only update
+			return this.updateXml(xml);
+		} else {
+			return this.createXml(xml);
+		}
+	}
+
   public updateXml(xml:Xml) : Observable<Xml> {
   	return this.xmlsApi.updateXmlUsingPUT(xml);
   }

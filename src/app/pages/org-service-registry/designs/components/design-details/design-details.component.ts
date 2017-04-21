@@ -154,12 +154,8 @@ export class DesignDetailsComponent {
 		return this.design.organizationId === this.authService.authState.orgMrn;
 	}
 
-	private isAdmin():boolean {
-		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
-	}
-
 	public shouldDisplayDelete():boolean {
-		return this.isAdmin() && !this.isLoadingInstances;
+		return this.isServiceAdminForOrg() && !this.isLoadingInstances;
 	}
 
 	private hasInstances():boolean {
@@ -192,6 +188,18 @@ export class DesignDetailsComponent {
 				this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
 			}
 		);
+	}
+
+	private isServiceAdminForOrg():boolean {
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
+	}
+
+	public showUpdate():boolean {
+		return this.isServiceAdminForOrg();
+	}
+
+	public update() {
+		this.navigationHelperService.navigateToUpdateDesign(this.design.designId, this.design.version);
 	}
 
 	// Endorsements
@@ -279,7 +287,7 @@ export class DesignDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isServiceAdminForOrg() && this.showEndorsements;
 	}
 
 	// Search

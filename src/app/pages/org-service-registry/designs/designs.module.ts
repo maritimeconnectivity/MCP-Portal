@@ -8,6 +8,7 @@ import {DesignListComponent} from "./components/design-list/design-list.componen
 import {DesignDetailsComponent} from "./components/design-details/design-details.component";
 import {SharedModule} from "../../shared/shared.module";
 import {DesignNewComponent} from "./components/design-new/design-new.component";
+import {DesignUpdateComponent} from "./components/design-update/design-update.component";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {DesignNewComponent} from "./components/design-new/design-new.component";
     DesignsComponent,
     DesignListComponent,
     DesignDetailsComponent,
-    DesignNewComponent
+    DesignNewComponent,
+	  DesignUpdateComponent
   ]
 })
 export default class DesignsModule {

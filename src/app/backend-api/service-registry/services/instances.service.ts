@@ -36,8 +36,8 @@ export class InstancesService implements OnInit {
 		this.chosenInstance = null;
 		let parallelObservables = [];
 
-		parallelObservables.push(this.updateOrCreateXml(updateXml?instance.instanceAsXml:null).take(1));
-		parallelObservables.push(this.updateOrCreateDoc(updateDoc?instance.instanceAsDoc:null).take(1));
+		parallelObservables.push(this.xmlsService.updateOrCreateXml(updateXml?instance.instanceAsXml:null).take(1));
+		parallelObservables.push(this.docsService.updateOrCreateDoc(updateDoc?instance.instanceAsDoc:null).take(1));
 
 		return Observable.forkJoin(parallelObservables).flatMap(
 			resultArray => {
@@ -65,26 +65,6 @@ export class InstancesService implements OnInit {
 					return Observable.of({});
 				}
 			});
-	}
-
-	private updateOrCreateDoc(doc:Doc) : Observable<Doc> {
-		if (!doc) {
-			return Observable.of(null);
-		} else if (doc.id) { // If doc has an ID then it has already been created and needs only update
-			return this.docsService.updateDoc(doc);
-		} else {
-			return this.docsService.createDoc(doc);
-		}
-	}
-
-	private updateOrCreateXml(xml:Xml) : Observable<Xml> {
-		if (!xml) {
-			return Observable.of(null);
-		} else if (xml.id) { // If xml has an ID then it has already been created and needs only update
-			return this.xmlsService.updateXml(xml);
-		} else {
-			return this.xmlsService.createXml(xml);
-		}
 	}
 
   public deleteInstance(instance:Instance) : Observable<{}> {

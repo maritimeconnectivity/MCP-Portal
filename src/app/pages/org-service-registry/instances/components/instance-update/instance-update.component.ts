@@ -125,41 +125,32 @@ export class InstanceUpdateComponent implements OnInit {
 
 	private isXmlValid(file: Xml) : Observable<boolean> {
 		try {
-			let mrn = this.xmlParser.getMrn(file);
-			let isValid = this.mrnHelper.checkMrnForInstance(mrn);
-			if (isValid) {
-				let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
-				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
-				let isDesignTheSame = this.isDesignSameAsBefore(designMrn, designVersion);
-				if (isDesignTheSame) {
-					let parseValid = this.parseDisplayValues(file);
-					return Observable.of(parseValid);
-				} else {
-					return Observable.create(observer => {
-						this.designService.getDesign(designMrn,designVersion).subscribe(
-							design => {
-								let parseValid = this.parseDisplayValues(file);
-								observer.next(parseValid);
-							},
-							err => {
-								if (err.status == 404) {
-									this.errorText  = "The MRN and version referencing the Design in the XML, doesn't match any designs in Service Registry<BR><BR>"
-										+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
-								} else {
-									this.errorText  = "Error when trying to validate implemented design.<BR>";
-									// If error isn't "Not found" then another error occured and we can't proceed
-									this.notifications.generateNotification('Error when trying to validate implemented design: ', err.message, MCNotificationType.Error, err);
-								}
-								observer.next(false);
-							}
-						);
-					});
-				}
+			let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
+			let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
+			let isDesignTheSame = this.isDesignSameAsBefore(designMrn, designVersion);
+			if (isDesignTheSame) {
+				let parseValid = this.parseDisplayValues(file);
+				return Observable.of(parseValid);
 			} else {
-				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
-					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
-					+ "'ID'=" + this.mrnHelper.mrnPatternError();
-				return Observable.of(false);
+				return Observable.create(observer => {
+					this.designService.getDesign(designMrn,designVersion).subscribe(
+						design => {
+							let parseValid = this.parseDisplayValues(file);
+							observer.next(parseValid);
+						},
+						err => {
+							if (err.status == 404) {
+								this.errorText  = "The MRN and version referencing the Design in the XML, doesn't match any designs in Service Registry<BR><BR>"
+									+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
+							} else {
+								this.errorText  = "Error when trying to validate implemented design.<BR>";
+								// If error isn't "Not found" then another error occured and we can't proceed
+								this.notifications.generateNotification('Error when trying to validate implemented design: ', err.message, MCNotificationType.Error, err);
+							}
+							observer.next(false);
+						}
+					);
+				});
 			}
 		} catch ( error ) {
 			this.errorText  = "Error in XML.<BR>";
@@ -173,8 +164,6 @@ export class InstanceUpdateComponent implements OnInit {
 		try {
 			if (this.xml) {
 				var instance:Instance = _.cloneDeep(this.instance);
-				console.log("INIT: ", this.instance);
-				console.log("NEW: ", instance);
 				// Already contains an XML, so just update the values and not the ID
 				instance.instanceAsXml.content = this.xml.content;
 				instance.instanceAsXml.contentContentType = this.xml.contentContentType;

@@ -19,6 +19,16 @@ export class DocsService implements OnInit {
 	return null;
   }
 
+	public updateOrCreateDoc(doc:Doc) : Observable<Doc> {
+		if (!doc) {
+			return Observable.of(null);
+		} else if (doc.id) { // If doc has an ID then it has already been created and needs only update
+			return this.updateDoc(doc);
+		} else {
+			return this.createDoc(doc);
+		}
+	}
+
   public updateDoc(doc:Doc) : Observable<Doc> {
   	return this.docsApi.updateDocUsingPUT(doc);
   }
