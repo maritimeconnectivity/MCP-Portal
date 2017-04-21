@@ -5,7 +5,6 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {ServicespecificationresourceApi} from "../autogen/api/ServicespecificationresourceApi";
 import {Specification} from "../autogen/model/Specification";
 import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
-import {Design} from "../autogen/model/Design";
 import {XmlParserService} from "../../../shared/xml-parser.service";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
@@ -14,16 +13,60 @@ import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/s
 import {forEach} from "@angular/router/src/utils/collection";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {SortingHelper} from "../../shared/SortingHelper";
+import {Xml} from "../autogen/model/Xml";
+import {Doc} from "../autogen/model/Doc";
+import {XmlsService} from "./xmls.service";
+import {DocsService} from "./docs.service";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
   private chosenSpecification: Specification;
-  constructor(private endorsementsService:EndorsementsService, private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
+  constructor(private docsService:DocsService, private xmlsService:XmlsService, private endorsementsService:EndorsementsService, private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
   }
 
   ngOnInit() {
 
   }
+
+	public updateStatus(specification:Specification, newStatus:string) : Observable<{}> {
+		this.chosenSpecification = null;
+		return this.specificationsApi.updateSpecificationStatusUsingPUT(specification.specificationId, specification.version, newStatus);
+	}
+
+	public updateSpecification(specification:Specification, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
+		this.chosenSpecification = null;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.xmlsService.updateOrCreateXml(updateXml?specification.specAsXml:null).take(1));
+		parallelObservables.push(this.docsService.updateOrCreateDoc(updateDoc?specification.specAsDoc:null).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let xml:Xml = resultArray[0];
+				let doc:Doc = resultArray[1];
+
+				var shouldUpdateSpecification = false;
+				if (doc) {
+					if (specification.specAsDoc) {
+						shouldUpdateSpecification = specification.specAsDoc.id !== doc.id; // update the specification if the id isn't the same
+					} else { // No doc before, but one now, so we need to update specification
+						shouldUpdateSpecification = true;
+					}
+					specification.specAsDoc = doc;
+				}
+
+				if (xml) { // If xml has changed we need to update the specification
+					specification.specAsXml = xml;
+					shouldUpdateSpecification = true;
+				}
+
+				if (shouldUpdateSpecification) {
+					return this.specificationsApi.updateSpecificationUsingPUT(specification);
+				} else {
+					return Observable.of({});
+				}
+			});
+	}
 
   public deleteSpecification(specification:Specification) : Observable<{}> {
     this.chosenSpecification = null;

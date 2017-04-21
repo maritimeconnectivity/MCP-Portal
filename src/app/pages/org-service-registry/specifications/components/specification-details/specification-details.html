@@ -9,6 +9,9 @@
         <li *ngIf="specification.specAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
+        <li *ngIf="showUpdate()">
+          <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update Specification</button>
+        </li>
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
         </li>

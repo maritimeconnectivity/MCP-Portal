@@ -8,7 +8,6 @@ import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
@@ -53,7 +52,7 @@ export class SpecificationDetailsComponent {
 	public isSearchingDesigns = false;
 	public searchKey = SEARCH_KEY;
 
-  constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
+  constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -132,12 +131,20 @@ export class SpecificationDetailsComponent {
 		return this.specification.organizationId === this.authService.authState.orgMrn;
 	}
 
-	private isAdmin():boolean {
-		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
+	private isServiceAdminForOrg():boolean {
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
+	}
+
+	public showUpdate():boolean {
+		return this.isServiceAdminForOrg();
+	}
+
+	public update() {
+		this.navigationHelperService.navigateToUpdateSpecification(this.specification.specificationId, this.specification.version);
 	}
 
 	public shouldDisplayDelete():boolean {
-		return this.isAdmin() && !this.isLoadingDesigns;
+		return this.isServiceAdminForOrg() && !this.isLoadingDesigns;
 	}
 
 	private hasDesigns():boolean {
@@ -252,7 +259,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isServiceAdminForOrg() && this.showEndorsements;
 	}
 	// Search
 	public search(searchRequest: ServiceRegistrySearchRequest) {
