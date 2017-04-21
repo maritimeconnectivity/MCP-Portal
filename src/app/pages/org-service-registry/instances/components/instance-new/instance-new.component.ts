@@ -162,6 +162,7 @@ export class InstanceNewComponent implements OnInit {
 			instance.status = this.xmlParser.getStatus(this.xml);
 			instance.organizationId = this.organization.mrn;
 			instance.version = this.xmlParser.getVersion(this.xml);
+			instance.endpointUri = this.xmlParser.getEndpoint(this.xml);
 			instance.designId = this.design.designId;
 
 			this.parsedInstance = instance;
@@ -178,7 +179,7 @@ export class InstanceNewComponent implements OnInit {
 		this.labelValuesParsed = [];
 		this.labelValuesParsed.push({label: 'Upload XML', valueHtml: ''});
 		if (this.organization && this.parsedInstance) {
-			this.labelValuesParsed = this.viewModelService.generateLabelValuesForDesign(this.parsedInstance, this.organization.name);
+			this.labelValuesParsed = this.viewModelService.generateLabelValuesForInstance(this.parsedInstance, this.organization.name);
 		}
 	}
 

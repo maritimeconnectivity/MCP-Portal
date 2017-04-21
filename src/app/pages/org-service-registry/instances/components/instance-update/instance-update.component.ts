@@ -19,6 +19,8 @@ import {Service} from "../../../../../backend-api/identity-registry/autogen/mode
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 import {Observable} from "rxjs";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
+import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
+import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 
 @Component({
   selector: 'instance-update',
@@ -30,6 +32,9 @@ export class InstanceUpdateComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
 	public hasError: boolean = false;
 	public errorText: string;
+
+	public labelValuesParsed:Array<LabelValueModel>;
+	private parsedInstance:Instance;
 
   public instance: Instance;
 
@@ -48,19 +53,18 @@ export class InstanceUpdateComponent implements OnInit {
 
 	private instanceIdFromRoute:string;
 	private versionFromRoute:string;
-	private mrn:string = '';
-	private name:string = '';
 	private status:string = '';
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
-  constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private router: Router, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private instancesService: InstancesService, private designService: DesignsService) {
+  constructor(private orgsService:OrganizationsService, private viewModelService: SrViewModelService, private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private router: Router, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private instancesService: InstancesService, private designService: DesignsService) {
   }
 
   ngOnInit() {
     this.isUpdating = false;
     this.isLoading = true;
     this.loadInstance();
+	  this.updateUI();
   }
 
   public setFormChanged() {
@@ -92,21 +96,32 @@ export class InstanceUpdateComponent implements OnInit {
 			  }
 			  this.setFormChanged();
 			  this.generateForm();
+			  this.updateUI();
 		  });
 	  } else {
 		  this.hasError = false;
 		  this.resetXmlFile();
 		  this.setFormChanged();
 		  this.generateForm();
+		  this.updateUI();
 	  }
   }
 
   private resetXmlFile() {
-	  this.name = this.instance.name;
 	  this.status = this.instance.status;
 	  this.xml = null;
 	  this.fileUploadXml.resetFileSelection();
+	  this.updateUI();
   }
+
+	private updateUI() {
+		if (this.xml) {
+			this.parseInstance();
+		} else {
+			this.parsedInstance = null;
+			this.setupLableValuesParsed();
+		}
+	}
 
 	private isXmlValid(file: Xml) : Observable<boolean> {
 		try {
@@ -153,8 +168,36 @@ export class InstanceUpdateComponent implements OnInit {
 		}
 	}
 
+	private parseInstance() {
+		this.parsedInstance = null;
+		try {
+			if (this.xml) {
+				var instance:Instance = _.cloneDeep(this.instance);
+				console.log("INIT: ", this.instance);
+				console.log("NEW: ", instance);
+				// Already contains an XML, so just update the values and not the ID
+				instance.instanceAsXml.content = this.xml.content;
+				instance.instanceAsXml.contentContentType = this.xml.contentContentType;
+				instance.instanceAsXml.name = this.xml.name;
+				instance.name = this.xmlParser.getName(this.xml);
+				instance.description = this.xmlParser.getDescription(this.xml);
+				instance.keywords = this.xmlParser.getKeywords(this.xml);
+				instance.status = this.xmlParser.getStatus(this.xml);
+				instance.version = this.xmlParser.getVersion(this.xml);
+				instance.endpointUri = this.xmlParser.getEndpoint(this.xml);
+				instance.designId = this.xmlParser.getMrnForDesignInInstance(this.xml);
+				this.parsedInstance = instance;
+			}
+		} catch ( error ) {
+			this.isUpdating = false;
+			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+			this.resetXmlFile();
+		} finally {
+			this.setupLableValuesParsed();
+		}
+	}
+
 	private parseDisplayValues(file:Xml):boolean {
-		this.name = this.xmlParser.getName(file);
 		this.status = this.xmlParser.getStatus(file);
 		let parsedMrn = this.xmlParser.getMrn(file);
 		let parsedVersion = this.xmlParser.getVersion(file);
@@ -165,6 +208,22 @@ export class InstanceUpdateComponent implements OnInit {
 			return false;
 		} else {
 			return true;
+		}
+	}
+
+	private setupLableValuesParsed() {
+		this.labelValuesParsed = [];
+		this.labelValuesParsed.push({label: 'Upload XML', valueHtml: ''});
+		if (this.parsedInstance) {
+			this.orgsService.getOrganizationName(this.instance.organizationId).subscribe(
+				organizationName => {
+					this.labelValuesParsed = this.viewModelService.generateLabelValuesForInstance(this.parsedInstance, organizationName);
+				},
+				err => {
+					this.labelValuesParsed = this.viewModelService.generateLabelValuesForInstance(this.parsedInstance, '');
+					this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+				}
+			);
 		}
 	}
 
@@ -187,33 +246,19 @@ export class InstanceUpdateComponent implements OnInit {
   public update() {
     this.isUpdating = true;
   	if (this.xml || this.doc) {
-		  try {
-			  if (this.xml) {
-				  // Already contains an XML, so just update the values and not the ID
-				  this.instance.instanceAsXml.content = this.xml.content;
-				  this.instance.instanceAsXml.contentContentType = this.xml.contentContentType;
-				  this.instance.instanceAsXml.name = this.xml.name;
-				  this.instance.name = this.xmlParser.getName(this.xml);
-				  this.instance.description = this.xmlParser.getDescription(this.xml);
-				  this.instance.keywords = this.xmlParser.getKeywords(this.xml);
-				  this.instance.status = this.xmlParser.getStatus(this.xml);
-				  this.instance.version = this.xmlParser.getVersion(this.xml);
-				  this.instance.designId = this.xmlParser.getMrnForDesignInInstance(this.xml);
-			  }
-			  if (this.doc) {
-				  if (this.instance.instanceAsDoc) { // Already contains a Doc, so just update the values and not the ID
-					  this.instance.instanceAsDoc.filecontent = this.doc.filecontent;
-					  this.instance.instanceAsDoc.filecontentContentType = this.doc.filecontentContentType;
-					  this.instance.instanceAsDoc.name = this.doc.name;
-				  } else {
-					  this.instance.instanceAsDoc = this.doc;
-				  }
-			  }
-			  this.updateInstance();
-		  } catch ( error ) {
-			  this.isUpdating = false;
-			  this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+		  if (this.xml) {
+			  this.instance = this.parsedInstance;
 		  }
+		  if (this.doc) {
+			  if (this.instance.instanceAsDoc) { // Already contains a Doc, so just update the values and not the ID
+				  this.instance.instanceAsDoc.filecontent = this.doc.filecontent;
+				  this.instance.instanceAsDoc.filecontentContentType = this.doc.filecontentContentType;
+				  this.instance.instanceAsDoc.name = this.doc.name;
+			  } else {
+				  this.instance.instanceAsDoc = this.doc;
+			  }
+		  }
+		  this.updateInstance();
 	  } else {
   		this.status = this.updateForm.value.status;
   		this.updateStatus();
@@ -253,8 +298,6 @@ export class InstanceUpdateComponent implements OnInit {
 			instance => {
 				this.instance = instance;
 				this.status = this.instance.status;
-				this.mrn = this.instance.instanceId;
-				this.name = this.instance.name;
 				this.generateLabelValues();
 				this.generateForm();
 				this.isLoading = false;
@@ -286,23 +329,14 @@ export class InstanceUpdateComponent implements OnInit {
 		this.updateForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel = {formGroup: this.updateForm, elementId: 'mrn', controlType: McFormControlType.Text, labelName: 'MRN', placeholder: 'Upload Instance Xml', isDisabled: true};
-		var formControl = new FormControl(this.mrn, formControlModel.validator);
-		this.updateForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
-
-		formControlModel = {formGroup: this.updateForm, elementId: 'name', controlType: McFormControlType.Text, labelName: 'Name', placeholder: 'Upload Instance XML', isDisabled: true};
-		formControl = new FormControl(this.name, formControlModel.validator);
-		this.updateForm.addControl(formControlModel.elementId, formControl);
-		this.formControlModels.push(formControlModel);
-
+		var formControlModel:McFormControlModel;
 		let disableStatus = this.xml != null || this.doc != null;
 		if (disableStatus) {
 			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
 		} else {
 			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: ''};
 		}
-		formControl = new FormControl(this.status, formControlModel.validator);
+		var formControl = new FormControl(this.status, formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.setStatus(param));
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
