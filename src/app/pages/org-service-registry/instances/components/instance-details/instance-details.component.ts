@@ -66,7 +66,7 @@ export class InstanceDetailsComponent {
 	  let version = this.route.snapshot.queryParams['instanceVersion'];
     this.loadInstance(instanceId, version);
 	  if (SHOW_ENDORSEMENTS) {
-		  this.loadEndorsements(instanceId);
+		  this.loadEndorsements(instanceId, version);
 	  }
   }
 
@@ -256,12 +256,12 @@ export class InstanceDetailsComponent {
 		}
 	}
 
-	private loadEndorsements(instanceId:string) {
+	private loadEndorsements(instanceId:string, instanceVersion:string) {
 		this.isLoadingEndorsements = true;
 		let parallelObservables = [];
 
-		parallelObservables.push(this.endorsementsService.isInstanceEndorsedByMyOrg(instanceId).take(1));
-		parallelObservables.push(this.endorsementsService.getEndorsementsForInstance(instanceId).take(1));
+		parallelObservables.push(this.endorsementsService.isInstanceEndorsedByMyOrg(instanceId, instanceVersion).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForInstance(instanceId, instanceVersion).take(1));
 
 		return Observable.forkJoin(parallelObservables).subscribe(
 			resultArray => {
@@ -291,11 +291,11 @@ export class InstanceDetailsComponent {
 	private endorse() {
 		this.isEndorsing = true;
 
-		this.endorsementsService.endorseInstance(this.instance.instanceId, this.design.designId).subscribe(
+		this.endorsementsService.endorseInstance(this.instance.instanceId, this.instance.version, this.design.designId, this.design.version).subscribe(
 			_ => {
 				this.isEndorsedByMyOrg = true;
 				this.isEndorsing = false;
-				this.loadEndorsements(this.instance.instanceId);
+				this.loadEndorsements(this.instance.instanceId, this.instance.version);
 			},
 			err => {
 				this.isEndorsing = false;
@@ -306,11 +306,11 @@ export class InstanceDetailsComponent {
 
 	private removeEndorse() {
 		this.isEndorsing = true;
-		this.endorsementsService.removeEndorsementOfInstance(this.instance.instanceId).subscribe(
+		this.endorsementsService.removeEndorsementOfInstance(this.instance.instanceId, this.instance.version).subscribe(
 			_ => {
 				this.isEndorsedByMyOrg = false;
 				this.isEndorsing = false;
-				this.loadEndorsements(this.instance.instanceId);
+				this.loadEndorsements(this.instance.instanceId, this.instance.version);
 			},
 			err => {
 				this.isEndorsing = false;

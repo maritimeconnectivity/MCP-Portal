@@ -23,22 +23,22 @@ export class EndorsementsService {
   constructor(private organizationService:OrganizationsService, private endorsementApi:EndorsecontrollerApi, private authService:AuthService) {
   }
 
-	public isSpecificationEndorsedByMyOrg(specificationMrn:string) : Observable<boolean> {
-		return this.isServiceEndorsedByMyOrg(specificationMrn);
+	public isSpecificationEndorsedByMyOrg(specificationMrn:string, specificationVersion:string) : Observable<boolean> {
+		return this.isServiceEndorsedByMyOrg(specificationMrn, specificationVersion);
 	}
 
-	public isDesignEndorsedByMyOrg(designMrn:string) : Observable<boolean> {
-		return this.isServiceEndorsedByMyOrg(designMrn);
+	public isDesignEndorsedByMyOrg(designMrn:string, designVersion:string) : Observable<boolean> {
+		return this.isServiceEndorsedByMyOrg(designMrn, designVersion);
 	}
 
-	public isInstanceEndorsedByMyOrg(instanceMrn:string) : Observable<boolean> {
-		return this.isServiceEndorsedByMyOrg(instanceMrn);
+	public isInstanceEndorsedByMyOrg(instanceMrn:string, instanceVersion:string) : Observable<boolean> {
+		return this.isServiceEndorsedByMyOrg(instanceMrn, instanceVersion);
 	}
 
-  private isServiceEndorsedByMyOrg(serviceMrn:string) : Observable<boolean> {
+  private isServiceEndorsedByMyOrg(serviceMrn:string, serviceVersion:string) : Observable<boolean> {
 	  return Observable.create(observer => {
 		  let orgMrn = this.authService.authState.orgMrn;
-		  this.endorsementApi.getEndorsmentUsingGET(serviceMrn, orgMrn).subscribe(
+		  this.endorsementApi.getEndorsmentUsingGET(serviceMrn, serviceVersion, orgMrn).subscribe(
 			  _ => {
 				  observer.next(true);
 			  },
@@ -53,40 +53,40 @@ export class EndorsementsService {
 	  });
   }
 
-	public getEndorsementsForSpecification(specificationMrn:string) : Observable<PageEndorsement> {
-		return this.getEndorsements(specificationMrn);
+	public getEndorsementsForSpecification(specificationMrn:string, specificationVersion:string) : Observable<PageEndorsement> {
+		return this.getEndorsements(specificationMrn, specificationVersion);
 	}
 
-	public getEndorsementsForDesign(designMrn:string) : Observable<PageEndorsement> {
-		return this.getEndorsements(designMrn);
+	public getEndorsementsForDesign(designMrn:string, designVersion:string) : Observable<PageEndorsement> {
+		return this.getEndorsements(designMrn, designVersion);
 	}
 
-	public getEndorsementsForInstance(instanceMrn:string) : Observable<PageEndorsement> {
-		return this.getEndorsements(instanceMrn);
+	public getEndorsementsForInstance(instanceMrn:string, instanceVersion:string) : Observable<PageEndorsement> {
+		return this.getEndorsements(instanceMrn, instanceVersion);
 	}
 
-	private getEndorsements(serviceMrn:string) : Observable<PageEndorsement> {
+	private getEndorsements(serviceMrn:string, serviceVersion:string) : Observable<PageEndorsement> {
 		// TODO: Maybe some paging? remember that the methods depending on this method is expecting to get ALL endorsements. So remember paging in those methods as well. Note that some methods may need the full list so maaybe a getAll method is needed. For example when used in a search for filtering. Some methods still need the pagination, for example the list of endorsing organizations
-		return this.endorsementApi.getEndormentsByServiceMrnUsingGET(serviceMrn);
+		return this.endorsementApi.getEndormentsByServiceMrnUsingGET(serviceMrn, serviceVersion);
 	}
 
-	public endorseSpecification(specificationMrn:string): Observable<Endorsement> {
-		return this.endorseService(ServiceLevelEnum.Specification, specificationMrn);
+	public endorseSpecification(specificationMrn:string, specificationVersion:string): Observable<Endorsement> {
+		return this.endorseService(ServiceLevelEnum.Specification, specificationMrn, specificationVersion);
 	}
 
-	public endorseDesign(designMrn:string, parentSpecificationMrn:string): Observable<Endorsement> {
-		return this.endorseService(ServiceLevelEnum.Design, designMrn, parentSpecificationMrn);
+	public endorseDesign(designMrn:string, designVersion:string, parentSpecificationMrn:string, parentSpecificationVersion:string): Observable<Endorsement> {
+		return this.endorseService(ServiceLevelEnum.Design, designMrn, designVersion, parentSpecificationMrn, parentSpecificationVersion);
 	}
 
-	public endorseInstance(instanceMrn:string, parentDesignMrn:string): Observable<Endorsement> {
-		return this.endorseService(ServiceLevelEnum.Instance, instanceMrn, parentDesignMrn);
+	public endorseInstance(instanceMrn:string, instanceVersion:string, parentDesignMrn:string, parentDesignVersion:string): Observable<Endorsement> {
+		return this.endorseService(ServiceLevelEnum.Instance, instanceMrn, instanceVersion, parentDesignMrn, parentDesignVersion);
 	}
 
-  private endorseService(serviceLevel:ServiceLevelEnum, serviceMrn:string, parentMrn?:string): Observable<Endorsement> {
+  private endorseService(serviceLevel:ServiceLevelEnum, serviceMrn:string, serviceVersion:string, parentMrn?:string, parentVersion?:string): Observable<Endorsement> {
 	  let orgMrn = this.authService.authState.orgMrn;
 	  let userMrn = this.authService.authState.user.mrn;
   	return this.organizationService.getOrganizationName(orgMrn).flatMap(organizationName => {
-		  let endorsement:Endorsement = {orgMrn:orgMrn, serviceMrn:serviceMrn, orgName:organizationName, serviceLevel:serviceLevel, userMrn:userMrn, parentMrn:parentMrn}
+		  let endorsement:Endorsement = {orgMrn:orgMrn, serviceMrn:serviceMrn, serviceVersion:serviceVersion, orgName:organizationName, serviceLevel:serviceLevel, userMrn:userMrn, parentMrn:parentMrn, parentVersion:parentVersion}
   		return this.endorsementApi.createEndormentUsingPOST(endorsement);
 	  });
   }
@@ -110,21 +110,21 @@ export class EndorsementsService {
 		});
 	}
 
-	public removeEndorsementOfSpecification(specificationMrn:string): Observable<any> {
-		return this.removeEndorsementOfService(ServiceLevelEnum.Specification, specificationMrn);
+	public removeEndorsementOfSpecification(specificationMrn:string, specificationVersion:string): Observable<any> {
+		return this.removeEndorsementOfService(ServiceLevelEnum.Specification, specificationMrn, specificationVersion);
 	}
 
-	public removeEndorsementOfDesign(designMrn:string): Observable<any> {
-		return this.removeEndorsementOfService(ServiceLevelEnum.Design, designMrn);
+	public removeEndorsementOfDesign(designMrn:string, designVersion:string): Observable<any> {
+		return this.removeEndorsementOfService(ServiceLevelEnum.Design, designMrn, designVersion);
 	}
 
-	public removeEndorsementOfInstance(instanceMrn:string): Observable<any> {
-		return this.removeEndorsementOfService(ServiceLevelEnum.Instance, instanceMrn);
+	public removeEndorsementOfInstance(instanceMrn:string, instanceVersion:string): Observable<any> {
+		return this.removeEndorsementOfService(ServiceLevelEnum.Instance, instanceMrn, instanceVersion);
 	}
 
-	private removeEndorsementOfService(serviceLevel:ServiceLevelEnum, serviceMrn:string): Observable<any> {
+	private removeEndorsementOfService(serviceLevel:ServiceLevelEnum, serviceMrn:string, serviceVersion:string): Observable<any> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.endorsementApi.deleteEndormentUsingDELETE(serviceMrn, orgMrn);
+		return this.endorsementApi.deleteEndormentUsingDELETE(serviceMrn, serviceVersion, orgMrn);
 	}
 
 	public searchEndorsementsForSpecifications(searchRequest:ServiceRegistrySearchRequest) : Observable<EndorsementSearchResult> {

@@ -69,7 +69,7 @@ export class DesignDetailsComponent {
 	  let version = this.route.snapshot.queryParams['designVersion'];
     this.loadDesign(designId, version);
 	  if (SHOW_ENDORSEMENTS) {
-		  this.loadEndorsements(designId);
+		  this.loadEndorsements(designId, version);
 	  }
   }
 
@@ -219,12 +219,12 @@ export class DesignDetailsComponent {
 		}
 	}
 
-	private loadEndorsements(designId:string) {
+	private loadEndorsements(designId:string, designVersion) {
 		this.isLoadingEndorsements = true;
 		let parallelObservables = [];
 
-		parallelObservables.push(this.endorsementsService.isDesignEndorsedByMyOrg(designId).take(1));
-		parallelObservables.push(this.endorsementsService.getEndorsementsForDesign(designId).take(1));
+		parallelObservables.push(this.endorsementsService.isDesignEndorsedByMyOrg(designId,designVersion).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForDesign(designId,designVersion).take(1));
 
 		return Observable.forkJoin(parallelObservables).subscribe(
 			resultArray => {
@@ -254,15 +254,17 @@ export class DesignDetailsComponent {
 	private endorse() {
 		this.isEndorsing = true;
 		var specificationId = '';
+		var specificationVersion = '';
 		if (this.design.specifications && this.design.specifications.length > 0) {
 			// TODO handle more specifications when endorse api has the functionality
 			specificationId = this.design.specifications[0].specificationId;
+			specificationVersion = this.design.specifications[0].version;
 		}
-		this.endorsementsService.endorseDesign(this.design.designId, specificationId).subscribe(
+		this.endorsementsService.endorseDesign(this.design.designId, this.design.version, specificationId, specificationVersion).subscribe(
 			_ => {
 				this.isEndorsedByMyOrg = true;
 				this.isEndorsing = false;
-				this.loadEndorsements(this.design.designId);
+				this.loadEndorsements(this.design.designId, this.design.version);
 			},
 			err => {
 				this.isEndorsing = false;
@@ -273,11 +275,11 @@ export class DesignDetailsComponent {
 
 	private removeEndorse() {
 		this.isEndorsing = true;
-		this.endorsementsService.removeEndorsementOfDesign(this.design.designId).subscribe(
+		this.endorsementsService.removeEndorsementOfDesign(this.design.designId, this.design.version).subscribe(
 			_ => {
 				this.isEndorsedByMyOrg = false;
 				this.isEndorsing = false;
-				this.loadEndorsements(this.design.designId);
+				this.loadEndorsements(this.design.designId, this.design.version);
 			},
 			err => {
 				this.isEndorsing = false;
