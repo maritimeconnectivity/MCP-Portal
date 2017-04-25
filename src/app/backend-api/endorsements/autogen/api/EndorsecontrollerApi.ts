@@ -112,10 +112,11 @@ export class EndorsecontrollerApi {
      * getEndorsedByParentMrnAndOrgMrn
      * 
      * @param parentMrn parentMrn
+     * @param parentVersion parentVersion
      * @param orgMrn orgMrn
      */
-    public getEndorsedByParentMrnAndOrgMrnUsingGET(parentMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
-        return this.getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn, orgMrn, extraHttpRequestParams)
+    public getEndorsedByParentMrnAndOrgMrnUsingGET(parentMrn: string, parentVersion: string, orgMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
+        return this.getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn, parentVersion, orgMrn, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -129,9 +130,10 @@ export class EndorsecontrollerApi {
      * getEndorsedByParentMrn
      * 
      * @param parentMrn parentMrn
+     * @param parentVersion parentVersion
      */
-    public getEndorsedByParentMrnUsingGET(parentMrn: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
-        return this.getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn, extraHttpRequestParams)
+    public getEndorsedByParentMrnUsingGET(parentMrn: string, parentVersion: string, extraHttpRequestParams?: any): Observable<models.PageEndorsement> {
+        return this.getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn, parentVersion, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -346,11 +348,13 @@ export class EndorsecontrollerApi {
      * getEndorsedByParentMrnAndOrgMrn
      * 
      * @param parentMrn parentMrn
+     * @param parentVersion parentVersion
      * @param orgMrn orgMrn
      */
-    public getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+    public getEndorsedByParentMrnAndOrgMrnUsingGETWithHttpInfo(parentMrn: string, parentVersion: string, orgMrn: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/oidc/endorsed-children/${parentMrn}/${parentVersion}/${orgMrn}'
                     .replace('${' + 'parentMrn' + '}', String(parentMrn))
+                    .replace('${' + 'parentVersion' + '}', String(parentVersion))
                     .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
         let queryParameters = new URLSearchParams();
@@ -358,6 +362,10 @@ export class EndorsecontrollerApi {
         // verify required parameter 'parentMrn' is not null or undefined
         if (parentMrn === null || parentMrn === undefined) {
             throw new Error('Required parameter parentMrn was null or undefined when calling getEndorsedByParentMrnAndOrgMrnUsingGET.');
+        }
+        // verify required parameter 'parentVersion' is not null or undefined
+        if (parentVersion === null || parentVersion === undefined) {
+            throw new Error('Required parameter parentVersion was null or undefined when calling getEndorsedByParentMrnAndOrgMrnUsingGET.');
         }
         // verify required parameter 'orgMrn' is not null or undefined
         if (orgMrn === null || orgMrn === undefined) {
@@ -391,16 +399,22 @@ export class EndorsecontrollerApi {
      * getEndorsedByParentMrn
      * 
      * @param parentMrn parentMrn
+     * @param parentVersion parentVersion
      */
-    public getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+    public getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn: string, parentVersion: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/oidc/endorsed-children/${parentMrn}/${parentVersion}'
-                    .replace('${' + 'parentMrn' + '}', String(parentMrn));
+                    .replace('${' + 'parentMrn' + '}', String(parentMrn))
+                    .replace('${' + 'parentVersion' + '}', String(parentVersion));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'parentMrn' is not null or undefined
         if (parentMrn === null || parentMrn === undefined) {
             throw new Error('Required parameter parentMrn was null or undefined when calling getEndorsedByParentMrnUsingGET.');
+        }
+        // verify required parameter 'parentVersion' is not null or undefined
+        if (parentVersion === null || parentVersion === undefined) {
+            throw new Error('Required parameter parentVersion was null or undefined when calling getEndorsedByParentMrnUsingGET.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [

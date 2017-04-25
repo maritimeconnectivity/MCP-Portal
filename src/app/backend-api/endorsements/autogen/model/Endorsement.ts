@@ -15,7 +15,7 @@ import * as models from './models';
 export interface Endorsement {
     createdAt?: Date;
 
-    orgMrn: string;
+    orgMrn?: string;
 
     orgName?: string;
 
@@ -28,13 +28,13 @@ export interface Endorsement {
      */
     serviceLevel: Endorsement.ServiceLevelEnum;
 
-    serviceMrn: string;
+    serviceMrn?: string;
 
-    serviceVersion: string;
+    serviceVersion?: string;
 
     updatedAt?: Date;
 
-    userMrn: string;
+    userMrn?: string;
 
 }
 export namespace Endorsement {

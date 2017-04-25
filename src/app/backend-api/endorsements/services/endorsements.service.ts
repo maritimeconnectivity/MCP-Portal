@@ -131,18 +131,18 @@ export class EndorsementsService {
 		return this.searchEndorsements(ServiceLevelEnum.Specification, searchRequest);
 	}
 
-	public searchEndorsementsForDesigns(searchRequest:ServiceRegistrySearchRequest, parentSpecificationMrn?:string) : Observable<EndorsementSearchResult> {
-		return this.searchEndorsements(ServiceLevelEnum.Design, searchRequest, parentSpecificationMrn);
+	public searchEndorsementsForDesigns(searchRequest:ServiceRegistrySearchRequest, parentSpecificationMrn?:string, parentVersion?:string) : Observable<EndorsementSearchResult> {
+		return this.searchEndorsements(ServiceLevelEnum.Design, searchRequest, parentSpecificationMrn, parentVersion);
 	}
 
-	public searchEndorsementsForInstances(searchRequest:ServiceRegistrySearchRequest, parentDesignMrn?:string) : Observable<EndorsementSearchResult> {
-		return this.searchEndorsements(ServiceLevelEnum.Instance, searchRequest, parentDesignMrn);
+	public searchEndorsementsForInstances(searchRequest:ServiceRegistrySearchRequest, parentDesignMrn?:string, parentVersion?:string) : Observable<EndorsementSearchResult> {
+		return this.searchEndorsements(ServiceLevelEnum.Instance, searchRequest, parentDesignMrn, parentVersion);
 	}
 
-	private searchEndorsements(serviceLevel:ServiceLevelEnum, searchRequest:ServiceRegistrySearchRequest, parentMrn?:string) : Observable<EndorsementSearchResult> {
+	private searchEndorsements(serviceLevel:ServiceLevelEnum, searchRequest:ServiceRegistrySearchRequest, parentMrn?:string, parentVersion?:string) : Observable<EndorsementSearchResult> {
 		if (searchRequest && searchRequest.endorsedBy && searchRequest.endorsedBy.length > 0) {
 			if (parentMrn) {
-				return this.getEndormentsByOrgMrnForParent(searchRequest.endorsedBy, parentMrn);
+				return this.getEndormentsByOrgMrnForParent(searchRequest.endorsedBy, parentMrn, parentVersion);
 			} else {
 				return this.getEndormentsByOrgMrn(serviceLevel, searchRequest.endorsedBy);
 			}
@@ -167,9 +167,9 @@ export class EndorsementsService {
 		});
 	}
 
-	private getEndormentsByOrgMrnForParent(endorsedBy:string, parentMrn:string): Observable<EndorsementSearchResult> {
-  	return Observable.create(observer => {
-			this.endorsementApi.getEndorsedByParentMrnAndOrgMrnUsingGET(parentMrn, endorsedBy).subscribe(
+	private getEndormentsByOrgMrnForParent(endorsedBy:string, parentMrn:string, parentVersion:string): Observable<EndorsementSearchResult> {
+  	return Observable.create(observer => { // TODO parentVersion
+			this.endorsementApi.getEndorsedByParentMrnAndOrgMrnUsingGET(parentMrn, parentVersion, endorsedBy).subscribe(
 				pageEndorsement => {
 					// TODO: Maybe some paging? remember that the methods depending on this method is expecting to get ALL endorsements. So remember paging in those methods as well. Note that some methods may need the full list so maaybe a getAll method is needed. For example when used in a search for filtering. Some methods still need the pagination, for example the list of endorsing organizations
 					let endorsementResult:EndorsementSearchResult = {shouldFilter:true, pageEndorsement:pageEndorsement};

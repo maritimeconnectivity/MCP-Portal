@@ -91,15 +91,15 @@ export class DesignsService implements OnInit {
 		return this.getDesigns(searchRequest);
 	}
 
-	public searchDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, version?:string): Observable<Array<Design>> {
+	public searchDesignsForSpecification(searchRequest:ServiceRegistrySearchRequest, specificationId:string, specificationVersion:string): Observable<Array<Design>> {
 		if (!searchRequest) {
-			return this.getDesignsForSpecification(specificationId, version);
+			return this.getDesignsForSpecification(specificationId, specificationVersion);
 		}
 
   	let parallelObservables = [];
 		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=specificationId=<firstId> OR specificationId=<secondId> OR ...
-		parallelObservables.push(this.searchAndFilterDesignsForSpecification(searchRequest, specificationId, version).take(1));
-		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest, specificationId).take(1));
+		parallelObservables.push(this.searchAndFilterDesignsForSpecification(searchRequest, specificationId, specificationVersion).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForDesigns(searchRequest, specificationId, specificationVersion).take(1));
 
 		return Observable.forkJoin(parallelObservables).flatMap(
 			resultArray => {

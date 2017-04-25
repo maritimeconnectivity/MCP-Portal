@@ -139,15 +139,15 @@ export class InstancesService implements OnInit {
 			});
 	}
 
-	public searchInstancesForDesign(searchRequest:ServiceRegistrySearchRequest, designId:string, version?:string): Observable<Array<Instance>> {
+	public searchInstancesForDesign(searchRequest:ServiceRegistrySearchRequest, designId:string, designVersion:string): Observable<Array<Instance>> {
 		if (!searchRequest) {
-			return this.getInstancesForDesign(designId, version);
+			return this.getInstancesForDesign(designId, designVersion);
 		}
 
 		let parallelObservables = [];
 		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=id=<firstId> OR id=<secondId> OR ...
-		parallelObservables.push(this.searchAndFilterInstancesForDesign(searchRequest, designId, version).take(1));
-		parallelObservables.push(this.endorsementsService.searchEndorsementsForInstances(searchRequest, designId).take(1));
+		parallelObservables.push(this.searchAndFilterInstancesForDesign(searchRequest, designId, designVersion).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForInstances(searchRequest, designId, designVersion).take(1));
 
 		return Observable.forkJoin(parallelObservables).flatMap(
 			resultArray => {
