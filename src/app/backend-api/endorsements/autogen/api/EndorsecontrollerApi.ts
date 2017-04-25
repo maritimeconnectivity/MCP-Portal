@@ -306,7 +306,7 @@ export class EndorsecontrollerApi {
      * @param serviceVersion serviceVersion
      */
     public getEndormentsByServiceMrnUsingGETWithHttpInfo(serviceMrn: string, serviceVersion: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/oidc/endorsements/${serviceMrn}/${serviceVersion}'
+        const path = this.basePath + '/oidc/endorsements/${serviceMrn}/${serviceVersion}/'
                     .replace('${' + 'serviceMrn' + '}', String(serviceMrn))
                     .replace('${' + 'serviceVersion' + '}', String(serviceVersion));
 
@@ -402,7 +402,7 @@ export class EndorsecontrollerApi {
      * @param parentVersion parentVersion
      */
     public getEndorsedByParentMrnUsingGETWithHttpInfo(parentMrn: string, parentVersion: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/oidc/endorsed-children/${parentMrn}/${parentVersion}'
+        const path = this.basePath + '/oidc/endorsed-children/${parentMrn}/${parentVersion}/'
                     .replace('${' + 'parentMrn' + '}', String(parentMrn))
                     .replace('${' + 'parentVersion' + '}', String(parentVersion));
 
