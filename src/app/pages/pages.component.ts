@@ -44,11 +44,11 @@ export class Pages {
   }
 
   ngOnInit() {
-  	if (this.mrnHelper.isStmOrg()) {
-  		PAGES_MENU = PAGES_MENU_STM;
-	  } else {
+  	//if (this.mrnHelper.isStmOrg()) {
+  		//PAGES_MENU = PAGES_MENU_STM;
+	  //} else {
 		  PAGES_MENU = PAGES_MENU_ALL;
-	  }
+	//  }
 	  this.routes = _.cloneDeep(PAGES_MENU);
 
 	  if (this.authService.authState.rolesLoaded) {
