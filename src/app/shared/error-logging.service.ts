@@ -3,6 +3,8 @@ import {NotificationsService} from "angular2-notifications";
 import {BugReportingService} from "../backend-api/identity-registry/services/bug-reporting.service";
 import {BugReport} from "../backend-api/identity-registry/autogen/model/BugReport";
 import {AuthService} from "../authentication/services/auth.service";
+import {BugReportAttachment} from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
+import {McHttpService} from "../backend-api/shared/mc-http.service";
 
 export interface MCErrorLoggerOptions {
 	makeBugReportFromError: boolean;
@@ -25,7 +27,7 @@ export class ErrorLoggingService {
   }
 	public logErrorWithMessage(message:string, error: any, showToUser:boolean ) : void {
   	if (this.isCachingError(message, error)) {
-		  AuthService.handle401();
+		  AuthService.handleCacheError();
 		  return;
 	  }
 		this.sendToConsole(error);
@@ -94,6 +96,7 @@ export class ErrorLoggingService {
 		}
 		if (errorString.length > 0) {
 			let bugReport:BugReport = {subject:subject, description:errorString};
+			bugReport.attachments = [this.createLogAttachement()];
 			this.bugreportService.reportBug(bugReport).subscribe(
 				_ => {
 					// Nothing should happen
@@ -104,6 +107,12 @@ export class ErrorLoggingService {
 				}
 			);
 		}
+	}
+
+	private createLogAttachement() : BugReportAttachment {
+		let data = JSON.stringify(McHttpService.getHttpCallLog());
+
+  	return {data:window.btoa(data),mimetype:'text/json',name:'httpLog.json'};
 	}
 
   private sendToUser(error: any): void {

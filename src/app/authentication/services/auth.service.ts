@@ -185,14 +185,24 @@ export class AuthService implements OnInit {
     });
   }
 
-  public static handle401() {
-  	try {
-		  AuthService.staticAuthInfo.loggedIn = false;
-		  AuthService.staticAuthInfo.authz.logout({redirectUri: window.location.origin + '/#' + AuthService.staticAuthInfo.logoutUrl + '?reason=401'});
-		  AuthService.staticAuthInfo.authz = null;
-	  }catch (err) { // State is somehow lost. Just do nothing.
+	public static handle401() {
+		try {
+			AuthService.staticAuthInfo.loggedIn = false;
+			AuthService.staticAuthInfo.authz.logout({redirectUri: window.location.origin + '/#' + AuthService.staticAuthInfo.logoutUrl + '?reason=401'});
+			AuthService.staticAuthInfo.authz = null;
+		}catch (err) { // State is somehow lost. Just do nothing.
 
-	  }
-  }
+		}
+	}
+
+	public static handleCacheError() {
+		try {
+			AuthService.staticAuthInfo.loggedIn = false;
+			AuthService.staticAuthInfo.authz.logout({redirectUri: window.location.origin + '/#' + AuthService.staticAuthInfo.logoutUrl + '?reason=cache'});
+			AuthService.staticAuthInfo.authz = null;
+		}catch (err) { // State is somehow lost. Just do nothing.
+
+		}
+	}
 
 }
