@@ -8,8 +8,6 @@ export interface HttpLogModel {
 	url:string;
 	options?:RequestOptionsArgs;
 	date:Date;
-	response?: Response
-	responseDate?:Date;
 }
 
 @Injectable()
@@ -28,7 +26,7 @@ export class McHttpService extends Http {
   	return McHttpService.httpCallLog;
   }
 
-  private static addCall(url: string | Request, requestDate:Date, options?: RequestOptionsArgs, response?:Response, responseDate?:Date) {
+  private static addCall(url: string | Request, requestDate:Date, options?: RequestOptionsArgs) {
   	try{
 	    let requestUrl:string;
 	    if (typeof url === "string") {
@@ -36,7 +34,7 @@ export class McHttpService extends Http {
 		  } else {
 	      requestUrl = url.url;
 		  }
-		  McHttpService.httpCallLog.push({url:requestUrl, options:options, date:requestDate, response:response, responseDate:responseDate});
+		  McHttpService.httpCallLog.push({url:requestUrl, options:options, date:requestDate});
 			if (McHttpService.httpCallLog.length > MAX_HTTP_LOG_ENTRIES) {
 				McHttpService.httpCallLog.splice(0,1);
 			}
@@ -64,14 +62,9 @@ export class McHttpService extends Http {
 	  	// So many things can go wrong, so we dont url encode
 	  }
 	  let requestDate = new Date();
-    return this.prepareService(options)
-	    .flatMap(optionsMap => {
-		    return this.interceptError(super.request(requestUrl, optionsMap), requestUrl, requestDate, options);
-	    })
-	    .flatMap(response => {
-		    McHttpService.addCall(requestUrl, requestDate, options, response, new Date());
-	    	return this.interceptResponse(response);
-	    });
+	  McHttpService.addCall(requestUrl, requestDate, options);
+
+    return this.prepareService(options).flatMap(optionsMap => {return this.interceptError(super.request(requestUrl, optionsMap))}).flatMap(response => {return this.interceptResponse(response)});
   }
 
   // Setting the http headers and if needed refreshes the access token
@@ -100,13 +93,12 @@ export class McHttpService extends Http {
   }
 
   // Intercepts errors from the http call
-  private interceptError(observable: Observable<Response>, requestUrl: string | Request, requestDate:Date, options?:RequestOptionsArgs): Observable<Response> {
+  private interceptError(observable: Observable<Response>): Observable<Response> {
     return observable.catch((err, source) => {
       if (err.status  == 401 ) {
         AuthService.handle401();
         return Observable.empty();
       } else {
-	      McHttpService.addCall(requestUrl, requestDate, options);
         return Observable.throw(err);
       }
     });
