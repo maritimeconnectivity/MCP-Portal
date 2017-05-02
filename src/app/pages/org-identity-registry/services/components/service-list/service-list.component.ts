@@ -43,8 +43,8 @@ export class ServiceListComponent implements OnInit {
 
 	private loadServices() {
 		this.servicesService.getIdServices().subscribe(
-			services => {
-				this.services = services;
+			pageService => {
+				this.services = pageService.content;
 				this.isLoading = false;
 				this.generateEntityImageList();
 			},

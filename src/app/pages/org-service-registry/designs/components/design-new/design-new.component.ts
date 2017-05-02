@@ -25,16 +25,20 @@ import {DesignXmlParser} from "../../../shared/services/design-xml-parser.servic
 })
 export class DesignNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+
+	public labelValuesParsed:Array<LabelValueModel>;
+	private parsedDesign:Design;
+
 	public hasError: boolean = false;
 	public errorText: string;
 
   public organization: Organization;
-  public labelValues:Array<LabelValueModel>;
-  public captionXml = 'Upload Design Xml file';
+  public labelValuesSpecification:Array<LabelValueModel>;
+  public captionXml = 'Upload Design XML file';
   public captionDoc = 'Upload Design Document file';
   public fileTypeXml = FileUploadType.Xml;
   public fileTypeDoc = FileUploadType.Doc;
-  public requiredTextXml = 'You need to upload Xml file';
+  public requiredTextXml = 'You need to upload XML file';
   public isFormValid = false;
   public isLoading = true;
 
@@ -56,6 +60,7 @@ export class DesignNewComponent implements OnInit {
     this.isLoading = true;
     this.loadMyOrganization();
     this.loadSpecification();
+	  this.updateUI();
   }
 
   public calculateFormValid() {
@@ -71,10 +76,10 @@ export class DesignNewComponent implements OnInit {
 	  if (file && this.isXmlValid(file)) {
 		  this.xml = file;
 	  } else {
-		  this.xml = null;
-		  this.fileUploadXml.resetFileSelection();
+		  this.resetXmlFile();
 	  }
     this.calculateFormValid();
+	  this.updateUI();
   }
 
 	private isXmlValid(file: Xml) : boolean {
@@ -82,7 +87,7 @@ export class DesignNewComponent implements OnInit {
 			let mrn = this.xmlParser.getMrn(file);
 			let isValid = this.mrnHelper.checkMrnForDesign(mrn);
 			if (!isValid) {
-				this.errorText = "The ID in the Xml-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
+				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForDesign() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			} else {
@@ -110,23 +115,8 @@ export class DesignNewComponent implements OnInit {
 
   public register() {
     this.isRegistering = true;
-    try {
-      var design:Design = {};
-      design.designAsXml = this.xml;
-      design.designAsDoc = this.doc;
-	    design.name = this.xmlParser.getName(this.xml);
-	    design.description = this.xmlParser.getDescription(this.xml);
-	    design.designId = this.xmlParser.getMrn(this.xml);
-	    design.status = this.xmlParser.getStatus(this.xml);
-	    design.organizationId = this.organization.mrn;
-	    design.version = this.xmlParser.getVersion(this.xml);
 
-      design.specifications = [this.specification];
-      this.createDesign(design);
-    } catch ( error ) {
-      this.isRegistering = false;
-      this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
-    }
+	  this.createDesign(this.parsedDesign);
   }
 
   private createDesign(design:Design) {
@@ -171,16 +161,63 @@ export class DesignNewComponent implements OnInit {
 	private loadOrganizationName() {
 		this.orgService.getOrganizationName(this.specification.organizationId).subscribe(
 			organizationName => {
-				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, organizationName);
+				this.labelValuesSpecification = this.viewModelService.generateLabelValuesForSpecification(this.specification, organizationName);
 				this.calculateFormValid();
 				this.isLoading = false;
 			},
 			err => {
-				this.labelValues = this.viewModelService.generateLabelValuesForSpecification(this.specification, '');
+				this.labelValuesSpecification = this.viewModelService.generateLabelValuesForSpecification(this.specification, '');
 				this.calculateFormValid();
 				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
 			}
 		);
+	}
+
+	private resetXmlFile(){
+		this.xml = null;
+		this.fileUploadXml.resetFileSelection();
+	}
+
+	private updateUI() {
+		if (this.xml) {
+			this.parseDesign();
+		} else {
+			this.parsedDesign = null;
+			this.setupLableValuesParsed();
+		}
+	}
+
+	private parseDesign() {
+		this.parsedDesign = null;
+		try {
+			var design:Design = {};
+			design.designAsXml = this.xml;
+			design.designAsDoc = this.doc;
+			design.name = this.xmlParser.getName(this.xml);
+			design.description = this.xmlParser.getDescription(this.xml);
+			design.designId = this.xmlParser.getMrn(this.xml);
+			design.status = this.xmlParser.getStatus(this.xml);
+			design.organizationId = this.organization.mrn;
+			design.version = this.xmlParser.getVersion(this.xml);
+
+			design.specifications = [this.specification];
+
+			this.parsedDesign = design;
+		} catch ( error ) {
+			this.isRegistering = false;
+			this.resetXmlFile();
+			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
+		} finally {
+			this.setupLableValuesParsed();
+		}
+	}
+
+	private setupLableValuesParsed() {
+		this.labelValuesParsed = [];
+		this.labelValuesParsed.push({label: 'Upload XML', valueHtml: ''});
+		if (this.organization && this.parsedDesign) {
+			this.labelValuesParsed = this.viewModelService.generateLabelValuesForDesign(this.parsedDesign, this.organization.name);
+		}
 	}
 }

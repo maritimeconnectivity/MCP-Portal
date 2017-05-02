@@ -28,7 +28,8 @@ export class ServiceDetailsComponent {
 	private loadService() {
 		this.isLoading = true;
 		let mrn = this.route.snapshot.params['id'];
-		this.servicesService.getIdService(mrn).subscribe(
+		// TODO: this class is obsolete. Delete it.
+		this.servicesService.getIdService(mrn, '').subscribe(
 			service => {
 				this.service = service;
 				this.title = service.name;
@@ -52,7 +53,7 @@ export class ServiceDetailsComponent {
 	public deleteForSure() {
 		this.isLoading = true;
 		this.showModal = false;
-		this.servicesService.deleteIdService(this.service.mrn).subscribe(
+		this.servicesService.deleteIdService(this.service.mrn,'').subscribe(
 			() => {
 				this.router.navigate(['../'], {relativeTo: this.route });
 			},

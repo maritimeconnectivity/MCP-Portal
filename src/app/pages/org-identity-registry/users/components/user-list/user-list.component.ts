@@ -43,8 +43,8 @@ export class UserListComponent implements OnInit {
 
 	private loadUsers() {
 		this.usersService.getUsers().subscribe(
-			users => {
-				this.users = users;
+			pageUser => {
+				this.users = pageUser.content;
 				this.isLoading = false;
 				this.generateEntityImageList();
 			},

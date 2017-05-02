@@ -44,8 +44,8 @@ export class DeviceListComponent implements OnInit {
 
 	private loadDevices() {
 		this.devicesService.getDevices().subscribe(
-			devices => {
-				this.devices = devices;
+			devicePage => {
+				this.devices = devicePage.content;
 				this.isLoading = false;
 				this.generateEntityImageList();
 			},

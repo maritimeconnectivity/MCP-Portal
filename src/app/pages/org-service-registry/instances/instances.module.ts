@@ -9,6 +9,7 @@ import {InstanceListComponent} from "./components/instance-list/instance-list.co
 import {InstanceDetailsComponent} from "./components/instance-details/instance-details.component";
 import {InstanceNewComponent} from "./components/instance-new/instance-new.component";
 import ServicesModule from "../../org-identity-registry/services/services.module";
+import {InstanceUpdateComponent} from "./components/instance-update/instance-update.component";
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import ServicesModule from "../../org-identity-registry/services/services.module
     InstancesComponent,
     InstanceListComponent,
     InstanceDetailsComponent,
-    InstanceNewComponent
+    InstanceNewComponent,
+	  InstanceUpdateComponent
   ]
 })
 export default class InstancesModule {

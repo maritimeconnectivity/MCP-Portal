@@ -9,15 +9,33 @@
         <li *ngIf="design.designAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
+        <li *ngIf="showUpdate()">
+          <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update Design</button>
+        </li>
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Design</button>
         </li>
+        <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingInstances">
+          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing"[title]="'Design'" (onEndorse)="endorseToggle()"></mc-endorse-button>
+        </li>
       </ul>
-      <div class="separator"></div>
+    </ba-card>
 
-      <h5>Instances that implements this Design</h5>
+    <div *ngIf="endorseMainSwitch">
+      <endorsed-by-list [title]="'Organizations endorsing the Design (' + title + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+    </div>
+
+    <ba-card title="Instances implementing the Design ({{design?.name}})" baCardClass="with-scroll table-panel">
+      <div *ngIf="!isLoadingInstances">
+        <service-registry-search [showKeywords]="false" [searchTitle]="'Instance search filters'" [searchKey]="searchKey" [isSearching]="isSearchingInstances" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
+
+        <div class="separator"></div>
+      </div>
+      <div class="create-loading-wrapper">
+        <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
+        <sk-fading-circle-small class="create-loading" [isRunning]="isSearchingInstances"></sk-fading-circle-small>
+      </div>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
-      <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
     </ba-card>
   </div>
 </div>

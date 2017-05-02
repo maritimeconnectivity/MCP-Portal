@@ -44,11 +44,11 @@ export class Pages {
   }
 
   ngOnInit() {
-  	if (this.mrnHelper.isStmOrg()) {
-  		PAGES_MENU = PAGES_MENU_STM;
-	  } else {
+  	//if (this.mrnHelper.isStmOrg()) {
+  		//PAGES_MENU = PAGES_MENU_STM;
+	  //} else {
 		  PAGES_MENU = PAGES_MENU_ALL;
-	  }
+	//  }
 	  this.routes = _.cloneDeep(PAGES_MENU);
 
 	  if (this.authService.authState.rolesLoaded) {
@@ -60,7 +60,7 @@ export class Pages {
 			  this.loadOrganization();
 		  });
 	  }
-	  this.preloadOrganizationNames();
+	  this.preloadOrganizations();
   }
 
 	private loadOrganization() {
@@ -78,8 +78,9 @@ export class Pages {
 		);
 	}
 
-	private preloadOrganizationNames() {
-		this.orgService.getOrganizationName('').subscribe(
+	private preloadOrganizations() {
+  	// Just preload organizations to cache. No need to do anything with results or errors
+		this.orgService.getAllOrganizations().subscribe(
 			_ => {
 
 			},

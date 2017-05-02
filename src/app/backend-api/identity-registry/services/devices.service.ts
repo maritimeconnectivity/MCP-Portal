@@ -5,6 +5,8 @@ import {PemCertificate} from "../autogen/model/PemCertificate";
 import {Device} from "../autogen/model/Device";
 import {DevicecontrollerApi} from "../autogen/api/DevicecontrollerApi";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
+import {PageDevice} from "../autogen/model/PageDevice";
+import {SortingHelper} from "../../shared/SortingHelper";
 
 @Injectable()
 export class DevicesService implements OnInit {
@@ -25,9 +27,11 @@ export class DevicesService implements OnInit {
 		return this.deviceApi.getDeviceUsingGET(orgMrn, deviceMrn);
 	}
 
-	public getDevices(): Observable<Array<Device>> {
+	public getDevices(): Observable<PageDevice> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn);
+		let sort = SortingHelper.sortingForDevices();
+		// TODO: do paging properly
+		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn, 0, 100, sort);
 	}
 
 	public createDevice(device:Device) :Observable<Device>{
@@ -45,7 +49,7 @@ export class DevicesService implements OnInit {
 		return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
 	}
 
-	public revokeCertificate(deviceMrn:string, certificateId:number, certicateRevocation:CertificateRevocation) : Observable<any> {
+	public revokeCertificate(deviceMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.deviceApi.revokeDeviceCertUsingPOST(orgMrn, deviceMrn, certificateId, certicateRevocation);
 	}

@@ -11,7 +11,7 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'prod-development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
@@ -75,24 +75,24 @@ module.exports = function(options) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-filename
        */
-      filename: '[name].bundle.js',
+      filename: '[name].[hash].bundle.js',
 
-      /**
-       * The filename of the SourceMaps for the JavaScript files.
-       * They are inside the output.path directory.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
-       */
-      sourceMapFilename: '[name].map',
+        /**
+         * The filename of the SourceMaps for the JavaScript files.
+         * They are inside the output.path directory.
+         *
+         * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
+         */
+        sourceMapFilename: '[name].[hash].map',
 
-      /** The filename of non-entry chunks as relative path
-       * inside the output.path directory.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
-       */
-      chunkFilename: '[id].chunk.js',
+        /** The filename of non-entry chunks as relative path
+         * inside the output.path directory.
+         *
+         * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
+         */
+        chunkFilename: '[id].[chunkhash].chunk.js',
 
-      library: 'ac_[name]',
+        library: 'ac_[name]',
       libraryTarget: 'var',
     },
 
@@ -111,9 +111,11 @@ module.exports = function(options) {
       new DefinePlugin({
           'IR_BASE_PATH':JSON.stringify('https://api.maritimecloud.net'),
           'SR_BASE_PATH':JSON.stringify('https://sr.maritimecloud.net'),
+          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://endorse.maritimecloud.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/temp-prod-keycloak.json'),
           'ERROR_TAG_TEXT':JSON.stringify('Production'),
           'IS_DEV': false,
+          'CAN_JOIN': true,
           'ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
           'process.env': {

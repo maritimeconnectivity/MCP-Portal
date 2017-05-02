@@ -3,6 +3,7 @@ import {DesignsComponent} from "./designs.component";
 import {DesignListComponent} from "./components/design-list/design-list.component";
 import {DesignDetailsComponent} from "./components/design-details/design-details.component";
 import {DesignNewComponent} from "./components/design-new/design-new.component";
+import {DesignUpdateComponent} from "./components/design-update/design-update.component";
 
 // noinspection TypeScriptValidateTypes
 export const designRoutes: Routes = [
@@ -24,7 +25,12 @@ export const designRoutes: Routes = [
         path: ':id',
         component: DesignDetailsComponent,
         data:{breadcrumb: 'Details'}
-      }
+      },
+	    {
+		    path: 'update/:id',
+		    component: DesignUpdateComponent,
+		    data:{breadcrumb: 'Update'}
+	    }
     ]
   }
 ];

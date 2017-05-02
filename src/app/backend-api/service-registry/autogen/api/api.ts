@@ -1,8 +1,17 @@
 export * from './DocresourceApi';
+import { DocresourceApi } from './DocresourceApi';
 export * from './ElasticsearchindexresourceApi';
+import { ElasticsearchindexresourceApi } from './ElasticsearchindexresourceApi';
 export * from './ServiceinstanceresourceApi';
+import { ServiceinstanceresourceApi } from './ServiceinstanceresourceApi';
 export * from './ServicespecificationresourceApi';
+import { ServicespecificationresourceApi } from './ServicespecificationresourceApi';
 export * from './SpecificationtemplateresourceApi';
+import { SpecificationtemplateresourceApi } from './SpecificationtemplateresourceApi';
 export * from './TechnicaldesignresourceApi';
+import { TechnicaldesignresourceApi } from './TechnicaldesignresourceApi';
 export * from './XmlresourceApi';
+import { XmlresourceApi } from './XmlresourceApi';
 export * from './XsdresourceApi';
+import { XsdresourceApi } from './XsdresourceApi';
+export const APIS = [DocresourceApi, ElasticsearchindexresourceApi, ServiceinstanceresourceApi, ServicespecificationresourceApi, SpecificationtemplateresourceApi, TechnicaldesignresourceApi, XmlresourceApi, XsdresourceApi];

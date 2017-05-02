@@ -26,12 +26,17 @@ export class MCNotificationsService {
 		    let extraMessage = "\n\nError was: " + originalError.json().error + ",\n" + originalError.json().message;
 		    message += extraMessage;
 	    } catch (err) {
-
+		    let extraMessage = "\n\nError was: " + originalError;
+		    // If this is an internal error created by this Portal then the message will be contained in the extraMessage and we don't wanna show it twice
+		    if (extraMessage.indexOf(message) < 0) {
+			    message += extraMessage;
+		    }
 	    }
     }
 	  this.notificationObserver.next({title:title, message:message, type:type});
 
-	  if(originalError && this.errorLogger.options.makeBugReportFromError) {
+	  let isXmlError = message.indexOf("Error trying to parse required field") > -1;
+	  if(originalError && this.errorLogger.options.makeBugReportFromError && !isXmlError) {
 		  this.notificationObserver.next({title:title, message:"A Bug Report was send automatically.", type:type});
 	  }
   }

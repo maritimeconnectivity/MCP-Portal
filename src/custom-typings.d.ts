@@ -51,11 +51,13 @@ declare module '*';
 
 // Extra variables that live on Global that will be replaced by webpack DefinePlugin
 declare var ENV: string;
+declare var ENDORSEMENT_BASE_PATH: string;
 declare var IR_BASE_PATH: string;
 declare var SR_BASE_PATH: string;
 declare var KEYCLOAK_JSON: string;
 declare var ERROR_TAG_TEXT: string;
 declare var IS_DEV: boolean;
+declare var CAN_JOIN: boolean;
 declare var HMR: boolean;
 declare var System: SystemJS;
 

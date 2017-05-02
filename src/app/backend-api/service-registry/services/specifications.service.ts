@@ -5,23 +5,72 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {ServicespecificationresourceApi} from "../autogen/api/ServicespecificationresourceApi";
 import {Specification} from "../autogen/model/Specification";
 import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
-import {Design} from "../autogen/model/Design";
 import {XmlParserService} from "../../../shared/xml-parser.service";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
+import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {QueryHelper} from "./query-helper";
+import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
+import {forEach} from "@angular/router/src/utils/collection";
+import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
+import {SortingHelper} from "../../shared/SortingHelper";
+import {Xml} from "../autogen/model/Xml";
+import {Doc} from "../autogen/model/Doc";
+import {XmlsService} from "./xmls.service";
+import {DocsService} from "./docs.service";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
   private chosenSpecification: Specification;
-  constructor(private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
+  constructor(private docsService:DocsService, private xmlsService:XmlsService, private endorsementsService:EndorsementsService, private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
   }
 
   ngOnInit() {
 
   }
 
+	public updateStatus(specification:Specification, newStatus:string) : Observable<{}> {
+		this.chosenSpecification = null;
+		return this.specificationsApi.updateSpecificationStatusUsingPUT(specification.specificationId, specification.version, newStatus, "default_auth");
+	}
+
+	public updateSpecification(specification:Specification, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
+		this.chosenSpecification = null;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.xmlsService.updateOrCreateXml(updateXml?specification.specAsXml:null).take(1));
+		parallelObservables.push(this.docsService.updateOrCreateDoc(updateDoc?specification.specAsDoc:null).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let xml:Xml = resultArray[0];
+				let doc:Doc = resultArray[1];
+
+				var shouldUpdateSpecification = false;
+				if (doc) {
+					if (specification.specAsDoc) {
+						shouldUpdateSpecification = specification.specAsDoc.id !== doc.id; // update the specification if the id isn't the same
+					} else { // No doc before, but one now, so we need to update specification
+						shouldUpdateSpecification = true;
+					}
+					specification.specAsDoc = doc;
+				}
+
+				if (xml) { // If xml has changed we need to update the specification
+					specification.specAsXml = xml;
+					shouldUpdateSpecification = true;
+				}
+
+				if (shouldUpdateSpecification) {
+					return this.specificationsApi.updateSpecificationUsingPUT(specification, "default_auth");
+				} else {
+					return Observable.of({});
+				}
+			});
+	}
+
   public deleteSpecification(specification:Specification) : Observable<{}> {
     this.chosenSpecification = null;
-    return this.specificationsApi.deleteSpecificationUsingDELETE(specification.specificationId, specification.version);
+    return this.specificationsApi.deleteSpecificationUsingDELETE(specification.specificationId, specification.version, "default_auth");
   }
 
   public createSpecification(specification:Specification):Observable<Specification> {
@@ -58,8 +107,9 @@ export class SpecificationsService implements OnInit {
     );
   }
   private createActualSpecification(specification:Specification, observer:Observer<any>) {
-    this.specificationsApi.createSpecificationUsingPOST(specification).subscribe(
+    this.specificationsApi.createSpecificationUsingPOST(specification, "default_auth").subscribe(
       createdSpecification => {
+	      createdSpecification.description = this.getDescription(createdSpecification);
 	      this.chosenSpecification = createdSpecification;
         observer.next(createdSpecification);
       },
@@ -69,24 +119,67 @@ export class SpecificationsService implements OnInit {
     );
   }
 
-  public getAllSpecifications(): Observable<Array<Specification>> {
-    // TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
-    return Observable.create(observer => {
-	    // TODO FIXME Hotfix. This pagination should be done the right way
-      this.specificationsApi.getAllSpecificationsUsingGET(0,100).subscribe(
-        specifications => {
-          // TODO delete this again, when description is part of the json
-          for (let specification of specifications) {
-            specification.description = this.getDescription(specification);
-          }
-          observer.next(specifications);
-        },
-        err => {
-          observer.error(err);
-        }
-      );
-    });
-  }
+	public getSpecificationsForMyOrg(): Observable<Array<Specification>> {
+		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
+
+		return this.getSpecifications(searchRequest);
+	}
+
+	public searchSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
+		let parallelObservables = [];
+
+		// TODO: When paging is done, this should not be in parallel. The endorsements should be retrieved first and then the result should be used to make a query=specificationId=<firstId> OR specificationId=<secondId> OR ...
+		parallelObservables.push(this.getSpecifications(searchRequest).take(1));
+		parallelObservables.push(this.endorsementsService.searchEndorsementsForSpecifications(searchRequest).take(1));
+
+		return Observable.forkJoin(parallelObservables).flatMap(
+			resultArray => {
+				let specifications:any = resultArray[0];
+				let endorsementResult:any = resultArray[1];
+				return this.combineSearchResult(specifications,endorsementResult);
+			});
+	}
+
+	private combineSearchResult(specifications:Array<Specification>, endorsementResult:EndorsementSearchResult) : Observable<Array<Specification>> {
+		if (endorsementResult.shouldFilter) {
+			specifications = this.filterSpecifications(specifications, endorsementResult.pageEndorsement.content);
+		}
+		return Observable.of(specifications);
+	}
+
+	private filterSpecifications(specifications:Array<Specification>, endorsements:Array<Endorsement>) : Array<Specification> {
+  	let filteredSpecifications: Array<Specification> = [];
+  	specifications.forEach(specification => {
+  		for (let endorsement of endorsements){
+  			if (specification.specificationId === endorsement.serviceMrn) {
+					filteredSpecifications.push(specification);
+					break;
+			  }
+		  }
+	  });
+  	return filteredSpecifications;
+	}
+
+	private getSpecifications(searchRequest:ServiceRegistrySearchRequest): Observable<Array<Specification>> {
+		// TODO I only create a new observable because I need to manipulate the response to get the description. If that is not needed anymore, i can just do a simple return of the call to the api, without subscribe
+		return Observable.create(observer => {
+			// TODO FIXME Hotfix. This pagination should be done the right way
+			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
+			let sort = SortingHelper.sortingForSpecifications();
+			this.specificationsApi.searchSpecificationsUsingGET(query,0,100, sort).subscribe(
+				specifications => {
+					// TODO delete this again, when description is part of the json
+					for (let specification of specifications) {
+						specification.description = this.getDescription(specification);
+					}
+					observer.next(specifications);
+				},
+				err => {
+					observer.error(err);
+				}
+			);
+		});
+	}
 
   public getSpecification(specificationId:string, version?:string): Observable<Specification> {
     var found = false;

@@ -25,7 +25,7 @@ export class CertificateRevokeComponent implements OnInit {
   public entityType: CertificateEntityType;
   public entityMrn: string;
 	public entityTitle: string;
-	public certificateId: number;
+	public certificateId: string;
   public isLoading: boolean;
   
 	public isRevoking = false;

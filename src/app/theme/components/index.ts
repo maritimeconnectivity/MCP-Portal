@@ -27,3 +27,4 @@ export * from './mcFormControlSelect';
 export * from './mcFormControlDatepicker';
 export * from './mcForm';
 export * from './mcModal';
+export * from './mcEndorseButton';
