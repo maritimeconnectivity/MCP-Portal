@@ -32,7 +32,7 @@ export class DesignsService implements OnInit {
 
 	public updateStatus(design:Design, newStatus:string) : Observable<{}> {
 		this.chosenDesign = null;
-		return this.designsApi.updateDesignStatusUsingPUT(design.designId, design.version, newStatus);
+		return this.designsApi.updateDesignStatusUsingPUT(design.designId, design.version, newStatus, "default_auth");
 	}
 
 	public updateDesign(design:Design, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
@@ -63,7 +63,7 @@ export class DesignsService implements OnInit {
 				}
 
 				if (shouldUpdateDesign) {
-					return this.designsApi.updateDesignUsingPUT(design);
+					return this.designsApi.updateDesignUsingPUT(design, "default_auth");
 				} else {
 					return Observable.of({});
 				}
@@ -154,7 +154,7 @@ export class DesignsService implements OnInit {
 
   public deleteDesign(design:Design) : Observable<{}> {
     this.chosenDesign = null;
-    return this.designsApi.deleteDesignUsingDELETE(design.designId, design.version);
+    return this.designsApi.deleteDesignUsingDELETE(design.designId, design.version, "default_auth");
   }
 
   public createDesign(design:Design):Observable<Design>{
@@ -191,7 +191,7 @@ export class DesignsService implements OnInit {
     );
   }
   private createActualDesign(design:Design, observer:Observer<any>) {
-    this.designsApi.createDesignUsingPOST(design).subscribe(
+    this.designsApi.createDesignUsingPOST(design, "default_auth").subscribe(
       createdDesign => {
 	      createdDesign.description = this.getDescription(createdDesign);
 	      this.chosenDesign = createdDesign;

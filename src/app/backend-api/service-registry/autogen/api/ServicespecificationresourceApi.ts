@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class ServicespecificationresourceApi {
-    protected basePath = 'https://sr-test.maritimecloud.net';
+    protected basePath = 'https://sr-staging.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -46,7 +46,7 @@ export class ServicespecificationresourceApi {
      * @param specification specification
      * @param authorization Authorization
      */
-    public createSpecificationUsingPOST(specification: models.Specification, authorization?: string, extraHttpRequestParams?: any): Observable<models.Specification> {
+    public createSpecificationUsingPOST(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<models.Specification> {
         return this.createSpecificationUsingPOSTWithHttpInfo(specification, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -64,7 +64,7 @@ export class ServicespecificationresourceApi {
      * @param version version
      * @param authorization Authorization
      */
-    public deleteSpecificationUsingDELETE(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+    public deleteSpecificationUsingDELETE(id: string, version: string, authorization: string, extraHttpRequestParams?: any): Observable<{}> {
         return this.deleteSpecificationUsingDELETEWithHttpInfo(id, version, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -156,7 +156,7 @@ export class ServicespecificationresourceApi {
      * @param status status
      * @param authorization Authorization
      */
-    public updateSpecificationStatusUsingPUT(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+    public updateSpecificationStatusUsingPUT(id: string, version: string, status: string, authorization: string, extraHttpRequestParams?: any): Observable<{}> {
         return this.updateSpecificationStatusUsingPUTWithHttpInfo(id, version, status, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -173,7 +173,7 @@ export class ServicespecificationresourceApi {
      * @param specification specification
      * @param authorization Authorization
      */
-    public updateSpecificationUsingPUT(specification: models.Specification, authorization?: string, extraHttpRequestParams?: any): Observable<models.Specification> {
+    public updateSpecificationUsingPUT(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<models.Specification> {
         return this.updateSpecificationUsingPUTWithHttpInfo(specification, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -191,7 +191,7 @@ export class ServicespecificationresourceApi {
      * @param specification specification
      * @param authorization Authorization
      */
-    public createSpecificationUsingPOSTWithHttpInfo(specification: models.Specification, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public createSpecificationUsingPOSTWithHttpInfo(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceSpecification';
 
         let queryParameters = new URLSearchParams();
@@ -199,6 +199,10 @@ export class ServicespecificationresourceApi {
         // verify required parameter 'specification' is not null or undefined
         if (specification === null || specification === undefined) {
             throw new Error('Required parameter specification was null or undefined when calling createSpecificationUsingPOST.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling createSpecificationUsingPOST.');
         }
         headers.set('Authorization', String(authorization));
 
@@ -236,7 +240,7 @@ export class ServicespecificationresourceApi {
      * @param version version
      * @param authorization Authorization
      */
-    public deleteSpecificationUsingDELETEWithHttpInfo(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public deleteSpecificationUsingDELETEWithHttpInfo(id: string, version: string, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceSpecification/${id}/${version}/'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -250,6 +254,10 @@ export class ServicespecificationresourceApi {
         // verify required parameter 'version' is not null or undefined
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling deleteSpecificationUsingDELETE.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling deleteSpecificationUsingDELETE.');
         }
         headers.set('Authorization', String(authorization));
 
@@ -495,7 +503,7 @@ export class ServicespecificationresourceApi {
      * @param status status
      * @param authorization Authorization
      */
-    public updateSpecificationStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public updateSpecificationStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceSpecification/${id}/${version}/status'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -513,6 +521,10 @@ export class ServicespecificationresourceApi {
         // verify required parameter 'status' is not null or undefined
         if (status === null || status === undefined) {
             throw new Error('Required parameter status was null or undefined when calling updateSpecificationStatusUsingPUT.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling updateSpecificationStatusUsingPUT.');
         }
         if (status !== undefined) {
             queryParameters.set('status', <any>status);
@@ -550,7 +562,7 @@ export class ServicespecificationresourceApi {
      * @param specification specification
      * @param authorization Authorization
      */
-    public updateSpecificationUsingPUTWithHttpInfo(specification: models.Specification, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public updateSpecificationUsingPUTWithHttpInfo(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceSpecification';
 
         let queryParameters = new URLSearchParams();
@@ -558,6 +570,10 @@ export class ServicespecificationresourceApi {
         // verify required parameter 'specification' is not null or undefined
         if (specification === null || specification === undefined) {
             throw new Error('Required parameter specification was null or undefined when calling updateSpecificationUsingPUT.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling updateSpecificationUsingPUT.');
         }
         headers.set('Authorization', String(authorization));
 

@@ -30,7 +30,7 @@ export class SpecificationsService implements OnInit {
 
 	public updateStatus(specification:Specification, newStatus:string) : Observable<{}> {
 		this.chosenSpecification = null;
-		return this.specificationsApi.updateSpecificationStatusUsingPUT(specification.specificationId, specification.version, newStatus);
+		return this.specificationsApi.updateSpecificationStatusUsingPUT(specification.specificationId, specification.version, newStatus, "default_auth");
 	}
 
 	public updateSpecification(specification:Specification, updateDoc:boolean, updateXml:boolean) : Observable<{}> {
@@ -61,7 +61,7 @@ export class SpecificationsService implements OnInit {
 				}
 
 				if (shouldUpdateSpecification) {
-					return this.specificationsApi.updateSpecificationUsingPUT(specification);
+					return this.specificationsApi.updateSpecificationUsingPUT(specification, "default_auth");
 				} else {
 					return Observable.of({});
 				}
@@ -70,7 +70,7 @@ export class SpecificationsService implements OnInit {
 
   public deleteSpecification(specification:Specification) : Observable<{}> {
     this.chosenSpecification = null;
-    return this.specificationsApi.deleteSpecificationUsingDELETE(specification.specificationId, specification.version);
+    return this.specificationsApi.deleteSpecificationUsingDELETE(specification.specificationId, specification.version, "default_auth");
   }
 
   public createSpecification(specification:Specification):Observable<Specification> {
@@ -107,7 +107,7 @@ export class SpecificationsService implements OnInit {
     );
   }
   private createActualSpecification(specification:Specification, observer:Observer<any>) {
-    this.specificationsApi.createSpecificationUsingPOST(specification).subscribe(
+    this.specificationsApi.createSpecificationUsingPOST(specification, "default_auth").subscribe(
       createdSpecification => {
 	      createdSpecification.description = this.getDescription(createdSpecification);
 	      this.chosenSpecification = createdSpecification;

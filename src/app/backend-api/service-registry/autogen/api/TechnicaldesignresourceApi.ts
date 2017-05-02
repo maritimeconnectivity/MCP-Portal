@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class TechnicaldesignresourceApi {
-    protected basePath = 'https://sr-test.maritimecloud.net';
+    protected basePath = 'https://sr-staging.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -46,7 +46,7 @@ export class TechnicaldesignresourceApi {
      * @param design design
      * @param authorization Authorization
      */
-    public createDesignUsingPOST(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<models.Design> {
+    public createDesignUsingPOST(design: models.Design, authorization: string, extraHttpRequestParams?: any): Observable<models.Design> {
         return this.createDesignUsingPOSTWithHttpInfo(design, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -64,7 +64,7 @@ export class TechnicaldesignresourceApi {
      * @param version version
      * @param authorization Authorization
      */
-    public deleteDesignUsingDELETE(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+    public deleteDesignUsingDELETE(id: string, version: string, authorization: string, extraHttpRequestParams?: any): Observable<{}> {
         return this.deleteDesignUsingDELETEWithHttpInfo(id, version, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -175,7 +175,7 @@ export class TechnicaldesignresourceApi {
      * @param status status
      * @param authorization Authorization
      */
-    public updateDesignStatusUsingPUT(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+    public updateDesignStatusUsingPUT(id: string, version: string, status: string, authorization: string, extraHttpRequestParams?: any): Observable<{}> {
         return this.updateDesignStatusUsingPUTWithHttpInfo(id, version, status, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -192,7 +192,7 @@ export class TechnicaldesignresourceApi {
      * @param design design
      * @param authorization Authorization
      */
-    public updateDesignUsingPUT(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<models.Design> {
+    public updateDesignUsingPUT(design: models.Design, authorization: string, extraHttpRequestParams?: any): Observable<models.Design> {
         return this.updateDesignUsingPUTWithHttpInfo(design, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -210,7 +210,7 @@ export class TechnicaldesignresourceApi {
      * @param design design
      * @param authorization Authorization
      */
-    public createDesignUsingPOSTWithHttpInfo(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public createDesignUsingPOSTWithHttpInfo(design: models.Design, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/technicalDesign';
 
         let queryParameters = new URLSearchParams();
@@ -218,6 +218,10 @@ export class TechnicaldesignresourceApi {
         // verify required parameter 'design' is not null or undefined
         if (design === null || design === undefined) {
             throw new Error('Required parameter design was null or undefined when calling createDesignUsingPOST.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling createDesignUsingPOST.');
         }
         headers.set('Authorization', String(authorization));
 
@@ -255,7 +259,7 @@ export class TechnicaldesignresourceApi {
      * @param version version
      * @param authorization Authorization
      */
-    public deleteDesignUsingDELETEWithHttpInfo(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public deleteDesignUsingDELETEWithHttpInfo(id: string, version: string, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/technicalDesign/${id}/${version}/'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -269,6 +273,10 @@ export class TechnicaldesignresourceApi {
         // verify required parameter 'version' is not null or undefined
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling deleteDesignUsingDELETE.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling deleteDesignUsingDELETE.');
         }
         headers.set('Authorization', String(authorization));
 
@@ -573,7 +581,7 @@ export class TechnicaldesignresourceApi {
      * @param status status
      * @param authorization Authorization
      */
-    public updateDesignStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public updateDesignStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/technicalDesign/${id}/${version}/status'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -591,6 +599,10 @@ export class TechnicaldesignresourceApi {
         // verify required parameter 'status' is not null or undefined
         if (status === null || status === undefined) {
             throw new Error('Required parameter status was null or undefined when calling updateDesignStatusUsingPUT.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling updateDesignStatusUsingPUT.');
         }
         if (status !== undefined) {
             queryParameters.set('status', <any>status);
@@ -628,7 +640,7 @@ export class TechnicaldesignresourceApi {
      * @param design design
      * @param authorization Authorization
      */
-    public updateDesignUsingPUTWithHttpInfo(design: models.Design, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public updateDesignUsingPUTWithHttpInfo(design: models.Design, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/technicalDesign';
 
         let queryParameters = new URLSearchParams();
@@ -636,6 +648,10 @@ export class TechnicaldesignresourceApi {
         // verify required parameter 'design' is not null or undefined
         if (design === null || design === undefined) {
             throw new Error('Required parameter design was null or undefined when calling updateDesignUsingPUT.');
+        }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling updateDesignUsingPUT.');
         }
         headers.set('Authorization', String(authorization));
 
