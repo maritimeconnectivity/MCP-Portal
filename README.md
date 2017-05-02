@@ -38,22 +38,10 @@ npm install
 
 And run the server locally
 ```bash
-npm start
+npm start-<api-environment>
 ```
 
 Now it can be reached at  http://localhost:3000
-
-
-or you can use docker and build a local maritime cloud portal image and run a container local 
-```bash
-$ .\build.sh 
-$ docker run -p 1111:8080 --name mcportal mc-p:0.0.1 
-
-```
-
-The portal can now be reached at  http://localhost:1111
-
-
 
 ###License
 [Apache 2.0](LICENSE.txt) license.
