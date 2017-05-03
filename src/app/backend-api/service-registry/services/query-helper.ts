@@ -21,7 +21,7 @@ export class QueryHelper {
 		var queryString = '';
 		var parameterAdded = false;
 		if (searchRequest.keywords && searchRequest.keywords.length > 0) {
-			queryString += QueryParameterString.keywords + QueryHelper.escapeQueryString(searchRequest.keywords);
+			queryString += QueryParameterString.keywords + "(" + QueryHelper.escapeQueryString(searchRequest.keywords) + ")";
 			parameterAdded = true;
 		}
 		if (searchRequest.registeredBy && searchRequest.registeredBy.length > 0) {
