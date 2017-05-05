@@ -135,6 +135,10 @@ export class SpecificationDetailsComponent {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
+	private isEndorseAdmin():boolean {
+		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+	}
+
 	public showUpdate():boolean {
 		return this.isServiceAdminForOrg();
 	}
@@ -259,7 +263,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isServiceAdminForOrg() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements;
 	}
 	// Search
 	public search(searchRequest: ServiceRegistrySearchRequest) {

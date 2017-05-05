@@ -190,6 +190,10 @@ export class DesignDetailsComponent {
 		);
 	}
 
+	private isEndorseAdmin():boolean {
+		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+	}
+
 	private isServiceAdminForOrg():boolean {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
@@ -289,7 +293,7 @@ export class DesignDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isServiceAdminForOrg() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements;
 	}
 
 	// Search

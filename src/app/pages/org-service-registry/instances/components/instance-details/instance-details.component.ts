@@ -239,6 +239,10 @@ export class InstanceDetailsComponent {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
 	}
 
+	private isEndorseAdmin():boolean {
+		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+	}
+
 	// Endorsements
 	private deleteEndorsements() {
 		if (this.endorsements && this.endorsements.length > 0) {
@@ -320,6 +324,6 @@ export class InstanceDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isAdmin() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements;
 	}
 }
