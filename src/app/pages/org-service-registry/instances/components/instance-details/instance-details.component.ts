@@ -19,6 +19,7 @@ import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
 import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
 import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
 import {Observable} from "rxjs/Observable";
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'instance-details',
@@ -324,6 +325,6 @@ export class InstanceDetailsComponent {
 	}
 
 	public shouldDisplayEndorsementButton():boolean {
-		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements;
+		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements && !isNullOrUndefined(this.design);
 	}
 }
