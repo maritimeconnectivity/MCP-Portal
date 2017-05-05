@@ -6,6 +6,7 @@ import {AuthService} from "../authentication/services/auth.service";
 import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
 import {MrnHelperService} from "../shared/mrn-helper.service";
 import {PAGES_MENU_STM, PAGES_MENU_ALL} from "./pages.menu";
+import {MCNotificationsService} from "../shared/mc-notifications.service";
 
 export var PAGES_MENU;
 @Component({
@@ -22,8 +23,14 @@ export var PAGES_MENU;
     <ba-page-top [loggedInName]="loggedInName"></ba-page-top>
     <div class="al-main">
       <div class="al-content">
+        
         <ba-content-top></ba-content-top>
-        <router-outlet></router-outlet>
+        <div *ngIf="showErrorLog()">
+        	<ba-card [title]="'Error log'">
+            <div class="error-notice" [innerHTML]="errorLog() | undefined | sanitizeHtml"></div>
+	        </ba-card>
+        </div>
+	      <router-outlet></router-outlet>
       </div>
     </div>
     <footer class="al-footer clearfix">
@@ -40,7 +47,7 @@ export class Pages {
 	public loggedInName = "";
 	public version = require("../../../package.json").version;
 
-  constructor(private mrnHelper:MrnHelperService, private orgService: OrganizationsService, private authService: AuthService) {
+  constructor(private mrnHelper:MrnHelperService, private orgService: OrganizationsService, private authService: AuthService, private mcNotificationService: MCNotificationsService) {
   }
 
   ngOnInit() {
@@ -62,6 +69,14 @@ export class Pages {
 	  }
 	  this.preloadOrganizations();
   }
+
+	private showErrorLog() {
+		return this.mcNotificationService.errorLog && this.mcNotificationService.errorLog.length > 0;
+	}
+
+	private errorLog() {
+		return this.mcNotificationService.errorLog;
+	}
 
 	private loadOrganization() {
 		this.orgService.getMyOrganization().subscribe(

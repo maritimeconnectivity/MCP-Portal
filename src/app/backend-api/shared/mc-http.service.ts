@@ -3,6 +3,7 @@ import {Http, ConnectionBackend, RequestOptions, Response, RequestOptionsArgs, R
 import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../authentication/services/auth.service";
 import {DONT_OVERWRITE_CONTENT_TYPE, MAX_HTTP_LOG_ENTRIES} from "../../shared/app.constants";
+import {UserError} from "../../shared/UserError";
 
 export interface HttpLogModel {
 	url:string;
@@ -99,6 +100,12 @@ export class McHttpService extends Http {
         AuthService.handle401();
         return Observable.empty();
       } else {
+      	let errorMessage = err.headers["X-mcsrApp-error"];
+	      console.log(err);
+	      console.log(err.headers);
+      	if (errorMessage) {
+		      err = new UserError(errorMessage);
+	      }
         return Observable.throw(err);
       }
     });
