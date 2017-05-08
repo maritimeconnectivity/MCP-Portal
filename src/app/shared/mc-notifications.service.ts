@@ -35,6 +35,7 @@ export class MCNotificationsService {
 		    } else {
 		    	extraMessage = JSON.stringify(originalError.json());
 		    }
+		    displaySendBugReport = this.shouldDisplayBugReportMessage(originalError);
 	    } catch (err) {
 		    extraMessage = originalError;
 		    if (originalError instanceof UserError) {
@@ -61,6 +62,14 @@ export class MCNotificationsService {
 	  displaySendBugReport = displaySendBugReport && !isXmlError;
 	  if(originalError && this.errorLogger.options.makeBugReportFromError && displaySendBugReport) {
 		  this.notificationObserver.next({title:title, message:"A Bug Report was send automatically.", type:type});
+	  }
+  }
+
+  private shouldDisplayBugReportMessage(error:any) : boolean {
+	  try {
+		  return !(error.status == 400 && error.statusText === 'Bad Request')
+	  } catch (err) {
+	  	return true;
 	  }
   }
 }
