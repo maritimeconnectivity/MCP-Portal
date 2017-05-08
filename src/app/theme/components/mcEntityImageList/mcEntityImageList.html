@@ -6,5 +6,5 @@
     </div>
 </div>
 <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
-<div class="no-data" *ngIf="!hasData() && !isLoading">No data</div>
+<div class="no-data" *ngIf="!hasData() && !isLoading">{{noDataText}}</div>
 

@@ -5,6 +5,7 @@ import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/
 import { layoutPaths } from './theme/theme.constants';
 import {MCNotificationsService, NotificationModel, MCNotificationType} from "./shared/mc-notifications.service";
 import {NotificationsService} from "angular2-notifications";
+import {NavigationStart, Router} from "@angular/router";
 
 /*
  * App Component
@@ -36,13 +37,20 @@ export class App {
               private _imageLoader: BaImageLoaderService,
               private _spinner: BaThemeSpinner,
               private mcNotificationService: MCNotificationsService,
-              private notificationService: NotificationsService) {
+              private notificationService: NotificationsService,
+              private router: Router) {
 
     this._loadImages();
 
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
       this.isMenuCollapsed = isCollapsed;
     });
+
+	  this.router.events.subscribe(event => {
+		  if (event instanceof NavigationStart) {
+		  	this.mcNotificationService.errorLog = null;
+		  }
+	  });
     this.mcNotificationService.notifications.subscribe(model => this.generateNotification(model));
   }
 

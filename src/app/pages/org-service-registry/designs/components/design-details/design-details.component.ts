@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FileHelperService} from "../../../../../shared/file-helper.service";
 import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
 import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
@@ -13,6 +12,14 @@ import {InstancesService} from "../../../../../backend-api/service-registry/serv
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
+import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
+import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import {Observable} from "rxjs/Observable";
+
+const SEARCH_KEY = 'DesignDetailsComponent';
 
 @Component({
   selector: 'design-details',
@@ -35,7 +42,19 @@ export class DesignDetailsComponent {
 	public showModalNoDelete:boolean = false;
 	public modalDescriptionNoDelete:string;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
+	// Endorsements
+	public isLoadingEndorsements:boolean;
+	public isEndorsing:boolean;
+	public showEndorsements:boolean;
+	public isEndorsedByMyOrg:boolean;
+	public endorsements:Array<Endorsement> = [];
+	public endorseMainSwitch = SHOW_ENDORSEMENTS;
+
+	// Search
+	public isSearchingInstances = false;
+	public searchKey = SEARCH_KEY;
+
+  constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
   }
 
@@ -46,7 +65,12 @@ export class DesignDetailsComponent {
     this.isLoadingDesign = true;
     this.isLoadingInstances = true;
     this.title = 'Loading ...';
-    this.loadDesign();
+	  let designId = this.route.snapshot.params['id'];
+	  let version = this.route.snapshot.queryParams['designVersion'];
+    this.loadDesign(designId, version);
+	  if (SHOW_ENDORSEMENTS) {
+		  this.loadEndorsements(designId, version);
+	  }
   }
 
   public downloadXml() {
@@ -57,9 +81,7 @@ export class DesignDetailsComponent {
     this.fileHelperService.downloadDoc(this.design.designAsDoc);
   }
 
-  private loadDesign() {
-    let designId = this.route.snapshot.params['id'];
-    let version = this.route.snapshot.queryParams['designVersion'];
+  private loadDesign(designId:string, version:string) {
     this.designsService.getDesign(designId, version).subscribe(
       design => {
         this.title = design.name;
@@ -98,16 +120,8 @@ export class DesignDetailsComponent {
 	}
 
   private loadInstances() {
-    this.instancesService.getInstancesForDesign(this.design.designId, this.design.version).subscribe(
-      instances => {
-        this.instances = instances;
-        this.isLoadingInstances = false;
-      },
-      err => {
-        this.isLoadingInstances = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
-      }
-    );
+	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  this.searchDesigns(searchRequest);
   }
 
   private generateLabelValuesForSpecification() {
@@ -140,12 +154,8 @@ export class DesignDetailsComponent {
 		return this.design.organizationId === this.authService.authState.orgMrn;
 	}
 
-	private isAdmin():boolean {
-		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
-	}
-
 	public shouldDisplayDelete():boolean {
-		return this.isAdmin() && !this.isLoadingInstances;
+		return this.isServiceAdminForOrg() && !this.isLoadingInstances;
 	}
 
 	private hasInstances():boolean {
@@ -171,11 +181,138 @@ export class DesignDetailsComponent {
 		this.showModal = false;
 		this.designsService.deleteDesign(this.design).subscribe(
 			() => {
-				this.navigationHelperService.navigateToOrgDesign('', '');
+				this.deleteEndorsements();
 			},
 			err => {
 				this.isLoadingDesign = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private isEndorseAdmin():boolean {
+		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+	}
+
+	private isServiceAdminForOrg():boolean {
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
+	}
+
+	public showUpdate():boolean {
+		return this.isServiceAdminForOrg();
+	}
+
+	public update() {
+		this.navigationHelperService.navigateToUpdateDesign(this.design.designId, this.design.version);
+	}
+
+	// Endorsements
+	private deleteEndorsements() {
+		if (this.endorsements && this.endorsements.length > 0) {
+			this.endorsementsService.removeAllEndorsementsOfDesign(this.design.designId).subscribe(
+				() => {
+					this.navigationHelperService.navigateToOrgDesign('', '');
+				},
+				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete endorsements of design', MCNotificationType.Error, err);
+					this.navigationHelperService.navigateToOrgDesign('', '');
+				}
+			);
+		} else {
+			this.navigationHelperService.navigateToOrgDesign('', '');
+		}
+	}
+
+	private loadEndorsements(designId:string, designVersion) {
+		this.isLoadingEndorsements = true;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.endorsementsService.isDesignEndorsedByMyOrg(designId,designVersion).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForDesign(designId,designVersion).take(1));
+
+		return Observable.forkJoin(parallelObservables).subscribe(
+			resultArray => {
+				let isEndorsedByMyOrg:any = resultArray[0];
+				let pageEndorsement: any = resultArray[1];
+				this.endorsements = pageEndorsement.content;
+				this.isEndorsedByMyOrg = isEndorsedByMyOrg;
+				this.isLoadingEndorsements = false;
+				this.showEndorsements = true;
+			},
+			err => {
+				this.showEndorsements = false;
+				this.isLoadingEndorsements = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get endorsements for design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public endorseToggle() {
+		if (this.isEndorsedByMyOrg) {
+			this.removeEndorse();
+		} else {
+			this.endorse();
+		}
+	}
+
+	private endorse() {
+		this.isEndorsing = true;
+		var specificationId = '';
+		var specificationVersion = '';
+		if (this.design.specifications && this.design.specifications.length > 0) {
+			// TODO handle more specifications when endorse api has the functionality
+			specificationId = this.design.specifications[0].specificationId;
+			specificationVersion = this.design.specifications[0].version;
+		}
+		this.endorsementsService.endorseDesign(this.design.designId, this.design.version, specificationId, specificationVersion).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = true;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.design.designId, this.design.version);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to endorse design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private removeEndorse() {
+		this.isEndorsing = true;
+		this.endorsementsService.removeEndorsementOfDesign(this.design.designId, this.design.version).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = false;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.design.designId, this.design.version);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to remove endorse of design', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public shouldDisplayEndorsementButton():boolean {
+		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements;
+	}
+
+	// Search
+	public search(searchRequest: ServiceRegistrySearchRequest) {
+		this.isSearchingInstances = true;
+		this.searchDesigns(searchRequest);
+	}
+
+	public searchDesigns(searchRequest:ServiceRegistrySearchRequest) {
+		this.instancesService.searchInstancesForDesign(searchRequest, this.design.designId, this.design.version).subscribe(
+			instances => {
+				this.instances = instances;
+				this.isLoadingInstances = false;
+				this.isSearchingInstances = false;
+			},
+			err => {
+				this.isLoadingInstances = false;
+				this.isSearchingInstances = false;
+				this.notifications.generateNotification('Error', 'Error when trying to search instances', MCNotificationType.Error, err);
 			}
 		);
 	}

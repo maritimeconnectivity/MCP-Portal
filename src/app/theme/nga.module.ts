@@ -78,6 +78,7 @@ import {McFormControlDatepicker} from "./components/mcFormControlDatepicker/mcFo
 import {CalendarModule} from "primeng/components/calendar/calendar";
 import {McFormControlTextArea} from "./components/mcFormControlTextArea/mcFormControlTextArea.component";
 import {McFormControlFileUpload} from "./components/mcFormControlFileUpload/mcFormControlFileUpload.component";
+import {McEndorseButton} from "./components/mcEndorseButton/mcEndorseButton.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -101,6 +102,7 @@ const NGA_COMPONENTS = [
 	McFileUploader,
 	McLogoUploader,
   McLoadingButton,
+	McEndorseButton,
 	McEntityImageList,
 	McEntityImage,
 	McFormControlText,

@@ -28,6 +28,7 @@ export class ServiceNewComponent implements OnInit {
   private isPrefilled = false;
 	private mrn: string;
 	private name: string;
+	private instanceVersion: string;
 	private mrnMask:string;
 	private mrnPattern:string;
 	private mrnPatternError:string;
@@ -51,10 +52,12 @@ export class ServiceNewComponent implements OnInit {
 		this.isLoading = true;
 		let mrn = this.activatedRoute.snapshot.queryParams['mrn'];
 		let name = this.activatedRoute.snapshot.queryParams['name'];
-		if (name && mrn) {
+		let instanceVersion = this.activatedRoute.snapshot.queryParams['instanceVersion'];
+		if (name && mrn && instanceVersion) {
 			this.isPrefilled = true;
 			this.mrn = mrn;
 			this.name = name;
+			this.instanceVersion = instanceVersion;
 		}
 		this.loadMyOrganization();
 	}
@@ -68,6 +71,7 @@ export class ServiceNewComponent implements OnInit {
 		let service:Service = {
 			mrn: this.mrn,
 			name: this.registerForm.value.name,
+			instanceVersion: this.instanceVersion,
 			permissions: this.registerForm.value.permissions,
 			certDomainName: this.registerForm.value.certDomainName
 		};
@@ -175,7 +179,7 @@ export class ServiceNewComponent implements OnInit {
 		this.formControlModels.push(formControlModelCheckbox);
 
 		if (this.useOIDC) {
-			formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid'};
+			formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid. E.g. http://www.maritimecp.net'};
 			formControl = new FormControl('', formControlModel.validator);
 			this.registerForm.addControl(formControlModel.elementId, formControl);
 			this.formControlModels.push(formControlModel);

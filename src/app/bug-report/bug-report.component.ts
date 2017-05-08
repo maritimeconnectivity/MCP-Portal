@@ -1,10 +1,8 @@
 import {Component, OnInit, HostListener} from '@angular/core';
 import {MCNotificationsService, MCNotificationType} from "../shared/mc-notifications.service";
 import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
-import {Organization} from "../backend-api/identity-registry/autogen/model/Organization";
 import {layoutSizes} from "../theme/theme.constants";
 import {NavigationHelperService} from "../shared/navigation-helper.service";
-import {UrlValidator} from "../theme/validators/url.validator";
 import {McUtils} from "../shared/mc-utils";
 import {
 	McFormControlModel,
@@ -13,7 +11,6 @@ import {
 import {AuthService} from "../authentication/services/auth.service";
 import {BugReport} from "../backend-api/identity-registry/autogen/model/BugReport";
 import {BugReportingService} from "../backend-api/identity-registry/services/bug-reporting.service";
-import {FileUploadType} from "../theme/components/mcFileUploader/mcFileUploader.component";
 import {BugReportAttachment} from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
 import {Observable} from "rxjs";
 
@@ -167,10 +164,12 @@ export class BugReportComponent implements OnInit {
 		let name = this.registerForm.value.name;
 		let email  = this.registerForm.value.emails.email;
 
+		let userAgent = window.navigator.userAgent;
 		let userString =
 			"**USER INFO**: \n" +
-			"*Name*: " + name + "\n" +
-			"*Email*: " + email + "\n\n" +
+			"*Agent*: " + userAgent + " \n \n" +
+			"*Name*: " + name + " \n" +
+			"*Email*: " + email + " \n\n" +
 			"**BUG REPORT MESSAGE**: \n";
 
 		bugReport.description = userString + bugReport.description;

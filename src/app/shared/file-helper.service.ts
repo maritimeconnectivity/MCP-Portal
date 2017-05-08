@@ -50,7 +50,7 @@ export class FileHelperService {
     }
     // TODO: I belive it is wrong that "content" is an array of strings. Please be wary of this may change in the future
     if (docFile.filecontent.length > 1 && docFile.filecontent.length < 10) {
-      this.notificationService.generateNotification('Error', 'Xml file from Service Registry is in the wrong format. Please file a bug report stating which file you were trying to download', MCNotificationType.Error);
+      this.notificationService.generateNotification('Error', 'File from Service Registry is in the wrong format. ' + docFile.name, MCNotificationType.Error);
       return;
     }
     let fileContent = docFile.filecontent.toString();

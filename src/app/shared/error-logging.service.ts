@@ -2,6 +2,9 @@ import {Injectable, Inject} from "@angular/core";
 import {NotificationsService} from "angular2-notifications";
 import {BugReportingService} from "../backend-api/identity-registry/services/bug-reporting.service";
 import {BugReport} from "../backend-api/identity-registry/autogen/model/BugReport";
+import {AuthService} from "../authentication/services/auth.service";
+import {BugReportAttachment} from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
+import {McHttpService} from "../backend-api/shared/mc-http.service";
 
 export interface MCErrorLoggerOptions {
 	makeBugReportFromError: boolean;
@@ -23,13 +26,37 @@ export class ErrorLoggingService {
     this.logErrorWithMessage(null, error, showToUser);
   }
 	public logErrorWithMessage(message:string, error: any, showToUser:boolean ) : void {
+  	if (this.isCachingError(message, error)) {
+		  AuthService.handleCacheError();
+		  return;
+	  }
 		this.sendToConsole(error);
 		if (showToUser) {
 			this.sendToUser(error);
 		}
-		if (this.options.makeBugReportFromError && !IS_DEV) {
+		let isXmlError = message && message.indexOf("Error trying to parse required field") > -1;
+		if (this.options.makeBugReportFromError && !IS_DEV && !isXmlError) {
 			this.sendToServer(message, error);
 		}
+	}
+
+	private isCachingError(message?:string, error?:any) : boolean {
+  	try {
+	    if (message && message.indexOf("Error: Loading chunk") > -1) {
+	      return true;
+		  }
+			if (error) {
+	      if (error.message && error.message.indexOf("Error: Loading chunk") > -1) {
+				  return true;
+			  }
+				if (error.stack && error.stack.indexOf("Error: Loading chunk") > -1) {
+					return true;
+				}
+			}
+	    return false;
+	  } catch (e) {
+  		return false;
+	  }
 	}
 
 	private sendToConsole(error: any): void {
@@ -69,6 +96,7 @@ export class ErrorLoggingService {
 		}
 		if (errorString.length > 0) {
 			let bugReport:BugReport = {subject:subject, description:errorString};
+			bugReport.attachments = [this.createLogAttachement()];
 			this.bugreportService.reportBug(bugReport).subscribe(
 				_ => {
 					// Nothing should happen
@@ -79,6 +107,12 @@ export class ErrorLoggingService {
 				}
 			);
 		}
+	}
+
+	private createLogAttachement() : BugReportAttachment {
+		let data = JSON.stringify(McHttpService.getHttpCallLog());
+
+  	return {data:window.btoa(data),mimetype:'text/json',name:'httpLog.json'};
 	}
 
   private sendToUser(error: any): void {

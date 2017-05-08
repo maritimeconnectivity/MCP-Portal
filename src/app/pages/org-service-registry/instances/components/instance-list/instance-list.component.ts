@@ -5,7 +5,10 @@ import {Organization} from "../../../../../backend-api/identity-registry/autogen
 import {Router, ActivatedRoute} from "@angular/router";
 import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
 import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
+import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
 
+const SEARCH_KEY = 'InstanceListComponent';
 @Component({
   selector: 'instance-list',
   encapsulation: ViewEncapsulation.None,
@@ -13,16 +16,18 @@ import {InstancesService} from "../../../../../backend-api/service-registry/serv
   styles: []
 })
 export class InstanceListComponent implements OnInit {
+	public searchKey = SEARCH_KEY;
+	public isSearching = false;
   public organization: Organization;
   public instances: Array<Instance>;
   public isLoading: boolean;
   public onGotoInstance: Function;
 	public cardTitle:string;
-  constructor(private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private instancesService: InstancesService) {
+  constructor(private searchRequestsService:SrSearchRequestsService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private instancesService: InstancesService) {
   }
 
   ngOnInit() {
-	  this.cardTitle = 'Loading ...';
+	  this.cardTitle = 'Instances';
     this.onGotoInstance = this.gotoInstance.bind(this);
 
     this.isLoading = true;
@@ -30,25 +35,48 @@ export class InstanceListComponent implements OnInit {
     this.loadInstances();
   }
 
+	public search(searchRequest: ServiceRegistrySearchRequest) {
+		this.isSearching = true;
+		this.searchInstances(searchRequest);
+	}
+
+	private searchInstances(searchRequest: ServiceRegistrySearchRequest) {
+		this.instancesService.searchInstances(searchRequest).subscribe(
+			instances => {
+				this.instances = instances;
+				this.isSearching = false;
+				this.isLoading = false;
+			},
+			err => {
+				this.isSearching = false;
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to search instances', MCNotificationType.Error, err);
+			}
+		);
+	}
+
   private loadInstances() {
-    this.instancesService.getAllInstances().subscribe(
-      instances => {
-        this.instances = instances;
-        this.isLoading = false;
-      },
-      err => {
-        this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
-      }
-    );
+	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  if (searchRequest) {
+		  this.searchInstances(searchRequest);
+	  } else {
+		  this.instancesService.getInstancesForMyOrg().subscribe(
+			  instances => {
+				  this.instances = instances;
+				  this.isLoading = false;
+			  },
+			  err => {
+				  this.isLoading = false;
+				  this.notifications.generateNotification('Error', 'Error when trying to get instances', MCNotificationType.Error, err);
+			  }
+		  );
+	  }
   }
 
   private loadMyOrganization() {
     this.orgService.getMyOrganization().subscribe(
       organization => {
         this.organization = organization;
-	      //this.cardTitle = 'Instances for ' + organization.name;
-	      this.cardTitle = 'All Instances';
       },
       err => {
         this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);

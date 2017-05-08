@@ -19,7 +19,7 @@ import { Observable }                                        from 'rxjs/Observab
 import 'rxjs/add/operator/map';
 
 import * as models                                           from '../model/models';
-import { BASE_PATH }                                         from '../variables';
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 /* tslint:disable:no-unused-variable member-ordering */
@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class ServiceinstanceresourceApi {
-    protected basePath = 'https://sr-test.maritimecloud.net/';
+    protected basePath = 'https://sr-staging.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -38,21 +38,6 @@ export class ServiceinstanceresourceApi {
         if (configuration) {
             this.configuration = configuration;
         }
-    }
-
-    /**
-     * 
-     * Extends object by coping non-existing properties.
-     * @param objA object to be extended
-     * @param objB source object
-     */
-    private extendObj<T1,T2>(objA: T1, objB: T2) {
-        for(let key in objB){
-            if(objB.hasOwnProperty(key)){
-                (objA as any)[key] = (objB as any)[key];
-            }
-        }
-        return <T1&T2>objA;
     }
 
     /**
@@ -324,7 +309,7 @@ export class ServiceinstanceresourceApi {
      * @param authorization Authorization
      */
     public createInstanceUsingPOSTWithHttpInfo(instance: models.Instance, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance`;
+        const path = this.basePath + '/api/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -332,7 +317,6 @@ export class ServiceinstanceresourceApi {
         if (instance === null || instance === undefined) {
             throw new Error('Required parameter instance was null or undefined when calling createInstanceUsingPOST.');
         }
-
         headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
@@ -344,11 +328,8 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
@@ -356,10 +337,10 @@ export class ServiceinstanceresourceApi {
             body: instance == null ? '' : JSON.stringify(instance), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -373,7 +354,9 @@ export class ServiceinstanceresourceApi {
      * @param authorization Authorization
      */
     public deleteInstanceUsingDELETEWithHttpInfo(id: string, version: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance/${id}/${version}/`;
+        const path = this.basePath + '/api/serviceInstance/${id}/${version}/'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -385,7 +368,6 @@ export class ServiceinstanceresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling deleteInstanceUsingDELETE.');
         }
-
         headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
@@ -397,20 +379,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Delete,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -427,7 +405,8 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllInstancesByIdUsingGETWithHttpInfo(id: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance/${id}`;
+        const path = this.basePath + '/api/serviceInstance/${id}'
+                    .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -438,14 +417,19 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -459,20 +443,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -488,21 +468,26 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllInstancesUsingGETWithHttpInfo(page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance`;
+        const path = this.basePath + '/api/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -516,20 +501,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -544,7 +525,9 @@ export class ServiceinstanceresourceApi {
      * @param authorization Authorization
      */
     public getInstanceUsingGETWithHttpInfo(id: string, version: string, includeDoc?: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance/${id}/${version}/`;
+        const path = this.basePath + '/api/serviceInstance/${id}/${version}/'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -571,20 +554,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -602,7 +581,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_searchGeometryGeoJSON/serviceInstance`;
+        const path = this.basePath + '/api/_searchGeometryGeoJSON/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -617,20 +596,27 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (geometry !== undefined) {
             queryParameters.set('geometry', <any>geometry);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -644,20 +630,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -675,7 +657,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_searchGeometryWKT/serviceInstance`;
+        const path = this.basePath + '/api/_searchGeometryWKT/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -690,20 +672,27 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (geometry !== undefined) {
             queryParameters.set('geometry', <any>geometry);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -717,20 +706,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -747,7 +732,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchInstancesByKeywordsUsingGETWithHttpInfo(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_searchKeywords/serviceInstance`;
+        const path = this.basePath + '/api/_searchKeywords/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -758,17 +743,23 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -782,20 +773,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -814,7 +801,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchInstancesByLocationUsingGETWithHttpInfo(latitude: string, longitude: string, query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_searchLocation/serviceInstance`;
+        const path = this.basePath + '/api/_searchLocation/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -833,23 +820,31 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (latitude !== undefined) {
             queryParameters.set('latitude', <any>latitude);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
+
         if (longitude !== undefined) {
             queryParameters.set('longitude', <any>longitude);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -863,20 +858,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -893,7 +884,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchInstancesByUnlocodeUsingGETWithHttpInfo(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_searchUnlocode/serviceInstance`;
+        const path = this.basePath + '/api/_searchUnlocode/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -904,17 +895,23 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -928,20 +925,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -958,7 +951,7 @@ export class ServiceinstanceresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchInstancesUsingGETWithHttpInfo(query: string, page?: number, size?: number, includeDoc?: string, authorization?: string, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_search/serviceInstance`;
+        const path = this.basePath + '/api/_search/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -969,17 +962,23 @@ export class ServiceinstanceresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
+
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
+
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
         }
 
         headers.set('Authorization', String(authorization));
@@ -993,20 +992,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -1021,7 +1016,9 @@ export class ServiceinstanceresourceApi {
      * @param authorization Authorization
      */
     public updateInstanceStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance/${id}/${version}/status`;
+        const path = this.basePath + '/api/serviceInstance/${id}/${version}/status'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1052,20 +1049,16 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -1078,7 +1071,7 @@ export class ServiceinstanceresourceApi {
      * @param authorization Authorization
      */
     public updateInstanceUsingPUTWithHttpInfo(instance: models.Instance, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceInstance`;
+        const path = this.basePath + '/api/serviceInstance';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -1086,7 +1079,6 @@ export class ServiceinstanceresourceApi {
         if (instance === null || instance === undefined) {
             throw new Error('Required parameter instance was null or undefined when calling updateInstanceUsingPUT.');
         }
-
         headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
@@ -1098,11 +1090,8 @@ export class ServiceinstanceresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
@@ -1110,10 +1099,10 @@ export class ServiceinstanceresourceApi {
             body: instance == null ? '' : JSON.stringify(instance), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);

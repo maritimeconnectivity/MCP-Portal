@@ -19,7 +19,7 @@ import { Observable }                                        from 'rxjs/Observab
 import 'rxjs/add/operator/map';
 
 import * as models                                           from '../model/models';
-import { BASE_PATH }                                         from '../variables';
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 /* tslint:disable:no-unused-variable member-ordering */
@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class SpecificationtemplateresourceApi {
-    protected basePath = 'https://sr-test.maritimecloud.net/';
+    protected basePath = 'https://sr-staging.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -38,21 +38,6 @@ export class SpecificationtemplateresourceApi {
         if (configuration) {
             this.configuration = configuration;
         }
-    }
-
-    /**
-     * 
-     * Extends object by coping non-existing properties.
-     * @param objA object to be extended
-     * @param objB source object
-     */
-    private extendObj<T1,T2>(objA: T1, objB: T2) {
-        for(let key in objB){
-            if(objB.hasOwnProperty(key)){
-                (objA as any)[key] = (objB as any)[key];
-            }
-        }
-        return <T1&T2>objA;
     }
 
     /**
@@ -163,7 +148,7 @@ export class SpecificationtemplateresourceApi {
      * @param specificationTemplate specificationTemplate
      */
     public createSpecificationTemplateUsingPOSTWithHttpInfo(specificationTemplate: models.SpecificationTemplate, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/specification-templates`;
+        const path = this.basePath + '/api/specification-templates';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -171,8 +156,6 @@ export class SpecificationtemplateresourceApi {
         if (specificationTemplate === null || specificationTemplate === undefined) {
             throw new Error('Required parameter specificationTemplate was null or undefined when calling createSpecificationTemplateUsingPOST.');
         }
-
-
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -182,11 +165,8 @@ export class SpecificationtemplateresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
@@ -194,10 +174,10 @@ export class SpecificationtemplateresourceApi {
             body: specificationTemplate == null ? '' : JSON.stringify(specificationTemplate), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -209,7 +189,8 @@ export class SpecificationtemplateresourceApi {
      * @param id id
      */
     public deleteSpecificationTemplateUsingDELETEWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/specification-templates/${id}`;
+        const path = this.basePath + '/api/specification-templates/${id}'
+                    .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -217,8 +198,6 @@ export class SpecificationtemplateresourceApi {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteSpecificationTemplateUsingDELETE.');
         }
-
-
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -228,20 +207,16 @@ export class SpecificationtemplateresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Delete,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -255,20 +230,23 @@ export class SpecificationtemplateresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllSpecificationTemplatesUsingGETWithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/specification-templates`;
+        const path = this.basePath + '/api/specification-templates';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -279,20 +257,16 @@ export class SpecificationtemplateresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -304,7 +278,8 @@ export class SpecificationtemplateresourceApi {
      * @param id id
      */
     public getSpecificationTemplateUsingGETWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/specification-templates/${id}`;
+        const path = this.basePath + '/api/specification-templates/${id}'
+                    .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -312,8 +287,6 @@ export class SpecificationtemplateresourceApi {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getSpecificationTemplateUsingGET.');
         }
-
-
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -323,20 +296,16 @@ export class SpecificationtemplateresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -351,7 +320,7 @@ export class SpecificationtemplateresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchSpecificationTemplatesUsingGETWithHttpInfo(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_search/specification-templates`;
+        const path = this.basePath + '/api/_search/specification-templates';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -362,16 +331,20 @@ export class SpecificationtemplateresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -382,20 +355,16 @@ export class SpecificationtemplateresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -407,7 +376,7 @@ export class SpecificationtemplateresourceApi {
      * @param specificationTemplate specificationTemplate
      */
     public updateSpecificationTemplateUsingPUTWithHttpInfo(specificationTemplate: models.SpecificationTemplate, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/specification-templates`;
+        const path = this.basePath + '/api/specification-templates';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -415,8 +384,6 @@ export class SpecificationtemplateresourceApi {
         if (specificationTemplate === null || specificationTemplate === undefined) {
             throw new Error('Required parameter specificationTemplate was null or undefined when calling updateSpecificationTemplateUsingPUT.');
         }
-
-
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -426,11 +393,8 @@ export class SpecificationtemplateresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
@@ -438,10 +402,10 @@ export class SpecificationtemplateresourceApi {
             body: specificationTemplate == null ? '' : JSON.stringify(specificationTemplate), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);

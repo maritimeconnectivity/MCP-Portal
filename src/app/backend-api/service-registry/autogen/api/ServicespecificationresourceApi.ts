@@ -19,7 +19,7 @@ import { Observable }                                        from 'rxjs/Observab
 import 'rxjs/add/operator/map';
 
 import * as models                                           from '../model/models';
-import { BASE_PATH }                                         from '../variables';
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 /* tslint:disable:no-unused-variable member-ordering */
@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class ServicespecificationresourceApi {
-    protected basePath = 'https://sr-test.maritimecloud.net/';
+    protected basePath = 'https://sr-staging.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -41,27 +41,13 @@ export class ServicespecificationresourceApi {
     }
 
     /**
-     * 
-     * Extends object by coping non-existing properties.
-     * @param objA object to be extended
-     * @param objB source object
-     */
-    private extendObj<T1,T2>(objA: T1, objB: T2) {
-        for(let key in objB){
-            if(objB.hasOwnProperty(key)){
-                (objA as any)[key] = (objB as any)[key];
-            }
-        }
-        return <T1&T2>objA;
-    }
-
-    /**
      * createSpecification
      * 
      * @param specification specification
+     * @param authorization Authorization
      */
-    public createSpecificationUsingPOST(specification: models.Specification, extraHttpRequestParams?: any): Observable<models.Specification> {
-        return this.createSpecificationUsingPOSTWithHttpInfo(specification, extraHttpRequestParams)
+    public createSpecificationUsingPOST(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<models.Specification> {
+        return this.createSpecificationUsingPOSTWithHttpInfo(specification, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -76,9 +62,10 @@ export class ServicespecificationresourceApi {
      * 
      * @param id id
      * @param version version
+     * @param authorization Authorization
      */
-    public deleteSpecificationUsingDELETE(id: string, version: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.deleteSpecificationUsingDELETEWithHttpInfo(id, version, extraHttpRequestParams)
+    public deleteSpecificationUsingDELETE(id: string, version: string, authorization: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.deleteSpecificationUsingDELETEWithHttpInfo(id, version, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -167,9 +154,10 @@ export class ServicespecificationresourceApi {
      * @param id id
      * @param version version
      * @param status status
+     * @param authorization Authorization
      */
-    public updateSpecificationStatusUsingPUT(id: string, version: string, status: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.updateSpecificationStatusUsingPUTWithHttpInfo(id, version, status, extraHttpRequestParams)
+    public updateSpecificationStatusUsingPUT(id: string, version: string, status: string, authorization: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.updateSpecificationStatusUsingPUTWithHttpInfo(id, version, status, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -183,9 +171,10 @@ export class ServicespecificationresourceApi {
      * updateSpecification
      * 
      * @param specification specification
+     * @param authorization Authorization
      */
-    public updateSpecificationUsingPUT(specification: models.Specification, extraHttpRequestParams?: any): Observable<models.Specification> {
-        return this.updateSpecificationUsingPUTWithHttpInfo(specification, extraHttpRequestParams)
+    public updateSpecificationUsingPUT(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<models.Specification> {
+        return this.updateSpecificationUsingPUTWithHttpInfo(specification, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -200,9 +189,10 @@ export class ServicespecificationresourceApi {
      * createSpecification
      * 
      * @param specification specification
+     * @param authorization Authorization
      */
-    public createSpecificationUsingPOSTWithHttpInfo(specification: models.Specification, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification`;
+    public createSpecificationUsingPOSTWithHttpInfo(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/serviceSpecification';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -210,6 +200,11 @@ export class ServicespecificationresourceApi {
         if (specification === null || specification === undefined) {
             throw new Error('Required parameter specification was null or undefined when calling createSpecificationUsingPOST.');
         }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling createSpecificationUsingPOST.');
+        }
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -220,11 +215,8 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
@@ -232,10 +224,10 @@ export class ServicespecificationresourceApi {
             body: specification == null ? '' : JSON.stringify(specification), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -246,9 +238,12 @@ export class ServicespecificationresourceApi {
      * 
      * @param id id
      * @param version version
+     * @param authorization Authorization
      */
-    public deleteSpecificationUsingDELETEWithHttpInfo(id: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification/${id}/${version}/`;
+    public deleteSpecificationUsingDELETEWithHttpInfo(id: string, version: string, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/serviceSpecification/${id}/${version}/'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -260,6 +255,11 @@ export class ServicespecificationresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling deleteSpecificationUsingDELETE.');
         }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling deleteSpecificationUsingDELETE.');
+        }
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -270,20 +270,16 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Delete,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -298,7 +294,8 @@ export class ServicespecificationresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllSpecificationsByIdUsingGETWithHttpInfo(id: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification/${id}`;
+        const path = this.basePath + '/api/serviceSpecification/${id}'
+                    .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -309,13 +306,16 @@ export class ServicespecificationresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -326,20 +326,16 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -353,20 +349,23 @@ export class ServicespecificationresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public getAllSpecificationsUsingGETWithHttpInfo(page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification`;
+        const path = this.basePath + '/api/serviceSpecification';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -377,20 +376,16 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -403,7 +398,9 @@ export class ServicespecificationresourceApi {
      * @param version version
      */
     public getSpecificationUsingGETWithHttpInfo(id: string, version: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification/${id}/${version}/`;
+        const path = this.basePath + '/api/serviceSpecification/${id}/${version}/'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -415,8 +412,6 @@ export class ServicespecificationresourceApi {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling getSpecificationUsingGET.');
         }
-
-
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -426,20 +421,16 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -454,7 +445,7 @@ export class ServicespecificationresourceApi {
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
     public searchSpecificationsUsingGETWithHttpInfo(query: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/_search/serviceSpecification`;
+        const path = this.basePath + '/api/_search/serviceSpecification';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -465,16 +456,20 @@ export class ServicespecificationresourceApi {
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
+
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
         }
+
         if (query !== undefined) {
             queryParameters.set('query', <any>query);
         }
-        if (sort !== undefined) {
-            queryParameters.set('sort', <any>sort);
-        }
 
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters.append('sort', <any>element);
+            })
+        }
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -485,20 +480,16 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -510,9 +501,12 @@ export class ServicespecificationresourceApi {
      * @param id id
      * @param version version
      * @param status status
+     * @param authorization Authorization
      */
-    public updateSpecificationStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification/${id}/${version}/status`;
+    public updateSpecificationStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/serviceSpecification/${id}/${version}/status'
+                    .replace('${' + 'id' + '}', String(id))
+                    .replace('${' + 'version' + '}', String(version));
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -528,10 +522,15 @@ export class ServicespecificationresourceApi {
         if (status === null || status === undefined) {
             throw new Error('Required parameter status was null or undefined when calling updateSpecificationStatusUsingPUT.');
         }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling updateSpecificationStatusUsingPUT.');
+        }
         if (status !== undefined) {
             queryParameters.set('status', <any>status);
         }
 
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -542,20 +541,16 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
-
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
             headers: headers,
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);
@@ -565,9 +560,10 @@ export class ServicespecificationresourceApi {
      * updateSpecification
      * 
      * @param specification specification
+     * @param authorization Authorization
      */
-    public updateSpecificationUsingPUTWithHttpInfo(specification: models.Specification, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/api/serviceSpecification`;
+    public updateSpecificationUsingPUTWithHttpInfo(specification: models.Specification, authorization: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/serviceSpecification';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -575,6 +571,11 @@ export class ServicespecificationresourceApi {
         if (specification === null || specification === undefined) {
             throw new Error('Required parameter specification was null or undefined when calling updateSpecificationUsingPUT.');
         }
+        // verify required parameter 'authorization' is not null or undefined
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling updateSpecificationUsingPUT.');
+        }
+        headers.set('Authorization', String(authorization));
 
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -585,11 +586,8 @@ export class ServicespecificationresourceApi {
         let produces: string[] = [
             'application/json'
         ];
-        
-            
 
         headers.set('Content-Type', 'application/json');
-
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
@@ -597,10 +595,10 @@ export class ServicespecificationresourceApi {
             body: specification == null ? '' : JSON.stringify(specification), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
-        
+
         // https://github.com/swagger-api/swagger-codegen/issues/4037
         if (extraHttpRequestParams) {
-            requestOptions = this.extendObj(requestOptions, extraHttpRequestParams);
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
         }
 
         return this.http.request(path, requestOptions);

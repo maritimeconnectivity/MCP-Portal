@@ -15,6 +15,11 @@ import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {DocsService} from "../../../../../backend-api/service-registry/services/docs.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
+import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
+import {Observable} from "rxjs/Observable";
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'instance-details',
@@ -39,7 +44,15 @@ export class InstanceDetailsComponent {
 	public shouldDisplayCreateButton:boolean = false;
 	public showUpdateIdService:boolean = false;
 
-  constructor(private servicesService:IdServicesService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService) {
+	// Endorsements
+	public isLoadingEndorsements:boolean;
+	public isEndorsing:boolean;
+	public showEndorsements:boolean;
+	public isEndorsedByMyOrg:boolean;
+	public endorsements:Array<Endorsement> = [];
+	public endorseMainSwitch = SHOW_ENDORSEMENTS;
+
+  constructor(private servicesService:IdServicesService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService) {
 
   }
 
@@ -50,7 +63,12 @@ export class InstanceDetailsComponent {
 	  this.isLoadingIdService = true;
     this.title = 'Loading ...';
 	  this.titleIdService = 'ID information';
-    this.loadInstance();
+	  let instanceId = this.route.snapshot.params['id'];
+	  let version = this.route.snapshot.queryParams['instanceVersion'];
+    this.loadInstance(instanceId, version);
+	  if (SHOW_ENDORSEMENTS) {
+		  this.loadEndorsements(instanceId, version);
+	  }
   }
 
   public downloadXml() {
@@ -62,7 +80,7 @@ export class InstanceDetailsComponent {
   }
 
   public createIdService() {
-		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name);
+		this.navigationHelperService.navigateToCreateIdService(this.instance.instanceId, this.instance.name, this.instance.version);
   }
 
   private isMyOrg():boolean {
@@ -70,9 +88,7 @@ export class InstanceDetailsComponent {
   }
 
 
-  private loadInstance() {
-    let instanceId = this.route.snapshot.params['id'];
-    let version = this.route.snapshot.queryParams['instanceVersion'];
+  private loadInstance(instanceId:string, version:string) {
     this.instancesService.getInstance(instanceId, version).subscribe(
       instance => {
         this.title = instance.name;
@@ -115,16 +131,17 @@ export class InstanceDetailsComponent {
 	}
 
   private loadIdService(mrn:string) {
-	  this.servicesService.getIdService(mrn, this.instance.organizationId).subscribe(
+	  this.servicesService.getIdService(mrn, this.instance.version, this.instance.organizationId).subscribe(
 		  service => {
+		  	service.name = this.instance.name;
 			  this.idService = service;
-			  this.showUpdateIdService = (this.isMyOrg() && this.isAdmin()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
+			  this.showUpdateIdService = (this.isMyOrg() && this.isServiceAdminForOrg()) /* TODO for now only update if my org, because updating another orgs entities is a quite different kind of woopass|| this.authService.authState.isSiteAdmin()*/;
 			  this.isLoadingIdService = false;
 		  },
 		  err => {
 			  if (err.status == 404) {
 				  this.shouldDisplayIdService = false;
-				  this.shouldDisplayCreateButton = this.isAdmin();
+				  this.shouldDisplayCreateButton = this.isServiceAdminForOrg();
 			  } else {
 			    this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
 			  }
@@ -154,7 +171,7 @@ export class InstanceDetailsComponent {
   }
 
 	public updateIdService() {
-		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn);
+		this.navigationHelperService.navigateToUpdateIdService(this.idService.mrn, this.instance.version);
 	}
 
   private gotoDesign(linkValue:any) {
@@ -165,15 +182,23 @@ export class InstanceDetailsComponent {
     }
   }
 
-	private isAdmin():boolean {
+	private isServiceAdminForOrg():boolean {
 		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
 	}
 
-	public showDelete():boolean {
-		return this.isAdmin();
+	public showUpdate():boolean {
+		return this.isServiceAdminForOrg();
 	}
 
-	private delete() {
+	public showDelete():boolean {
+		return this.isServiceAdminForOrg();
+	}
+
+	public update() {
+		this.navigationHelperService.navigateToUpdateInstance(this.instance.instanceId, this.instance.version);
+	}
+
+	public delete() {
 		this.modalDescription = 'Do you want to delete the instance?';
 		this.showModal = true;
 	}
@@ -186,7 +211,7 @@ export class InstanceDetailsComponent {
 		this.showModal = false;
 		this.instancesService.deleteInstance(this.instance).subscribe(
 			() => {
-				this.deleteIdService();
+				this.deleteEndorsements();
 			},
 			err => {
 				this.isLoadingInstance = false;
@@ -197,16 +222,109 @@ export class InstanceDetailsComponent {
 
 	private deleteIdService() {
   	if (this.idService) {
-			this.servicesService.deleteIdService(this.idService.mrn).subscribe(
+			this.servicesService.deleteIdService(this.idService.mrn, this.instance.version).subscribe(
 				() => {
 					this.navigationHelperService.navigateToOrgInstance('', '');
 				},
 				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete ID', MCNotificationType.Error, err);
 					this.navigationHelperService.navigateToOrgInstance('', '');
 				}
 			);
 	  } else {
 		  this.navigationHelperService.navigateToOrgInstance('', '');
 	  }
+	}
+
+	private isAdmin():boolean {
+		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
+	}
+
+	private isEndorseAdmin():boolean {
+		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+	}
+
+	// Endorsements
+	private deleteEndorsements() {
+		if (this.endorsements && this.endorsements.length > 0) {
+			this.endorsementsService.removeAllEndorsementsOfInstance(this.instance.instanceId).subscribe(
+				() => {
+					this.deleteIdService();
+				},
+				err => {
+					this.notifications.generateNotification('Error', 'Error when trying to delete endorsements of instance', MCNotificationType.Error, err);
+					this.deleteIdService();
+				}
+			);
+		} else {
+			this.deleteIdService();
+		}
+	}
+
+	private loadEndorsements(instanceId:string, instanceVersion:string) {
+		this.isLoadingEndorsements = true;
+		let parallelObservables = [];
+
+		parallelObservables.push(this.endorsementsService.isInstanceEndorsedByMyOrg(instanceId, instanceVersion).take(1));
+		parallelObservables.push(this.endorsementsService.getEndorsementsForInstance(instanceId, instanceVersion).take(1));
+
+		return Observable.forkJoin(parallelObservables).subscribe(
+			resultArray => {
+				let isEndorsedByMyOrg:any = resultArray[0];
+				let pageEndorsement: any = resultArray[1];
+				this.endorsements = pageEndorsement.content;
+				this.isEndorsedByMyOrg = isEndorsedByMyOrg;
+				this.isLoadingEndorsements = false;
+				this.showEndorsements = true;
+			},
+			err => {
+				this.showEndorsements = false;
+				this.isLoadingEndorsements = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get endorsements for instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public endorseToggle() {
+		if (this.isEndorsedByMyOrg) {
+			this.removeEndorse();
+		} else {
+			this.endorse();
+		}
+	}
+
+	private endorse() {
+		this.isEndorsing = true;
+
+		this.endorsementsService.endorseInstance(this.instance.instanceId, this.instance.version, this.design.designId, this.design.version).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = true;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.instance.instanceId, this.instance.version);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to endorse instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private removeEndorse() {
+		this.isEndorsing = true;
+		this.endorsementsService.removeEndorsementOfInstance(this.instance.instanceId, this.instance.version).subscribe(
+			_ => {
+				this.isEndorsedByMyOrg = false;
+				this.isEndorsing = false;
+				this.loadEndorsements(this.instance.instanceId, this.instance.version);
+			},
+			err => {
+				this.isEndorsing = false;
+				this.notifications.generateNotification('Error', 'Error when trying to remove endorse of instance', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	public shouldDisplayEndorsementButton():boolean {
+		return SHOW_ENDORSEMENTS && this.isEndorseAdmin() && this.showEndorsements && !isNullOrUndefined(this.design);
 	}
 }

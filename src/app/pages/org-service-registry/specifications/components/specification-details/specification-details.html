@@ -9,25 +9,35 @@
         <li *ngIf="specification.specAsXml">
           <button type="button" class="btn btn-primary btn-raised" (click)="downloadXml()">Download XML</button>
         </li>
+        <li *ngIf="showUpdate()">
+          <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update Specification</button>
+        </li>
         <li *ngIf="shouldDisplayDelete()">
           <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Specification</button>
         </li>
+        <li *ngIf="shouldDisplayEndorsementButton() && !isLoadingDesigns">
+          <mc-endorse-button [isEndorsedByMyOrg]="isEndorsedByMyOrg" [isEndorsing]="isEndorsing"[title]="'Specification'" (onEndorse)="endorseToggle()"></mc-endorse-button>
+        </li>
       </ul>
+    </ba-card>
 
-      <div class="separator"></div>
+    <div *ngIf="endorseMainSwitch">
+      <endorsed-by-list [title]="'Organizations endorsing the Specification (' + title + ')'" [endorsements]="endorsements" [isLoading]="isLoadingEndorsements"></endorsed-by-list>
+    </div>
 
-      <h5>Designs that implements this Specification</h5>
+    <ba-card title="Designs implementing the Specification ({{specification?.name}})" baCardClass="with-scroll table-panel">
+      <div *ngIf="!isLoadingDesigns">
+        <service-registry-search [showKeywords]="false" [searchTitle]="'Design search filters'" [searchKey]="searchKey" [isSearching]="isSearchingDesigns" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
+
+        <div class="separator"></div>
+      </div>
+      <div class="create-loading-wrapper">
+        <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
+        <sk-fading-circle-small class="create-loading" [isRunning]="isSearchingDesigns"></sk-fading-circle-small>
+      </div>
       <designs-table [designs]="designs" [isLoading]="isLoadingDesigns" [onRowClick]="onGotoDesign"></designs-table>
-      <mc-create-button *ngIf="!isLoadingDesigns" title="Register new Design" [onClick]="onCreate"></mc-create-button>
-
-      <!-- Doesn't work atm.
-      <div class="separator"></div>
-
-      <h5>Instances that implements this Specification</h5>
-      <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>
-      -->
     </ba-card>
   </div>
 </div>
-<mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete specification'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>
-<mc-modal (onOk)="cancelModal()" [show]="showModalNoDelete" [title]="'Delete specification'" [description]="modalDescriptionNoDelete" [okClass]="'btn btn-default btn-raised'" [okTitle]="'OK'"></mc-modal>
+<mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete Specification'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>
+<mc-modal (onOk)="cancelModal()" [show]="showModalNoDelete" [title]="'Delete Specification'" [description]="modalDescriptionNoDelete" [okClass]="'btn btn-default btn-raised'" [okTitle]="'OK'"></mc-modal>

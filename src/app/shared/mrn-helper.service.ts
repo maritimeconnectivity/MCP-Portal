@@ -85,11 +85,18 @@ export class MrnHelperService {
 
 	public checkMrn(mrn:string, validMrnMask:string) : boolean {
 		try {
-			let orgSplit = mrn.split(':');
-			let elementId = orgSplit[orgSplit.length-1];
-			let idMatches = elementId.match(this.mrnPattern());
-			let validMrn = validMrnMask + elementId;
-			return idMatches && validMrn === mrn;
+			let elementIdIndex = mrn.indexOf(validMrnMask);
+			if (elementIdIndex < 0) {
+				return false;
+			}
+			var valid = true;
+			let idSplit = mrn.substring(elementIdIndex).split(':');
+			idSplit.forEach(idElement => {
+				if(!idElement.match(this.mrnPattern())) {
+					valid = false;
+				}
+			});
+			return valid;
 		} catch (error) {
 			return false;
 		}

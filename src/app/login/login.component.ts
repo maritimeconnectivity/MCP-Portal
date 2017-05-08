@@ -12,13 +12,18 @@ export class LoginComponent implements OnInit {
 
 	public version = require("../../../package.json").version;
 
+	public canJoin:boolean = CAN_JOIN;
+
   constructor(private authService: AuthService, private notificationService: MCNotificationsService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    if (this.route.snapshot.queryParams['reason'] === '401'){
-      this.notificationService.generateNotification('Session timeout', 'Your session has timed out', MCNotificationType.Error);
-    }
+	  if (this.route.snapshot.queryParams['reason'] === '401'){
+		  this.notificationService.generateNotification('Session timeout', 'Your session has timed out', MCNotificationType.Error);
+	  }
+	  else if (this.route.snapshot.queryParams['reason'] === 'cache'){
+		  this.notificationService.generateNotification('Caching Error', 'Please try to refresh your browser with CTRL-F5', MCNotificationType.Error);
+	  }
   }
 
   logIn() {

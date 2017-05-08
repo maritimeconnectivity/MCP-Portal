@@ -2,10 +2,17 @@ import { Injectable } from '@angular/core';
 import {Http, ConnectionBackend, RequestOptions, Response, RequestOptionsArgs, Request} from '@angular/http';
 import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../authentication/services/auth.service";
-import {DONT_OVERWRITE_CONTENT_TYPE} from "../../shared/app.constants";
+import {DONT_OVERWRITE_CONTENT_TYPE, MAX_HTTP_LOG_ENTRIES} from "../../shared/app.constants";
+
+export interface HttpLogModel {
+	url:string;
+	options?:RequestOptionsArgs;
+	date:Date;
+}
 
 @Injectable()
 export class McHttpService extends Http {
+	private static httpCallLog = new Array<HttpLogModel>();
   private static shouldAuthenticate = true;
   public static nextCallShouldNotAuthenticate() {
     McHttpService.shouldAuthenticate = false;
@@ -15,8 +22,49 @@ export class McHttpService extends Http {
     super(backend, defaultOptions);
   }
 
+  public static getHttpCallLog() : Array<HttpLogModel> {
+  	return McHttpService.httpCallLog;
+  }
+
+  private static addCall(url: string | Request, requestDate:Date, options?: RequestOptionsArgs) {
+  	try{
+	    let requestUrl:string;
+	    if (typeof url === "string") {
+	      requestUrl = url;
+		  } else {
+	      requestUrl = url.url;
+		  }
+		  McHttpService.httpCallLog.push({url:requestUrl, options:options, date:requestDate});
+			if (McHttpService.httpCallLog.length > MAX_HTTP_LOG_ENTRIES) {
+				McHttpService.httpCallLog.splice(0,1);
+			}
+	  }catch(err){
+		  // If anything goes wrong, then just continue
+	  }
+  }
+
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    return this.prepareService(options).flatMap(optionsMap => { return this.interceptError(super.request(url, optionsMap))}).flatMap(response => { return this.interceptResponse(response)});
+	  var requestUrl = url;
+	  try {
+	  	// We will try to url encode the params of the url
+	    if (typeof url === "string"){
+			  let indexDotSlashSlash = url.indexOf("://");
+			  if (indexDotSlashSlash > -1) {
+				  let urlProtocol = url.substring(0,indexDotSlashSlash+3);
+				  let urlParams = url.substring(indexDotSlashSlash+3).split("/");
+				  requestUrl = urlProtocol + urlParams[0];
+				  for(let i=1; i<urlParams.length; i++) {
+					  requestUrl += "/" + encodeURIComponent(urlParams[i]);
+				  }
+			  }
+		  }
+	  }catch(err){
+	  	// So many things can go wrong, so we dont url encode
+	  }
+	  let requestDate = new Date();
+	  McHttpService.addCall(requestUrl, requestDate, options);
+
+    return this.prepareService(options).flatMap(optionsMap => {return this.interceptError(super.request(requestUrl, optionsMap))}).flatMap(response => {return this.interceptResponse(response)});
   }
 
   // Setting the http headers and if needed refreshes the access token
