@@ -18,6 +18,7 @@ import {Xml} from "../autogen/model/Xml";
 import {Doc} from "../autogen/model/Doc";
 import {XmlsService} from "./xmls.service";
 import {DocsService} from "./docs.service";
+import {UserError} from "../../../shared/UserError";
 
 
 @Injectable()
@@ -162,20 +163,30 @@ export class DesignsService implements OnInit {
     design.comment = '';
     design.designAsXml.comment = '';
     return Observable.create(observer => {
-      // TODO The api is a bit strange. For now you need to create the xml and doc first and then the design
-      this.xmlApi.createXmlUsingPOST(design.designAsXml).subscribe(
-        xml => {
-          design.designAsXml = xml;
-          if (design.designAsDoc) {
-            this.createWithDoc(design, observer);
-          } else {
-            this.createActualDesign(design, observer);
-          }
-        },
-        err => {
-          observer.error(err);
-        }
-      );
+	    this.getDesign(design.designId, design.version).subscribe(des => {
+			    observer.error(new UserError('Design already exists with same MRN and version.'));
+		    },
+		    err => {
+			    if (err.status == 404) { // The design doesn't exist - create it
+				    // TODO The api is a bit strange. For now you need to create the xml and doc first and then the design
+				    this.xmlApi.createXmlUsingPOST(design.designAsXml).subscribe(
+					    xml => {
+						    design.designAsXml = xml;
+						    if (design.designAsDoc) {
+							    this.createWithDoc(design, observer);
+						    } else {
+							    this.createActualDesign(design, observer);
+						    }
+					    },
+					    err => {
+						    observer.error(err);
+					    }
+				    );
+			    } else {
+				    observer.error(err);
+			    }
+		    }
+	    );
     });
   }
   private createWithDoc(design:Design, observer:Observer<any>) {

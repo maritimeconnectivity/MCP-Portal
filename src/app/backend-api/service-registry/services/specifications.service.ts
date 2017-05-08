@@ -17,6 +17,7 @@ import {Xml} from "../autogen/model/Xml";
 import {Doc} from "../autogen/model/Doc";
 import {XmlsService} from "./xmls.service";
 import {DocsService} from "./docs.service";
+import {UserError} from "../../../shared/UserError";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
@@ -78,20 +79,34 @@ export class SpecificationsService implements OnInit {
     specification.comment = '';
     specification.specAsXml.comment = '';
     return Observable.create(observer => {
-      // TODO The api is a bit strange. For now you need to create the xml and doc first and then the specification
-      this.xmlApi.createXmlUsingPOST(specification.specAsXml).subscribe(
-        xml => {
-          specification.specAsXml = xml;
-          if (specification.specAsDoc) {
-            this.createWithDoc(specification, observer);
-          } else {
-            this.createActualSpecification(specification, observer);
-          }
-        },
-        err => {
-          observer.error(err);
-        }
-      );
+	    this.getSpecification(specification.specificationId, specification.version).subscribe(spec => {
+			    observer.error(new UserError('Specification already exists with same MRN and version.'));
+		    },
+		    err => {
+			    if (err.status == 404) { // The specification doesn't exist - create it
+				    // TODO The api is a bit strange. For now you need to create the xml and doc first and then the specification
+				    this.xmlApi.createXmlUsingPOST(specification.specAsXml).subscribe(
+					    xml => {
+						    specification.specAsXml = xml;
+						    if (specification.specAsDoc) {
+							    this.createWithDoc(specification, observer);
+						    } else {
+							    this.createActualSpecification(specification, observer);
+						    }
+					    },
+					    err => {
+						    observer.error(err);
+					    }
+				    );
+			    } else {
+				    observer.error(err);
+			    }
+		    }
+	    );
+
+
+
+
     });
   }
   private createWithDoc(specification:Specification, observer:Observer<any>) {

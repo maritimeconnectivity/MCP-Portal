@@ -16,6 +16,7 @@ import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/ser
 import {EndorsementSearchResult, EndorsementsService} from "../../endorsements/services/endorsements.service";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {AuthService} from "../../../authentication/services/auth.service";
+import {UserError} from "../../../shared/UserError";
 
 @Injectable()
 export class InstancesService implements OnInit {
@@ -77,20 +78,30 @@ export class InstancesService implements OnInit {
     instance.comment = '';
     instance.instanceAsXml.comment = '';
     return Observable.create(observer => {
-      // TODO The api is a bit strange. For now you need to create the xml and doc first and then the instance
-      this.xmlApi.createXmlUsingPOST(instance.instanceAsXml).subscribe(
-        xml => {
-          instance.instanceAsXml = xml;
-          if (instanceDoc) {
-            this.createWithDoc(instance, instanceDoc, observer);
-          } else {
-            this.createActualInstance(instance, observer);
-          }
-        },
-        err => {
-          observer.error(err);
-        }
-      );
+    	this.getInstance(instance.instanceId, instance.version).subscribe(ins => {
+			    observer.error(new UserError('Instance already exists with same MRN and version.'));
+	      },
+		    err => {
+			    if (err.status == 404) { // The instance doesn't exist - create it
+				    // TODO The api is a bit strange. For now you need to create the xml and doc first and then the instance
+				    this.xmlApi.createXmlUsingPOST(instance.instanceAsXml).subscribe(
+					    xml => {
+						    instance.instanceAsXml = xml;
+						    if (instanceDoc) {
+							    this.createWithDoc(instance, instanceDoc, observer);
+						    } else {
+							    this.createActualInstance(instance, observer);
+						    }
+					    },
+					    err => {
+						    observer.error(err);
+					    }
+				    );
+			    } else {
+				    observer.error(err);
+			    }
+		    }
+	    );
     });
   }
   private createWithDoc(instance:Instance, instanceDoc:Doc, observer:Observer<any>) {
