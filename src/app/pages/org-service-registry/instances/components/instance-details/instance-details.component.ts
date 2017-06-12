@@ -37,9 +37,7 @@ export class InstanceDetailsComponent {
   public onGotoDesign: Function;
 	public showModal:boolean = false;
 	public modalDescription:string;
-	public WKT:string = 'POLYGON((10.689 -25.092, 34.595 ' +
-		'-20.170, 38.814 -35.639, 13.502 ' +
-		'-39.155, 10.689 -25.092))';
+	public WKTs:Array<string>;
 
 	public isLoadingIdService: boolean;
 	public titleIdService:string;
@@ -98,7 +96,7 @@ export class InstanceDetailsComponent {
         this.title = instance.name;
         this.instance = instance;
         this.loadDesign();
-        //this.xmlParser.getGeometryAsWKT(this.instance.instanceAsXml);
+        this.WKTs = this.xmlParser.getGeometriesAsWKT(this.instance.instanceAsXml);
       },
       err => {
         // TODO: make this as a general component

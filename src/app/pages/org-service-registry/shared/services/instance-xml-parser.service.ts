@@ -22,8 +22,20 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 		return this.xmlParserService.getValueFromField('URL', xml);
 	}
 
-	public getGeometryAsWKT(xml: Xml): string { // TODO: should get all WKTs instead of only first one
-		let coversArea = this.xmlParserService.getVauleFromEmbeddedField('coversAreas', 'coversArea', xml);
-		return this.xmlParserService.getValueFromField('geometryAsWKT', coversArea);
+	public getGeometriesAsWKT(xml: Xml): Array<string> {
+		var parser = new DOMParser();
+		let xmlString = xml.content.split('\+').join(''); // remove +
+		var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
+
+		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
+		let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
+
+		var areas = [];
+		for (let i = 0; i < coversAreas.length; i++) {
+			let area = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0].nodeValue.replace(/\s+\(\(/, '\(\(');
+			areas.push(area);
+		}
+
+		return areas;
 	}
 }

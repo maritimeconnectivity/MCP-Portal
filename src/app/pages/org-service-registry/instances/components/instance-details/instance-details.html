@@ -27,7 +27,7 @@
 
     <div>
       <ba-card title="Coverage Area" baCardClass="with-scroll table-panel">
-        <mc-coverage-map *ngIf="instance && !isLoadingInstance"></mc-coverage-map>
+        <mc-coverage-map *ngIf="instance && !isLoadingInstance" [WKTs]="WKTs"></mc-coverage-map>
       </ba-card>
     </div>
 
