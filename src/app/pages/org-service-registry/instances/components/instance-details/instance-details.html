@@ -25,6 +25,12 @@
       <service-details-view [shouldShowUpdate]="showUpdateIdService" (updateAction)="updateIdService()" [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
     </div>
 
+    <div>
+      <ba-card title="Coverage Area" baCardClass="with-scroll table-panel">
+        <mc-coverage-map *ngIf="instance && !isLoadingInstance"></mc-coverage-map>
+      </ba-card>
+    </div>
+
     <div *ngIf="shouldDisplayCreateButton">
       <ba-card title="{{titleIdService}}" baCardClass="with-scroll table-panel">
         <ul class="btn-list clearfix">

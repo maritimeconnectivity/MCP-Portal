@@ -21,4 +21,9 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 	public getEndpoint(xml: Xml): string {
 		return this.xmlParserService.getValueFromField('URL', xml);
 	}
+
+	public getGeometryAsWKT(xml: Xml): string { // TODO: should get all WKTs instead of only first one
+		let coversArea = this.xmlParserService.getVauleFromEmbeddedField('coversAreas', 'coversArea', xml);
+		return this.xmlParserService.getValueFromField('geometryAsWKT', coversArea);
+	}
 }

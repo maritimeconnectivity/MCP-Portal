@@ -18,6 +18,7 @@ import {OrganizationsService} from "../../../../../backend-api/identity-registry
 import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
 import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
 import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
+import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
 import {Observable} from "rxjs/Observable";
 import {isNullOrUndefined} from "util";
 
@@ -36,6 +37,9 @@ export class InstanceDetailsComponent {
   public onGotoDesign: Function;
 	public showModal:boolean = false;
 	public modalDescription:string;
+	public WKT:string = 'POLYGON((10.689 -25.092, 34.595 ' +
+		'-20.170, 38.814 -35.639, 13.502 ' +
+		'-39.155, 10.689 -25.092))';
 
 	public isLoadingIdService: boolean;
 	public titleIdService:string;
@@ -52,7 +56,7 @@ export class InstanceDetailsComponent {
 	public endorsements:Array<Endorsement> = [];
 	public endorseMainSwitch = SHOW_ENDORSEMENTS;
 
-  constructor(private servicesService:IdServicesService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService) {
+  constructor(private servicesService:IdServicesService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private mrnHelper: MrnHelperService, private docsService: DocsService, private orgsService: OrganizationsService, private xmlParser: InstanceXmlParser) {
 
   }
 
@@ -94,6 +98,7 @@ export class InstanceDetailsComponent {
         this.title = instance.name;
         this.instance = instance;
         this.loadDesign();
+        //this.xmlParser.getGeometryAsWKT(this.instance.instanceAsXml);
       },
       err => {
         // TODO: make this as a general component
