@@ -21,14 +21,14 @@
       </ul>
     </ba-card>
 
-    <div *ngIf="shouldDisplayIdService">
-      <service-details-view [shouldShowUpdate]="showUpdateIdService" (updateAction)="updateIdService()" [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
-    </div>
-
     <div>
-      <ba-card title="Coverage Area" baCardClass="with-scroll table-panel">
+      <ba-card title="Coverage Area of {{title}}" baCardClass="with-scroll table-panel">
         <mc-coverage-map *ngIf="instance && !isLoadingInstance" [WKTs]="WKTs"></mc-coverage-map>
       </ba-card>
+    </div>
+
+    <div *ngIf="shouldDisplayIdService">
+      <service-details-view [shouldShowUpdate]="showUpdateIdService" (updateAction)="updateIdService()" [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
     </div>
 
     <div *ngIf="shouldDisplayCreateButton">

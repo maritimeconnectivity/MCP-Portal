@@ -1,1 +1,2 @@
-<div id="map" class="map"></div>
+<button type="button" id="expand-btn" class="btn btn-primary btn-raised" (click)="expandMap()">{{btnText}}</button>
+<div [style.height]="size" [style.width]="size" id="map" class="map instance-map"></div>
