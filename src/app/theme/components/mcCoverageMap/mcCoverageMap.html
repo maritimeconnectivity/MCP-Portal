@@ -1,2 +1,5 @@
-<button type="button" id="expand-btn" class="btn btn-primary btn-raised" (click)="expandMap()">{{btnText}}</button>
-<div [style.height]="size" [style.width]="size" id="map" class="map instance-map"></div>
+<div>
+    <button type="button" id="expand-btn" class="btn btn-primary btn-raised" [hidden]="hideButton" (click)="expandMap()">{{btnText}}</button>
+    <div #olMap [style.height]="size" [style.width]="size" id="map" class="map instance-map"></div>
+</div>
+<sk-fading-circle [isRunning]="isLoading"></sk-fading-circle>

@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
+import {AfterViewChecked, Component, OnInit, ViewChild, ViewEncapsulation} from "@angular/core";
+import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
@@ -18,14 +18,18 @@ import {IdServicesService} from "../../../../../backend-api/identity-registry/se
 import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {
-	McFormControlModel, SelectModel,
-	McFormControlType, McFormControlModelSelect, McFormControlModelCheckbox
+	McFormControlModel,
+	McFormControlModelCheckbox,
+	McFormControlModelSelect,
+	McFormControlType,
+	SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {FormGroup, FormControl, Validators, FormBuilder} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UrlValidator} from "../../../../../theme/validators/url.validator";
 import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
+import {McCoverageMap} from "../../../../../theme/components/mcCoverageMap/mcCoverageMap.component";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 @Component({
@@ -35,8 +39,9 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
   styles: []
 })
 
-export class InstanceNewComponent implements OnInit {
+export class InstanceNewComponent implements OnInit, AfterViewChecked {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+	@ViewChild(McCoverageMap) public coverageMap: McCoverageMap;
 
 	public labelValuesParsed:Array<LabelValueModel>;
 	private parsedInstance:Instance;
@@ -78,7 +83,11 @@ export class InstanceNewComponent implements OnInit {
     this.generateForm();
     this.loadMyOrganization();
     this.loadDesign();
-	  this.updateUI();
+  }
+
+  ngAfterViewChecked(): void {
+  	//this.coverageMap.render();
+  	this.updateUI();
   }
 
   public isFormValid() {
@@ -110,7 +119,7 @@ export class InstanceNewComponent implements OnInit {
 	  this.updateUI();
   }
 
-	private isXmlValid(file: Xml) : boolean {
+	private isXmlValid(file: Xml) : boolean { // TODO: check if WKT is valid
 		try {
 			let mrn = this.xmlParser.getMrn(file);
 			let isValid = this.mrnHelper.checkMrnForInstance(mrn);
