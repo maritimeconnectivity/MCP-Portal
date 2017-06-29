@@ -18,6 +18,7 @@ const SEARCH_KEY = 'InstanceListComponent';
 export class InstanceListComponent implements OnInit {
 	public searchKey = SEARCH_KEY;
 	public isSearching = false;
+	private initialSearchRequest: ServiceRegistrySearchRequest;
   public organization: Organization;
   public instances: Array<Instance>;
   public isLoading: boolean;
@@ -46,8 +47,10 @@ export class InstanceListComponent implements OnInit {
 				this.instances = instances;
 				this.isSearching = false;
 				this.isLoading = false;
+				this.initialSearchRequest = searchRequest;
 			},
 			err => {
+				this.searchRequestsService.addSearchRequest(SEARCH_KEY, this.initialSearchRequest);
 				this.isSearching = false;
 				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to search instances', MCNotificationType.Error, err);
@@ -57,6 +60,7 @@ export class InstanceListComponent implements OnInit {
 
   private loadInstances() {
 	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  this.initialSearchRequest = searchRequest;
 	  if (searchRequest) {
 		  this.searchInstances(searchRequest);
 	  } else {

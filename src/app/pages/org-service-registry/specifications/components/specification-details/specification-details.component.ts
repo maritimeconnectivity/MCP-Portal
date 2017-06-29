@@ -51,6 +51,7 @@ export class SpecificationDetailsComponent {
 	// Search
 	public isSearchingDesigns = false;
 	public searchKey = SEARCH_KEY;
+	private initialSearchRequest: ServiceRegistrySearchRequest;
 
   constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private notifications: MCNotificationsService, private specificationsService: SpecificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
@@ -120,6 +121,7 @@ export class SpecificationDetailsComponent {
 
   private loadDesigns() {
 	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  this.initialSearchRequest = searchRequest;
 		this.searchDesigns(searchRequest);
   }
 
@@ -277,8 +279,10 @@ export class SpecificationDetailsComponent {
 				this.designs = designs;
 				this.isLoadingDesigns = false;
 				this.isSearchingDesigns = false;
+				this.initialSearchRequest = searchRequest;
 			},
 			err => {
+				this.searchRequestsService.addSearchRequest(SEARCH_KEY, this.initialSearchRequest);
 				this.isLoadingDesigns = false;
 				this.isSearchingDesigns = false;
 				this.notifications.generateNotification('Error', 'Error when trying to search designs', MCNotificationType.Error, err);

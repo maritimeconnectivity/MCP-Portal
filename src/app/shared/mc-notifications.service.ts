@@ -51,6 +51,7 @@ export class MCNotificationsService {
 			    this.errorLog = extraMessage;
 			    extraMessage = ": See error log for details";
 		    } else {
+			    this.errorLog = null;
 		    	extraMessage = ". Error was: " + extraMessage;
 		    }
 		    // If this is an internal error created by this Portal then the message will be contained in the extraMessage and we don't wanna show it twice
