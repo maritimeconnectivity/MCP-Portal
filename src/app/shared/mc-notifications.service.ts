@@ -22,11 +22,16 @@ export class MCNotificationsService {
 
   public notifications = this.notificationObserver.asObservable();
 
-  public generateNotification(title:string, message:string, type: MCNotificationType, originalError?:any) {
-  	var displaySendBugReport = true;
-    if (originalError) {
-      this.errorLogger.logErrorWithMessage(message, originalError, false);
+  public generateNotification(title:string, message:string, type: MCNotificationType, anyError?:any) {
+	  let isUserError = anyError instanceof UserError;
+
+    if (anyError) {
+      this.errorLogger.logErrorWithMessage(message, anyError, false);
 	    var extraMessage;
+	    var originalError = anyError;
+	    if (isUserError && anyError.originalError) {
+		    originalError = anyError.originalError;
+	    }
 	    try {
 		    let jsonError = originalError.json().error;
 		    let jsonErrorMessage = originalError.json().message;
@@ -35,12 +40,10 @@ export class MCNotificationsService {
 		    } else {
 		    	extraMessage = JSON.stringify(originalError.json());
 		    }
-		    displaySendBugReport = this.shouldDisplayBugReportMessage(originalError);
 	    } catch (err) {
 		    extraMessage = originalError;
-		    if (originalError instanceof UserError) {
-			    displaySendBugReport = false;
-			    extraMessage = JSON.stringify(originalError.errorMessage);
+		    if (isUserError) {
+			    extraMessage = JSON.stringify(anyError.errorMessage);
 		    }
 	    }
 	    finally {
@@ -58,18 +61,8 @@ export class MCNotificationsService {
     }
 	  this.notificationObserver.next({title:title, message:message, type:type});
 
-	  let isXmlError = message.indexOf("Error trying to parse required field") > -1;
-	  displaySendBugReport = displaySendBugReport && !isXmlError;
-	  if(originalError && this.errorLogger.options.makeBugReportFromError && displaySendBugReport) {
+	  if(anyError && this.errorLogger.options.makeBugReportFromError && !isUserError) {
 		  this.notificationObserver.next({title:title, message:"A Bug Report was send automatically.", type:type});
-	  }
-  }
-
-  private shouldDisplayBugReportMessage(error:any) : boolean {
-	  try {
-		  return !(error.status == 400 && error.statusText === 'Bad Request')
-	  } catch (err) {
-	  	return true;
 	  }
   }
 }

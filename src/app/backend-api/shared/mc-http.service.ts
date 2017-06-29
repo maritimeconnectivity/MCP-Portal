@@ -3,6 +3,7 @@ import {Http, ConnectionBackend, RequestOptions, Response, RequestOptionsArgs, R
 import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../authentication/services/auth.service";
 import {DONT_OVERWRITE_CONTENT_TYPE, MAX_HTTP_LOG_ENTRIES} from "../../shared/app.constants";
+import {UserError} from "../../shared/UserError";
 
 export interface HttpLogModel {
 	url:string;
@@ -95,12 +96,18 @@ export class McHttpService extends Http {
   // Intercepts errors from the http call
   private interceptError(observable: Observable<Response>): Observable<Response> {
     return observable.catch((err, source) => {
-      if (err.status  == 401 ) {
-        AuthService.handle401();
-        return Observable.empty();
-      } else {
-        return Observable.throw(err);
-      }
+	    try {
+		    if (err.status == 400 && err.statusText === 'Bad Request') {
+			    return Observable.throw(new UserError('Bad Request', err));
+		    } else if (err.status  == 401 ) {
+	        AuthService.handle401();
+	        return Observable.empty();
+	      } else {
+	        return Observable.throw(err);
+	      }
+	    } catch (errCatch) {
+		    return Observable.throw(err);
+	    }
     });
   }
 
