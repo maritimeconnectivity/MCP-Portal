@@ -21,4 +21,21 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 	public getEndpoint(xml: Xml): string {
 		return this.xmlParserService.getValueFromField('URL', xml);
 	}
+
+	public getGeometriesAsWKT(xml: Xml): Array<string> {
+		var parser = new DOMParser();
+		let xmlString = xml.content.split('\+').join(''); // remove +
+		var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
+
+		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
+		let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
+
+		var areas = [];
+		for (let i = 0; i < coversAreas.length; i++) {
+			let area = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0].nodeValue.replace(/\s+\(\(/, '\(\(');
+			areas.push(area);
+		}
+
+		return areas;
+	}
 }

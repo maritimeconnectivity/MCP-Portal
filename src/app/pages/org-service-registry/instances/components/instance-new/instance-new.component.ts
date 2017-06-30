@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
+import {Component, OnInit, ViewChild, ViewEncapsulation} from "@angular/core";
+import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
@@ -18,14 +18,18 @@ import {IdServicesService} from "../../../../../backend-api/identity-registry/se
 import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {
-	McFormControlModel, SelectModel,
-	McFormControlType, McFormControlModelSelect, McFormControlModelCheckbox
+	McFormControlModel,
+	McFormControlModelCheckbox,
+	McFormControlModelSelect,
+	McFormControlType,
+	SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {FormGroup, FormControl, Validators, FormBuilder} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UrlValidator} from "../../../../../theme/validators/url.validator";
 import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
+import {McCoverageMap} from "../../../../../theme/components/mcCoverageMap/mcCoverageMap.component";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 @Component({
@@ -37,6 +41,7 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 export class InstanceNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
+	@ViewChild(McCoverageMap) public coverageMap: McCoverageMap;
 
 	public labelValuesParsed:Array<LabelValueModel>;
 	private parsedInstance:Instance;
@@ -67,6 +72,7 @@ export class InstanceNewComponent implements OnInit {
 	private useOIDCRedirect:boolean = true;
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
+	public WKTs: Array<string>;
 
   constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
   }
@@ -78,7 +84,7 @@ export class InstanceNewComponent implements OnInit {
     this.generateForm();
     this.loadMyOrganization();
     this.loadDesign();
-	  this.updateUI();
+    this.updateUI();
   }
 
   public isFormValid() {
@@ -117,12 +123,19 @@ export class InstanceNewComponent implements OnInit {
 			if (isValid) {
 				let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
 				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
+				console.log(file);
 				isValid = (designMrn === this.design.designId) && (designVersion === this.design.version);
+				let isWKTValid = this.isWKTValid(file);
 
 				if (!isValid) {
 					this.errorText  = "The MRN and/or version referencing the Design in the XML, doesn't match the MRN and/or version of the chosen Design.<BR><BR>"
 						+ "Chosen Design: " + this.design.designId + ", version: " + this.design.version + "<BR>"
 						+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
+				}
+				if (!isWKTValid) {
+					this.errorText = "The WKT for the coverage area(s) of the instance XML is invalid. This can be due to "
+						+ "invalid characters and/or unnecessary whitespaces.";
+					isValid = false;
 				}
 			} else {
 				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
@@ -135,6 +148,31 @@ export class InstanceNewComponent implements OnInit {
 			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
 			return false;
 		}
+	}
+
+	private isWKTValid(file: Xml): boolean {
+  		var parser = new DOMParser();
+  		var xmlData = parser.parseFromString(file.content, file.contentContentType);
+
+		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
+		let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
+		console.log(coversAreas);
+
+		let isValid = true;
+		let areas = [];
+
+		for (let i = 0; i < coversAreas.length; i++) {
+			let area = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0].nodeValue;
+			if (area.match(/\s+\(\(/) || area.includes('\+')) {
+				return false;
+			} else {
+				areas.push(area);
+			}
+		}
+		if (isValid) {
+			this.WKTs = areas;
+		}
+		return isValid;
 	}
 
 	private resetXmlFile(){

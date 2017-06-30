@@ -12,6 +12,7 @@ export * from './baFullCalendar';
 export * from './baCheckbox';
 export * from './baMultiCheckbox';
 export * from './mcCreateButton';
+export * from './mcCoverageMap';
 export * from './mcLabelValueTable';
 export * from './mcTable';
 export * from './mcFileUploader';
