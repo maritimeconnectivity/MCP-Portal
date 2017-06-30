@@ -18,7 +18,7 @@ import {Xml} from "../autogen/model/Xml";
 import {Doc} from "../autogen/model/Doc";
 import {XmlsService} from "./xmls.service";
 import {DocsService} from "./docs.service";
-import {UserError} from "../../../shared/UserError";
+import {PortalUserError, UserError} from "../../../shared/UserError";
 
 
 @Injectable()
@@ -164,7 +164,7 @@ export class DesignsService implements OnInit {
     design.designAsXml.comment = '';
     return Observable.create(observer => {
 	    this.getDesign(design.designId, design.version).subscribe(des => {
-			    observer.error(new UserError('Design already exists with same MRN and version.'));
+			    observer.error(new PortalUserError('Design already exists with same MRN and version.'));
 		    },
 		    err => {
 			    if (err.status == 404) { // The design doesn't exist - create it

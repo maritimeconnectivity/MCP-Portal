@@ -16,7 +16,7 @@ import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/ser
 import {EndorsementSearchResult, EndorsementsService} from "../../endorsements/services/endorsements.service";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {AuthService} from "../../../authentication/services/auth.service";
-import {UserError} from "../../../shared/UserError";
+import {PortalUserError, UserError} from "../../../shared/UserError";
 
 @Injectable()
 export class InstancesService implements OnInit {
@@ -79,7 +79,7 @@ export class InstancesService implements OnInit {
     instance.instanceAsXml.comment = '';
     return Observable.create(observer => {
     	this.getInstance(instance.instanceId, instance.version).subscribe(ins => {
-			    observer.error(new UserError('Instance already exists with same MRN and version.'));
+			    observer.error(new PortalUserError('Instance already exists with same MRN and version.'));
 	      },
 		    err => {
 			    if (err.status == 404) { // The instance doesn't exist - create it

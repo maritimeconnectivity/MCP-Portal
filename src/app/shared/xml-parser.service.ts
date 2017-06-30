@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Xml} from "../backend-api/service-registry/autogen/model/Xml";
+import {PortalUserError, UserError} from "./UserError";
 
 @Injectable()
 export class XmlParserService {
@@ -27,7 +28,7 @@ export class XmlParserService {
 	    }
       return innerElement[0].childNodes[0].nodeValue;
     } catch ( error ) {
-      throw new Error("Error trying to parse required field: " + outerField + " -> " + fieldToFind);
+      throw new PortalUserError("Error trying to parse required field: " + outerField + " -> " + fieldToFind);
     }
   }
 
@@ -44,7 +45,7 @@ export class XmlParserService {
 	    }
 	    return innerElement[0].childNodes[0].nodeValue;
     } catch ( error ) {
-      throw new Error("Error trying to parse required field: " + field);
+      throw new PortalUserError("Error trying to parse required field: " + field);
     }
   }
 
