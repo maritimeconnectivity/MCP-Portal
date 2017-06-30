@@ -1,23 +1,32 @@
-import {AfterViewInit, Component, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from "@angular/core";
+import {
+  Component,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation
+} from "@angular/core";
 import * as ol from "openlayers";
 
 @Component({
   selector: 'mc-coverage-map',
-  styles: [require('./mcCoverageMap.scss')],
+  styles: [require('./mcCoverageMap.scss'), require('openlayers/dist/ol.css')],
   template: require('./mcCoverageMap.html'),
   encapsulation: ViewEncapsulation.None
 })
-export class McCoverageMap implements OnInit, AfterViewInit { // TODO: try https://github.com/quentin-ol/angular2-openlayers again
+export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
   @Input() public WKTs: Array<string>;
   @Input() public hideButton: boolean;
   @Input() public isLoading: boolean;
-  @ViewChild('olMap') olMap;
+  private checked: boolean;
   private features: Array<ol.Feature> = [];
-  private extent: ol.Extent;
   private map: ol.Map;
   private view: ol.View;
   private raster: ol.layer.Tile;
   private vector: ol.layer.Vector;
+  private extent: ol.Extent;
   private expanded: boolean = false;
   private minSize: string = "30%";
   private maxSize: string = "100%";
@@ -27,43 +36,55 @@ export class McCoverageMap implements OnInit, AfterViewInit { // TODO: try https
   public size: string = this.minSize;
 
   ngOnInit(): void {
-    this.raster = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    });
+    setTimeout(() => {
+      if (!this.checked) { // make sure the map is only made once
+        this.raster = new ol.layer.Tile({
+          source: new ol.source.OSM()
+        });
 
-    let format = new ol.format.WKT();
+        if (this.WKTs) {
+          this.makeFeatures();
+        }
 
-    if (this.WKTs) {
-      this.WKTs.forEach(WKT => {
-        this.features.push(format.readFeature(WKT, {
-          dataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857'
-        }));
-      });
-    }
+        this.vector = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            features: this.features
+          })
+        });
 
-    this.vector = new ol.layer.Vector({
-      source: new ol.source.Vector({
-        features: this.features
-      })
-    });
+        this.view = new ol.View({
+          center: [0, 0],
+          zoom: 2
+        });
 
-    this.view = new ol.View({
-      center: [0, 0],
-      zoom: 2
-    });
-
-    this.map = new ol.Map({
-      layers: [this.raster, this.vector],
-      view: this.view
-    });
+        this.map = new ol.Map({pixelRatio: 1});
+        this.map.addLayer(this.raster);
+        this.map.addLayer(this.vector);
+        this.map.setView(this.view);
+        this.map.setTarget('map');
+        this.checked = true;
+        this.extent = this.vector.getSource().getExtent();
+        if (this.WKTs) {
+          this.fitMap();
+        }
+      }
+    }, 200);
   }
 
-  ngAfterViewInit(): void {
-    this.map.setTarget(this.olMap.nativeElement);
-    this.map.updateSize();
-    console.log(this.olMap);
-    this.fitMap();
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.checked) {
+      for(let propName in changes) {
+        if (propName === 'WKTs' && this.WKTs !== null) {
+          this.makeFeatures();
+          this.map.render();
+          this.fitMap();
+        }
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.map = null; // make sure the map is actually destroyed
   }
 
   public expandMap(): void {
@@ -76,27 +97,25 @@ export class McCoverageMap implements OnInit, AfterViewInit { // TODO: try https
       this.btnText = this.minBtnText;
       this.expanded = true;
     }
-    this.fitMap();
+    setTimeout(() => {
+      this.fitMap();
+    }, 50);
   }
 
   private fitMap(): void {
     this.map.updateSize();
-    this.map.render();
-    if (!this.extent && this.features.length > 0) {
-      this.extent = this.features[0].getGeometry().getExtent();
-      for (let i = 1; i < this.features.length; i++) {
-        ol.extent.extend(this.extent, this.features[i].getGeometry().getExtent());
-      }
-    }
-
-    if (this.extent) {
-      this.view.fit(this.extent);
-      //this.raster.getSource().refresh();
-    }
+    this.map.getView().fit(this.extent, this.map.getSize());
+    this.raster.getSource().refresh();
   }
 
-  public render(): void {
-    this.map.render();
+  private makeFeatures(): void {
+    let format = new ol.format.WKT();
+    this.WKTs.forEach(WKT => {
+      this.features.push(format.readFeature(WKT, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      }));
+    });
   }
 
   @HostListener("window:resize", [])
