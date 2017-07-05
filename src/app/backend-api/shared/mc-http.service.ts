@@ -98,7 +98,19 @@ export class McHttpService extends Http {
     return observable.catch((err, source) => {
 	    try {
 		    if (err.status == 400 && err.statusText === 'Bad Request') {
-			    return Observable.throw(new UserError('Bad Request', err));
+			    // Sorry for this hack. This is a SR-error that xml is not valid. We don't want to create a bug report  when this happens
+			    var sendBugReport = true;
+			    try {
+				    let jsonErrorMessage = err.json().message;
+				    sendBugReport = jsonErrorMessage.indexOf('cvc-complex') < 0;
+			    } catch (e) {}
+			    let userError = new UserError(err.statusText, err);
+			    userError.sendBugReport = sendBugReport;
+			    return Observable.throw(userError);
+		    } else if (err.status  == 409 ) {
+		    	let userError = new UserError(err.statusText, err);
+		    	userError.sendBugReport = false;
+			    return Observable.throw(userError);
 		    } else if (err.status  == 401 ) {
 	        AuthService.handle401();
 	        return Observable.empty();

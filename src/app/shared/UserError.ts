@@ -2,11 +2,13 @@ export class UserError {
 	errorMessage: string;
 	message: string;
 	originalError?: any;
+	sendBugReport: boolean;
 
 	constructor(errorMessage:string, originalError?:any) {
 		this.errorMessage = errorMessage;
 		this.message = errorMessage;
 		this.originalError = originalError;
+		this.sendBugReport = true;
 	}
 }
 

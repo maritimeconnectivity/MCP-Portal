@@ -45,11 +45,7 @@ export class ErrorLoggingService {
 		if ( err instanceof PortalUserError) {
 			sendBugReport = false;
 		}	else if (isUserError) {
-			// Sorry for this hack. This is a SR-error that xml is not valid. We don't want to create a bug report  when this happens
-			try {
-				let jsonErrorMessage = originalError.json().message;
-				sendBugReport = jsonErrorMessage.indexOf('cvc-complex') < 0;
-			} catch (e) {}
+			sendBugReport = err.sendBugReport;
 		}
 		if (this.options.makeBugReportFromError && !IS_DEV && sendBugReport) {
 			this.sendToServer(message, originalError);
