@@ -105,7 +105,6 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
   private fitMap(): void {
     this.map.updateSize();
     this.map.getView().fit(this.extent, this.map.getSize());
-    this.raster.getSource().refresh();
   }
 
   private makeFeatures(): void {
