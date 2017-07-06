@@ -30,12 +30,19 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 		var areas = [];
 
 		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
-		if (coversAreasRoot.nodeValue) {
+
+		if (coversAreasRoot) {
 			let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
 
-			if (coversAreas[0].nodeValue) {
+			if (coversAreas.length > 0) {
 				for (let i = 0; i < coversAreas.length; i++) {
-					let area = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0].nodeValue.replace(/\s+\(\(/, '\(\(');
+					let node = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0];
+					let area = null;
+					if (node) {
+						area = node.nodeValue.replace(/\s+\(\(/, '\(\(');
+					} else {
+						area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
+					}
 					areas.push(area);
 				}
 			} else {
