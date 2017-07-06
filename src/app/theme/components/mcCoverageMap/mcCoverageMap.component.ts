@@ -9,6 +9,7 @@ import {
   ViewEncapsulation
 } from "@angular/core";
 import * as ol from "openlayers";
+import set = Reflect.set;
 
 @Component({
   selector: 'mc-coverage-map',
@@ -114,6 +115,15 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
         dataProjection: 'EPSG:4326',
         featureProjection: 'EPSG:3857'
       }));
+      if (this.vector) {
+        console.log(this.WKTs);
+        this.vector.getSource().clear();
+        setTimeout(() => { // TODO: delete old features before making new ones
+          this.vector.setVisible(false);
+          this.vector.setVisible(true);
+        }, 50);
+        this.extent = this.vector.getSource().getExtent();
+      }
     });
   }
 

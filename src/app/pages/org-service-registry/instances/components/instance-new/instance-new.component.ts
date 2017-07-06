@@ -123,7 +123,7 @@ export class InstanceNewComponent implements OnInit {
 			if (isValid) {
 				let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
 				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
-				console.log(file);
+
 				isValid = (designMrn === this.design.designId) && (designVersion === this.design.version);
 				let isWKTValid = this.isWKTValid(file);
 
@@ -156,7 +156,6 @@ export class InstanceNewComponent implements OnInit {
 
 		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
 		let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
-		console.log(coversAreas);
 
 		let isValid = true;
 		let areas = [];
