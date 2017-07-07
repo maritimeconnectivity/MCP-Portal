@@ -25,9 +25,14 @@ export class McEndorseButton {
 		this.onClickHandler = this.onEndorseHandler.bind(this);
 		this.setEndorseButtonClassAndTitle();
 	}
+
 	ngOnChanges() {
 		this.setEndorseButtonClassAndTitle();
 		this.changeDetector.detectChanges();
+	}
+
+	ngOnDestroy() {
+		this.changeDetector.detach();
 	}
 
   public isAdmin():boolean {
