@@ -21,6 +21,10 @@ export class McFormControlCheckbox {
 		this.changeDetector.detectChanges();
 	}
 
+	ngOnDestroy() {
+		this.changeDetector.detach();
+	}
+
 	public onChange(value: any): void {
 		this.state = value;
 	}

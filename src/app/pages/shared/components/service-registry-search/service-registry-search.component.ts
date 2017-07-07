@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
+import {Component, ViewEncapsulation, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
 import {ServiceRegistrySearchRequest} from "./ServiceRegistrySearchRequest";
@@ -19,7 +19,7 @@ interface SelectModel {
   template: require('./service-registry-search.html'),
 	styles: [require('./service-registry-search.scss')]
 })
-export class ServiceRegistrySearchComponent {
+export class ServiceRegistrySearchComponent implements OnDestroy {
 	@Input() searchTitle: string;
 	@Input() searchKey: string;
 	@Input() isSearching: boolean;
@@ -41,6 +41,10 @@ export class ServiceRegistrySearchComponent {
   constructor(private searchRequestsService:SrSearchRequestsService, private changeDetector: ChangeDetectorRef, private authService:AuthService, formBuilder:FormBuilder, private orgsService: OrganizationsService, private notifications: MCNotificationsService) {
   	this.formGroup = formBuilder.group({});
   }
+
+	ngOnDestroy() {
+		this.changeDetector.detach();
+	}
 
 	ngOnInit() {
 		this.onSearchFunction = this.search.bind(this);
