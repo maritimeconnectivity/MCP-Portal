@@ -56,6 +56,7 @@ export class InstanceUpdateComponent implements OnInit {
 	private status:string = '';
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
+	public WKTs: Array<string>;
 
   constructor(private orgsService:OrganizationsService, private viewModelService: SrViewModelService, private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private router: Router, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private instancesService: InstancesService, private designService: DesignsService) {
   }
@@ -183,6 +184,7 @@ export class InstanceUpdateComponent implements OnInit {
 			this.resetXmlFile();
 		} finally {
 			this.setupLableValuesParsed();
+			this.WKTs = this.xmlParser.getGeometriesAsWKT(this.xml);
 		}
 	}
 

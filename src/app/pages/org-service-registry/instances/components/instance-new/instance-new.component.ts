@@ -41,7 +41,6 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 export class InstanceNewComponent implements OnInit {
 	@ViewChild('uploadXml')	public fileUploadXml: McFileUploader;
-	@ViewChild(McCoverageMap) public coverageMap: McCoverageMap;
 
 	public labelValuesParsed:Array<LabelValueModel>;
 	private parsedInstance:Instance;
@@ -123,20 +122,31 @@ export class InstanceNewComponent implements OnInit {
 			if (isValid) {
 				let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
 				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
-				console.log(file);
+
 				isValid = (designMrn === this.design.designId) && (designVersion === this.design.version);
-				let isWKTValid = this.isWKTValid(file);
 
 				if (!isValid) {
 					this.errorText  = "The MRN and/or version referencing the Design in the XML, doesn't match the MRN and/or version of the chosen Design.<BR><BR>"
 						+ "Chosen Design: " + this.design.designId + ", version: " + this.design.version + "<BR>"
 						+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
 				}
-				if (!isWKTValid) {
-					this.errorText = "The WKT for the coverage area(s) of the instance XML is invalid. This can be due to "
-						+ "invalid characters and/or unnecessary whitespaces.";
+
+				let isWKTValid;
+				try {
+					isWKTValid = this.isWKTValid(file);
+					if (!isWKTValid) {
+						let errorText = "The WKT(s) for the coverage area(s) of the instance XML is invalid. This can be due to "
+							+ "invalid characters and/or unnecessary whitespaces.<BR>";
+						this.errorText ? this.errorText += errorText : this.errorText = errorText;
+						isValid = false;
+					}
+				} catch (error) {
+					let errorText = "The WKTs for the coverage areas cannot be read. This can be due to "
+						+ "them being missing or being invalid.<BR>";
+					this.errorText ? this.errorText += errorText : this.errorText = errorText;
 					isValid = false;
 				}
+
 			} else {
 				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
@@ -156,7 +166,6 @@ export class InstanceNewComponent implements OnInit {
 
 		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
 		let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
-		console.log(coversAreas);
 
 		let isValid = true;
 		let areas = [];

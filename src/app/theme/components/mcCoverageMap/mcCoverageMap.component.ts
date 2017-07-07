@@ -9,6 +9,7 @@ import {
   ViewEncapsulation
 } from "@angular/core";
 import * as ol from "openlayers";
+import set = Reflect.set;
 
 @Component({
   selector: 'mc-coverage-map',
@@ -76,7 +77,6 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
       for(let propName in changes) {
         if (propName === 'WKTs' && this.WKTs !== null) {
           this.makeFeatures();
-          this.map.render();
           this.fitMap();
         }
       }
@@ -108,6 +108,10 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
   }
 
   private makeFeatures(): void {
+    if (this.vector) {
+      this.vector.getSource().clear();
+      this.features = [];
+    }
     let format = new ol.format.WKT();
     this.WKTs.forEach(WKT => {
       this.features.push(format.readFeature(WKT, {
@@ -115,6 +119,11 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
         featureProjection: 'EPSG:3857'
       }));
     });
+    if (this.vector) {
+      console.log(this.WKTs);
+      this.vector.getSource().addFeatures(this.features);
+      this.extent = this.vector.getSource().getExtent();
+    }
   }
 
   @HostListener("window:resize", [])
