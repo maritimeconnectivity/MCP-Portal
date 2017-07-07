@@ -77,7 +77,6 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
       for(let propName in changes) {
         if (propName === 'WKTs' && this.WKTs !== null) {
           this.makeFeatures();
-          this.map.render();
           this.fitMap();
         }
       }
@@ -109,22 +108,22 @@ export class McCoverageMap implements OnInit, OnChanges, OnDestroy {
   }
 
   private makeFeatures(): void {
+    if (this.vector) {
+      this.vector.getSource().clear();
+      this.features = [];
+    }
     let format = new ol.format.WKT();
     this.WKTs.forEach(WKT => {
       this.features.push(format.readFeature(WKT, {
         dataProjection: 'EPSG:4326',
         featureProjection: 'EPSG:3857'
       }));
-      if (this.vector) {
-        console.log(this.WKTs);
-        this.vector.getSource().clear();
-        setTimeout(() => { // TODO: delete old features before making new ones
-          this.vector.setVisible(false);
-          this.vector.setVisible(true);
-        }, 50);
-        this.extent = this.vector.getSource().getExtent();
-      }
     });
+    if (this.vector) {
+      console.log(this.WKTs);
+      this.vector.getSource().addFeatures(this.features);
+      this.extent = this.vector.getSource().getExtent();
+    }
   }
 
   @HostListener("window:resize", [])

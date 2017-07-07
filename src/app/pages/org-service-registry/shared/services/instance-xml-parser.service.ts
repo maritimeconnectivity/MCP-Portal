@@ -36,11 +36,16 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 
 			if (coversAreas.length > 0) {
 				for (let i = 0; i < coversAreas.length; i++) {
-					let node = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0];
 					let area = null;
-					if (node) {
-						area = node.nodeValue.replace(/\s+\(\(/, '\(\(');
-					} else {
+
+					try {
+						let node = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0];
+						if (node) {
+							area = node.nodeValue.replace(/\s+\(\(/, '\(\(');
+						} else {
+							area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
+						}
+					} catch (error) {
 						area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
 					}
 					areas.push(area);
