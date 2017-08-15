@@ -25,7 +25,6 @@ import {
 	SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {UrlValidator} from "../../../../../theme/validators/url.validator";
 import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
@@ -373,7 +372,7 @@ export class InstanceNewComponent implements OnInit {
 			this.formControlModels.push(formControlModelSelect);
 
 			if (this.useOIDCRedirect) {
-				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid. E.g. http://www.maritimecp.net'};
+				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
 				formControl = new FormControl('', formControlModel.validator);
 				this.registerForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);
