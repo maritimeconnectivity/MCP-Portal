@@ -188,7 +188,13 @@ export class InstanceNewComponent implements OnInit {
 				let prefix = xmlData.documentElement.prefix;
 				nodeElement = coversAreas[i].getElementsByTagName(prefix + ":" + 'geometryAsWKT');
 			}
-			let area = nodeElement[0].childNodes[0].nodeValue;
+			let node = nodeElement[0].childNodes[0];
+			let area = null;
+			if (node) {
+				area = node.nodeValue;
+			} else {
+				area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
+			}
 
 			if (area.match(/\s+\(\(/) || area.includes('\+')) {
 				return false;

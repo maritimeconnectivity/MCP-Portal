@@ -31,7 +31,7 @@ export class DevicesService implements OnInit {
 		let orgMrn = this.authService.authState.orgMrn;
 		let sort = SortingHelper.sortingForDevices();
 		// TODO: do paging properly
-		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn, 0, 100, sort);
+		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn, 0,300, sort);
 	}
 
 	public createDevice(device:Device) :Observable<Device>{

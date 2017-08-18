@@ -135,7 +135,7 @@ export class DesignsService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForDesigns();
-			this.designsApi.searchDesignsUsingGET(query,0,100, sort).subscribe(
+			this.designsApi.searchDesignsUsingGET(query,0,300, sort).subscribe(
 				designs => {
 					for (let design of designs) {
 						design.description = this.getDescription(design);
@@ -252,7 +252,7 @@ export class DesignsService implements OnInit {
 		   }
 		   // TODO FIXME Hotfix. This pagination should be done the right way
 		   let sort = SortingHelper.sortingForDesigns();
-		   this.designsApi.searchDesignsUsingGET(query,0,100, sort).subscribe(
+		   this.designsApi.searchDesignsUsingGET(query,0,300, sort).subscribe(
 			   designs => {
 				   var designsFiltered: Array<Design> = [];
 				   for (let design of designs) {

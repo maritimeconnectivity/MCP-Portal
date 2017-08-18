@@ -180,7 +180,7 @@ export class SpecificationsService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForSpecifications();
-			this.specificationsApi.searchSpecificationsUsingGET(query,0,100, sort).subscribe(
+			this.specificationsApi.searchSpecificationsUsingGET(query,0,300, sort).subscribe(
 				specifications => {
 					// TODO delete this again, when description is part of the json
 					for (let specification of specifications) {
