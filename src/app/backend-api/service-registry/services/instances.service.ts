@@ -308,11 +308,8 @@ export class InstancesService implements OnInit {
 	      console.log("PARSE ERROR: ", instance);
 	      return 'Parse error';
       }
-      var parser = new DOMParser();
-      let xmlString =  instance.instanceAsXml.content;
-      var xmlData = parser.parseFromString(xmlString, instance.instanceAsXml.contentContentType);
 
-      return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
+      return this.xmlInstanceParser.getDescription(instance.instanceAsXml);
     } catch ( error ) {
       return '';
     }

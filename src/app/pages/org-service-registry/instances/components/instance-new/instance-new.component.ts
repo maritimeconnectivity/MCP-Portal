@@ -28,7 +28,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
-import {McCoverageMap} from "../../../../../theme/components/mcCoverageMap/mcCoverageMap.component";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
 @Component({
@@ -160,17 +159,37 @@ export class InstanceNewComponent implements OnInit {
 	}
 
 	private isWKTValid(file: Xml): boolean {
-  		var parser = new DOMParser();
-  		var xmlData = parser.parseFromString(file.content, file.contentContentType);
+  	var parser = new DOMParser();
 
-		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
-		let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
+		let xmlString = file.content.split('\+').join(''); // remove +
+		var xmlData = parser.parseFromString(xmlString, file.contentContentType);
+
+		let coversAreasRootElement = xmlData.getElementsByTagName('coversAreas');
+		if (coversAreasRootElement.length == 0) {
+			let prefix = xmlData.documentElement.prefix;
+			coversAreasRootElement = xmlData.getElementsByTagName(prefix + ":" + 'coversAreas');
+		}
+
+		let coversAreasRoot = coversAreasRootElement[0];
+
+		let coversAreasElement = coversAreasRoot.getElementsByTagName('coversArea');
+		if (coversAreasElement.length == 0) {
+			let prefix = xmlData.documentElement.prefix;
+			coversAreasElement = coversAreasRoot.getElementsByTagName(prefix + ":" + 'coversArea');
+		}
+		let coversAreas = coversAreasElement;
 
 		let isValid = true;
 		let areas = [];
 
 		for (let i = 0; i < coversAreas.length; i++) {
-			let area = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0].nodeValue;
+			let nodeElement = coversAreasRoot.getElementsByTagName('geometryAsWKT');
+			if (nodeElement.length == 0) {
+				let prefix = xmlData.documentElement.prefix;
+				nodeElement = coversAreas[i].getElementsByTagName(prefix + ":" + 'geometryAsWKT');
+			}
+			let area = nodeElement[0].childNodes[0].nodeValue;
+
 			if (area.match(/\s+\(\(/) || area.includes('\+')) {
 				return false;
 			} else {

@@ -307,11 +307,9 @@ export class DesignsService implements OnInit {
       	console.log("PARSE ERROR: ", design);
         return 'Parse error';
       }
-      var parser = new DOMParser();
-      let xmlString =  design.designAsXml.content;
-      var xmlData = parser.parseFromString(xmlString, design.designAsXml.contentContentType);
 
-      return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
+
+      return this.xmlDesignParser.getDescription(design.designAsXml);
     } catch ( error ) {
       return '';
     }

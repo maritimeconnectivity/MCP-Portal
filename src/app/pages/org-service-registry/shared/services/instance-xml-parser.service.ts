@@ -29,17 +29,33 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 
 		var areas = [];
 
-		let coversAreasRoot = xmlData.getElementsByTagName('coversAreas')[0];
+		let coversAreasRootElement = xmlData.getElementsByTagName('coversAreas');
+		if (coversAreasRootElement.length == 0) {
+			let prefix = xmlData.documentElement.prefix;
+			coversAreasRootElement = xmlData.getElementsByTagName(prefix + ":" + 'coversAreas');
+		}
 
+		let coversAreasRoot = coversAreasRootElement[0];
 		if (coversAreasRoot) {
-			let coversAreas = coversAreasRoot.getElementsByTagName('coversArea');
+			let coversAreasElement = coversAreasRoot.getElementsByTagName('coversArea');
+			if (coversAreasElement.length == 0) {
+				let prefix = xmlData.documentElement.prefix;
+				coversAreasElement = coversAreasRoot.getElementsByTagName(prefix + ":" + 'coversArea');
+			}
+			let coversAreas = coversAreasElement;
 
 			if (coversAreas.length > 0) {
 				for (let i = 0; i < coversAreas.length; i++) {
 					let area = null;
 
 					try {
-						let node = coversAreas[i].getElementsByTagName('geometryAsWKT')[0].childNodes[0];
+						let nodeElement = coversAreasRoot.getElementsByTagName('geometryAsWKT');
+						if (nodeElement.length == 0) {
+							let prefix = xmlData.documentElement.prefix;
+							nodeElement = coversAreas[i].getElementsByTagName(prefix + ":" + 'geometryAsWKT');
+						}
+
+						let node = nodeElement[0].childNodes[0];
 						if (node) {
 							area = node.nodeValue.replace(/\s+\(\(/, '\(\(');
 						} else {
