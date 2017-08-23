@@ -178,7 +178,7 @@ export class InstancesService implements OnInit {
 			}
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let sort = SortingHelper.sortingForInstances();
-			this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
 				instances => {
 					var instancesFiltered: Array<Instance> = [];
 					for (let instance of instances) {
@@ -227,7 +227,7 @@ export class InstancesService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForInstances();
-			this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
 				instances => {
 					for (let instance of instances) {
 						instance.description = this.getDescription(instance);
@@ -246,7 +246,7 @@ export class InstancesService implements OnInit {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
 	    let query = QueryHelper.generateQueryStringForDesign(designId);
 	    let sort = SortingHelper.sortingForInstances();
-	    this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+	    this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
 			    for (let instance of instances) {
