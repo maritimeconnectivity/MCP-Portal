@@ -177,6 +177,13 @@ export class InstanceNewComponent implements OnInit {
 			let prefix = xmlData.documentElement.prefix;
 			coversAreasElement = coversAreasRoot.getElementsByTagName(prefix + ":" + 'coversArea');
 		}
+
+		// no coversArea? Then probably using unlocodes, thus we don't show map
+		if (!coversAreasElement || coversAreasElement.length == 0) {
+			this.WKTs = null;
+			return true
+		}
+
 		let coversAreas = coversAreasElement;
 
 		let isValid = true;
@@ -214,6 +221,7 @@ export class InstanceNewComponent implements OnInit {
 
 	private resetXmlFile(){
 		this.xml = null;
+		this.WKTs = null;
 		this.fileUploadXml.resetFileSelection();
 	}
 

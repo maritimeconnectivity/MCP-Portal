@@ -22,6 +22,7 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 		return this.xmlParserService.getValueFromField('URL', xml);
 	}
 
+	// Returns null if no coversArea is defined. For example if using unlocodes
 	public getGeometriesAsWKT(xml: Xml): Array<string> {
 		var parser = new DOMParser();
 		let xmlString = xml.content.split('\+').join(''); // remove +
@@ -42,6 +43,12 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 				let prefix = xmlData.documentElement.prefix;
 				coversAreasElement = coversAreasRoot.getElementsByTagName(prefix + ":" + 'coversArea');
 			}
+
+			// no coversArea? Then probably using unlocodes, thus we don't provide an area
+			if (!coversAreasElement || coversAreasElement.length == 0) {
+				return null;
+			}
+
 			let coversAreas = coversAreasElement;
 
 			if (coversAreas.length > 0) {
