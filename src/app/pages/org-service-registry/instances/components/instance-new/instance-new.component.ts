@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
+import {Component, OnInit, ViewChild, ViewEncapsulation} from "@angular/core";
+import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
@@ -18,11 +18,13 @@ import {IdServicesService} from "../../../../../backend-api/identity-registry/se
 import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {
-	McFormControlModel, SelectModel,
-	McFormControlType, McFormControlModelSelect, McFormControlModelCheckbox
+	McFormControlModel,
+	McFormControlModelCheckbox,
+	McFormControlModelSelect,
+	McFormControlType,
+	SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {FormGroup, FormControl, Validators, FormBuilder} from "@angular/forms";
-import {UrlValidator} from "../../../../../theme/validators/url.validator";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
@@ -67,6 +69,7 @@ export class InstanceNewComponent implements OnInit {
 	private useOIDCRedirect:boolean = true;
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
+	public WKTs: Array<string>;
 
   constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
   }
@@ -78,7 +81,7 @@ export class InstanceNewComponent implements OnInit {
     this.generateForm();
     this.loadMyOrganization();
     this.loadDesign();
-	  this.updateUI();
+    this.updateUI();
   }
 
   public isFormValid() {
@@ -117,6 +120,7 @@ export class InstanceNewComponent implements OnInit {
 			if (isValid) {
 				let designMrn = this.xmlParser.getMrnForDesignInInstance(file);
 				let designVersion = this.xmlParser.getVersionForDesignInInstance(file);
+
 				isValid = (designMrn === this.design.designId) && (designVersion === this.design.version);
 
 				if (!isValid) {
@@ -124,6 +128,23 @@ export class InstanceNewComponent implements OnInit {
 						+ "Chosen Design: " + this.design.designId + ", version: " + this.design.version + "<BR>"
 						+ "Xml-parsed Design: " + designMrn + ", version: " + designVersion + "<BR>";
 				}
+
+				let isWKTValid;
+				try {
+					isWKTValid = this.isWKTValid(file);
+					if (!isWKTValid) {
+						let errorText = "The WKT(s) for the coverage area(s) of the instance XML is invalid. This can be due to "
+							+ "invalid characters and/or unnecessary whitespaces.<BR>";
+						this.errorText ? this.errorText += errorText : this.errorText = errorText;
+						isValid = false;
+					}
+				} catch (error) {
+					let errorText = "The WKTs for the coverage areas cannot be read. This can be due to "
+						+ "them being missing or being invalid.<BR>";
+					this.errorText ? this.errorText += errorText : this.errorText = errorText;
+					isValid = false;
+				}
+
 			} else {
 				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
 					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
@@ -137,8 +158,70 @@ export class InstanceNewComponent implements OnInit {
 		}
 	}
 
+	private isWKTValid(file: Xml): boolean {
+  	var parser = new DOMParser();
+
+		let xmlString = file.content.split('\+').join(''); // remove +
+		var xmlData = parser.parseFromString(xmlString, file.contentContentType);
+
+		let coversAreasRootElement = xmlData.getElementsByTagName('coversAreas');
+		if (coversAreasRootElement.length == 0) {
+			let prefix = xmlData.documentElement.prefix;
+			coversAreasRootElement = xmlData.getElementsByTagName(prefix + ":" + 'coversAreas');
+		}
+
+		let coversAreasRoot = coversAreasRootElement[0];
+
+		let coversAreasElement = coversAreasRoot.getElementsByTagName('coversArea');
+		if (coversAreasElement.length == 0) {
+			let prefix = xmlData.documentElement.prefix;
+			coversAreasElement = coversAreasRoot.getElementsByTagName(prefix + ":" + 'coversArea');
+		}
+
+		// no coversArea? Then probably using unlocodes, thus we don't show map
+		if (!coversAreasElement || coversAreasElement.length == 0) {
+			this.WKTs = null;
+			return true
+		}
+
+		let coversAreas = coversAreasElement;
+
+		let isValid = true;
+		let areas = [];
+
+		for (let i = 0; i < coversAreas.length; i++) {
+			let nodeElement = coversAreasRoot.getElementsByTagName('geometryAsWKT');
+			if (nodeElement.length == 0) {
+				let prefix = xmlData.documentElement.prefix;
+				nodeElement = coversAreas[i].getElementsByTagName(prefix + ":" + 'geometryAsWKT');
+			}
+			let area = null;
+			if (nodeElement && nodeElement[0]) {
+				let node = nodeElement[0].childNodes[0];
+				if (node) {
+					area = node.nodeValue.replace(/\s+\(\(/, '\(\(');
+				} else {
+					area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
+				}
+			} else {
+				area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
+			}
+
+			if (area.match(/\s+\(\(/) || area.includes('\+')) {
+				return false;
+			} else {
+				areas.push(area);
+			}
+		}
+		if (isValid) {
+			this.WKTs = areas;
+		}
+		return isValid;
+	}
+
 	private resetXmlFile(){
 		this.xml = null;
+		this.WKTs = null;
 		this.fileUploadXml.resetFileSelection();
 	}
 
@@ -326,7 +409,7 @@ export class InstanceNewComponent implements OnInit {
 			this.formControlModels.push(formControlModelSelect);
 
 			if (this.useOIDCRedirect) {
-				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid. E.g. http://www.maritimecp.net'};
+				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
 				formControl = new FormControl('', formControlModel.validator);
 				this.registerForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);

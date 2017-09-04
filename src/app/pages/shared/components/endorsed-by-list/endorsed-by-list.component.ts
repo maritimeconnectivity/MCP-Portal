@@ -18,6 +18,8 @@ export class EndorsedByListComponent {
 	@Input() isLoading:boolean;
 	@Input() title:string;
 
+	private cardTitle:string;
+
 	private oldEndorsements:Array<Endorsement>;
 	public entityImageList: Array<EntityImageModel>;
 
@@ -25,10 +27,12 @@ export class EndorsedByListComponent {
   }
 
   ngOnInit() {
+  	this.cardTitle = this.title;
 	  this.generateEntityImageList();
   }
 
 	ngOnChanges() {
+		this.cardTitle = this.title;
 		this.generateEntityImageList();
 	}
 

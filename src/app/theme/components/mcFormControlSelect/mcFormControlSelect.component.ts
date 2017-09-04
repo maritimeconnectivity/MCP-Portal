@@ -25,6 +25,10 @@ export class McFormControlSelect {
 		this.changeDetector.detectChanges();
 	}
 
+	ngOnDestroy() {
+		this.changeDetector.detach();
+	}
+
 	public isValid():boolean {
 		var isSelected = this.selectedValue !== undefined;
 		if (isSelected) {

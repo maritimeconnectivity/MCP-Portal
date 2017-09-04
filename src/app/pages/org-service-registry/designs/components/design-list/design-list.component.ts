@@ -18,6 +18,7 @@ const SEARCH_KEY = 'DesignListComponent';
 })
 export class DesignListComponent implements OnInit {
 	public searchKey = SEARCH_KEY;
+	private initialSearchRequest: ServiceRegistrySearchRequest;
 	public isSearching = false;
   public organization: Organization;
   public designs: Array<Design>;
@@ -47,8 +48,10 @@ export class DesignListComponent implements OnInit {
 				this.designs = designs;
 				this.isSearching = false;
 				this.isLoading = false;
+				this.initialSearchRequest = searchRequest;
 			},
 			err => {
+				this.searchRequestsService.addSearchRequest(SEARCH_KEY, this.initialSearchRequest);
 				this.isSearching = false;
 				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to search designs', MCNotificationType.Error, err);
@@ -58,6 +61,7 @@ export class DesignListComponent implements OnInit {
 
   private loadDesigns() {
 	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  this.initialSearchRequest = searchRequest;
 	  if (searchRequest) {
 		  this.searchDesigns(searchRequest);
 	  } else {

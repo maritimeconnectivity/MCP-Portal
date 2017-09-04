@@ -36,7 +36,7 @@ export class UsersService implements OnInit {
 		let orgMrn = this.authService.authState.orgMrn;
 		let sort = SortingHelper.sortingForUsers();
 		// TODO: do paging properly
-		return this.userApi.getOrganizationUsersUsingGET(orgMrn, 0, 100, sort);
+		return this.userApi.getOrganizationUsersUsingGET(orgMrn, 0,300, sort);
 	}
 
 	public createUserForOrg(orgMrn: string, user: User) : Observable<User> {

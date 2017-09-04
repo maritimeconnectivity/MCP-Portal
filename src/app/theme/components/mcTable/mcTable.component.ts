@@ -52,7 +52,7 @@ export class McTable {
   }
 
   private isWindowToSmall():boolean {
-    return window.innerWidth <= layoutSizes.resWidthCollapseSidebar;
+    return window.innerWidth <= layoutSizes.resWidthCollapseSidebar + 200; // Sorry for magic number. Just works the best
   }
 
   public hasRowData():boolean {

@@ -25,6 +25,7 @@ export class SpecificationListComponent implements OnInit {
   public onCreate: Function;
   public onGotoSpec: Function;
 	public cardTitle:string;
+	private initialSearchRequest: ServiceRegistrySearchRequest;
   constructor(private searchRequestsService:SrSearchRequestsService, private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
   }
 
@@ -49,8 +50,10 @@ export class SpecificationListComponent implements OnInit {
 			  this.specifications = specifications;
 			  this.isSearching = false;
 			  this.isLoading = false;
+			  this.initialSearchRequest = searchRequest;
 		  },
 		  err => {
+			  this.searchRequestsService.addSearchRequest(SEARCH_KEY, this.initialSearchRequest);
 			  this.isSearching = false;
 			  this.isLoading = false;
 			  this.notifications.generateNotification('Error', 'Error when trying to search specifications', MCNotificationType.Error, err);
@@ -71,6 +74,7 @@ export class SpecificationListComponent implements OnInit {
 
   private loadSpecifications() {
   	let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+  	this.initialSearchRequest = searchRequest;
   	if (searchRequest) {
   		this.searchSpecifications(searchRequest);
 	  } else {

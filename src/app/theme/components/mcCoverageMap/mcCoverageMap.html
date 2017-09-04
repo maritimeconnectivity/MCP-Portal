@@ -1,0 +1,5 @@
+<div>
+    <button type="button" id="expand-btn" class="btn btn-primary btn-raised" [hidden]="hideButton" (click)="expandMap()">{{btnText}}</button>
+    <div id="map" class="map" [ngStyle]="{'width': size, 'height': size}"></div>
+</div>
+<sk-fading-circle [isRunning]="isLoading"></sk-fading-circle>

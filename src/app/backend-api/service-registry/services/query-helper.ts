@@ -6,11 +6,11 @@ enum QueryOperatorString {
 	OR = <any> ' OR '
 }
 enum QueryParameterString {
-	designId = <any> ('designId'+EQUAL_STRING),
-	specificationId = <any> ('specificationId'+EQUAL_STRING),
-	organizationId = <any> ('organizationId'+EQUAL_STRING),
+	designId = <any> ('+designId'+EQUAL_STRING),
+	specificationId = <any> ('+specificationId'+EQUAL_STRING),
+	organizationId = <any> ('+organizationId'+EQUAL_STRING),
 	keywords = <any> ('keywords'+EQUAL_STRING),
-	version = <any> ('version'+EQUAL_STRING)
+	version = <any> ('+version'+EQUAL_STRING)
 }
 export class QueryHelper {
 
@@ -28,7 +28,7 @@ export class QueryHelper {
 			if (parameterAdded) {
 				queryString += QueryOperatorString.AND;
 			}
-			queryString += QueryParameterString.organizationId + QueryHelper.escapeQueryString(searchRequest.registeredBy);
+			queryString += QueryParameterString.organizationId + "\"" + QueryHelper.escapeQueryString(searchRequest.registeredBy) + "\"";
 		}
 		return queryString.length > 0 ? queryString : '*';
 	}
@@ -40,7 +40,7 @@ export class QueryHelper {
 		if (version) {
 			versionQuery = QueryOperatorString.AND + QueryParameterString.version + QueryHelper.escapeQueryString(version);
 		}
-		queryString = QueryParameterString.designId + QueryHelper.escapeQueryString(designId) + versionQuery;
+		queryString = QueryParameterString.designId + "\"" + QueryHelper.escapeQueryString(designId) + "\"" + versionQuery;
 
 		return queryString;
 	}
@@ -52,7 +52,7 @@ export class QueryHelper {
 		if (version) {
 			versionQuery = QueryOperatorString.AND + QueryParameterString.version + QueryHelper.escapeQueryString(version);
 		}
-		queryString = QueryParameterString.specificationId + QueryHelper.escapeQueryString(specificationId) + versionQuery;
+		queryString = QueryParameterString.specificationId + "\"" + QueryHelper.escapeQueryString(specificationId) + "\"" + versionQuery;
 
 		return queryString;
 	}

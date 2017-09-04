@@ -17,7 +17,7 @@ export class VesselsService {
 		let orgMrn = this.authService.authState.orgMrn;
 		let sort = SortingHelper.sortingForVessels();
 		// TODO: do paging properly
-		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn, 0, 100, sort);
+		return this.vesselApi.getOrganizationVesselsUsingGET(orgMrn, 0,300, sort);
 	}
 
 	public deleteVessel(vesselMrn:string):Observable<any> {

@@ -28,6 +28,10 @@ import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
 
+// Fix for iOS < 10
+import 'intl';
+import 'intl/locale-data/jsonp/en';
+
 // Typescript emit helpers polyfill
 import 'ts-helpers';
 

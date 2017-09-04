@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class ElasticsearchindexresourceApi {
-    protected basePath = 'https://sr-staging.maritimecloud.net';
+    protected basePath = 'https://sr-test.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -72,7 +72,7 @@ export class ElasticsearchindexresourceApi {
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain'
+            'application/json;charset=UTF-8'
         ];
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({

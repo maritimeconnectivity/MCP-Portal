@@ -237,7 +237,10 @@ a {
 .align-center {
   text-align: center;
 }
-
+.list-endpoint {
+  word-break: break-all;
+  min-width: 180px;
+}
 .amcharts-chart-div > a {
   font-size: 6px !important;
 }

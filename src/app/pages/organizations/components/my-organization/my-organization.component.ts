@@ -39,6 +39,11 @@ export class MyOrganization implements OnInit {
     );
   }
 
+
+	ngOnDestroy() {
+		this.changeDetector.detach();
+	}
+
   public logoLoaded() {
 	  this.isLoading = false;
 	  this.changeDetector.detectChanges();

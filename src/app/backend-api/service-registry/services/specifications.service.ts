@@ -5,24 +5,23 @@ import {AuthService} from "../../../authentication/services/auth.service";
 import {ServicespecificationresourceApi} from "../autogen/api/ServicespecificationresourceApi";
 import {Specification} from "../autogen/model/Specification";
 import {XmlresourceApi} from "../autogen/api/XmlresourceApi";
-import {XmlParserService} from "../../../shared/xml-parser.service";
 import {DocresourceApi} from "../autogen/api/DocresourceApi";
 import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/service-registry-search/ServiceRegistrySearchRequest";
 import {QueryHelper} from "./query-helper";
 import {EndorsementsService, EndorsementSearchResult} from "../../endorsements/services/endorsements.service";
-import {forEach} from "@angular/router/src/utils/collection";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {SortingHelper} from "../../shared/SortingHelper";
 import {Xml} from "../autogen/model/Xml";
 import {Doc} from "../autogen/model/Doc";
 import {XmlsService} from "./xmls.service";
 import {DocsService} from "./docs.service";
-import {UserError} from "../../../shared/UserError";
+import {PortalUserError, UserError} from "../../../shared/UserError";
+import {SpecificationXmlParser} from "../../../pages/org-service-registry/shared/services/specification-xml-parser.service";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
   private chosenSpecification: Specification;
-  constructor(private docsService:DocsService, private xmlsService:XmlsService, private endorsementsService:EndorsementsService, private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: XmlParserService) {
+  constructor(private docsService:DocsService, private xmlsService:XmlsService, private endorsementsService:EndorsementsService, private specificationsApi: ServicespecificationresourceApi, private xmlApi: XmlresourceApi, private docApi: DocresourceApi, private authService: AuthService, private xmlParser: SpecificationXmlParser) {
   }
 
   ngOnInit() {
@@ -80,7 +79,7 @@ export class SpecificationsService implements OnInit {
     specification.specAsXml.comment = '';
     return Observable.create(observer => {
 	    this.getSpecification(specification.specificationId, specification.version).subscribe(spec => {
-			    observer.error(new UserError('Specification already exists with same MRN and version.'));
+			    observer.error(new PortalUserError('Specification already exists with same MRN and version.'));
 		    },
 		    err => {
 			    if (err.status == 404) { // The specification doesn't exist - create it
@@ -181,7 +180,7 @@ export class SpecificationsService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForSpecifications();
-			this.specificationsApi.searchSpecificationsUsingGET(query,0,100, sort).subscribe(
+			this.specificationsApi.searchSpecificationsUsingGET(query,0,300, sort).subscribe(
 				specifications => {
 					// TODO delete this again, when description is part of the json
 					for (let specification of specifications) {
@@ -238,11 +237,8 @@ export class SpecificationsService implements OnInit {
 	      console.log("PARSE ERROR: ", specification);
 	      return 'Parse error';
       }
-      var parser = new DOMParser();
-      let xmlString =  specification.specAsXml.content;
-      var xmlData = parser.parseFromString(xmlString, specification.specAsXml.contentContentType);
 
-      return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
+      return this.xmlParser.getDescription(specification.specAsXml)
     } catch ( error ) {
       return '';
     }

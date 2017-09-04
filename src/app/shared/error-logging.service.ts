@@ -5,6 +5,7 @@ import {BugReport} from "../backend-api/identity-registry/autogen/model/BugRepor
 import {AuthService} from "../authentication/services/auth.service";
 import {BugReportAttachment} from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
 import {McHttpService} from "../backend-api/shared/mc-http.service";
+import {PortalUserError, UserError} from "./UserError";
 
 export interface MCErrorLoggerOptions {
 	makeBugReportFromError: boolean;
@@ -25,18 +26,29 @@ export class ErrorLoggingService {
   public logError( error: any, showToUser:boolean ) : void {
     this.logErrorWithMessage(null, error, showToUser);
   }
-	public logErrorWithMessage(message:string, error: any, showToUser:boolean ) : void {
-  	if (this.isCachingError(message, error)) {
+	public logErrorWithMessage(message:string, err: any, showToUser:boolean ) : void {
+  	let originalError = err;
+		let isUserError = err instanceof UserError;
+		if (isUserError && err.originalError) {
+			originalError = err.originalError;
+		}
+  	if (this.isCachingError(message, originalError)) {
 		  AuthService.handleCacheError();
 		  return;
 	  }
-		this.sendToConsole(error);
+		this.sendToConsole(originalError);
 		if (showToUser) {
-			this.sendToUser(error);
+			this.sendToUser(originalError);
 		}
-		let isXmlError = message && message.indexOf("Error trying to parse required field") > -1;
-		if (this.options.makeBugReportFromError && !IS_DEV && !isXmlError) {
-			this.sendToServer(message, error);
+
+		var sendBugReport = true;
+		if ( err instanceof PortalUserError) {
+			sendBugReport = false;
+		}	else if (isUserError) {
+			sendBugReport = err.sendBugReport;
+		}
+		if (this.options.makeBugReportFromError && !IS_DEV && sendBugReport) {
+			this.sendToServer(message, originalError);
 		}
 	}
 
