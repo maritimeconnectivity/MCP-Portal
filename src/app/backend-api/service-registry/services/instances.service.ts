@@ -16,7 +16,7 @@ import {ServiceRegistrySearchRequest} from "../../../pages/shared/components/ser
 import {EndorsementSearchResult, EndorsementsService} from "../../endorsements/services/endorsements.service";
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {AuthService} from "../../../authentication/services/auth.service";
-import {UserError} from "../../../shared/UserError";
+import {PortalUserError, UserError} from "../../../shared/UserError";
 
 @Injectable()
 export class InstancesService implements OnInit {
@@ -79,7 +79,7 @@ export class InstancesService implements OnInit {
     instance.instanceAsXml.comment = '';
     return Observable.create(observer => {
     	this.getInstance(instance.instanceId, instance.version).subscribe(ins => {
-			    observer.error(new UserError('Instance already exists with same MRN and version.'));
+			    observer.error(new PortalUserError('Instance already exists with same MRN and version.'));
 	      },
 		    err => {
 			    if (err.status == 404) { // The instance doesn't exist - create it
@@ -178,7 +178,7 @@ export class InstancesService implements OnInit {
 			}
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let sort = SortingHelper.sortingForInstances();
-			this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
 				instances => {
 					var instancesFiltered: Array<Instance> = [];
 					for (let instance of instances) {
@@ -227,7 +227,7 @@ export class InstancesService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForInstances();
-			this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
 				instances => {
 					for (let instance of instances) {
 						instance.description = this.getDescription(instance);
@@ -246,7 +246,7 @@ export class InstancesService implements OnInit {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
 	    let query = QueryHelper.generateQueryStringForDesign(designId);
 	    let sort = SortingHelper.sortingForInstances();
-	    this.instancesApi.searchInstancesUsingGET(query,0,100,undefined,undefined,sort).subscribe(
+	    this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
 			    for (let instance of instances) {
@@ -308,11 +308,8 @@ export class InstancesService implements OnInit {
 	      console.log("PARSE ERROR: ", instance);
 	      return 'Parse error';
       }
-      var parser = new DOMParser();
-      let xmlString =  instance.instanceAsXml.content;
-      var xmlData = parser.parseFromString(xmlString, instance.instanceAsXml.contentContentType);
 
-      return xmlData.getElementsByTagName('description')[0].childNodes[0].nodeValue;
+      return this.xmlInstanceParser.getDescription(instance.instanceAsXml);
     } catch ( error ) {
       return '';
     }

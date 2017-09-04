@@ -51,7 +51,7 @@ export class OrganizationsService implements OnInit {
 		// Should never come to this
 		return Observable.create(observer => {
 			// TODO: do paging properly
-			this.organizationApi.getUnapprovedOrganizationsUsingGET(0,100).subscribe(
+			this.organizationApi.getUnapprovedOrganizationsUsingGET(0,300).subscribe(
 				pageOrganization => {
 					this.unapprovedOrganizations = pageOrganization.content;
 					var foundOrganization = null;
@@ -76,7 +76,7 @@ export class OrganizationsService implements OnInit {
 	public getUnapprovedOrganizations () : Observable<Array<Organization>> {
 		return Observable.create(observer => {
 			// TODO: do paging properly
-			this.organizationApi.getUnapprovedOrganizationsUsingGET(0, 100).subscribe(
+			this.organizationApi.getUnapprovedOrganizationsUsingGET(0,300).subscribe(
 				pageOrganization => {
 					this.unapprovedOrganizations = pageOrganization.content;
 					observer.next(pageOrganization.content);
@@ -170,7 +170,7 @@ export class OrganizationsService implements OnInit {
 		return Observable.create(observer => {
 			let sort = SortingHelper.sortingForOrganizations();
 			// TODO: do paging properly
-			this.organizationApi.getOrganizationUsingGET2(0, 100, sort).subscribe(
+			this.organizationApi.getOrganizationUsingGET2(0,300, sort).subscribe(
 				pageOrganization => {
 					this.organizations = pageOrganization.content;
 					observer.next(pageOrganization.content);
@@ -189,7 +189,7 @@ export class OrganizationsService implements OnInit {
 
 		return Observable.create(observer => {
 			// TODO: This should always get all organizations. So make pagesize unlimited. OR maybe build in fetch of next page if searchOrganizationNameFromList returns nothing
-			this.organizationApi.getOrganizationUsingGET2(0, 100).subscribe(
+			this.organizationApi.getOrganizationUsingGET2(0,300).subscribe(
 				pageOrganization => {
 					this.organizations = pageOrganization.content;
 					observer.next(this.searchOrganizationNameFromList(orgMrn));

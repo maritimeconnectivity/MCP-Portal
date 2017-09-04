@@ -11,7 +11,6 @@ import {
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
-import {UrlValidator} from "../../../../../theme/validators/url.validator";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 
@@ -194,7 +193,7 @@ export class ServiceUpdateComponent implements OnInit {
 			this.formControlModels.push(formControlModelSelect);
 
 			if (this.useOIDCRedirect) {
-				formControlModel = {formGroup: this.updateForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.compose([Validators.required, UrlValidator.validate]), errorText:'URI not valid. E.g. http://www.maritimecp.net'};
+				formControlModel = {formGroup: this.updateForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
 				formControl = new FormControl(this.idService.oidcRedirectUri, formControlModel.validator);
 				this.updateForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);

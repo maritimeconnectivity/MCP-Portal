@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Xml} from "../backend-api/service-registry/autogen/model/Xml";
+import {PortalUserError, UserError} from "./UserError";
 
 @Injectable()
 export class XmlParserService {
@@ -13,10 +14,21 @@ export class XmlParserService {
       let xmlString =  xml.content;
       var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
 
-      let innerXmlData = xmlData.getElementsByTagName(outerField)[0];
-      return innerXmlData.getElementsByTagName(fieldToFind)[0].childNodes[0].nodeValue;
+	    let outerElement = xmlData.getElementsByTagName(outerField);
+	    if (outerElement.length == 0) {
+	    	let prefix = xmlData.documentElement.prefix;
+	    	outerElement = xmlData.getElementsByTagName(prefix + ":" + outerField);
+	    }
+
+	    let innerXmlData = outerElement[0];
+	    let innerElement = innerXmlData.getElementsByTagName(fieldToFind);
+	    if (innerElement.length == 0) {
+		    let prefix = xmlData.documentElement.prefix;
+		    innerElement = innerXmlData.getElementsByTagName(prefix + ":" + fieldToFind);
+	    }
+      return innerElement[0].childNodes[0].nodeValue;
     } catch ( error ) {
-      throw new Error("Error trying to parse required field: " + outerField + " -> " + fieldToFind);
+      throw new PortalUserError("Error trying to parse required field: " + outerField + " -> " + fieldToFind);
     }
   }
 
@@ -26,9 +38,14 @@ export class XmlParserService {
       let xmlString =  xml.content;
       var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
 
-      return xmlData.getElementsByTagName(field)[0].childNodes[0].nodeValue;
+	    let innerElement = xmlData.getElementsByTagName(field);
+	    if (innerElement.length == 0) {
+		    let prefix = xmlData.documentElement.prefix;
+		    innerElement = xmlData.getElementsByTagName(prefix + ":" + field);
+	    }
+	    return innerElement[0].childNodes[0].nodeValue;
     } catch ( error ) {
-      throw new Error("Error trying to parse required field: " + field);
+      throw new PortalUserError("Error trying to parse required field: " + field);
     }
   }
 

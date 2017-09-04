@@ -53,6 +53,7 @@ export class DesignDetailsComponent {
 	// Search
 	public isSearchingInstances = false;
 	public searchKey = SEARCH_KEY;
+	private initialSearchRequest: ServiceRegistrySearchRequest;
 
   constructor(private searchRequestsService:SrSearchRequestsService, private endorsementsService:EndorsementsService, private authService: AuthService, private route: ActivatedRoute, private router: Router, private viewModelService: SrViewModelService, private navigationHelperService: NavigationHelperService, private instancesService: InstancesService, private specificationsService: SpecificationsService, private notifications: MCNotificationsService, private designsService: DesignsService, private fileHelperService: FileHelperService, private orgsService: OrganizationsService) {
 
@@ -121,6 +122,7 @@ export class DesignDetailsComponent {
 
   private loadInstances() {
 	  let searchRequest = this.searchRequestsService.getSearchRequest(SEARCH_KEY);
+	  this.initialSearchRequest = searchRequest;
 	  this.searchDesigns(searchRequest);
   }
 
@@ -308,8 +310,10 @@ export class DesignDetailsComponent {
 				this.instances = instances;
 				this.isLoadingInstances = false;
 				this.isSearchingInstances = false;
+				this.initialSearchRequest = searchRequest;
 			},
 			err => {
+				this.searchRequestsService.addSearchRequest(SEARCH_KEY, this.initialSearchRequest);
 				this.isLoadingInstances = false;
 				this.isSearchingInstances = false;
 				this.notifications.generateNotification('Error', 'Error when trying to search instances', MCNotificationType.Error, err);

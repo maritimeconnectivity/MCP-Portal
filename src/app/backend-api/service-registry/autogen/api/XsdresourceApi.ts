@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class XsdresourceApi {
-    protected basePath = 'https://sr-staging.maritimecloud.net';
+    protected basePath = 'https://sr-test.maritimecloud.net';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
@@ -328,16 +328,16 @@ export class XsdresourceApi {
         if (query === null || query === undefined) {
             throw new Error('Required parameter query was null or undefined when calling searchXsdsUsingGET.');
         }
+        if (query !== undefined) {
+            queryParameters.set('query', <any>query);
+        }
+
         if (page !== undefined) {
             queryParameters.set('page', <any>page);
         }
 
         if (size !== undefined) {
             queryParameters.set('size', <any>size);
-        }
-
-        if (query !== undefined) {
-            queryParameters.set('query', <any>query);
         }
 
         if (sort) {
