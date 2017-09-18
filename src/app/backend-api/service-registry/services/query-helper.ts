@@ -7,7 +7,7 @@ enum QueryOperatorString {
 }
 enum QueryParameterString {
 	designId = <any> ('+designId'+EQUAL_STRING),
-	specificationId = <any> ('+specificationId'+EQUAL_STRING),
+	specificationId = <any> ('+specifications.specificationId'+EQUAL_STRING),
 	organizationId = <any> ('+organizationId'+EQUAL_STRING),
 	keywords = <any> ('keywords'+EQUAL_STRING),
 	version = <any> ('+version'+EQUAL_STRING)
