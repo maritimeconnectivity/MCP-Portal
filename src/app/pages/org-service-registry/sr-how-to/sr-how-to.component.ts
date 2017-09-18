@@ -22,7 +22,7 @@ export class SrHowToComponent {
 				this.xsds = xsds;
 			},
 			err => {
-				this.notifications.generateNotification('Error', 'Error when trying to get the user', MCNotificationType.Error, err);
+				this.notifications.generateNotification('Error', 'Error when trying to get the XSDs', MCNotificationType.Error, err);
 			}
 		)
   }
