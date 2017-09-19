@@ -7,8 +7,8 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 import {ActivatedRoute, Router} from "@angular/router";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {
-	McFormControlModel,
-	McFormControlType
+    McFormControlModel, McFormControlModelSelect,
+    McFormControlType, SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
 import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
@@ -274,12 +274,16 @@ export class SpecificationUpdateComponent implements OnInit {
 		this.updateForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel;
+		var formControlModel:McFormControlModelSelect;
 		let disableStatus = this.xml != null || this.doc != null;
+		let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},
+			{label: "released", value: "released", isSelected: false}, {label: "deprecated", value: "deprecated", isSelected: false},
+			{label: "deleted", value: "deleted", isSelected: false}];
+		statusSelect.forEach(status => 	{if (status.value === this.status) status.isSelected = true});
 		if (disableStatus) {
-			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
 		} else {
-			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: ''};
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: ''};
 		}
 		var formControl = new FormControl(this.status, formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.setStatus(param));
