@@ -7,6 +7,7 @@ import {CertificatesService} from "../../../../backend-api/identity-registry/ser
 import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
 import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {FileHelperService} from "../../../../shared/file-helper.service";
+import {CertificateBundle} from "../../../../backend-api/identity-registry/autogen/model/CertificateBundle";
 
 
 @Component({
@@ -20,7 +21,7 @@ export class CertificateIssueNewComponent implements OnInit {
   public entityMrn: string;
   public entityTitle: string;
   public isLoading: boolean;
-  public pemCertificate: PemCertificate;
+  public certificate: CertificateBundle;
 
   public labelValues:Array<LabelValueModel>;
 
@@ -43,14 +44,14 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public zipAndDownload() {
-    this.fileHelper.downloadPemCertificate(this.pemCertificate, this.entityTitle);
+    this.fileHelper.downloadPemCertificate(this.certificate, this.entityTitle);
   }
 
   public issueNew() {
     this.isLoading = true;
     this.certificateService.issueNewCertificate(this.entityType, this.entityMrn).subscribe(
-      pemCertificate => {
-        this.pemCertificate = pemCertificate;
+      certificateBundle => {
+        this.certificate = certificateBundle;
         this.isLoading = false;
       },
       err => {

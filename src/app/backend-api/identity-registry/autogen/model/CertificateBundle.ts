@@ -12,23 +12,13 @@
 
 import * as models from './models';
 
-export interface PageUser {
-    content?: Array<models.User>;
+export interface CertificateBundle {
+    jksKeystore?: string;
 
-    first?: boolean;
+    keystorePassword?: string;
 
-    last?: boolean;
+    pemCertificate?: models.PemCertificate;
 
-    number?: number;
-
-    numberOfElements?: number;
-
-    size?: number;
-
-    sort?: models.Sort;
-
-    totalElements?: number;
-
-    totalPages?: number;
+    pkcs12Keystore?: string;
 
 }
