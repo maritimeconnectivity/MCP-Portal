@@ -1,6 +1,7 @@
 export * from './BugReport';
 export * from './BugReportAttachment';
 export * from './Certificate';
+export * from './CertificateBundle';
 export * from './CertificateRevocation';
 export * from './Device';
 export * from './IdentityProviderAttribute';
