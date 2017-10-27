@@ -6,7 +6,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let tableRow of tableRows; let i = index">
+      <tr class="{{rowClass}}" *ngFor="let tableRow of tableRows; let i = index">
         <td *ngFor="let cell of tableRow.cells" class="{{cell.class}}" (click)="clickedCell(i, cell)">
           <div *ngIf="!cell.actionButtons" [innerHTML]="cell.valueHtml | undefined | truncate:cell.truncateNumber | sanitizeHtml"></div>
           <div *ngIf="cell.actionButtons">
