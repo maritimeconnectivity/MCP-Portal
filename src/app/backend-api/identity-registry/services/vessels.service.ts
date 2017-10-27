@@ -49,4 +49,9 @@ export class VesselsService {
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.vesselApi.revokeVesselCertUsingPOST(orgMrn, vesselMrn, certificateId, certicateRevocation);
 	}
+
+	public getVesselServices(vesselMrn:string) : Observable<any> {
+  		let orgMrn = this.authService.authState.orgMrn;
+  		return this.vesselApi.getVesselServicesUsingGET(orgMrn, vesselMrn);
+	}
 }

@@ -7,6 +7,7 @@ import {AuthService} from "../../../../authentication/services/auth.service";
 import {ServiceViewModel} from "../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
 import {IdServicesService} from "../../../../backend-api/identity-registry/services/id-services.service";
+import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'service-details-view',
@@ -27,12 +28,15 @@ export class ServiceDetailsViewComponent {
 	public labelValues:Array<LabelValueModel>;
 	public entityType: CertificateEntityType;
 	public entityMrn:string;
-	constructor(private fileHelperService:FileHelperService, private authService: AuthService, private servicesService: IdServicesService, private notifications:MCNotificationsService) {
+	public onGotoVessel: Function;
+
+	constructor(private fileHelperService:FileHelperService, private authService: AuthService, private servicesService: IdServicesService, private notifications:MCNotificationsService, private navigationHelperService: NavigationHelperService) {
 
 	}
 
 	ngOnInit() {
 		this.entityType = CertificateEntityType.Service;
+		this.onGotoVessel = this.gotoVessel.bind(this);
 	}
 
 	ngOnChanges() {
@@ -76,6 +80,7 @@ export class ServiceDetailsViewComponent {
 			this.labelValues.push({label: 'MRN', valueHtml: this.service.mrn});
 			this.labelValues.push({label: 'Name', valueHtml: this.service.name});
 			this.labelValues.push({label: 'Permissions', valueHtml: this.service.permissions});
+			this.generateLabelValueForVessel();
 			this.labelValues.push({label: 'Certificate domain name', valueHtml: this.service.certDomainName});
 			if (this.service.oidcRedirectUri) {
 				this.labelValues.push({label: 'OIDC Redirect URI', valueHtml: this.service.oidcRedirectUri});
@@ -90,6 +95,14 @@ export class ServiceDetailsViewComponent {
 			if (this.service.oidcAccessType) {
 				this.labelValues.push({label: 'Access type', valueHtml: ServiceViewModel.getLabelForEnum(this.service.oidcAccessType)});
 			}
+		}
+	}
+
+	private generateLabelValueForVessel() {
+		let vessel = this.service.vessel;
+		if (vessel) {
+			let label = 'Linked vessel';
+			this.labelValues.push({label: label, valueHtml: vessel.name, linkFunction: this.onGotoVessel, linkValue: [vessel.mrn]});
 		}
 	}
 
@@ -111,5 +124,13 @@ export class ServiceDetailsViewComponent {
 
 	private update() {
 		this.updateAction.emit('');
+	}
+
+	private gotoVessel(linkValue:any) {
+		try {
+			this.navigationHelperService.navigateToVessel(linkValue[0]);
+		} catch (error) {
+			this.notifications.generateNotification('Error', 'Error when trying to go to vessel', MCNotificationType.Error, error);
+		}
 	}
 }
