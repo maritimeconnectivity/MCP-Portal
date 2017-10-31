@@ -13,6 +13,9 @@ import {Service} from "../../../../../backend-api/identity-registry/autogen/mode
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
+import {isNullOrUndefined} from "util";
+import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
 
 
 @Component({
@@ -26,16 +29,18 @@ export class ServiceUpdateComponent implements OnInit {
 	public idService:Service;
 	public showModal:boolean = false;
 	public modalDescription:string;
+	private vessel: Vessel;
 	// McForm params
 	private useOIDC:boolean = false;
 	private useOIDCRedirect:boolean = true;
+	private linkToVessel:boolean = false;
 	public isLoading = true;
 	public isUpdating = false;
 	public updateTitle = "Update";
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
-	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private servicesService: IdServicesService, mrnHelper: MrnHelperService) {
+	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private servicesService: IdServicesService, mrnHelper: MrnHelperService, private vesselsService: VesselsService) {
 
 	}
 
@@ -53,6 +58,10 @@ export class ServiceUpdateComponent implements OnInit {
 				this.idService = idService;
 				this.useOIDC = this.idService.oidcAccessType != undefined;
 				this.useOIDCRedirect = (this.idService.oidcAccessType && this.idService.oidcAccessType != OidcAccessTypeEnum.BearerOnly);
+				this.linkToVessel = !isNullOrUndefined(this.idService.vessel);
+				if (this.linkToVessel) {
+					this.vessel = this.idService.vessel;
+				}
 				this.generateForm();
 				this.isLoading = false;
 			},
@@ -152,6 +161,11 @@ export class ServiceUpdateComponent implements OnInit {
 		this.generateForm();
 	}
 
+	private shouldLinkToVessel(linkToVessel: boolean) {
+		this.linkToVessel = linkToVessel;
+		this.generateForm();
+	}
+
 	private generateForm() {
 		this.updateForm = this.formBuilder.group({});
 
@@ -200,6 +214,25 @@ export class ServiceUpdateComponent implements OnInit {
 			}
 
 		}
+
+        let linkToVesselCheckbox:McFormControlModelCheckbox = {state: this.linkToVessel, formGroup: this.updateForm, elementId: 'linkToVessel', controlType: McFormControlType.Checkbox, labelName: 'Link to a vessel'};
+        formControl = new FormControl({value: linkToVesselCheckbox.state, disabled: false}, linkToVesselCheckbox.validator);
+        formControl.valueChanges.subscribe(param => this.shouldLinkToVessel(param));
+        this.updateForm.addControl(linkToVesselCheckbox.elementId, formControl);
+        this.formControlModels.push(linkToVesselCheckbox);
+
+        if (this.linkToVessel) {
+            let selectValues = this.vesselSelectValues();
+            let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.updateForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: null, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
+            formControl = new FormControl(this.selectedValue(selectValues));
+            formControl.valueChanges.subscribe(param => {
+                if (param) {
+                    this.vessel = param;
+                }
+            });
+            this.updateForm.addControl(vesselSelect.elementId, formControl);
+            this.formControlModels.push(vesselSelect);
+        }
 	}
 
 	private selectedValue(selectValues:Array<SelectModel>):string {
@@ -221,4 +254,18 @@ export class ServiceUpdateComponent implements OnInit {
 		});
 		return selectValues;
 	}
+
+    private vesselSelectValues():Array<SelectModel> {
+        let selectValues:Array<SelectModel> = [];
+        this.vesselsService.getVessels().subscribe(pageVessel => {
+            let orgVessels = pageVessel.content;
+            console.log(this.vessel);
+            orgVessels.forEach(vessel => {
+            	let isSelected = this.vessel.mrn === vessel.mrn;
+                selectValues.push({value: vessel, label: vessel.name, isSelected: isSelected});
+            });
+        },error => this.notifications.generateNotification('Error', 'Error when trying to get vessels', MCNotificationType.Error, error));
+
+        return selectValues;
+    }
 }

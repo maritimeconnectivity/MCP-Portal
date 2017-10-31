@@ -436,11 +436,10 @@ export class InstanceNewComponent implements OnInit {
 
 		if (this.linkToVessel) {
 			let selectValues = this.vesselSelectValues();
-			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, labelName: 'Vessel', placeholder: '', validator: SelectValidator.validate, showCheckmark: true};
+			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: Validators.required, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
 			formControl = new FormControl(this.selectedValue(selectValues), vesselSelect.validator);
 			formControl.valueChanges.subscribe(param => {
-				// TODO: something is not working here
-				if (param !== null) {
+				if (param) {
 					this.vessel = param;
 				}
 			});
