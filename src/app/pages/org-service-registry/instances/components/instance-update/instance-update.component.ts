@@ -102,7 +102,6 @@ export class InstanceUpdateComponent implements OnInit {
 	  } else {
 		  this.hasError = false;
 		  this.resetXmlFile();
-		  this.setFormChanged();
 		  this.generateForm();
 		  this.updateUI();
 	  }
@@ -112,6 +111,7 @@ export class InstanceUpdateComponent implements OnInit {
 	  this.status = this.instance.status;
 	  this.xml = null;
 	  this.fileUploadXml.resetFileSelection();
+	  this.setFormChanged();
 	  this.updateUI();
   }
 
@@ -177,13 +177,13 @@ export class InstanceUpdateComponent implements OnInit {
 				instance.endpointUri = this.xmlParser.getEndpoint(this.xml);
 				instance.designId = this.xmlParser.getMrnForDesignInInstance(this.xml);
 				this.parsedInstance = instance;
+				this.setupLableValuesParsed();
 			}
 		} catch ( error ) {
 			this.isUpdating = false;
 			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
 			this.resetXmlFile();
 		} finally {
-			this.setupLableValuesParsed();
 			this.WKTs = this.xmlParser.getGeometriesAsWKT(this.xml);
 		}
 	}
