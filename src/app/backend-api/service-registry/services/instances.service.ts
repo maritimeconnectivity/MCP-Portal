@@ -17,6 +17,7 @@ import {EndorsementSearchResult, EndorsementsService} from "../../endorsements/s
 import {Endorsement} from "../../endorsements/autogen/model/Endorsement";
 import {AuthService} from "../../../authentication/services/auth.service";
 import {PortalUserError, UserError} from "../../../shared/UserError";
+import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
 
 @Injectable()
 export class InstancesService implements OnInit {
@@ -178,7 +179,7 @@ export class InstancesService implements OnInit {
 			}
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let sort = SortingHelper.sortingForInstances();
-			this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,undefined,0,PAGE_SIZE_DEFAULT,sort).subscribe(
 				instances => {
 					var instancesFiltered: Array<Instance> = [];
 					for (let instance of instances) {
@@ -227,7 +228,7 @@ export class InstancesService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForInstances();
-			this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,undefined,0,PAGE_SIZE_DEFAULT,sort).subscribe(
 				instances => {
 					for (let instance of instances) {
 						instance.description = this.getDescription(instance);
@@ -246,7 +247,7 @@ export class InstancesService implements OnInit {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
 	    let query = QueryHelper.generateQueryStringForDesign(designId);
 	    let sort = SortingHelper.sortingForInstances();
-	    this.instancesApi.searchInstancesUsingGET(query,undefined,0,300,sort).subscribe(
+	    this.instancesApi.searchInstancesUsingGET(query,undefined,0,PAGE_SIZE_DEFAULT,sort).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
 			    for (let instance of instances) {

@@ -7,6 +7,7 @@ import {DevicecontrollerApi} from "../autogen/api/DevicecontrollerApi";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 import {PageDevice} from "../autogen/model/PageDevice";
 import {SortingHelper} from "../../shared/SortingHelper";
+import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
 
 @Injectable()
 export class DevicesService implements OnInit {
@@ -31,7 +32,7 @@ export class DevicesService implements OnInit {
 		let orgMrn = this.authService.authState.orgMrn;
 		let sort = SortingHelper.sortingForDevices();
 		// TODO: do paging properly
-		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn, 0,300, sort);
+		return this.deviceApi.getOrganizationDevicesUsingGET(orgMrn, 0,PAGE_SIZE_DEFAULT, sort);
 	}
 
 	public createDevice(device:Device) :Observable<Device>{

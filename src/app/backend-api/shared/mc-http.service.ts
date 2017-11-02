@@ -97,12 +97,12 @@ export class McHttpService extends Http {
   private interceptError(observable: Observable<Response>): Observable<Response> {
     return observable.catch((err, source) => {
 	    try {
-		    if (err.status == 400 && err.statusText === 'Bad Request') {
+		    if (err.status == 400) {
 			    // Sorry for this hack. This is a SR-error that xml is not valid. We don't want to create a bug report  when this happens
 			    var sendBugReport = true;
 			    try {
 				    let jsonErrorMessage = err.json().message;
-				    sendBugReport = jsonErrorMessage.indexOf('cvc-complex') < 0;
+				    sendBugReport = jsonErrorMessage.indexOf('cvc-') < 0;
 			    } catch (e) {}
 			    let userError = new UserError(err.statusText, err);
 			    userError.sendBugReport = sendBugReport;

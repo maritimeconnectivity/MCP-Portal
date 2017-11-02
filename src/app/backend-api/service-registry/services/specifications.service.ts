@@ -17,6 +17,7 @@ import {XmlsService} from "./xmls.service";
 import {DocsService} from "./docs.service";
 import {PortalUserError, UserError} from "../../../shared/UserError";
 import {SpecificationXmlParser} from "../../../pages/org-service-registry/shared/services/specification-xml-parser.service";
+import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
 
 @Injectable()
 export class SpecificationsService implements OnInit {
@@ -180,7 +181,7 @@ export class SpecificationsService implements OnInit {
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForSpecifications();
-			this.specificationsApi.searchSpecificationsUsingGET(query,0,300, sort).subscribe(
+			this.specificationsApi.searchSpecificationsUsingGET(query,0,PAGE_SIZE_DEFAULT, sort).subscribe(
 				specifications => {
 					// TODO delete this again, when description is part of the json
 					for (let specification of specifications) {

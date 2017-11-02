@@ -1,3 +1,4 @@
+// NOTE: be carefull when autogenerating. This file is changed manually
 /**
  * Maritime Connectivity Platform Identity Registry API
  * MCP Identity Registry API can be used for managing entities in the Maritime Connectivity Platform.

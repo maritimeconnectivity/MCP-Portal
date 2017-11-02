@@ -1,6 +1,7 @@
 import {Component, ViewEncapsulation, Input} from '@angular/core';
 import {HostListener} from "@angular/core/src/metadata/directives";
 import {layoutSizes} from "../../theme.constants";
+import {isNullOrUndefined} from "util";
 
 export interface TableHeader {
   title:string;
@@ -38,10 +39,18 @@ export class McTable {
   @Input() tableRows: Array<TableRow>;
   @Input() isLoading: boolean;
   @Input() onRowClick?: (index:number) => void;
+  public rowClass:string;
   public tableClass:string;
   constructor() {
     this.calculateTableClass();
   }
+
+	ngOnInit() {
+		this.rowClass = (this.canRowClick()? "mc-table-row-clickable" : "");
+	}
+	ngOnChanges() {
+		this.rowClass = (this.canRowClick()? "mc-table-row-clickable" : "");
+	}
   @HostListener('window:resize')
   public onWindowResize():void {
     this.calculateTableClass();
@@ -57,6 +66,10 @@ export class McTable {
 
   public hasRowData():boolean {
     return this.tableRows && this.tableRows.length > 0;
+  }
+
+  public canRowClick():boolean {
+  	return !isNullOrUndefined(this.onRowClick);
   }
 
   public clickedCell(index, cell:any) {

@@ -22,8 +22,11 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 		return this.xmlParserService.getValueFromField('URL', xml);
 	}
 
-	// Returns null if no coversArea is defined. For example if using unlocodes
+	// Returns null if no coversArea is defined. For example if using unlocodes. Also returns null if input xml is null
 	public getGeometriesAsWKT(xml: Xml): Array<string> {
+		if (!xml) {
+			return null;
+		}
 		var parser = new DOMParser();
 		let xmlString = xml.content.split('\+').join(''); // remove +
 		var xmlData = parser.parseFromString(xmlString, xml.contentContentType);
