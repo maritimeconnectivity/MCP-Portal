@@ -422,7 +422,7 @@ export class InstanceNewComponent implements OnInit {
 
 			if (this.useOIDCRedirect) {
 				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
-				formControl = new FormControl('', formControlModel.validator);
+				formControl = new FormControl(oldForm.value.oidcRedirectUri, formControlModel.validator);
 				this.registerForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);
 			}
@@ -436,7 +436,7 @@ export class InstanceNewComponent implements OnInit {
 
 		if (this.linkToVessel) {
 			let selectValues = this.vesselSelectValues();
-			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: Validators.required, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
+			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: Validators.required, labelName: 'Vessel', placeholder: '', showCheckmark: true, requireGroupValid: false};
 			formControl = new FormControl(this.selectedValue(selectValues), vesselSelect.validator);
 			formControl.valueChanges.subscribe(param => {
 				if (param) {

@@ -30,6 +30,7 @@ export class ServiceUpdateComponent implements OnInit {
 	public showModal:boolean = false;
 	public modalDescription:string;
 	private vessel: Vessel;
+	private vessels: Array<Vessel>;
 	// McForm params
 	private useOIDC:boolean = false;
 	private useOIDCRedirect:boolean = true;
@@ -39,6 +40,11 @@ export class ServiceUpdateComponent implements OnInit {
 	public updateTitle = "Update";
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
+
+	// Changed fields
+	private permissions:string;
+	private certDomainName:string;
+	private oidcRedirectUri:string;
 
 	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private servicesService: IdServicesService, mrnHelper: MrnHelperService, private vesselsService: VesselsService) {
 
@@ -59,18 +65,30 @@ export class ServiceUpdateComponent implements OnInit {
 				this.useOIDC = this.idService.oidcAccessType != undefined;
 				this.useOIDCRedirect = (this.idService.oidcAccessType && this.idService.oidcAccessType != OidcAccessTypeEnum.BearerOnly);
 				this.linkToVessel = !isNullOrUndefined(this.idService.vessel);
+				this.permissions = this.idService.permissions;
+				this.certDomainName = this.idService.certDomainName;
+				this.oidcRedirectUri = this.idService.oidcRedirectUri;
 				if (this.linkToVessel) {
 					this.vessel = this.idService.vessel;
 				}
-				this.generateForm();
-				this.isLoading = false;
+				this.loadVessels();
 			},
 			err => {
 				this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
-
-				this.navigationService.navigateToVessel(mrn);
+				this.navigationService.navigateToService(mrn);
 			}
 		);
+	}
+
+	private loadVessels() {
+		this.vesselsService.getVessels().subscribe(pageVessel => {
+			this.vessels = pageVessel.content;
+			this.generateForm();
+			this.isLoading = false;
+		},error => {
+			this.notifications.generateNotification('Error', 'Error when trying to get vessels for the service', MCNotificationType.Error, error);
+			this.navigationService.navigateToService(this.idService.mrn);
+		});
 	}
 
 	public cancel() {
@@ -111,6 +129,12 @@ export class ServiceUpdateComponent implements OnInit {
 		this.idService.name = this.updateForm.value.name;
 		this.idService.permissions = this.updateForm.value.permissions;
 		this.idService.certDomainName = this.updateForm.value.certDomainName;
+
+		if (this.linkToVessel) {
+			this.idService.vessel = this.updateForm.value.vesselSelect;
+		} else {
+			this.idService.vessel = null;
+		}
 
 		if (overwriteOidc) {
 			if (this.useOIDC) {
@@ -183,12 +207,14 @@ export class ServiceUpdateComponent implements OnInit {
 		this.formControlModels.push(formControlModel);
 
 		formControlModel = {formGroup: this.updateForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
-		formControl = new FormControl(this.idService.permissions, formControlModel.validator);
+		formControl = new FormControl(this.permissions, formControlModel.validator);
+		formControl.valueChanges.subscribe(param => this.permissions = param);
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
 		formControlModel = {formGroup: this.updateForm, elementId: 'certDomainName', controlType: McFormControlType.Text, labelName: 'Certificate domain name', placeholder: ''};
-		formControl = new FormControl(this.idService.certDomainName, formControlModel.validator);
+		formControl = new FormControl(this.certDomainName, formControlModel.validator);
+		formControl.valueChanges.subscribe(param => this.certDomainName = param);
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
@@ -208,31 +234,32 @@ export class ServiceUpdateComponent implements OnInit {
 
 			if (this.useOIDCRedirect) {
 				formControlModel = {formGroup: this.updateForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
-				formControl = new FormControl(this.idService.oidcRedirectUri, formControlModel.validator);
+				formControl = new FormControl(this.oidcRedirectUri, formControlModel.validator);
+				formControl.valueChanges.subscribe(param => this.oidcRedirectUri = param);
 				this.updateForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);
 			}
 
 		}
 
-        let linkToVesselCheckbox:McFormControlModelCheckbox = {state: this.linkToVessel, formGroup: this.updateForm, elementId: 'linkToVessel', controlType: McFormControlType.Checkbox, labelName: 'Link to a vessel'};
-        formControl = new FormControl({value: linkToVesselCheckbox.state, disabled: false}, linkToVesselCheckbox.validator);
-        formControl.valueChanges.subscribe(param => this.shouldLinkToVessel(param));
-        this.updateForm.addControl(linkToVesselCheckbox.elementId, formControl);
-        this.formControlModels.push(linkToVesselCheckbox);
+    let linkToVesselCheckbox:McFormControlModelCheckbox = {state: this.linkToVessel, formGroup: this.updateForm, elementId: 'linkToVessel', controlType: McFormControlType.Checkbox, labelName: 'Link to a vessel'};
+    formControl = new FormControl({value: linkToVesselCheckbox.state, disabled: false}, linkToVesselCheckbox.validator);
+    formControl.valueChanges.subscribe(param => this.shouldLinkToVessel(param));
+    this.updateForm.addControl(linkToVesselCheckbox.elementId, formControl);
+    this.formControlModels.push(linkToVesselCheckbox);
 
-        if (this.linkToVessel) {
-            let selectValues = this.vesselSelectValues();
-            let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.updateForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: null, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
-            formControl = new FormControl(this.selectedValue(selectValues));
-            formControl.valueChanges.subscribe(param => {
-                if (param) {
-                    this.vessel = param;
-                }
-            });
-            this.updateForm.addControl(vesselSelect.elementId, formControl);
-            this.formControlModels.push(vesselSelect);
-        }
+    if (this.linkToVessel) {
+        let selectValues = this.vesselSelectValues();
+        let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.updateForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: null, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
+        formControl = new FormControl(this.selectedValue(selectValues));
+        formControl.valueChanges.subscribe(param => {
+            if (param) {
+                this.vessel = param;
+            }
+        });
+        this.updateForm.addControl(vesselSelect.elementId, formControl);
+        this.formControlModels.push(vesselSelect);
+    }
 	}
 
 	private selectedValue(selectValues:Array<SelectModel>):string {
@@ -256,16 +283,20 @@ export class ServiceUpdateComponent implements OnInit {
 	}
 
     private vesselSelectValues():Array<SelectModel> {
-        let selectValues:Array<SelectModel> = [];
-        this.vesselsService.getVessels().subscribe(pageVessel => {
-            let orgVessels = pageVessel.content;
-            console.log(this.vessel);
-            orgVessels.forEach(vessel => {
-            	let isSelected = this.vessel.mrn === vessel.mrn;
-                selectValues.push({value: vessel, label: vessel.name, isSelected: isSelected});
-            });
-        },error => this.notifications.generateNotification('Error', 'Error when trying to get vessels', MCNotificationType.Error, error));
-
-        return selectValues;
+	    let selectValues:Array<SelectModel> = [];
+	    var defaultSelected = true;
+	    if (this.vessels && this.vessels.length > 0) {
+		    this.vessels.forEach(vessel => {
+			    let isSelected = false;
+			    if (this.vessel) {
+				    isSelected = this.vessel.mrn === vessel.mrn;
+			    } else {
+				    isSelected = defaultSelected;
+				    defaultSelected = false;
+			    }
+			    selectValues.push({value: vessel, label: vessel.name, isSelected: isSelected});
+		    });
+	    }
+	    return selectValues;
     }
 }
