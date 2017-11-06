@@ -255,12 +255,12 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
-	public navigateToService(serviceMrn:string):void {
+	public navigateToService(serviceMrn:string, serviceVersion):void {
 		this.path = '/' + serviceMrn;
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('services', pagesMenu[0]);
 
-		this.router.navigate([this.path]);
+		this.router.navigate([this.path], {queryParams: {serviceVersion: serviceVersion}});
 	}
 
 	public navigateToUser(userMrn:string):void {

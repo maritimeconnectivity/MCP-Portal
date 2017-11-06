@@ -75,7 +75,7 @@ export class ServiceUpdateComponent implements OnInit {
 			},
 			err => {
 				this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
-				this.navigationService.navigateToService(mrn);
+				this.navigationService.navigateToService(mrn, version);
 			}
 		);
 	}
@@ -87,7 +87,7 @@ export class ServiceUpdateComponent implements OnInit {
 			this.isLoading = false;
 		},error => {
 			this.notifications.generateNotification('Error', 'Error when trying to get vessels for the service', MCNotificationType.Error, error);
-			this.navigationService.navigateToService(this.idService.mrn);
+			this.navigationService.navigateToService(this.idService.mrn, this.idService.instanceVersion);
 		});
 	}
 

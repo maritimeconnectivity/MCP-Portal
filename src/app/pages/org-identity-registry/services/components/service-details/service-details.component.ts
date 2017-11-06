@@ -28,8 +28,8 @@ export class ServiceDetailsComponent {
 	private loadService() {
 		this.isLoading = true;
 		let mrn = this.route.snapshot.params['id'];
-		// TODO: this class is obsolete. Delete it.
-		this.servicesService.getIdService(mrn, '').subscribe(
+		let version = this.route.snapshot.queryParams['serviceVersion'];
+		this.servicesService.getIdService(mrn, version).subscribe(
 			service => {
 				this.service = service;
 				this.title = service.name;

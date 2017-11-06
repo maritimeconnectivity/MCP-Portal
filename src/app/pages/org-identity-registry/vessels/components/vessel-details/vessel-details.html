@@ -12,9 +12,14 @@
       </ul>
     </ba-card>
 
+    <ba-card title="Services for {{title}}" baCardClass="with-scroll table-panel">
+      <h5>Update the ID information in the Instance-details-view to link additional services to this Vessel</h5>
+      <services-table [services]="vesselServices" [isLoading]="isLoading"></services-table>
+    </ba-card>
+
     <div *ngIf="vessel">
         <ba-card title="Certificates for {{title}}" baCardClass="with-scroll table-panel">
-            <certificates-table [entityMrn]="vessel.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="vessel.certificates"></certificates-table>
+          <certificates-table [entityMrn]="vessel.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="vessel.certificates"></certificates-table>
         </ba-card>
     </div>
   </div>
