@@ -9,6 +9,8 @@ import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-
 import {IdServicesService} from "../../../../backend-api/identity-registry/services/id-services.service";
 import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
 import {TOKEN_DELIMITER} from "../../../../shared/app.constants";
+import {InstancesService} from "../../../../backend-api/service-registry/services/instances.service";
+import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
 
 @Component({
   selector: 'service-details-view',
@@ -20,6 +22,7 @@ export class ServiceDetailsViewComponent {
 	@Input() service:Service;
 	@Input() shouldShowDelete:boolean = true;
 	@Input() shouldShowUpdate:boolean = true;
+	@Input() shouldShowLinkToInstance:boolean = true;
 	@Input() isLoading:boolean;
 	@Input() title:string;
 
@@ -30,21 +33,50 @@ export class ServiceDetailsViewComponent {
 	public entityType: CertificateEntityType;
 	public entityMrn:string;
 	public onGotoVessel: Function;
+	public onGotoInstance: Function;
+	private linkToInstance:boolean = false;
+	public isLoadingInstance:boolean = false;
 
-	constructor(private fileHelperService:FileHelperService, private authService: AuthService, private servicesService: IdServicesService, private notifications:MCNotificationsService, private navigationHelperService: NavigationHelperService) {
+	constructor(private fileHelperService:FileHelperService, private authService: AuthService, private servicesService: IdServicesService, private notifications:MCNotificationsService, private navigationHelperService: NavigationHelperService, private instancesService:InstancesService) {
 
 	}
 
 	ngOnInit() {
+		this.isLoadingInstance = true;
 		this.entityType = CertificateEntityType.Service;
 		this.onGotoVessel = this.gotoVessel.bind(this);
+		this.onGotoInstance = this.gotoInstance.bind(this);
 	}
 
 	ngOnChanges() {
 		if (this.service) {
 			this.entityMrn = this.service.mrn + TOKEN_DELIMITER + this.service.instanceVersion;
-			this.generateLabelValues();
+			if (this.shouldShowLinkToInstance) {
+				this.loadInstance();
+			} else {
+				this.generateLabelValues();
+				this.isLoadingInstance = false;
+			}
 		}
+	}
+
+	private loadInstance() {
+		this.instancesService.getInstance(this.service.mrn, this.service.instanceVersion).subscribe(
+			instance => {
+				this.linkToInstance = true;
+				this.generateLabelValues();
+				this.isLoadingInstance = false;
+			},
+			err => {
+				if (err.status == 404) {
+					this.linkToInstance = false;
+					this.generateLabelValues();
+				} else {
+					this.notifications.generateNotification('Error', 'Error when trying to get the Instance for the ID service', MCNotificationType.Error, err);
+				}
+				this.isLoadingInstance = false;
+			}
+		);
 	}
 
 	public showDownload():boolean {
@@ -81,7 +113,6 @@ export class ServiceDetailsViewComponent {
 			this.labelValues.push({label: 'MRN', valueHtml: this.service.mrn});
 			this.labelValues.push({label: 'Name', valueHtml: this.service.name});
 			this.labelValues.push({label: 'Permissions', valueHtml: this.service.permissions});
-			this.generateLabelValueForVessel();
 			this.labelValues.push({label: 'Certificate domain name', valueHtml: this.service.certDomainName});
 			if (this.service.oidcRedirectUri) {
 				this.labelValues.push({label: 'OIDC Redirect URI', valueHtml: this.service.oidcRedirectUri});
@@ -96,6 +127,10 @@ export class ServiceDetailsViewComponent {
 			if (this.service.oidcAccessType) {
 				this.labelValues.push({label: 'Access type', valueHtml: ServiceViewModel.getLabelForEnum(this.service.oidcAccessType)});
 			}
+
+			this.generateLabelValueForVessel();
+
+			this.generateLabelValueForInstance();
 		}
 	}
 
@@ -104,6 +139,13 @@ export class ServiceDetailsViewComponent {
 		if (vessel) {
 			let label = 'Linked vessel';
 			this.labelValues.push({label: label, valueHtml: vessel.name, linkFunction: this.onGotoVessel, linkValue: [vessel.mrn]});
+		}
+	}
+
+	private generateLabelValueForInstance() {
+		if (this.shouldShowLinkToInstance && this.linkToInstance) {
+			let label = 'Linked Instance';
+			this.labelValues.push({label: label, valueHtml: this.service.name, linkFunction: this.onGotoInstance, linkValue: [this.service.mrn, this.service.instanceVersion]});
 		}
 	}
 
@@ -125,6 +167,14 @@ export class ServiceDetailsViewComponent {
 
 	private update() {
 		this.updateAction.emit('');
+	}
+
+	private gotoInstance(linkValue:any) {
+		try {
+			this.navigationHelperService.navigateToOrgInstance(linkValue[0], linkValue[1]);
+		} catch (error) {
+			this.notifications.generateNotification('Error', 'Error when trying to go to instance', MCNotificationType.Error, error);
+		}
 	}
 
 	private gotoVessel(linkValue:any) {

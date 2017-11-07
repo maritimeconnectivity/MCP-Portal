@@ -1,5 +1,5 @@
 <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-  <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+  <mc-label-value-table [isLoading]="isLoading || isLoadingInstance" [labelValues]="labelValues"></mc-label-value-table>
   <ul *ngIf="!isLoading && service && (showDownload() || showDelete() || showUpdate())" class="btn-list clearfix">
     <li *ngIf="showDownload()">
       <button type="button" class="btn btn-primary btn-raised" (click)="downloadXML()">Download JBOSS XML</button>
