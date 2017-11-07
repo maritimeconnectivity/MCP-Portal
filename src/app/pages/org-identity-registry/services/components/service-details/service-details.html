@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12">
-    <service-details-view [shouldShowDelete]="true" (deleteAction)="delete()" [isLoading]="isLoading" [title]="title" [service]="service"></service-details-view>
+    <service-details-view [shouldShowDelete]="true" (updateAction)="update()" (deleteAction)="delete()" [isLoading]="isLoading" [title]="title" [service]="service"></service-details-view>
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete service'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>

@@ -8,6 +8,7 @@ import {ServiceViewModel} from "../../../org-identity-registry/services/view-mod
 import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
 import {IdServicesService} from "../../../../backend-api/identity-registry/services/id-services.service";
 import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
+import {TOKEN_DELIMITER} from "../../../../shared/app.constants";
 
 @Component({
   selector: 'service-details-view',
@@ -41,7 +42,7 @@ export class ServiceDetailsViewComponent {
 
 	ngOnChanges() {
 		if (this.service) {
-			this.entityMrn = this.service.mrn + '#¤#' + this.service.instanceVersion;
+			this.entityMrn = this.service.mrn + TOKEN_DELIMITER + this.service.instanceVersion;
 			this.generateLabelValues();
 		}
 	}

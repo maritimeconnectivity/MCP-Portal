@@ -16,6 +16,7 @@ import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 import {isNullOrUndefined} from "util";
 import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
 import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
+import {VesselHelper} from "../../../../shared/services/vessel-helper";
 
 
 @Component({
@@ -302,21 +303,21 @@ export class ServiceUpdateComponent implements OnInit {
 		return selectValues;
 	}
 
-    private vesselSelectValues():Array<SelectModel> {
-	    let selectValues:Array<SelectModel> = [];
-	    var defaultSelected = true;
-	    if (this.vessels && this.vessels.length > 0) {
-		    this.vessels.forEach(vessel => {
-			    let isSelected = false;
-			    if (this.vessel) {
-				    isSelected = this.vessel.mrn === vessel.mrn;
-			    } else {
-				    isSelected = defaultSelected;
-				    defaultSelected = false;
-			    }
-			    selectValues.push({value: vessel, label: vessel.name, isSelected: isSelected});
-		    });
-	    }
-	    return selectValues;
-    }
+	private vesselSelectValues():Array<SelectModel> {
+		let selectValues:Array<SelectModel> = [];
+		var defaultSelected = true;
+		if (this.vessels && this.vessels.length > 0) {
+			this.vessels.forEach(vessel => {
+				let isSelected = false;
+				if (this.vessel) {
+					isSelected = this.vessel.mrn === vessel.mrn;
+				} else {
+					isSelected = defaultSelected;
+					defaultSelected = false;
+				}
+				selectValues.push({value: vessel, label: VesselHelper.labelForSelect(vessel), isSelected: isSelected});
+			});
+		}
+		return selectValues;
+	}
 }

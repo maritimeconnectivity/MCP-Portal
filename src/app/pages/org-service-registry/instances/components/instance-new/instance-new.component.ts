@@ -77,6 +77,7 @@ export class InstanceNewComponent implements OnInit {
 	public WKTs: Array<string>;
 	private linkToVessel: boolean = false;
 	private vessel: Vessel;
+	private vessels: Array<Vessel>;
 
 	public showModal:boolean = false;
 	public modalDescription:string;
@@ -88,6 +89,7 @@ export class InstanceNewComponent implements OnInit {
     this.onRegister = this.register.bind(this);
     this.isRegistering = false;
     this.isLoading = true;
+	  this.loadVessels();
     this.generateForm();
     this.loadMyOrganization();
     this.loadDesign();
@@ -352,6 +354,7 @@ export class InstanceNewComponent implements OnInit {
 		}
 		this.createIdService(service, instance);
 	}
+
   private createIdService(idService:Service, instance:Instance) {
     this.idServicesService.createIdService(idService).subscribe(
       service => {
@@ -364,8 +367,18 @@ export class InstanceNewComponent implements OnInit {
 	      this.navigationService.navigateToOrgInstance(instance.instanceId, instance.version);
       }
     );
-
   }
+
+	private loadVessels() {
+		this.vesselsService.getVessels().subscribe(pageVessel => {
+			this.vessels = pageVessel.content;
+			this.generateForm();
+			this.isLoading = false;
+		},error => {
+			this.notifications.generateNotification('Error', 'Error when trying to get vessels for the service', MCNotificationType.Error, error);
+			this.cancel();
+		});
+	}
 
   private loadMyOrganization() {
     this.orgService.getMyOrganization().subscribe(
@@ -473,7 +486,7 @@ export class InstanceNewComponent implements OnInit {
 
 		if (this.linkToVessel) {
 			let selectValues = this.vesselSelectValues();
-			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: Validators.required, labelName: 'Vessel', placeholder: '', showCheckmark: true, requireGroupValid: false};
+			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: null, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
 			formControl = new FormControl(this.selectedValue(selectValues), vesselSelect.validator);
 			formControl.valueChanges.subscribe(param => {
 				if (param) {
@@ -498,23 +511,20 @@ export class InstanceNewComponent implements OnInit {
 
 	private vesselSelectValues():Array<SelectModel> {
 		let selectValues:Array<SelectModel> = [];
-		this.vesselsService.getVessels().subscribe(pageVessel => {
-			let orgVessels = pageVessel.content;
-			orgVessels.forEach(vessel => {
-				selectValues.push({value: vessel, label: VesselHelper.labelForSelect(vessel), isSelected: false});
+		var defaultSelected = true;
+		if (this.vessels && this.vessels.length > 0) {
+			this.vessels.forEach(vessel => {
+				let isSelected = false;
+				if (this.vessel) {
+					isSelected = this.vessel.mrn === vessel.mrn;
+				} else {
+					isSelected = defaultSelected;
+					defaultSelected = false;
+				}
+				selectValues.push({value: vessel, label: VesselHelper.labelForSelect(vessel), isSelected: isSelected});
 			});
-		},error => this.notifications.generateNotification('Error', 'Error when trying to get vessels', MCNotificationType.Error, error));
-
-		return selectValues;
-	}
-
-	private getAttributeValue(attributeName:AttributeNameEnum) : string {
-		for (let attribute of this.vessel.attributes) {
-			if (attribute.attributeName === attributeName) {
-				return attribute.attributeValue;
-			}
 		}
-		return '';
+		return selectValues;
 	}
 
 	private selectedValue(selectValues:Array<SelectModel>):any {

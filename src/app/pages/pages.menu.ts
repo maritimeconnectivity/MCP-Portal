@@ -46,14 +46,14 @@ export var PAGES_MENU_ALL = [
 			        }
 		        }
 	        },
-	        /*{
+	        {
 		        path: 'services',
 		        data: {
 			        menu: {
-				        title: 'Services',
+				        title: 'ID Services',
 			        }
 		        }
-	        },*/
+	        },
 	        {
 		        path: 'users',
 		        data: {

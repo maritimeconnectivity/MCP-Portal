@@ -1,7 +1,16 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="Register new Service for {{organization?.name}}" baCardClass="with-scroll table-panel">
-      <mc-form [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isRegistering" [registerTitle]="registerTitle" (onCancel)="cancel()" (onRegister)="register()"></mc-form>
+      <mc-form [hideButtons]="true" [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading"></mc-form>
+
+      <ul class="btn-list clearfix">
+        <li>
+          <mc-loading-button [class]="registerButtonClass" [disabled]="!isFormValid()" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="onRegister" ></mc-loading-button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
+        </li>
+      </ul>
     </ba-card>
   </div>
 </div>
