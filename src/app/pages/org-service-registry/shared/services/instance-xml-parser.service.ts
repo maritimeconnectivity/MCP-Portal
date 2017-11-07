@@ -18,6 +18,14 @@ export class InstanceXmlParser extends ServiceRegistryXmlParser {
 		return this.xmlParserService.getVauleFromEmbeddedField('implementsServiceDesign', 'id', xml);
 	}
 
+	public getImo(xml: Xml): string {
+		return this.xmlParserService.getValueFromFieldOrEmptyString('IMO', xml);
+	}
+
+	public getMmsi(xml: Xml): string {
+		return this.xmlParserService.getValueFromFieldOrEmptyString('MMSI', xml);
+	}
+
 	public getEndpoint(xml: Xml): string {
 		return this.xmlParserService.getValueFromField('URL', xml);
 	}

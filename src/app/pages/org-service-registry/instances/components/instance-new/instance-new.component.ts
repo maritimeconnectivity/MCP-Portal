@@ -31,6 +31,9 @@ import {SelectValidator} from "../../../../../theme/validators/select.validator"
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
 import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
 import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import {VesselAttribute} from "../../../../../backend-api/identity-registry/autogen/model/VesselAttribute";
+import AttributeNameEnum = VesselAttribute.AttributeNameEnum;
+import {VesselHelper} from "../../../../shared/services/vessel-helper";
 
 @Component({
   selector: 'instance-new',
@@ -74,6 +77,9 @@ export class InstanceNewComponent implements OnInit {
 	public WKTs: Array<string>;
 	private linkToVessel: boolean = false;
 	private vessel: Vessel;
+
+	public showModal:boolean = false;
+	public modalDescription:string;
 
   constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService, private vesselsService: VesselsService) {
   }
@@ -275,9 +281,40 @@ export class InstanceNewComponent implements OnInit {
   }
 
   public register() {
-    this.isRegistering = true;
-	  this.createInstance(this.parsedInstance);
+		if (this.showVesselAttNotEqualWarning()) {
+			let imoNumber = this.xmlParser.getImo(this.parsedInstance.instanceAsXml);
+			let mmsiNumber = this.xmlParser.getMmsi(this.parsedInstance.instanceAsXml);
+			this.modalDescription =
+				"The IMO and/or the MMSI number from the Xml and the Vessel doesn't match.<br><br>" +
+				"Vessel: IMO:" + VesselHelper.getIMO(this.vessel) + ", MMSI:" + VesselHelper.getMMSI(this.vessel) + "<br>" +
+				"Xml: IMO:" + imoNumber + ", MMSI:" + mmsiNumber + "<br><br>" +
+				"Register Instance anyway?";
+			this.showModal = true;
+		} else {
+			this.registerForSure();
+		}
   }
+
+  private showVesselAttNotEqualWarning() : boolean {
+	  if (this.linkToVessel) {
+		  let imoNumber = this.xmlParser.getImo(this.parsedInstance.instanceAsXml);
+		  let mmsiNumber = this.xmlParser.getMmsi(this.parsedInstance.instanceAsXml);
+		  if (!VesselHelper.isVesselAttEqualTo(this.vessel, imoNumber, mmsiNumber)) {
+			  return true;
+		  }
+	  }
+	  return false;
+  }
+
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public registerForSure() {
+		this.isRegistering = true;
+		this.showModal = false;
+		this.createInstance(this.parsedInstance);
+	}
 
   private createInstance(instance:Instance) {
     this.instancesService.createInstance(instance, this.doc).subscribe(
@@ -463,12 +500,21 @@ export class InstanceNewComponent implements OnInit {
 		let selectValues:Array<SelectModel> = [];
 		this.vesselsService.getVessels().subscribe(pageVessel => {
 			let orgVessels = pageVessel.content;
-            orgVessels.forEach(vessel => {
-                selectValues.push({value: vessel, label: vessel.name, isSelected: false});
-            });
+			orgVessels.forEach(vessel => {
+				selectValues.push({value: vessel, label: VesselHelper.labelForSelect(vessel), isSelected: false});
+			});
 		},error => this.notifications.generateNotification('Error', 'Error when trying to get vessels', MCNotificationType.Error, error));
 
 		return selectValues;
+	}
+
+	private getAttributeValue(attributeName:AttributeNameEnum) : string {
+		for (let attribute of this.vessel.attributes) {
+			if (attribute.attributeName === attributeName) {
+				return attribute.attributeValue;
+			}
+		}
+		return '';
 	}
 
 	private selectedValue(selectValues:Array<SelectModel>):any {
