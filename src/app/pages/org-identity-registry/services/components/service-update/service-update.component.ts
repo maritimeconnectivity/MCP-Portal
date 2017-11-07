@@ -28,6 +28,7 @@ export class ServiceUpdateComponent implements OnInit {
 
 	public idService:Service;
 	public showModal:boolean = false;
+	public showModalVesselAtt:boolean = false;
 	public modalDescription:string;
 	private vessel: Vessel;
 	private vessels: Array<Vessel>;
@@ -100,7 +101,25 @@ export class ServiceUpdateComponent implements OnInit {
 			this.modalDescription = "<b>Certificates</b> will be <b>invalid</b> if you update the service.<br>You need to revoke the certificates and issue new ones.<br><br>Would you still like to update?";
 			this.showModal = true;
 		} else {
+			this.showVesselAttWarning();
+		}
+	}
+
+	public showVesselAttWarning() {
+		if (this.linkToVessel && this.isNewVessel()) {
+			this.showModal = false;
+			this.modalDescription = "The linked Vessel has changed. You should change the IMO and MMSI in the Instance XML as well.<br><br>Would you still like to update?";
+			this.showModalVesselAtt = true;
+		} else {
 			this.updateForSure();
+		}
+	}
+
+	private isNewVessel() : boolean {
+		if (this.vessel && this.idService.vessel) {
+			return this.vessel.mrn !== this.idService.vessel.mrn;
+		} else {
+			return true;
 		}
 	}
 
@@ -117,6 +136,7 @@ export class ServiceUpdateComponent implements OnInit {
 
 	public cancelModal() {
 		this.showModal = false;
+		this.showModalVesselAtt = false;
 	}
 
 	public updateForSure() {
