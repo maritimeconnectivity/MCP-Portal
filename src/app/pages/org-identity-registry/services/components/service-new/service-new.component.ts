@@ -93,7 +93,7 @@ export class ServiceNewComponent implements OnInit {
 				if (this.isPrefilled) {
 					this.cancel();
 				} else {
-					this.navigationService.navigateToService(service.mrn);
+					this.navigationService.navigateToService(service.mrn, service.instanceVersion);
 				}
 				this.isRegistering = false;
 			},

@@ -64,6 +64,8 @@ export interface Service {
 
     updatedAt?: Date;
 
+    vessel?: models.Vessel;
+
 }
 export namespace Service {
     export enum OidcAccessTypeEnum {

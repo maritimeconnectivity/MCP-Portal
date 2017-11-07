@@ -8,6 +8,7 @@ import {VesselViewModel} from "../../view-models/VesselViewModel";
 import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
+import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 
 @Component({
   selector: 'vessel-details',
@@ -17,6 +18,7 @@ import {NavigationHelperService} from "../../../../../shared/navigation-helper.s
 })
 export class VesselDetailsComponent {
 	public labelValues:Array<LabelValueModel>;
+	public vesselServices:Array<Service>;
 	public title:string;
 	public isLoading:boolean;
 	public vesselViewModel:VesselViewModel;
@@ -54,6 +56,19 @@ export class VesselDetailsComponent {
 				this.vessel = vessel;
 				this.vesselViewModel = new VesselViewModel(vessel);
 				this.title = vessel.name;
+				this.loadVesselServices();
+			},
+			err => {
+				this.isLoading = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get the vessel', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private loadVesselServices() {
+		this.vesselsService.getVesselServices(this.vessel.mrn).subscribe(
+			services => { // FIXME: change when new api is here
+				this.vesselServices = services;
 				this.isLoading = false;
 				this.generateLabelValues();
 			},

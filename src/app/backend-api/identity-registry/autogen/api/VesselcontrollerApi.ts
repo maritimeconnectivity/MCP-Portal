@@ -149,6 +149,40 @@ export class VesselcontrollerApi {
 
     /**
      * 
+     * @summary getVesselServices
+     * @param orgMrn orgMrn
+     * @param vesselMrn vesselMrn
+     */
+    public getVesselServicesUsingGET(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Array<models.Service>> {
+        return this.getVesselServicesUsingGETWithHttpInfo(orgMrn, vesselMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @summary getVesselServices
+     * @param orgMrn orgMrn
+     * @param vesselMrn vesselMrn
+     */
+    public getVesselServicesUsingGET1(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Array<models.Service>> {
+        return this.getVesselServicesUsingGET1WithHttpInfo(orgMrn, vesselMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
      * @summary getVessel
      * @param orgMrn orgMrn
      * @param vesselMrn vesselMrn
@@ -562,6 +596,96 @@ export class VesselcontrollerApi {
             })
         }
 
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getVesselServices
+     * 
+     * @param orgMrn orgMrn
+     * @param vesselMrn vesselMrn
+     */
+    public getVesselServicesUsingGETWithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}/services'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'orgMrn' is not null or undefined
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling getVesselServicesUsingGET.');
+        }
+        // verify required parameter 'vesselMrn' is not null or undefined
+        if (vesselMrn === null || vesselMrn === undefined) {
+            throw new Error('Required parameter vesselMrn was null or undefined when calling getVesselServicesUsingGET.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getVesselServices
+     * 
+     * @param orgMrn orgMrn
+     * @param vesselMrn vesselMrn
+     */
+    public getVesselServicesUsingGET1WithHttpInfo(orgMrn: string, vesselMrn: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/x509/api/org/${orgMrn}/vessel/${vesselMrn}/services'
+                    .replace('${' + 'orgMrn' + '}', String(orgMrn))
+                    .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'orgMrn' is not null or undefined
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling getVesselServicesUsingGET1.');
+        }
+        // verify required parameter 'vesselMrn' is not null or undefined
+        if (vesselMrn === null || vesselMrn === undefined) {
+            throw new Error('Required parameter vesselMrn was null or undefined when calling getVesselServicesUsingGET1.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'

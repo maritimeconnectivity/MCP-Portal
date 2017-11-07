@@ -10,7 +10,7 @@ import {McFormControlModelSelect} from "../mcForm/mcFormControlModel";
 export class McFormControlSelect {
 	@Input() formControlModel: McFormControlModelSelect;
 
-	public selectedValue:string;
+	public selectedValue:any;
 
   constructor(private changeDetector: ChangeDetectorRef) {
   }
@@ -31,7 +31,7 @@ export class McFormControlSelect {
 
 	public isValid():boolean {
 		var isSelected = this.selectedValue !== undefined;
-		if (isSelected) {
+		if (isSelected && (this.selectedValue instanceof String)) {
 			isSelected = this.selectedValue.toLowerCase().indexOf('undefined') < 0;
 		}
 		let isGroupValid = true;

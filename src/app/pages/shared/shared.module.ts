@@ -16,6 +16,7 @@ import {ServiceRegistrySearchComponent} from "./components/service-registry-sear
 import {ReactiveFormsModule} from "@angular/forms";
 import {SrSearchRequestsService} from "../org-service-registry/shared/services/sr-search-requests.service";
 import {EndorsedByListComponent} from "./components/endorsed-by-list/endorsed-by-list.component";
+import {ServicesTableComponent} from "./components/services-table/services-table.component";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {EndorsedByListComponent} from "./components/endorsed-by-list/endorsed-by
 	  CertificateRevokeComponent,
 	  ServiceDetailsViewComponent,
 	  ServiceRegistrySearchComponent,
-	  EndorsedByListComponent
+	  EndorsedByListComponent,
+	  ServicesTableComponent
   ],
   exports: [
     OrganizationDetailsTableComponent,
@@ -46,7 +48,8 @@ import {EndorsedByListComponent} from "./components/endorsed-by-list/endorsed-by
 	  CertificateRevokeComponent,
 	  ServiceDetailsViewComponent,
 	  ServiceRegistrySearchComponent,
-	  EndorsedByListComponent
+	  EndorsedByListComponent,
+	  ServicesTableComponent
   ],
   providers: [
     SrViewModelService,
