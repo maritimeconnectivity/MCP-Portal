@@ -3,7 +3,7 @@
     <ba-card title="Register new Service for {{organization?.name}}" baCardClass="with-scroll table-panel">
       <mc-form [hideButtons]="true" [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading"></mc-form>
 
-      <ul class="btn-list clearfix">
+      <ul *ngIf="registerForm" class="btn-list clearfix">
         <li>
           <mc-loading-button [class]="registerButtonClass" [disabled]="!isFormValid()" [isLoading]="isRegistering" [title]="registerTitle" [onClick]="onRegister" ></mc-loading-button>
         </li>
