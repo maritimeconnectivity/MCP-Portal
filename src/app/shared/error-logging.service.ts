@@ -6,6 +6,7 @@ import {AuthService} from "../authentication/services/auth.service";
 import {BugReportAttachment} from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
 import {McHttpService} from "../backend-api/shared/mc-http.service";
 import {PortalUserError, UserError} from "./UserError";
+import {ServerUnreachableError} from "./ServerUnreachableError";
 
 export interface MCErrorLoggerOptions {
 	makeBugReportFromError: boolean;
@@ -87,8 +88,13 @@ export class ErrorLoggingService {
   	var errorString = '';
 
 		if ( message ) {
+			subject = autoTag;
+			if (error instanceof ServerUnreachableError) {
+				let serverUnreachableTag = '#UNREACHABLE';
+				subject += (' ' + serverUnreachableTag);
+			}
 			errorString += "**MESSAGE**: \n" + message + "\n\n";
-			subject = autoTag + ' ' + message;
+			subject += (' ' + message);
 		}
 
 		try {
@@ -105,6 +111,10 @@ export class ErrorLoggingService {
 		}
 		if ( error ) {
 			errorString += "**ERROR STRING**: \n" + error  + "\n\n";
+		}
+
+		if (error instanceof ServerUnreachableError) {
+			errorString = "" + error.message;
 		}
 		if (errorString.length > 0) {
 			let bugReport:BugReport = {subject:subject, description:errorString};

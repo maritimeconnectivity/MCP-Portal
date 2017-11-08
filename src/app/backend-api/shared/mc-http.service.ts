@@ -4,6 +4,7 @@ import {Observable} from "rxjs/Observable";
 import {AuthService} from "../../authentication/services/auth.service";
 import {DONT_OVERWRITE_CONTENT_TYPE, MAX_HTTP_LOG_ENTRIES} from "../../shared/app.constants";
 import {UserError} from "../../shared/UserError";
+import {ServerUnreachableError} from "../../shared/ServerUnreachableError";
 
 export interface HttpLogModel {
 	url:string;
@@ -97,7 +98,10 @@ export class McHttpService extends Http {
   private interceptError(observable: Observable<Response>): Observable<Response> {
     return observable.catch((err, source) => {
 	    try {
-		    if (err.status == 400) {
+	    	if (err.status == 0 && err.url == null) {
+			    return Observable.throw(new ServerUnreachableError());
+		    }
+		    else if (err.status == 400) {
 			    // Sorry for this hack. This is a SR-error that xml is not valid. We don't want to create a bug report  when this happens
 			    var sendBugReport = true;
 			    try {
