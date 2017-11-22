@@ -115,7 +115,7 @@ export class ApproveDetailsComponent {
 		this.userService.createUserForOrg(this.organization.mrn, user).subscribe(
 			user => {
 				this.isApproving = false;
-				this.notifications.generateNotification('Organization Approved', 'The organization was approved and now has access to the Maritime Cloud', MCNotificationType.Success);
+				this.notifications.generateNotification('Organization Approved', 'The organization was approved and now has access to the Maritime Connectivity Platform', MCNotificationType.Success);
 				this.router.navigate(['../'], {relativeTo: this.route });
 			},
 			err => {

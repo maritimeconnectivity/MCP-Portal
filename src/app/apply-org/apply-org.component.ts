@@ -96,7 +96,7 @@ export class ApplyOrgComponent implements OnInit {
 		McHttpService.nextCallShouldNotAuthenticate();
 		this.organizationsService.applyOrganization(organization).subscribe(
 			organization => {
-				this.notificationService.generateNotification('Apply', 'You have successfully applied to join the Maritime Cloud. An email will be send with confirmation.', MCNotificationType.Success);
+				this.notificationService.generateNotification('Apply', 'You have successfully applied to join the Maritime Connectivity Platform. An email will be send with confirmation.', MCNotificationType.Success);
 				this.navigationHelper.takeMeHome();
 			},
 			err => {

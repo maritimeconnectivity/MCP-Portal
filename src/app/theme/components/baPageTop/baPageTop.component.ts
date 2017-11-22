@@ -24,7 +24,7 @@ export class BaPageTop {
   public isMenuCollapsed:boolean = false;
 
   public portalHeadline: string;
-  public maritimeCloudHeadline: string;
+  public mcpHeadline: string;
 
   constructor(private renderer:Renderer, private _state:GlobalState, private authService: AuthService) {
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
@@ -71,13 +71,13 @@ export class BaPageTop {
 
   private doMinimumResize() {
 	  if (window.innerWidth <= layoutSizes.resWidthMinimum) {
-		  this.maritimeCloudHeadline = "MC";
+		  this.mcpHeadline = "MCP";
 		  this.portalHeadline = "Portal";
 	  } else if (window.innerWidth <= layoutSizes.resWidthHideSidebar) {
-		  this.maritimeCloudHeadline = "Maritime Cloud";
-		  this.portalHeadline = "Portal";
+		  this.mcpHeadline = "MCP";
+		  this.portalHeadline = "Management Portal";
 	  } else {
-		  this.maritimeCloudHeadline = "Maritime Cloud";
+		  this.mcpHeadline = "Maritime Connectivity Platform";
 		  this.portalHeadline = "Management Portal";
 	  }
   }

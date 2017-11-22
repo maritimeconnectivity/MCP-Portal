@@ -1,6 +1,6 @@
 FROM node:latest
 
-RUN git clone https://github.com/MaritimeCloud/MaritimeCloudPortal.git /var/www \
+RUN git clone https://github.com/MaritimeCloud/MCP-Portal.git /var/www \
     && cd /var/www \
     && npm install --global rimraf \
     && npm run clean \

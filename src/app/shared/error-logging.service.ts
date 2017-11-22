@@ -74,7 +74,7 @@ export class ErrorLoggingService {
 
 	private sendToConsole(error: any): void {
 		if ( console && console.group && console.error ) {
-			console.group("Maritime Cloud - Error logging");
+			console.group("Maritime Connectivity Platform - Error logging");
 			console.error(error);
 			console.error( "Error message: ", error.message );
 			console.error( "Error stack: ", error.stack );

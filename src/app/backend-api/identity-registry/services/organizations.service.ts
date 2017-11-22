@@ -26,7 +26,7 @@ export class OrganizationsService implements OnInit {
 	}
 
 	public deleteOrganization(orgMrn:string):Observable<any> {
-		// TODO: for now this organization is crucial to the Maritime Cloud, and cannot be deleted. Also you cant delete you own
+		// TODO: for now this organization is crucial to the Maritime Connectivity Platform, and cannot be deleted. Also you cant delete you own
 		if (orgMrn === 'urn:mrn:mcl:org:dma') {
 			throw Error('You cannot delete this organization');
 		}
