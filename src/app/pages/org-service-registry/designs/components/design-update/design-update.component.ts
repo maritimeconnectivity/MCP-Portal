@@ -253,17 +253,13 @@ export class DesignUpdateComponent implements OnInit {
 	}
 
 	private updateStatus() {
-		this.notifications.generateNotification("Not Implemented", "Update status only, is sadly not implemented yet", MCNotificationType.Info);
-		this.isUpdating = false;
-		/*
-		 this.designService.updateStatus(this.design, this.status).subscribe(_ => {
-		 this.navigationService.navigateToOrgDesign(this.design.designId, this.design.version);
-		 },
-		 err => {
-		 this.isUpdating = false;
-		 this.notifications.generateNotification('Error', 'Error when trying to update status', MCNotificationType.Error, err);
-		 });
-		 */
+		this.designService.updateStatus(this.design, this.status).subscribe(_ => {
+				this.navigationService.navigateToOrgDesign(this.design.designId, this.design.version);
+			},
+			err => {
+				this.isUpdating = false;
+				this.notifications.generateNotification('Error', 'Error when trying to update status of design', MCNotificationType.Error, err);
+			});
 	}
 
 	private updateDesign() {

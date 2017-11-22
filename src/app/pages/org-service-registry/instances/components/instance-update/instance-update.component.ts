@@ -257,17 +257,13 @@ export class InstanceUpdateComponent implements OnInit {
   }
 
   private updateStatus() {
-  	this.notifications.generateNotification("Not Implemented", "Update status only, is sadly not implemented yet", MCNotificationType.Info);
-	  this.isUpdating = false;
-  	/*
 	  this.instancesService.updateStatus(this.instance, this.status).subscribe(_ => {
 			  this.navigationService.navigateToOrgInstance(this.instance.instanceId, this.instance.version);
 		  },
 		  err => {
 			  this.isUpdating = false;
-			  this.notifications.generateNotification('Error', 'Error when trying to update status', MCNotificationType.Error, err);
+			  this.notifications.generateNotification('Error', 'Error when trying to update status of instance', MCNotificationType.Error, err);
 		  });
-		  */
   }
 
   private updateInstance() {

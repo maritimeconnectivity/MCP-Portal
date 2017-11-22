@@ -211,17 +211,13 @@ export class SpecificationUpdateComponent implements OnInit {
 	}
 
 	private updateStatus() {
-		this.notifications.generateNotification("Not Implemented", "Update status only, is sadly not implemented yet", MCNotificationType.Info);
-		this.isUpdating = false;
-		/*
-		 this.specificationsService.updateStatus(this.specification, this.status).subscribe(_ => {
-		 this.navigationService.navigateToOrgSpecification(this.specification.specificationId, this.specification.version);
-		 },
-		 err => {
-		 this.isUpdating = false;
-		 this.notifications.generateNotification('Error', 'Error when trying to update status', MCNotificationType.Error, err);
-		 });
-		 */
+		this.specificationsService.updateStatus(this.specification, this.status).subscribe(_ => {
+				this.navigationService.navigateToOrgSpecification(this.specification.specificationId, this.specification.version);
+			},
+			err => {
+				this.isUpdating = false;
+				this.notifications.generateNotification('Error', 'Error when trying to update status of specification', MCNotificationType.Error, err);
+			});
 	}
 
 	private updateSpecification() {
@@ -289,6 +285,5 @@ export class SpecificationUpdateComponent implements OnInit {
 		formControl.valueChanges.subscribe(param => this.setStatus(param));
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
-
 	}
 }
