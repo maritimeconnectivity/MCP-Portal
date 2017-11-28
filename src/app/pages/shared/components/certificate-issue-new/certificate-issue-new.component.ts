@@ -8,6 +8,7 @@ import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/
 import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {FileHelperService} from "../../../../shared/file-helper.service";
 import {CertificateBundle} from "../../../../backend-api/identity-registry/autogen/model/CertificateBundle";
+import {TOKEN_DELIMITER} from "../../../../shared/app.constants";
 
 
 @Component({
@@ -68,6 +69,6 @@ export class CertificateIssueNewComponent implements OnInit {
   private generateLabelValues() {
     this.labelValues = [];
     this.labelValues.push({label: 'Name', valueHtml: this.entityTitle});
-    this.labelValues.push({label: 'MRN', valueHtml: this.entityMrn});
+    this.labelValues.push({label: 'MRN', valueHtml: this.entityMrn.split(TOKEN_DELIMITER)[0]});
   }
 }
