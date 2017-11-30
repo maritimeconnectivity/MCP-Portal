@@ -8,6 +8,7 @@ import {AuthService} from "../../../../../authentication/services/auth.service";
 import {Observable} from "rxjs";
 import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
 import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
+import FederationTypeEnum = Organization.FederationTypeEnum;
 
 @Component({
   selector: 'user-list',
@@ -27,15 +28,16 @@ export class UserListComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.loadMyOrganization();
-	  this.loadUsers();
   }
 
 	private loadMyOrganization() {
 		this.orgService.getMyOrganization().subscribe(
 			organization => {
 				this.organization = organization;
+				this.loadUsers();
 			},
 			err => {
+				this.isLoading = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
 			}
 		);
@@ -79,9 +81,13 @@ export class UserListComponent implements OnInit {
 			  }
 		  );
 	  }
-	  if (this.authService.authState.isAdmin()) {
+	  if (this.canCreateUser()) {
 		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new User', isAdd:true, htmlContent: '&nbsp;'});
 	  }
+  }
+
+  private canCreateUser():boolean {
+  	return this.authService.authState.isAdmin() && this.organization && this.organization.federationType != FederationTypeEnum.ExternalIdp;
   }
 
 	private createImgObservable(user:User):Observable<string> {
