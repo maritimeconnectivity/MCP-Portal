@@ -312,17 +312,18 @@ export class DesignUpdateComponent implements OnInit {
 		this.updateForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-        var formControlModel:McFormControlModelSelect;
-        let disableStatus = this.xml != null || this.doc != null;
-        let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},
-            {label: "released", value: "released", isSelected: false}, {label: "deprecated", value: "deprecated", isSelected: false},
-            {label: "deleted", value: "deleted", isSelected: false}];
-        statusSelect.forEach(status => 	{if (status.value === this.status) status.isSelected = true});
-        if (disableStatus) {
-            formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
-        } else {
-            formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: ''};
-        }
+		var formControlModel:McFormControlModelSelect;
+		let disableStatus = this.xml != null || this.doc != null;
+		// TODO Get dynamically from XSD
+		let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},{label: "simulated", value: "simulated", isSelected: false},
+			{label: "released", value: "released", isSelected: false}, {label: "deprecated", value: "deprecated", isSelected: false},
+			{label: "deleted", value: "deleted", isSelected: false}];
+		statusSelect.forEach(status => 	{if (status.value === this.status) status.isSelected = true});
+		if (disableStatus) {
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
+		} else {
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: ''};
+		}
 		var formControl = new FormControl(this.status, formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.setStatus(param));
 		this.updateForm.addControl(formControlModel.elementId, formControl);
