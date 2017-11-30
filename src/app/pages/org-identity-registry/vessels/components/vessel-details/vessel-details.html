@@ -1,8 +1,12 @@
 <div class="row">
   <div class="col-lg-12">
     <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
-      <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
-      <ul *ngIf="!isLoading && (showDelete() || showUpdate())" class="btn-list clearfix">
+      <div *ngIf="image" style="margin-bottom: 10px;">
+        <img class="logo-image-no-center" [attr.src]="image | sanitizeUrl" *ngIf="image && !canChangeImage">
+        <mc-logo-uploader [logo]="image" [uploadingLogo]="uploadingImage" (onUpload)="uploadImage($event)" *ngIf="image && canChangeImage"></mc-logo-uploader>
+      </div>
+      <mc-label-value-table [isLoading]="isLoadingVesselAndImage" [labelValues]="labelValues"></mc-label-value-table>
+      <ul *ngIf="!isLoadingVesselAndImage && (showDelete() || showUpdate())" class="btn-list clearfix">
         <li *ngIf="showUpdate()">
           <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update vessel</button>
         </li>
@@ -14,12 +18,12 @@
 
     <ba-card title="Services for {{title}}" baCardClass="with-scroll table-panel">
       <h5>Update the ID information in the Instance-details-view to link additional services to this Vessel</h5>
-      <services-table [services]="vesselServices" [isLoading]="isLoading"></services-table>
+      <services-table [services]="vesselServices" [isLoading]="isLoadingVesselAndImage"></services-table>
     </ba-card>
 
     <div *ngIf="vessel">
         <ba-card title="Certificates for {{title}}" baCardClass="with-scroll table-panel">
-          <certificates-table [entityMrn]="vessel.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="vessel.certificates"></certificates-table>
+          <certificates-table [entityMrn]="vessel.mrn" [isLoading]="isLoadingVesselAndImage" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="vessel.certificates"></certificates-table>
         </ba-card>
     </div>
   </div>

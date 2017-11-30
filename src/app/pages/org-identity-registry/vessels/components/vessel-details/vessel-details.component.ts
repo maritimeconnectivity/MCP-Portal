@@ -9,6 +9,7 @@ import {CertificateEntityType} from "../../../../shared/services/certificate-hel
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import {VesselImageService} from "../../../../../backend-api/identity-registry/services/vessel-image.service";
 
 @Component({
   selector: 'vessel-details',
@@ -20,14 +21,20 @@ export class VesselDetailsComponent {
 	public labelValues:Array<LabelValueModel>;
 	public vesselServices:Array<Service>;
 	public title:string;
-	public isLoading:boolean;
+	public isLoadingVesselAndImage:boolean;
 	public vesselViewModel:VesselViewModel;
 	public vessel:Vessel;
 	public entityType: CertificateEntityType;
 	public certificateTitle: string;
 	public showModal:boolean = false;
 	public modalDescription:string;
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router:Router, private vesselsService: VesselsService, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
+
+	// Images
+	public image:string;
+	public canChangeImage:boolean;
+	public uploadingImage:boolean = false;
+
+  constructor(private vesselImageService:VesselImageService, private authService: AuthService, private route: ActivatedRoute, private router:Router, private vesselsService: VesselsService, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
 
   }
 
@@ -49,18 +56,62 @@ export class VesselDetailsComponent {
   }
 
 	private loadVessel() {
-		this.isLoading = true;
+		this.isLoadingVesselAndImage = true;
 		let mrn = this.route.snapshot.params['id'];
 		this.vesselsService.getVessel(mrn).subscribe(
 			vessel => {
 				this.vessel = vessel;
 				this.vesselViewModel = new VesselViewModel(vessel);
 				this.title = vessel.name;
+
+				this.canChangeImage = this.canChangeTheImage();
+				this.loadImage();
+			},
+			err => {
+				this.isLoadingVesselAndImage = false;
+				this.notifications.generateNotification('Error', 'Error when trying to get the vessel', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+	private loadImage(){
+		this.vesselImageService.getImageForVessel(this.vessel.mrn).subscribe(
+			image => {
+				this.image = URL.createObjectURL(new Blob([image]));
+				this.uploadingImage = false;
+				this.imageLoaded();
 				this.loadVesselServices();
 			},
 			err => {
-				this.isLoading = false;
-				this.notifications.generateNotification('Error', 'Error when trying to get the vessel', MCNotificationType.Error, err);
+				if (this.canChangeTheImage()) {
+					this.image = 'assets/img/no_ship.png';
+				}
+				this.uploadingImage = false;
+				this.imageLoaded();
+				this.loadVesselServices();
+			}
+		);
+	}
+
+	private imageLoaded() {
+
+	}
+
+	private canChangeTheImage():boolean {
+		return ( (this.authService.authState.isAdmin()) || this.authService.authState.isSiteAdmin());
+	}
+
+	public uploadImage(image:any) {
+		let oldImage = this.image;
+		this.uploadingImage = true;
+		this.vesselImageService.uploadImage(this.vessel.mrn, image).subscribe(
+			image => {
+				this.loadImage();
+			},
+			err => {
+				this.image = oldImage;
+				this.uploadingImage = false;
+				this.notifications.generateNotification('Error', 'Error when trying to upload vessel image', MCNotificationType.Error, err);
 			}
 		);
 	}
@@ -69,11 +120,11 @@ export class VesselDetailsComponent {
 		this.vesselsService.getVesselServices(this.vessel.mrn).subscribe(
 			services => { // FIXME: change when new api is here
 				this.vesselServices = services;
-				this.isLoading = false;
+				this.isLoadingVesselAndImage = false;
 				this.generateLabelValues();
 			},
 			err => {
-				this.isLoading = false;
+				this.isLoadingVesselAndImage = false;
 				this.notifications.generateNotification('Error', 'Error when trying to get the vessel', MCNotificationType.Error, err);
 			}
 		);
@@ -105,14 +156,14 @@ export class VesselDetailsComponent {
 	}
 
 	public deleteForSure() {
-		this.isLoading = true;
+		this.isLoadingVesselAndImage = true;
 		this.showModal = false;
 		this.vesselsService.deleteVessel(this.vessel.mrn).subscribe(
 			() => {
 				this.router.navigate(['../'], {relativeTo: this.route });
 			},
 			err => {
-				this.isLoading = false;
+				this.isLoadingVesselAndImage = false;
 				this.notifications.generateNotification('Error', 'Error when trying to delete the vessel', MCNotificationType.Error, err);
 			}
 		);

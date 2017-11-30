@@ -30,6 +30,7 @@ export class OrganizationDetailsTableComponent implements OnChanges {
 	    this.loadLogo();
     }
   }
+
   public uploadLogo(logo:any) {
 	  let oldLogo = this.logo;
 	  this.uploadingLogo = true;
