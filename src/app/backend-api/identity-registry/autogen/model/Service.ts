@@ -43,12 +43,12 @@ export interface Service {
     oidcAccessType?: Service.OidcAccessTypeEnum;
 
     /**
-     * The client id of the service in Maritime Cloud. Will be generated.
+     * The client id of the service in MCP. Will be generated.
      */
     oidcClientId?: string;
 
     /**
-     * The client secret of the service in Maritime Cloud. Will be generated.
+     * The client secret of the service in MCP. Will be generated.
      */
     oidcClientSecret?: string;
 
@@ -64,6 +64,9 @@ export interface Service {
 
     updatedAt?: Date;
 
+    /**
+     * The vessel that is linked to this service.
+     */
     vessel?: models.Vessel;
 
 }
