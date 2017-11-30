@@ -70,9 +70,10 @@ export class ServiceListComponent implements OnInit {
 	  this.entityImageList = [];
 	  if (this.services) {
 		  this.services.forEach(service => {
-			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(service), entityId:service.mrn + TOKEN_DELIMITER + service.instanceVersion, title:service.name});
+		  	if (service.instanceVersion) {
+			      this.entityImageList.push({imageSourceObservable:this.createImgObservable(service), entityId:service.mrn + TOKEN_DELIMITER + service.instanceVersion, title:service.name});
 			  }
-		  );
+		  });
 	  }
 	  if (this.authService.authState.isAdmin()) {
 		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Service', isAdd:true});
