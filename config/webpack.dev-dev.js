@@ -113,7 +113,7 @@ module.exports = function(options) {
           'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimecloud.net'),
           'ENDORSEMENT_BASE_PATH':JSON.stringify('https://test-endorse.maritimecloud.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-dev-keycloak.json'),
-          'ERROR_TAG_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
+          'ENVIRONMENT_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': true,
           'CAN_JOIN': false,
           'ENV': JSON.stringify(METADATA.ENV),

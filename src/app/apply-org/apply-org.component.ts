@@ -47,7 +47,7 @@ export class ApplyOrgComponent implements OnInit {
 
   ngOnInit() {
   	if (!CAN_JOIN) {
-		  this.notificationService.generateNotification('Apply', 'You can only apply in production. This is ' + ERROR_TAG_TEXT, MCNotificationType.Alert);
+		  this.notificationService.generateNotification('Apply', 'You can only apply in production. This is ' + ENVIRONMENT_TEXT, MCNotificationType.Alert);
 		  this.navigationHelper.takeMeHome();
   		return;
 	  }

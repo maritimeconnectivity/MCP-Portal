@@ -49,7 +49,7 @@ import {ServicesTableComponent} from "./components/services-table/services-table
 	  ServiceDetailsViewComponent,
 	  ServiceRegistrySearchComponent,
 	  EndorsedByListComponent,
-	  ServicesTableComponent
+	  ServicesTableComponent,
   ],
   providers: [
     SrViewModelService,

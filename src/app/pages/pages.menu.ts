@@ -145,6 +145,17 @@ export var PAGES_MENU_ALL = [
 		    path: '',
 		    data: {
 			    menu: {
+				    title: 'About',
+				    url: '/#/about',
+				    icon: 'ion-information',
+				    order: 700
+			    }
+		    }
+	    },
+	    {
+		    path: '',
+		    data: {
+			    menu: {
 				    title: 'MCP',
 				    url: 'http://maritimeconnectivity.net',
 				    icon: 'ion-android-exit',
@@ -202,6 +213,14 @@ export var PAGES_MENU_STM = [
 						data: {
 							menu: {
 								title: 'Devices',
+							}
+						}
+					},
+					{
+						path: 'services',
+						data: {
+							menu: {
+								title: 'ID Services',
 							}
 						}
 					},
@@ -281,6 +300,17 @@ export var PAGES_MENU_STM = [
 						icon: 'ion-help',
 						order: 700,
 						target: '_blank'
+					}
+				}
+			},
+			{
+				path: '',
+				data: {
+					menu: {
+						title: 'About',
+						url: '/#/about',
+						icon: 'ion-information',
+						order: 700
 					}
 				}
 			},
