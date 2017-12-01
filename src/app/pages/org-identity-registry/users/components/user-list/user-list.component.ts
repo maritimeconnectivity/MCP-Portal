@@ -87,7 +87,7 @@ export class UserListComponent implements OnInit {
   }
 
   private canCreateUser():boolean {
-  	return this.authService.authState.isAdmin() && this.organization && this.organization.federationType != FederationTypeEnum.ExternalIdp;
+  	return this.authService.authState.isAdmin() && this.organization.federationType === FederationTypeEnum.TestIdp;
   }
 
 	private createImgObservable(user:User):Observable<string> {
