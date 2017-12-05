@@ -273,7 +273,7 @@ export class SpecificationUpdateComponent implements OnInit {
 		var formControlModel:McFormControlModelSelect;
 		let disableStatus = this.xml != null || this.doc != null;
 		// TODO Get dynamically from XSD
-		let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},{label: "simulated", value: "simulated", isSelected: false},
+		let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},
 			{label: "released", value: "released", isSelected: false}, {label: "deprecated", value: "deprecated", isSelected: false},
 			{label: "deleted", value: "deleted", isSelected: false}];
 		statusSelect.forEach(status => 	{if (status.value === this.status) status.isSelected = true});

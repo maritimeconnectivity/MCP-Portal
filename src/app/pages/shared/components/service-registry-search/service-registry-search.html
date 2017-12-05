@@ -17,6 +17,17 @@
         </div>
       </div>
     </div>
+    <div *ngIf="showSimulatedOption" class="row">
+      <div class="col-sm-12">
+        <div [formGroup]="formGroup" class="form-group mc-form-group">
+          <label class="checkbox-inline custom-checkbox">
+            <input type="checkbox"  [checked]=simulatedState  class="form-control mc-form-control" formControlName="showSimulated"
+                   (change)="onSimulatedChange($event.target.checked)" [value]="value">
+            <span>Show simulated</span>
+          </label>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-sm-6">
         <div [formGroup]="formGroup" class="form-group mc-form-group" style="margin-bottom: 0px !important;">

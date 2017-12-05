@@ -154,7 +154,7 @@ export class InstancesService implements OnInit {
 
 	public searchInstancesForDesign(searchRequest:ServiceRegistrySearchRequest, designId:string, designVersion:string): Observable<Array<Instance>> {
 		if (!searchRequest) {
-			return this.getInstancesForDesign(searchRequest.showOnlySimulated, designId, designVersion);
+			return this.getInstancesForDesign(false, designId, designVersion);
 		}
 
 		let parallelObservables = [];
