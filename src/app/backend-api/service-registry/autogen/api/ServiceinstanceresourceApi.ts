@@ -81,12 +81,14 @@ export class ServiceinstanceresourceApi {
      * @summary getAllInstancesById
      * @param id id
      * @param includeDoc includeDoc
+     * @param includeNonCompliant includeNonCompliant
+     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesByIdUsingGET(id: string, includeDoc?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.getAllInstancesByIdUsingGETWithHttpInfo(id, includeDoc, page, size, sort, extraHttpRequestParams)
+    public getAllInstancesByIdUsingGET(id: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.getAllInstancesByIdUsingGETWithHttpInfo(id, includeDoc, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -121,9 +123,11 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param version version
      * @param includeDoc includeDoc
+     * @param includeNonCompliant includeNonCompliant
+     * @param displaySimulated displaySimulated
      */
-    public getInstanceUsingGET(id: string, version: string, includeDoc?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
-        return this.getInstanceUsingGETWithHttpInfo(id, version, includeDoc, extraHttpRequestParams)
+    public getInstanceUsingGET(id: string, version: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
+        return this.getInstanceUsingGETWithHttpInfo(id, version, includeDoc, includeNonCompliant, displaySimulated, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -276,11 +280,9 @@ export class ServiceinstanceresourceApi {
      * @param version version
      * @param status status
      * @param authorization Authorization
-     * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      */
-    public updateInstanceStatusUsingPUT(id: string, version: string, status: string, authorization?: string, includeNonCompliant?: string, displaySimulated?: string, extraHttpRequestParams?: any): Observable<{}> {
-        return this.updateInstanceStatusUsingPUTWithHttpInfo(id, version, status, authorization, includeNonCompliant, displaySimulated, extraHttpRequestParams)
+    public updateInstanceStatusUsingPUT(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<{}> {
+        return this.updateInstanceStatusUsingPUTWithHttpInfo(id, version, status, authorization, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -409,11 +411,13 @@ export class ServiceinstanceresourceApi {
      * 
      * @param id id
      * @param includeDoc includeDoc
+     * @param includeNonCompliant includeNonCompliant
+     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesByIdUsingGETWithHttpInfo(id: string, includeDoc?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllInstancesByIdUsingGETWithHttpInfo(id: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceInstance/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
@@ -425,6 +429,14 @@ export class ServiceinstanceresourceApi {
         }
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
+        }
+
+        if (includeNonCompliant !== undefined) {
+            queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
+        }
+
+        if (displaySimulated !== undefined) {
+            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -526,8 +538,10 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param version version
      * @param includeDoc includeDoc
+     * @param includeNonCompliant includeNonCompliant
+     * @param displaySimulated displaySimulated
      */
-    public getInstanceUsingGETWithHttpInfo(id: string, version: string, includeDoc?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public getInstanceUsingGETWithHttpInfo(id: string, version: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceInstance/${id}/${version}/'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -544,6 +558,14 @@ export class ServiceinstanceresourceApi {
         }
         if (includeDoc !== undefined) {
             queryParameters.set('includeDoc', <any>includeDoc);
+        }
+
+        if (includeNonCompliant !== undefined) {
+            queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
+        }
+
+        if (displaySimulated !== undefined) {
+            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         // to determine the Content-Type header
@@ -1045,10 +1067,8 @@ export class ServiceinstanceresourceApi {
      * @param version version
      * @param status status
      * @param authorization Authorization
-     * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      */
-    public updateInstanceStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, includeNonCompliant?: string, displaySimulated?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public updateInstanceStatusUsingPUTWithHttpInfo(id: string, version: string, status: string, authorization?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceInstance/${id}/${version}/status'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -1069,14 +1089,6 @@ export class ServiceinstanceresourceApi {
         }
         if (status !== undefined) {
             queryParameters.set('status', <any>status);
-        }
-
-        if (includeNonCompliant !== undefined) {
-            queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (authorization !== undefined && authorization !== null) {

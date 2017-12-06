@@ -27,4 +27,9 @@ export class McUtils {
 	public static getStringValueOfBoolean(value:boolean) {
 		return value ? 'true' : 'false';
 	}
+
+
+	public static getYesNoString(value:boolean) {
+		return value ? 'Yes' : 'No';
+	}
 }

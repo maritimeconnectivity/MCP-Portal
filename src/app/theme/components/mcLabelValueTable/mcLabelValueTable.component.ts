@@ -7,6 +7,7 @@ export interface LabelValueModel {
   valueHtml:string;
   linkFunction?:Function;
   linkValue?:any;
+  linkClass?:string;
 }
 
 @Component({

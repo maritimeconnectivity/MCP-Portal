@@ -178,6 +178,9 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 			if (searchRequest.keywords) {
 				keywords = searchRequest.keywords;
 			}
+			if (searchRequest.showOnlySimulated) {
+				this.simulatedState = searchRequest.showOnlySimulated;
+			}
 		} else if (this.preFilterMyOrg){
 			registeredBy = this.authService.authState.orgMrn;
 		}

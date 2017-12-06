@@ -219,7 +219,7 @@ export class InstanceNewComponent implements OnInit {
 				area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
 			}
 
-			if (area.match(/\s+\(\(/) || area.includes('\+')) {
+			if (area.includes('\+')) {
 				return false;
 			} else {
 				areas.push(area);

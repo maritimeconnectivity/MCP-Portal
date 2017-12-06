@@ -1,10 +1,10 @@
 <div *ngIf="labelValues">
   <table class="table table-no-borders {{tableClass}}">
     <tbody>
-      <tr *ngFor="let labelValue of labelValues">
-        <td>{{labelValue.label}} :</td>
+      <tr *ngFor="let labelValue of labelValues" [class]="labelValue.linkClass">
+        <td>{{labelValue.label}}</td>
         <td>
-          <div *ngIf="!labelValue.linkFunction" [innerHTML]="labelValue.valueHtml | undefined | sanitizeHtml"></div>
+          <div [class]="labelValue.linkClass" *ngIf="!labelValue.linkFunction" [innerHTML]="labelValue.valueHtml | undefined | sanitizeHtml"></div>
           <a *ngIf="labelValue.linkFunction" class="learn-more" (click)="labelValue.linkFunction(labelValue.linkValue)">{{labelValue.valueHtml | undefined}}</a>
         </td>
       </tr>
