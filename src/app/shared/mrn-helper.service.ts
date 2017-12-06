@@ -33,10 +33,10 @@ export class MrnHelperService {
 	}
 
 	public mrnPattern():string {
-		return '[a-zA-Z0-9_-]{3,25}';
+		return "^([a-z0-9()+,\\-.:=@;$_!*']|%[0-9a-f]{2}){3,25}$";
 	}
 	public mrnPatternError():string {
-		return 'It should contain at least 3 characters and only a-z 0-9 - _';
+		return "It should contain at least 3 characters and only a-z 0-9 + , \\ - . : = @ ; $ _ ! * '";
 	}
 
 	public mrnMaskForVessel():string {
@@ -92,10 +92,11 @@ export class MrnHelperService {
 			var valid = true;
 			let idSplit = mrn.substring(elementIdIndex).split(':');
 			idSplit.forEach(idElement => {
-				if(!idElement.match(this.mrnPattern())) {
+				if(!idElement.toLowerCase().match(this.mrnPattern())) {
 					valid = false;
 				}
 			});
+
 			return valid;
 		} catch (error) {
 			return false;

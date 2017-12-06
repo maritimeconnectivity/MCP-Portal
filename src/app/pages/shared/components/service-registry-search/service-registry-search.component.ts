@@ -26,6 +26,7 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 	@Input() preFilterMyOrg: boolean;
 	@Input() showEndorsement: boolean;
 	@Input() showKeywords: boolean = true;
+	@Input() showSimulatedOption: boolean = false;
 	@Output() onSearch:EventEmitter<ServiceRegistrySearchRequest> = new EventEmitter<ServiceRegistrySearchRequest>();
 	private endorsementMainSwitch = SHOW_ENDORSEMENTS;
 
@@ -37,6 +38,7 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 	public isCollapsed:boolean;
 	public collapsedClass:string;
 	public toggleClass:string;
+	public simulatedState:boolean = false;
 
   constructor(private searchRequestsService:SrSearchRequestsService, private changeDetector: ChangeDetectorRef, private authService:AuthService, formBuilder:FormBuilder, private orgsService: OrganizationsService, private notifications: MCNotificationsService) {
   	this.formGroup = formBuilder.group({});
@@ -55,77 +57,85 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
   	this.loadOrganizations();
 	}
 
+	public onSimulatedChange(value: any) {
+		this.simulatedState = value;
+		this.search();
+	}
+
 	public toggle() {
-			this.isCollapsed = !this.isCollapsed;
-			this.setClass();
-		}
+		this.isCollapsed = !this.isCollapsed;
+		this.setClass();
+	}
 
 	private setClass() {
-			this.toggleClass = this.isCollapsed ? 'fa fa-caret-square-o-down' : 'fa fa-caret-square-o-up';
+		this.toggleClass = this.isCollapsed ? 'fa fa-caret-square-o-down' : 'fa fa-caret-square-o-up';
+	}
+
+	public search() {
+		let keywords = this.formGroup.value.keywords;
+
+		let endorsedBy:string;
+		let registeredBy:string;
+
+		let registeredByValue = this.formGroup.value.registeredBy;
+		if (registeredByValue && registeredByValue.toLowerCase().indexOf('undefined') < 0) {
+			registeredBy = registeredByValue;
 		}
 
-  public search() {
-  	let keywords = this.formGroup.value.keywords;
-
-	  let endorsedBy:string;
-	  let registeredBy:string;
-
-	  let registeredByValue = this.formGroup.value.registeredBy;
-	  if (registeredByValue && registeredByValue.toLowerCase().indexOf('undefined') < 0) {
-		  registeredBy = registeredByValue;
-	  }
-
-	  let endorsedByValue = this.formGroup.value.endorsedBy;
-	  if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
-		  endorsedBy = endorsedByValue;
-	  }
+		let endorsedByValue = this.formGroup.value.endorsedBy;
+		if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
+			endorsedBy = endorsedByValue;
+		}
 		this.doSearch(keywords, registeredBy, endorsedBy);
-  }
+	}
 
-  private searchFromRegisteredBy(registeredBy) {
-	  let keywords = this.formGroup.value.keywords;
+	private searchFromRegisteredBy(registeredBy) {
+		let keywords = this.formGroup.value.keywords;
 
-	  let endorsedBy:string;
+		let endorsedBy:string;
 
-	  if (registeredBy && registeredBy.toLowerCase().indexOf('undefined') > -1) {
-		  registeredBy = undefined;
-	  }
+		if (registeredBy && registeredBy.toLowerCase().indexOf('undefined') > -1) {
+			registeredBy = undefined;
+		}
 
-	  let endorsedByValue = this.formGroup.value.endorsedBy;
-	  if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
-		  endorsedBy = endorsedByValue;
-	  }
-	  this.doSearch(keywords, registeredBy, endorsedBy);
-  }
+		let endorsedByValue = this.formGroup.value.endorsedBy;
+		if (endorsedByValue && endorsedByValue.toLowerCase().indexOf('undefined') < 0) {
+			endorsedBy = endorsedByValue;
+		}
+		this.doSearch(keywords, registeredBy, endorsedBy);
+	}
 
-  private searchFromEndorsedBy(endorsedBy:string) {
-	  let keywords = this.formGroup.value.keywords;
+	private searchFromEndorsedBy(endorsedBy:string) {
+		let keywords = this.formGroup.value.keywords;
 
-	  let registeredBy:string;
+		let registeredBy:string;
 
 
-	  let registeredByValue = this.formGroup.value.registeredBy;
-	  if (registeredByValue && registeredByValue.toLowerCase().indexOf('undefined') < 0) {
-		  registeredBy = registeredByValue;
-	  }
+		let registeredByValue = this.formGroup.value.registeredBy;
+		if (registeredByValue && registeredByValue.toLowerCase().indexOf('undefined') < 0) {
+			registeredBy = registeredByValue;
+		}
 
-	  if (endorsedBy && endorsedBy.toLowerCase().indexOf('undefined') > -1) {
-		  endorsedBy = undefined;
-	  }
+		if (endorsedBy && endorsedBy.toLowerCase().indexOf('undefined') > -1) {
+			endorsedBy = undefined;
+		}
 
-	  this.doSearch(keywords, registeredBy, endorsedBy);
-  }
+		this.doSearch(keywords, registeredBy, endorsedBy);
+	}
 
-  private doSearch(keywords:string, registeredBy:string, endorsedBy:string) {
-	  let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
-	  this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
-	  this.notifications.errorLog = null; // Remove error log if it is present
-	  this.onSearch.emit(searchRequest);
-  }
+	private doSearch(keywords:string, registeredBy:string, endorsedBy:string) {
+		let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy, showOnlySimulated:this.simulatedState};
+		this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
+		this.notifications.errorLog = null; // Remove error log if it is present
+		this.onSearch.emit(searchRequest);
+	}
 
 	private generateForm() {
 		var formControl = new FormControl('');
 		this.formGroup.addControl('keywords', formControl);
+
+		formControl = new FormControl(undefined);
+		this.formGroup.addControl('showSimulated', formControl);
 
 		formControl = new FormControl(undefined);
 		this.formGroup.addControl('registeredBy', formControl);
@@ -133,8 +143,6 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 		formControl = new FormControl(undefined);
 		this.formGroup.addControl('endorsedBy', formControl);
 	}
-
-
 
 	private loadOrganizations() {
 		this.orgsService.getAllOrganizations().subscribe(
@@ -169,6 +177,9 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 			endorsedBy = searchRequest.endorsedBy;
 			if (searchRequest.keywords) {
 				keywords = searchRequest.keywords;
+			}
+			if (searchRequest.showOnlySimulated) {
+				this.simulatedState = searchRequest.showOnlySimulated;
 			}
 		} else if (this.preFilterMyOrg){
 			registeredBy = this.authService.authState.orgMrn;

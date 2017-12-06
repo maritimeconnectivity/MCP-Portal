@@ -32,3 +32,4 @@
     </ba-card>
   </div>
 </div>
+<mc-modal (onCancel)="cancelModal()" (onOk)="registerForSure()" [show]="showModal" [title]="'Register instance'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Register'"></mc-modal>

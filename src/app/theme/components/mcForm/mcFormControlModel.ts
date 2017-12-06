@@ -11,7 +11,7 @@ export enum McFormControlType {
 
 export interface SelectModel {
 	label:string;
-	value:string;
+	value:any;
 	isSelected:boolean;
 }
 

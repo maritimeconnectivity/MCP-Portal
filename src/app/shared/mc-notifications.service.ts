@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ErrorLoggingService} from "./error-logging.service";
 import {UserError} from "./UserError";
+import {ServerUnreachableError} from "./ServerUnreachableError";
 
 export enum MCNotificationType {Success, Error, Info, Alert}
 export interface NotificationModel {
@@ -27,43 +28,53 @@ export class MCNotificationsService {
 
     if (anyError) {
       this.errorLogger.logErrorWithMessage(message, anyError, false);
-	    var extraMessage;
-	    var originalError = anyError;
-	    if (isUserError && anyError.originalError) {
-		    originalError = anyError.originalError;
-	    }
-	    try {
-		    let jsonError = originalError.json().error;
-		    let jsonErrorMessage = originalError.json().message;
-		    if (jsonError || jsonErrorMessage) {
-		    	extraMessage = jsonError + ",\n" + jsonErrorMessage;
-		    } else {
-		    	extraMessage = JSON.stringify(originalError.json());
-		    }
-	    } catch (err) {
-		    extraMessage = originalError;
-		    if (isUserError) {
-			    extraMessage = JSON.stringify(anyError.errorMessage);
-		    }
-	    }
-	    finally {
-		    if (extraMessage.length > 400) {
-			    this.errorLog = extraMessage;
-			    extraMessage = ": See error log for details";
-		    } else {
-			    this.errorLog = null;
-		    	extraMessage = ". Error was: " + extraMessage;
-		    }
-		    // If this is an internal error created by this Portal then the message will be contained in the extraMessage and we don't wanna show it twice
-		    if (extraMessage.indexOf(message) < 0) {
-			    message += extraMessage;
-		    }
-	    }
+      if (anyError instanceof ServerUnreachableError) {
+      	message = anyError.message;
+      } else {
+      	message = this.getExtraMessage(message, anyError);
+      }
+
     }
 	  this.notificationObserver.next({title:title, message:message, type:type});
 
 	  if(anyError && this.errorLogger.options.makeBugReportFromError && !isUserError) {
 		  this.notificationObserver.next({title:title, message:"A Bug Report was send automatically.", type:type});
 	  }
+  }
+  private getExtraMessage(message:string, anyError:any) : string {
+	  let isUserError = anyError instanceof UserError;
+	  var extraMessage;
+	  var originalError = anyError;
+	  if (isUserError && anyError.originalError) {
+		  originalError = anyError.originalError;
+	  }
+	  try {
+		  let jsonError = originalError.json().error;
+		  let jsonErrorMessage = originalError.json().message;
+		  if (jsonError || jsonErrorMessage) {
+			  extraMessage = jsonError + ",\n" + jsonErrorMessage;
+		  } else {
+			  extraMessage = JSON.stringify(originalError.json());
+		  }
+	  } catch (err) {
+		  extraMessage = originalError;
+		  if (isUserError) {
+			  extraMessage = JSON.stringify(anyError.errorMessage);
+		  }
+	  }
+	  finally {
+		  if (extraMessage.length > 400) {
+			  this.errorLog = extraMessage;
+			  extraMessage = ": See error log for details";
+		  } else {
+			  this.errorLog = null;
+			  extraMessage = ". Error was: " + extraMessage;
+		  }
+		  // If this is an internal error created by this Portal then the message will be contained in the extraMessage and we don't wanna show it twice
+		  if (extraMessage.indexOf(message) < 0) {
+			  message += extraMessage;
+		  }
+	  }
+	  return message
   }
 }

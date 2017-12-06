@@ -29,6 +29,11 @@ import {ServiceViewModel} from "../../../../org-identity-registry/services/view-
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
+import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
+import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import {VesselAttribute} from "../../../../../backend-api/identity-registry/autogen/model/VesselAttribute";
+import AttributeNameEnum = VesselAttribute.AttributeNameEnum;
+import {VesselHelper} from "../../../../shared/services/vessel-helper";
 
 @Component({
   selector: 'instance-new',
@@ -70,14 +75,21 @@ export class InstanceNewComponent implements OnInit {
 	public registerForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 	public WKTs: Array<string>;
+	private linkToVessel: boolean = false;
+	private vessel: Vessel;
+	private vessels: Array<Vessel>;
 
-  constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService) {
+	public showModal:boolean = false;
+	public modalDescription:string;
+
+  constructor(private formBuilder: FormBuilder, private xmlParser: InstanceXmlParser, private mrnHelper: MrnHelperService, private activatedRoute: ActivatedRoute, private xmlParserService: XmlParserService, private viewModelService: SrViewModelService, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private designsService: DesignsService, private orgService: OrganizationsService, private instancesService: InstancesService, private idServicesService: IdServicesService, private vesselsService: VesselsService) {
   }
 
   ngOnInit() {
     this.onRegister = this.register.bind(this);
     this.isRegistering = false;
     this.isLoading = true;
+	  this.loadVessels();
     this.generateForm();
     this.loadMyOrganization();
     this.loadDesign();
@@ -207,7 +219,7 @@ export class InstanceNewComponent implements OnInit {
 				area = 'POLYGON((-180 90, 180 90, 180 -90, -180 -90))';
 			}
 
-			if (area.match(/\s+\(\(/) || area.includes('\+')) {
+			if (area.includes('\+')) {
 				return false;
 			} else {
 				areas.push(area);
@@ -271,9 +283,40 @@ export class InstanceNewComponent implements OnInit {
   }
 
   public register() {
-    this.isRegistering = true;
-	  this.createInstance(this.parsedInstance);
+		if (this.showVesselAttNotEqualWarning()) {
+			let imoNumber = this.xmlParser.getImo(this.parsedInstance.instanceAsXml);
+			let mmsiNumber = this.xmlParser.getMmsi(this.parsedInstance.instanceAsXml);
+			this.modalDescription =
+				"The IMO and/or the MMSI number from the Xml and the Vessel doesn't match.<br><br>" +
+				"Vessel: IMO:" + VesselHelper.getIMO(this.vessel) + ", MMSI:" + VesselHelper.getMMSI(this.vessel) + "<br>" +
+				"Xml: IMO:" + imoNumber + ", MMSI:" + mmsiNumber + "<br><br>" +
+				"Register Instance anyway?";
+			this.showModal = true;
+		} else {
+			this.registerForSure();
+		}
   }
+
+  private showVesselAttNotEqualWarning() : boolean {
+	  if (this.linkToVessel) {
+		  let imoNumber = this.xmlParser.getImo(this.parsedInstance.instanceAsXml);
+		  let mmsiNumber = this.xmlParser.getMmsi(this.parsedInstance.instanceAsXml);
+		  if (!VesselHelper.isVesselAttEqualTo(this.vessel, imoNumber, mmsiNumber)) {
+			  return true;
+		  }
+	  }
+	  return false;
+  }
+
+	public cancelModal() {
+		this.showModal = false;
+	}
+
+	public registerForSure() {
+		this.isRegistering = true;
+		this.showModal = false;
+		this.createInstance(this.parsedInstance);
+	}
 
   private createInstance(instance:Instance) {
     this.instancesService.createInstance(instance, this.doc).subscribe(
@@ -306,8 +349,12 @@ export class InstanceNewComponent implements OnInit {
 				service.oidcAccessType = oidcAccessType;
 			}
 		}
+		if (this.linkToVessel) {
+			service.vessel = this.vessel;
+		}
 		this.createIdService(service, instance);
 	}
+
   private createIdService(idService:Service, instance:Instance) {
     this.idServicesService.createIdService(idService).subscribe(
       service => {
@@ -320,8 +367,18 @@ export class InstanceNewComponent implements OnInit {
 	      this.navigationService.navigateToOrgInstance(instance.instanceId, instance.version);
       }
     );
-
   }
+
+	private loadVessels() {
+		this.vesselsService.getVessels().subscribe(pageVessel => {
+			this.vessels = pageVessel.content;
+			this.generateForm();
+			this.isLoading = false;
+		},error => {
+			this.notifications.generateNotification('Error', 'Error when trying to get vessels for the service', MCNotificationType.Error, error);
+			this.cancel();
+		});
+	}
 
   private loadMyOrganization() {
     this.orgService.getMyOrganization().subscribe(
@@ -376,6 +433,11 @@ export class InstanceNewComponent implements OnInit {
 		this.generateForm();
 	}
 
+	private shouldLinkToVessel(linkToVessel: boolean) {
+		this.linkToVessel = linkToVessel;
+		this.generateForm();
+	}
+
 	private generateForm() {
 		var oldForm = this.registerForm;
 		this.registerForm = this.formBuilder.group({});
@@ -410,10 +472,29 @@ export class InstanceNewComponent implements OnInit {
 
 			if (this.useOIDCRedirect) {
 				formControlModel = {formGroup: this.registerForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
-				formControl = new FormControl('', formControlModel.validator);
+				formControl = new FormControl(oldForm.value.oidcRedirectUri, formControlModel.validator);
 				this.registerForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);
 			}
+		}
+
+		let linkToVesselCheckbox:McFormControlModelCheckbox = {state: this.linkToVessel, formGroup: this.registerForm, elementId: 'linkToVessel', controlType: McFormControlType.Checkbox, labelName: 'Link to a vessel'};
+		formControl = new FormControl({value: linkToVesselCheckbox.state, disabled: false}, linkToVesselCheckbox.validator);
+		formControl.valueChanges.subscribe(param => this.shouldLinkToVessel(param));
+		this.registerForm.addControl(linkToVesselCheckbox.elementId, formControl);
+		this.formControlModels.push(linkToVesselCheckbox);
+
+		if (this.linkToVessel) {
+			let selectValues = this.vesselSelectValues();
+			let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.registerForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: null, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
+			formControl = new FormControl(this.selectedValue(selectValues), vesselSelect.validator);
+			formControl.valueChanges.subscribe(param => {
+				if (param) {
+					this.vessel = param;
+				}
+			});
+			this.registerForm.addControl(vesselSelect.elementId, formControl);
+			this.formControlModels.push(vesselSelect);
 		}
 	}
 
@@ -427,7 +508,26 @@ export class InstanceNewComponent implements OnInit {
 		});
 		return selectValues;
 	}
-	private selectedValue(selectValues:Array<SelectModel>):string {
+
+	private vesselSelectValues():Array<SelectModel> {
+		let selectValues:Array<SelectModel> = [];
+		var defaultSelected = true;
+		if (this.vessels && this.vessels.length > 0) {
+			this.vessels.forEach(vessel => {
+				let isSelected = false;
+				if (this.vessel) {
+					isSelected = this.vessel.mrn === vessel.mrn;
+				} else {
+					isSelected = defaultSelected;
+					defaultSelected = false;
+				}
+				selectValues.push({value: vessel, label: VesselHelper.labelForSelect(vessel), isSelected: isSelected});
+			});
+		}
+		return selectValues;
+	}
+
+	private selectedValue(selectValues:Array<SelectModel>):any {
 		for(let selectModel of selectValues) {
 			if (selectModel.isSelected) {
 				return selectModel.value;

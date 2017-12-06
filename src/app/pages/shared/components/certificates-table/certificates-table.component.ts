@@ -13,6 +13,7 @@ import {
 	TableCellActionButtons, TableActionButton
 } from "../../../../theme/components/mcTable/mcTable.component";
 import {DatePipe} from "@angular/common";
+import {CertificateBundle} from "../../../../backend-api/identity-registry/autogen/model/CertificateBundle";
 
 @Component({
   selector: 'certificates-table',
@@ -149,6 +150,7 @@ export class CertificatesTableComponent implements OnChanges{
 
   public download(certificate:Certificate) {
     let pemCertificate:PemCertificate = {certificate:certificate.certificate};
-    this.fileHelper.downloadPemCertificate(pemCertificate, this.certificateTitle);
+    let certBundle:CertificateBundle = {pemCertificate:pemCertificate};
+    this.fileHelper.downloadPemCertificate(certBundle, this.certificateTitle);
   }
 }

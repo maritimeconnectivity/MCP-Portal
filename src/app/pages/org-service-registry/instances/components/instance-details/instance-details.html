@@ -26,7 +26,7 @@
     </ba-card>
 
     <div *ngIf="shouldDisplayIdService">
-      <service-details-view [shouldShowUpdate]="showUpdateIdService" (updateAction)="updateIdService()" [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
+      <service-details-view [shouldShowUpdate]="showUpdateIdService" (updateAction)="updateIdService()" [shouldShowLinkToInstance]="false" [shouldShowDelete]="false" [isLoading]="isLoadingIdService" [title]="titleIdService" [service]="idService"></service-details-view>
     </div>
 
     <div *ngIf="shouldDisplayCreateButton">

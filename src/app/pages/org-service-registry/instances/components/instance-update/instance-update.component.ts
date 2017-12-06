@@ -11,8 +11,8 @@ import {Instance} from "../../../../../backend-api/service-registry/autogen/mode
 import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {
-	McFormControlModel,
-	McFormControlType
+    McFormControlModel, McFormControlModelSelect,
+    McFormControlType, SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
 import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
@@ -102,7 +102,6 @@ export class InstanceUpdateComponent implements OnInit {
 	  } else {
 		  this.hasError = false;
 		  this.resetXmlFile();
-		  this.setFormChanged();
 		  this.generateForm();
 		  this.updateUI();
 	  }
@@ -112,6 +111,7 @@ export class InstanceUpdateComponent implements OnInit {
 	  this.status = this.instance.status;
 	  this.xml = null;
 	  this.fileUploadXml.resetFileSelection();
+	  this.setFormChanged();
 	  this.updateUI();
   }
 
@@ -177,13 +177,13 @@ export class InstanceUpdateComponent implements OnInit {
 				instance.endpointUri = this.xmlParser.getEndpoint(this.xml);
 				instance.designId = this.xmlParser.getMrnForDesignInInstance(this.xml);
 				this.parsedInstance = instance;
+				this.setupLableValuesParsed();
 			}
 		} catch ( error ) {
 			this.isUpdating = false;
 			this.notifications.generateNotification('Error in XML', error.message, MCNotificationType.Error, error);
 			this.resetXmlFile();
 		} finally {
-			this.setupLableValuesParsed();
 			this.WKTs = this.xmlParser.getGeometriesAsWKT(this.xml);
 		}
 	}
@@ -257,17 +257,13 @@ export class InstanceUpdateComponent implements OnInit {
   }
 
   private updateStatus() {
-  	this.notifications.generateNotification("Not Implemented", "Update status only, is sadly not implemented yet", MCNotificationType.Info);
-	  this.isUpdating = false;
-  	/*
 	  this.instancesService.updateStatus(this.instance, this.status).subscribe(_ => {
 			  this.navigationService.navigateToOrgInstance(this.instance.instanceId, this.instance.version);
 		  },
 		  err => {
 			  this.isUpdating = false;
-			  this.notifications.generateNotification('Error', 'Error when trying to update status', MCNotificationType.Error, err);
+			  this.notifications.generateNotification('Error', 'Error when trying to update status of instance', MCNotificationType.Error, err);
 		  });
-		  */
   }
 
   private updateInstance() {
@@ -320,12 +316,17 @@ export class InstanceUpdateComponent implements OnInit {
 		this.updateForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel;
+		var formControlModel:McFormControlModelSelect;
 		let disableStatus = this.xml != null || this.doc != null;
+		// TODO Get dynamically from XSD
+		let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},{label: "simulated", value: "simulated", isSelected: false},
+			{label: "released", value: "released", isSelected: false}, {label: "deprecated", value: "deprecated", isSelected: false},
+			{label: "deleted", value: "deleted", isSelected: false}];
+		statusSelect.forEach(status => 	{if (status.value === this.status) status.isSelected = true});
 		if (disableStatus) {
-			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
 		} else {
-			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: ''};
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: ''};
 		}
 		var formControl = new FormControl(this.status, formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.setStatus(param));

@@ -27,7 +27,7 @@
 
     <ba-card title="Instances implementing the Design ({{design?.name}})" baCardClass="with-scroll table-panel">
       <div *ngIf="!isLoadingInstances">
-        <service-registry-search [showKeywords]="false" [searchTitle]="'Instance search filters'" [searchKey]="searchKey" [isSearching]="isSearchingInstances" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
+        <service-registry-search [showSimulatedOption]="true" [showKeywords]="false" [searchTitle]="'Instance search filters'" [searchKey]="searchKey" [isSearching]="isSearchingInstances" [showEndorsement]="true" [preFilterMyOrg]="false" (onSearch)="search($event)"></service-registry-search>
 
         <div class="separator"></div>
       </div>

@@ -15,7 +15,7 @@ export class BugReportingService {
   }
 
   public reportBug(bugReport:BugReport) : Observable<any> {
-		bugReport.subject = "#"+ ERROR_TAG_TEXT + ' v.' + this.version + ': ' + bugReport.subject;
+		bugReport.subject = "#"+ ENVIRONMENT_TEXT + ' v.' + this.version + ': ' + bugReport.subject;
   	if (AuthService.staticAuthInfo && AuthService.staticAuthInfo.loggedIn) {
   		this.addUserToReport(bugReport, AuthService.staticAuthInfo.user);
 	  }

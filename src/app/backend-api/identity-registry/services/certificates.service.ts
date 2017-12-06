@@ -9,6 +9,7 @@ import {IdServicesService} from "./id-services.service";
 import {UsersService} from "./users.service";
 import {VesselsService} from "./vessels.service";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
+import {TOKEN_DELIMITER} from "../../../shared/app.constants";
 
 @Injectable()
 export class CertificatesService implements OnInit {
@@ -126,7 +127,7 @@ export class CertificatesService implements OnInit {
 	}
 
   private issueNewCertificateForService(serviceMrn: string, observer: Observer<any>) {
-	  let serviceMrnAndVersion = serviceMrn.split('#¤#');
+	  let serviceMrnAndVersion = serviceMrn.split(TOKEN_DELIMITER);
     this.servicesService.issueNewCertificate(serviceMrnAndVersion[0], serviceMrnAndVersion[1]).subscribe(
       pemCertificate => {
         observer.next(pemCertificate);
@@ -138,7 +139,7 @@ export class CertificatesService implements OnInit {
   }
 
 	private revokeCertificateForService(serviceMrn: string, certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
-  	let serviceMrnAndVersion = serviceMrn.split('#¤#');
+  	let serviceMrnAndVersion = serviceMrn.split(TOKEN_DELIMITER);
 		this.servicesService.revokeCertificate(serviceMrnAndVersion[0], serviceMrnAndVersion[1], certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);

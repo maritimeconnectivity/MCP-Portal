@@ -3,6 +3,7 @@ import {TableHeader, TableRow, TableCell} from "../../../../theme/components/mcT
 import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
 import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
 import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
+import {McUtils} from "../../../../shared/mc-utils";
 
 @Component({
   selector: 'instances-table',
@@ -38,6 +39,9 @@ export class InstancesTableComponent implements OnChanges {
     tableHeader = {title:'Status', class:'nowrap'};
     tableHeaders.push(tableHeader);
 
+	  tableHeader = {title:'Compliant', class:'nowrap'};
+	  tableHeaders.push(tableHeader);
+
 	  tableHeader = {title:'Organization', class:'nowrap'};
 	  tableHeaders.push(tableHeader);
 
@@ -56,8 +60,12 @@ export class InstancesTableComponent implements OnChanges {
       tableCell = {valueHtml:instance.version, class:'nowrap align-center', truncateNumber:0};
       cells.push(tableCell);
 
-      tableCell = {valueHtml:instance.status, class:'nowrap', truncateNumber:0};
-      cells.push(tableCell);
+	    tableCell = {valueHtml:instance.status, class:'nowrap', truncateNumber:0};
+	    cells.push(tableCell);
+
+	    let compliantClass = instance.compliant ? '' : 'label-danger';
+	    tableCell = {valueHtml:McUtils.getYesNoString(instance.compliant), class:'nowrap ' + compliantClass, truncateNumber:0};
+	    cells.push(tableCell);
 
 	    tableCell = {valueHtml:'', class:'nowrap', truncateNumber:25};
 	    this.setOrganizationCell(tableCell, instance.organizationId);

@@ -8,6 +8,8 @@ import {AuthService} from "../../../../../authentication/services/auth.service";
 import {Observable} from "rxjs";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
+import {TOKEN_DELIMITER} from "../../../../../shared/app.constants";
 
 @Component({
   selector: 'service-list',
@@ -21,7 +23,7 @@ export class ServiceListComponent implements OnInit {
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
   public isLoading: boolean;
-  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private servicesService: IdServicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private servicesService: IdServicesService, private orgService: OrganizationsService, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
   }
 
   ngOnInit() {
@@ -57,23 +59,21 @@ export class ServiceListComponent implements OnInit {
 
 	public gotoDetails(entityModel:EntityImageModel) {
 		if (entityModel.entityId === this.KEY_NEW) {
-			this.gotoCreate();
+			this.navigationHelper.navigateToCreateIdService();
 		} else {
-			this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+			let serviceMrnAndVersion = entityModel.entityId.split(TOKEN_DELIMITER);
+			this.navigationHelper.navigateToService(serviceMrnAndVersion[0], serviceMrnAndVersion[1]);
 		}
-	}
-
-	public gotoCreate() {
-		this.router.navigate(['register'], {relativeTo: this.route})
 	}
 
   private generateEntityImageList() {
 	  this.entityImageList = [];
 	  if (this.services) {
 		  this.services.forEach(service => {
-			    this.entityImageList.push({imageSourceObservable:this.createImgObservable(service), entityId:service.mrn, title:service.name});
+		  	if (service.instanceVersion) {
+			      this.entityImageList.push({imageSourceObservable:this.createImgObservable(service), entityId:service.mrn + TOKEN_DELIMITER + service.instanceVersion, title:service.name});
 			  }
-		  );
+		  });
 	  }
 	  if (this.authService.authState.isAdmin()) {
 		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Service', isAdd:true});

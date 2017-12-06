@@ -6,6 +6,7 @@ import {Service} from "../autogen/model/Service";
 import {PemCertificate} from "../autogen/model/PemCertificate";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 import {PageService} from "../autogen/model/PageService";
+import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
 
 @Injectable()
 export class IdServicesService implements OnInit {
@@ -40,7 +41,8 @@ export class IdServicesService implements OnInit {
 
 	public getIdServices(): Observable<PageService> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.getOrganizationServicesUsingGET(orgMrn);
+		// TODO: do paging properly
+		return this.servicesApi.getOrganizationServicesUsingGET(orgMrn, 0, PAGE_SIZE_DEFAULT);
 	}
 
 	public issueNewCertificate(serviceMrn:string, serviceVersion:string) : Observable<PemCertificate> {

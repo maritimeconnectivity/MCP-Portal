@@ -1,8 +1,8 @@
 #!/bin/bash
 _tag=$1
-echo "Deploying Maritime Cloud!"
-#git clone https://github.com/MaritimeCloud/MaritimeCloudPortal.git /maritime_cloud_deployment
-#cd /maritime_cloud_deployment
+echo "Deploying Maritime Connectivity Platform Portal!"
+#git clone https://github.com/MaritimeCloud/MCP-Portal.git /mcp_deployment
+#cd /mcp_deployment
 git pull
 npm install --global rimraf
 npm run clean

@@ -9,6 +9,7 @@ import {VesselcontrollerApi} from "./autogen/api/VesselcontrollerApi";
 import {LogocontrollerApi} from "./autogen/api/LogocontrollerApi";
 import {Http} from "@angular/http";
 import {BugReportControllerApi} from "./autogen/api/BugReportControllerApi";
+import {VesselimagecontrollerApi} from "./autogen/api/VesselimagecontrollerApi";
 
 @NgModule({
   imports: [
@@ -77,6 +78,13 @@ import {BugReportControllerApi} from "./autogen/api/BugReportControllerApi";
 		  provide: DevicecontrollerApi,
 		  useFactory: (http: Http) => {
 			  return new DevicecontrollerApi(http, IR_BASE_PATH, null);
+		  },
+		  deps: [Http]
+	  },
+	  {
+		  provide: VesselimagecontrollerApi,
+		  useFactory: (http: Http) => {
+			  return new VesselimagecontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  }

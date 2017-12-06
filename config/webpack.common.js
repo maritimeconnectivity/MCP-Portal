@@ -18,8 +18,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
  */
 const HMR = helpers.hasProcessFlag('hot');
 const METADATA = {
-  title: 'Maritime Cloud Management Portal',
-  description: 'Management portal for managing the core elements of the Maritime Cloud',
+  title: 'Maritime Connectivity Platform Management Portal',
+  description: 'Management portal for managing the core elements of the Maritime Connectivity Platform',
   baseUrl: './',
   isDevServer: helpers.isWebpackDevServer()
 };

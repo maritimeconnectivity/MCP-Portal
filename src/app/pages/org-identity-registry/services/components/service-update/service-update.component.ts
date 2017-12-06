@@ -13,6 +13,10 @@ import {Service} from "../../../../../backend-api/identity-registry/autogen/mode
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
 import {SelectValidator} from "../../../../../theme/validators/select.validator";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
+import {isNullOrUndefined} from "util";
+import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
+import {VesselHelper} from "../../../../shared/services/vessel-helper";
 
 
 @Component({
@@ -25,17 +29,26 @@ export class ServiceUpdateComponent implements OnInit {
 
 	public idService:Service;
 	public showModal:boolean = false;
+	public showModalVesselAtt:boolean = false;
 	public modalDescription:string;
+	private vessel: Vessel;
+	private vessels: Array<Vessel>;
 	// McForm params
 	private useOIDC:boolean = false;
 	private useOIDCRedirect:boolean = true;
+	private linkToVessel:boolean = false;
 	public isLoading = true;
 	public isUpdating = false;
 	public updateTitle = "Update";
 	public updateForm: FormGroup;
 	public formControlModels: Array<McFormControlModel>;
 
-	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private servicesService: IdServicesService, mrnHelper: MrnHelperService) {
+	// Changed fields
+	private permissions:string;
+	private certDomainName:string;
+	private oidcRedirectUri:string;
+
+	constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private servicesService: IdServicesService, mrnHelper: MrnHelperService, private vesselsService: VesselsService) {
 
 	}
 
@@ -53,15 +66,31 @@ export class ServiceUpdateComponent implements OnInit {
 				this.idService = idService;
 				this.useOIDC = this.idService.oidcAccessType != undefined;
 				this.useOIDCRedirect = (this.idService.oidcAccessType && this.idService.oidcAccessType != OidcAccessTypeEnum.BearerOnly);
-				this.generateForm();
-				this.isLoading = false;
+				this.linkToVessel = !isNullOrUndefined(this.idService.vessel);
+				this.permissions = this.idService.permissions;
+				this.certDomainName = this.idService.certDomainName;
+				this.oidcRedirectUri = this.idService.oidcRedirectUri;
+				if (this.linkToVessel) {
+					this.vessel = this.idService.vessel;
+				}
+				this.loadVessels();
 			},
 			err => {
 				this.notifications.generateNotification('Error', 'Error when trying to get the service', MCNotificationType.Error, err);
-
-				this.navigationService.navigateToVessel(mrn);
+				this.navigationService.navigateToService(mrn, version);
 			}
 		);
+	}
+
+	private loadVessels() {
+		this.vesselsService.getVessels().subscribe(pageVessel => {
+			this.vessels = pageVessel.content;
+			this.generateForm();
+			this.isLoading = false;
+		},error => {
+			this.notifications.generateNotification('Error', 'Error when trying to get vessels for the service', MCNotificationType.Error, error);
+			this.navigationService.navigateToService(this.idService.mrn, this.idService.instanceVersion);
+		});
 	}
 
 	public cancel() {
@@ -73,7 +102,25 @@ export class ServiceUpdateComponent implements OnInit {
 			this.modalDescription = "<b>Certificates</b> will be <b>invalid</b> if you update the service.<br>You need to revoke the certificates and issue new ones.<br><br>Would you still like to update?";
 			this.showModal = true;
 		} else {
+			this.showVesselAttWarning();
+		}
+	}
+
+	public showVesselAttWarning() {
+		if (this.linkToVessel && this.isNewVessel()) {
+			this.showModal = false;
+			this.modalDescription = "The linked Vessel has changed. You should change the IMO and MMSI in the Instance XML as well.<br><br>Would you still like to update?";
+			this.showModalVesselAtt = true;
+		} else {
 			this.updateForSure();
+		}
+	}
+
+	private isNewVessel() : boolean {
+		if (this.vessel && this.idService.vessel) {
+			return this.vessel.mrn !== this.idService.vessel.mrn;
+		} else {
+			return true;
 		}
 	}
 
@@ -90,6 +137,7 @@ export class ServiceUpdateComponent implements OnInit {
 
 	public cancelModal() {
 		this.showModal = false;
+		this.showModalVesselAtt = false;
 	}
 
 	public updateForSure() {
@@ -102,6 +150,12 @@ export class ServiceUpdateComponent implements OnInit {
 		this.idService.name = this.updateForm.value.name;
 		this.idService.permissions = this.updateForm.value.permissions;
 		this.idService.certDomainName = this.updateForm.value.certDomainName;
+
+		if (this.linkToVessel) {
+			this.idService.vessel = this.updateForm.value.vesselSelect;
+		} else {
+			this.idService.vessel = null;
+		}
 
 		if (overwriteOidc) {
 			if (this.useOIDC) {
@@ -152,6 +206,11 @@ export class ServiceUpdateComponent implements OnInit {
 		this.generateForm();
 	}
 
+	private shouldLinkToVessel(linkToVessel: boolean) {
+		this.linkToVessel = linkToVessel;
+		this.generateForm();
+	}
+
 	private generateForm() {
 		this.updateForm = this.formBuilder.group({});
 
@@ -169,12 +228,14 @@ export class ServiceUpdateComponent implements OnInit {
 		this.formControlModels.push(formControlModel);
 
 		formControlModel = {formGroup: this.updateForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
-		formControl = new FormControl(this.idService.permissions, formControlModel.validator);
+		formControl = new FormControl(this.permissions, formControlModel.validator);
+		formControl.valueChanges.subscribe(param => this.permissions = param);
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
 		formControlModel = {formGroup: this.updateForm, elementId: 'certDomainName', controlType: McFormControlType.Text, labelName: 'Certificate domain name', placeholder: ''};
-		formControl = new FormControl(this.idService.certDomainName, formControlModel.validator);
+		formControl = new FormControl(this.certDomainName, formControlModel.validator);
+		formControl.valueChanges.subscribe(param => this.certDomainName = param);
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
@@ -194,12 +255,32 @@ export class ServiceUpdateComponent implements OnInit {
 
 			if (this.useOIDCRedirect) {
 				formControlModel = {formGroup: this.updateForm, elementId: 'oidcRedirectUri', controlType: McFormControlType.Text, labelName: 'OIDC Redirect URI', placeholder: '', validator:Validators.required, errorText:'URI is required'};
-				formControl = new FormControl(this.idService.oidcRedirectUri, formControlModel.validator);
+				formControl = new FormControl(this.oidcRedirectUri, formControlModel.validator);
+				formControl.valueChanges.subscribe(param => this.oidcRedirectUri = param);
 				this.updateForm.addControl(formControlModel.elementId, formControl);
 				this.formControlModels.push(formControlModel);
 			}
 
 		}
+
+    let linkToVesselCheckbox:McFormControlModelCheckbox = {state: this.linkToVessel, formGroup: this.updateForm, elementId: 'linkToVessel', controlType: McFormControlType.Checkbox, labelName: 'Link to a vessel'};
+    formControl = new FormControl({value: linkToVesselCheckbox.state, disabled: false}, linkToVesselCheckbox.validator);
+    formControl.valueChanges.subscribe(param => this.shouldLinkToVessel(param));
+    this.updateForm.addControl(linkToVesselCheckbox.elementId, formControl);
+    this.formControlModels.push(linkToVesselCheckbox);
+
+    if (this.linkToVessel) {
+        let selectValues = this.vesselSelectValues();
+        let vesselSelect:McFormControlModelSelect = {selectValues: selectValues, formGroup: this.updateForm, elementId: 'vesselSelect', controlType: McFormControlType.Select, validator: null, labelName: 'Vessel', placeholder: '', showCheckmark: false, requireGroupValid: false};
+        formControl = new FormControl(this.selectedValue(selectValues));
+        formControl.valueChanges.subscribe(param => {
+            if (param) {
+                this.vessel = param;
+            }
+        });
+        this.updateForm.addControl(vesselSelect.elementId, formControl);
+        this.formControlModels.push(vesselSelect);
+    }
 	}
 
 	private selectedValue(selectValues:Array<SelectModel>):string {
@@ -219,6 +300,24 @@ export class ServiceUpdateComponent implements OnInit {
 			let isSelected = OidcAccessTypeEnum[oidcType.value] === OidcAccessTypeEnum[this.idService.oidcAccessType];
 			selectValues.push({value:oidcType.value, label:oidcType.label, isSelected: isSelected});
 		});
+		return selectValues;
+	}
+
+	private vesselSelectValues():Array<SelectModel> {
+		let selectValues:Array<SelectModel> = [];
+		var defaultSelected = true;
+		if (this.vessels && this.vessels.length > 0) {
+			this.vessels.forEach(vessel => {
+				let isSelected = false;
+				if (this.vessel) {
+					isSelected = this.vessel.mrn === vessel.mrn;
+				} else {
+					isSelected = defaultSelected;
+					defaultSelected = false;
+				}
+				selectValues.push({value: vessel, label: VesselHelper.labelForSelect(vessel), isSelected: isSelected});
+			});
+		}
 		return selectValues;
 	}
 }

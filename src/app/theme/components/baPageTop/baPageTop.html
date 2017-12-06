@@ -1,7 +1,7 @@
 <div style="display: inline-block !important;" class="page-top clearfix" baScrollPosition maxHeight="50" (scrollChange)="scrolledChanged($event)"
      [ngClass]="{scrolled: isScrolled}">
   <a (click)="toggleMenu()" class="collapse-menu-link ion-navicon"></a>
-  <a #logo routerLink="/" class="al-logo clearfix">{{this.maritimeCloudHeadline}} <span>{{this.portalHeadline}}</span></a>
+  <a #logo routerLink="/" class="al-logo clearfix">{{this.mcpHeadline}} <span>{{this.portalHeadline}}</span></a>
 
   <div [style.max-width]="orgNameMaxWidth" #orgnamewrapper class="org-name-wrapper">
     <span #loggedin class="logged-in">{{loggedInText}} &nbsp;</span><span class="org-name">{{loggedInName}}</span>
