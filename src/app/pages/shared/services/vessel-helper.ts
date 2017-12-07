@@ -13,7 +13,7 @@ export class VesselHelper {
 	public static labelForSelect(vessel:Vessel) : string {
 		let imo = VesselHelper.getIMO(vessel);
 		let mmsi = VesselHelper.getMMSI(vessel);
-		return vessel.name + ", IMO:" + (imo.length == 0 ? ' - ' : + imo) + ", MMSI:" + (mmsi.length == 0 ? ' - ' : + mmsi);
+		return vessel.name + ", IMO:" + (imo.length == 0 ? ' - ' : imo) + ", MMSI:" + (mmsi.length == 0 ? ' - ' : mmsi);
 	}
 
 	// Returns empty string if no IMO exists for the vessel
