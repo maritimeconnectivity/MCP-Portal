@@ -8,8 +8,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
 import {
-	McFormControlModel,
-	McFormControlType
+    McFormControlModel, McFormControlModelSelect,
+    McFormControlType, SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
 import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
@@ -253,17 +253,13 @@ export class DesignUpdateComponent implements OnInit {
 	}
 
 	private updateStatus() {
-		this.notifications.generateNotification("Not Implemented", "Update status only, is sadly not implemented yet", MCNotificationType.Info);
-		this.isUpdating = false;
-		/*
-		 this.designService.updateStatus(this.design, this.status).subscribe(_ => {
-		 this.navigationService.navigateToOrgDesign(this.design.designId, this.design.version);
-		 },
-		 err => {
-		 this.isUpdating = false;
-		 this.notifications.generateNotification('Error', 'Error when trying to update status', MCNotificationType.Error, err);
-		 });
-		 */
+		this.designService.updateStatus(this.design, this.status).subscribe(_ => {
+				this.navigationService.navigateToOrgDesign(this.design.designId, this.design.version);
+			},
+			err => {
+				this.isUpdating = false;
+				this.notifications.generateNotification('Error', 'Error when trying to update status of design', MCNotificationType.Error, err);
+			});
 	}
 
 	private updateDesign() {
@@ -316,12 +312,17 @@ export class DesignUpdateComponent implements OnInit {
 		this.updateForm = this.formBuilder.group({});
 		this.formControlModels = [];
 
-		var formControlModel:McFormControlModel;
+		var formControlModel:McFormControlModelSelect;
 		let disableStatus = this.xml != null || this.doc != null;
+		// TODO Get dynamically from XSD
+		let statusSelect:Array<SelectModel> = [{label: "provisional", value: "provisional", isSelected: false},
+			{label: "released", value: "released", isSelected: false}, {label: "deprecated", value: "deprecated", isSelected: false},
+			{label: "deleted", value: "deleted", isSelected: false}];
+		statusSelect.forEach(status => 	{if (status.value === this.status) status.isSelected = true});
 		if (disableStatus) {
-			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: '', isDisabled: disableStatus};
 		} else {
-			formControlModel = {formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Text, labelName: 'Status', placeholder: ''};
+			formControlModel = {selectValues: statusSelect, showCheckmark: false, formGroup: this.updateForm, elementId: 'status', controlType: McFormControlType.Select, labelName: 'Status', placeholder: ''};
 		}
 		var formControl = new FormControl(this.status, formControlModel.validator);
 		formControl.valueChanges.subscribe(param => this.setStatus(param));

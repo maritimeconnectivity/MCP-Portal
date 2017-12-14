@@ -21,6 +21,7 @@ import {XsdsService} from "../backend-api/service-registry/services/xsds.service
 import {XmlsService} from "../backend-api/service-registry/services/xmls.service";
 import {EndorsementApiModule} from "../backend-api/endorsements/endorsement-api.module";
 import {EndorsementsService} from "../backend-api/endorsements/services/endorsements.service";
+import {VesselImageService} from "../backend-api/identity-registry/services/vessel-image.service";
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import {EndorsementsService} from "../backend-api/endorsements/services/endorsem
     DevicesService,
     UsersService,
     VesselsService,
+	  VesselImageService,
 	  LogoService,
 	  DatePipe
   ]

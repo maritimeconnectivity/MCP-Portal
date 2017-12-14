@@ -130,7 +130,7 @@ export class NavigationHelperService {
 		if (this.pathBeforeCreateIdService) {
 			this.router.navigateByUrl(this.pathBeforeCreateIdService);
 		} else {
-			this.navigateToOrgInstance('', '');
+			this.takeMeHome();
 		}
 	}
 
@@ -255,12 +255,12 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
-	public navigateToService(serviceMrn:string):void {
+	public navigateToService(serviceMrn:string, serviceVersion):void {
 		this.path = '/' + serviceMrn;
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('services', pagesMenu[0]);
 
-		this.router.navigate([this.path]);
+		this.router.navigate([this.path], {queryParams: {serviceVersion: serviceVersion}});
 	}
 
 	public navigateToUser(userMrn:string):void {
@@ -279,12 +279,16 @@ export class NavigationHelperService {
 		this.router.navigate([this.path]);
 	}
 
-	public navigateToCreateIdService(mrn:string, name:string, instanceVersion:string) {
+	public navigateToCreateIdService(mrn?:string, name?:string, instanceVersion?:string) {
 		this.pathBeforeCreateIdService = this.router.url;
 		this.path = '/register-id';
 		let pagesMenu = PAGES_MENU;
 		this.generatePath('instances', pagesMenu[0]);
-		this.router.navigate([this.path], { queryParams: { mrn: mrn, name: name, instanceVersion: instanceVersion }, preserveQueryParams: false});
+		if (mrn && name && instanceVersion) {
+			this.router.navigate([this.path], { queryParams: { mrn: mrn, name: name, instanceVersion: instanceVersion }, preserveQueryParams: false});
+		} else {
+			this.router.navigate([this.path]);
+		}
 	}
 
   public navigateToCreateSpecification() {

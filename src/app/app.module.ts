@@ -37,6 +37,8 @@ import {ApplyOrgModule} from "./apply-org/apply-org.module";
 import {SiteAdminAuthGuard} from "./authentication/services/site-admin-guard.service";
 import {BugReportingService} from "./backend-api/identity-registry/services/bug-reporting.service";
 import {BugReportModule} from "./bug-report/bug-report.module";
+import {AboutModule} from "./about/about.module";
+import {ApiVersionService} from "./backend-api/shared/api-version.service";
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
@@ -69,6 +71,7 @@ type StoreType = {
     LoginModule,
 	  ApplyOrgModule,
 	  BugReportModule,
+	  AboutModule,
     Four04Module,
     IdentityRegistryApiModule,
     SimpleNotificationsModule,
@@ -79,6 +82,7 @@ type StoreType = {
     APP_PROVIDERS,
     AuthGuard,
 	  SiteAdminAuthGuard,
+	  ApiVersionService,
     AuthService,
     RolesService,
 	  BugReportingService,

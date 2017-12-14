@@ -23,4 +23,13 @@ export class McUtils {
 
 		emails.setValidators(Validators.compose([Validators.required, EqualPasswordsValidator.validate(formControlEmail, formControlEmail2)]));
 	}
+	// returns 'true' or 'false'
+	public static getStringValueOfBoolean(value:boolean) {
+		return value ? 'true' : 'false';
+	}
+
+
+	public static getYesNoString(value:boolean) {
+		return value ? 'Yes' : 'No';
+	}
 }

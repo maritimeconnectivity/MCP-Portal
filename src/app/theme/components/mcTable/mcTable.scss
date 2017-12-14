@@ -5,6 +5,10 @@
   min-width: 180px;
 }
 
+.mc-table-row-clickable {
+  cursor: pointer;
+}
+
 .mc-table {
   td {
     vertical-align: middle;

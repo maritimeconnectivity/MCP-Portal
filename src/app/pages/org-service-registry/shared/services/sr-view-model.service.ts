@@ -3,6 +3,8 @@ import {Specification} from "../../../../backend-api/service-registry/autogen/mo
 import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {Design} from "../../../../backend-api/service-registry/autogen/model/Design";
 import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
+import {McUtils} from "../../../../shared/mc-utils";
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class SrViewModelService implements OnInit {
@@ -51,8 +53,14 @@ export class SrViewModelService implements OnInit {
       labelValues.push({label: 'Status', valueHtml: instance.status});
 	    labelValues.push({label: 'Organization', valueHtml: organizationName});
       labelValues.push({label: 'Description', valueHtml: instance.description});
-      labelValues.push({label: 'Service endpoint', valueHtml: instance.endpointUri});
+	    labelValues.push({label: 'Service endpoint', valueHtml: instance.endpointUri});
+
+	    if (!isNullOrUndefined(instance.compliant)) {
+	    	let compliantClass =  instance.compliant ? '' : 'label-danger';
+		    labelValues.push({label: 'Compliant', valueHtml: McUtils.getYesNoString(instance.compliant), linkClass: compliantClass});
+	    }
     }
     return labelValues;
   }
+
 }

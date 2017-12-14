@@ -46,14 +46,14 @@ export var PAGES_MENU_ALL = [
 			        }
 		        }
 	        },
-	        /*{
+	        {
 		        path: 'services',
 		        data: {
 			        menu: {
-				        title: 'Services',
+				        title: 'ID Services',
 			        }
 		        }
-	        },*/
+	        },
 	        {
 		        path: 'users',
 		        data: {
@@ -134,7 +134,7 @@ export var PAGES_MENU_ALL = [
 		    data: {
 			    menu: {
 				    title: 'User Guide',
-				    url: 'http://manual.maritimecloud.net',
+				    url: 'http://manual.maritimeconnectivity.net',
 				    icon: 'ion-help',
 				    order: 700,
 				    target: '_blank'
@@ -145,8 +145,19 @@ export var PAGES_MENU_ALL = [
 		    path: '',
 		    data: {
 			    menu: {
-				    title: 'Maritime Cloud',
-				    url: 'http://maritimecloud.net',
+				    title: 'About',
+				    url: '/#/about',
+				    icon: 'ion-information',
+				    order: 700
+			    }
+		    }
+	    },
+	    {
+		    path: '',
+		    data: {
+			    menu: {
+				    title: 'MCP',
+				    url: 'http://maritimeconnectivity.net',
 				    icon: 'ion-android-exit',
 				    order: 800,
 				    target: '_blank'
@@ -202,6 +213,14 @@ export var PAGES_MENU_STM = [
 						data: {
 							menu: {
 								title: 'Devices',
+							}
+						}
+					},
+					{
+						path: 'services',
+						data: {
+							menu: {
+								title: 'ID Services',
 							}
 						}
 					},
@@ -277,7 +296,7 @@ export var PAGES_MENU_STM = [
 				data: {
 					menu: {
 						title: 'User Guide',
-						url: 'http://manual.maritimecloud.net',
+						url: 'http://manual.maritimeconnectivity.net',
 						icon: 'ion-help',
 						order: 700,
 						target: '_blank'
@@ -288,8 +307,19 @@ export var PAGES_MENU_STM = [
 				path: '',
 				data: {
 					menu: {
-						title: 'Maritime Cloud',
-						url: 'http://maritimecloud.net',
+						title: 'About',
+						url: '/#/about',
+						icon: 'ion-information',
+						order: 700
+					}
+				}
+			},
+			{
+				path: '',
+				data: {
+					menu: {
+						title: 'MCP',
+						url: 'http://maritimeconnectivity.net',
 						icon: 'ion-android-exit',
 						order: 800,
 						target: '_blank'

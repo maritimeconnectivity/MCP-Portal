@@ -80,6 +80,7 @@ import {CalendarModule} from "primeng/components/calendar/calendar";
 import {McFormControlTextArea} from "./components/mcFormControlTextArea/mcFormControlTextArea.component";
 import {McFormControlFileUpload} from "./components/mcFormControlFileUpload/mcFormControlFileUpload.component";
 import {McEndorseButton} from "./components/mcEndorseButton/mcEndorseButton.component";
+import {McpVersionsViewComponent} from "./components/mcp-versions-view/mcp-versions-view.component";
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -114,7 +115,8 @@ const NGA_COMPONENTS = [
 	McFormControlSelect,
 	McFormControlDatepicker,
 	McForm,
-	McModal
+	McModal,
+	McpVersionsViewComponent
 ];
 
 const NGA_DIRECTIVES = [

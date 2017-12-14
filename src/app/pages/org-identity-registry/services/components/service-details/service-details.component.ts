@@ -4,6 +4,7 @@ import {MCNotificationsService, MCNotificationType} from "../../../../../shared/
 import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
 import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
 import {ServiceViewModel} from "../../view-models/ServiceViewModel";
+import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'service-details',
@@ -17,7 +18,7 @@ export class ServiceDetailsComponent {
 	public service:Service;
 	public showModal:boolean = false;
 	public modalDescription:string;
-	constructor(private route: ActivatedRoute, private servicesService: IdServicesService, private router:Router, private notifications:MCNotificationsService) {
+	constructor(private route: ActivatedRoute, private servicesService: IdServicesService, private router:Router, private notifications:MCNotificationsService, private navigationHelper: NavigationHelperService) {
 
 	}
 
@@ -28,8 +29,8 @@ export class ServiceDetailsComponent {
 	private loadService() {
 		this.isLoading = true;
 		let mrn = this.route.snapshot.params['id'];
-		// TODO: this class is obsolete. Delete it.
-		this.servicesService.getIdService(mrn, '').subscribe(
+		let version = this.route.snapshot.queryParams['serviceVersion'];
+		this.servicesService.getIdService(mrn, version).subscribe(
 			service => {
 				this.service = service;
 				this.title = service.name;
@@ -42,7 +43,11 @@ export class ServiceDetailsComponent {
 		);
 	}
 
-	private delete() {
+	public update() {
+		this.navigationHelper.navigateToUpdateIdService(this.service.mrn, this.service.instanceVersion);
+	}
+
+	public delete() {
 		this.modalDescription = 'Are you sure you want to delete the service?';
 		this.showModal = true;
 	}
@@ -53,7 +58,7 @@ export class ServiceDetailsComponent {
 	public deleteForSure() {
 		this.isLoading = true;
 		this.showModal = false;
-		this.servicesService.deleteIdService(this.service.mrn,'').subscribe(
+		this.servicesService.deleteIdService(this.service.mrn, this.service.instanceVersion).subscribe(
 			() => {
 				this.router.navigate(['../'], {relativeTo: this.route });
 			},

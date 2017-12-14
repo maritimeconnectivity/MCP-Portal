@@ -8,6 +8,7 @@ import {VesselsService} from "../../../../../backend-api/identity-registry/servi
 import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
 import {AuthService} from "../../../../../authentication/services/auth.service";
 import {Observable} from "rxjs";
+import {VesselImageService} from "../../../../../backend-api/identity-registry/services/vessel-image.service";
 
 @Component({
   selector: 'vessel-list',
@@ -21,7 +22,7 @@ export class VesselListComponent implements OnInit {
 	public entityImageList: Array<EntityImageModel>;
   public organization: Organization;
   public isLoading: boolean;
-  constructor(private authService: AuthService, private router:Router, private route:ActivatedRoute, private vesselsService: VesselsService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
+  constructor(private vesselImageService:VesselImageService, private authService: AuthService, private router:Router, private route:ActivatedRoute, private vesselsService: VesselsService, private orgService: OrganizationsService, private notifications:MCNotificationsService) {
   }
 
   ngOnInit() {
@@ -83,7 +84,14 @@ export class VesselListComponent implements OnInit {
 	private createImgObservable(vessel:Vessel):Observable<string> {
 		let imageSrc = 'assets/img/no_ship.png';
 		return Observable.create(observer => {
-			observer.next(imageSrc);
+			this.vesselImageService.getImageForVessel(vessel.mrn).subscribe(
+				logo => {
+					observer.next(URL.createObjectURL(new Blob([logo])));
+				},
+				err => {
+					observer.next(imageSrc);
+				}
+			);
 		});
 	}
 }
