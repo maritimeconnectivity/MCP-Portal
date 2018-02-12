@@ -70,6 +70,10 @@ export class MrnHelperService {
 	}
 
 	public mrnMaskForInstance():string {
+		return this.mrnPreFix() + 'service:instance:' + this.orgShortName() + ':';
+	}
+
+	public mrnMaskTextForInstance():string {
 		// TODO Temp check until mrn-service is ready
 		return "urn:mrn:[mcp|stm]:service:instance:" + this.orgShortName() + ':';
 	}
