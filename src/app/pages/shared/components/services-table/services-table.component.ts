@@ -27,10 +27,22 @@ export class ServicesTableComponent implements OnChanges {
   }
   ngOnChanges() {
     if (this.services) {
-      this.generateHeadersAndRows();
+	    this.loadMyOrganization();
     }
   }
-  private generateHeadersAndRows() {
+
+	private loadMyOrganization() {
+		this.orgsService.getMyOrganization().subscribe(
+			organization => {
+				this.generateHeadersAndRows(organization.mrn);
+			},
+			err => {
+				this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+			}
+		);
+	}
+
+  private generateHeadersAndRows(orgMrn:string) {
     var tableHeaders: Array<TableHeader> = [];
     var tableRows: Array<TableRow> = [];
 
@@ -53,7 +65,7 @@ export class ServicesTableComponent implements OnChanges {
       cells.push(tableCell);
 
 	    tableCell = {valueHtml:'', class:'nowrap', truncateNumber:30};
-	    this.setOrganizationCell(tableCell, "urn:mrn:mcl:org:dma"); // FIXME: fjern igen
+	    this.setOrganizationCell(tableCell, orgMrn);
 	    cells.push(tableCell);
 
       let tableRow: TableRow = {cells: cells};
