@@ -9,6 +9,7 @@ import {
 import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
 import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
 import {McUtils} from "../../../../../shared/mc-utils";
+import {EmailValidator} from "../../../../../theme/validators/email.validator";
 
 
 @Component({
@@ -44,7 +45,6 @@ export class UserUpdateComponent implements OnInit {
 		this.isUpdating = true;
 		this.user.firstName = this.updateForm.value.firstName;
 		this.user.lastName = this.updateForm.value.lastName;
-		this.user.email = this.updateForm.value.emails.email;
 		this.user.permissions = this.updateForm.value.permissions;
 
 		this.updateUser(this.user);
@@ -90,6 +90,11 @@ export class UserUpdateComponent implements OnInit {
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
+		formControlModel = {formGroup: this.updateForm, elementId: 'email', controlType: McFormControlType.Text, labelName: 'Email',  placeholder: '', isDisabled: true};
+		formControl = new FormControl(this.user.email, formControlModel.validator);
+		this.updateForm.addControl(formControlModel.elementId, formControl);
+		this.formControlModels.push(formControlModel);
+
 		formControlModel = {formGroup: this.updateForm, elementId: 'firstName', controlType: McFormControlType.Text, labelName: 'First Name', placeholder: 'First Name is required', validator:Validators.required};
 		formControl = new FormControl(this.user.firstName, formControlModel.validator);
 		this.updateForm.addControl(formControlModel.elementId, formControl);
@@ -100,7 +105,6 @@ export class UserUpdateComponent implements OnInit {
 		this.updateForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		McUtils.generateEmailConfirmGroup(this.formBuilder, this.updateForm, this.formControlModels, this.user.email);
 
 		formControlModel = {formGroup: this.updateForm, elementId: 'permissions', controlType: McFormControlType.Text, labelName: 'Permissions', placeholder: ''};
 		formControl = new FormControl(this.user.permissions, formControlModel.validator);
