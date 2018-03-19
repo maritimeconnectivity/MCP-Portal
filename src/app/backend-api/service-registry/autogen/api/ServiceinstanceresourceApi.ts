@@ -82,13 +82,12 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesByIdUsingGET(id: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.getAllInstancesByIdUsingGETWithHttpInfo(id, includeDoc, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public getAllInstancesByIdUsingGET(id: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.getAllInstancesByIdUsingGETWithHttpInfo(id, includeDoc, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -124,10 +123,9 @@ export class ServiceinstanceresourceApi {
      * @param version version
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      */
-    public getInstanceUsingGET(id: string, version: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
-        return this.getInstanceUsingGETWithHttpInfo(id, version, includeDoc, includeNonCompliant, displaySimulated, extraHttpRequestParams)
+    public getInstanceUsingGET(id: string, version: string, includeDoc?: string, includeNonCompliant?: string, extraHttpRequestParams?: any): Observable<models.Instance> {
+        return this.getInstanceUsingGETWithHttpInfo(id, version, includeDoc, includeNonCompliant, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -144,13 +142,12 @@ export class ServiceinstanceresourceApi {
      * @param includeDoc includeDoc
      * @param query query
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryGeojsonUsingGET(geometry: string, includeDoc?: string, query?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<any> {
-        return this.searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry, includeDoc, query, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByGeometryGeojsonUsingGET(geometry: string, includeDoc?: string, query?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<any> {
+        return this.searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry, includeDoc, query, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -167,13 +164,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryWKTUsingGET(geometry: string, query?: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<any> {
-        return this.searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry, query, includeDoc, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByGeometryWKTUsingGET(geometry: string, query?: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<any> {
+        return this.searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry, query, includeDoc, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -189,13 +185,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByKeywordsUsingGET(query: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByKeywordsUsingGETWithHttpInfo(query, includeDoc, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByKeywordsUsingGET(query: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByKeywordsUsingGETWithHttpInfo(query, includeDoc, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -213,13 +208,12 @@ export class ServiceinstanceresourceApi {
      * @param includeDoc includeDoc
      * @param query query
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByLocationUsingGET(latitude: string, longitude: string, includeDoc?: string, query?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<any> {
-        return this.searchInstancesByLocationUsingGETWithHttpInfo(latitude, longitude, includeDoc, query, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByLocationUsingGET(latitude: string, longitude: string, includeDoc?: string, query?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<any> {
+        return this.searchInstancesByLocationUsingGETWithHttpInfo(latitude, longitude, includeDoc, query, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -235,13 +229,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByUnlocodeUsingGET(query: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesByUnlocodeUsingGETWithHttpInfo(query, includeDoc, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public searchInstancesByUnlocodeUsingGET(query: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesByUnlocodeUsingGETWithHttpInfo(query, includeDoc, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -257,13 +250,12 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesUsingGET(query: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
-        return this.searchInstancesUsingGETWithHttpInfo(query, includeDoc, includeNonCompliant, displaySimulated, page, size, sort, extraHttpRequestParams)
+    public searchInstancesUsingGET(query: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Array<models.Instance>> {
+        return this.searchInstancesUsingGETWithHttpInfo(query, includeDoc, includeNonCompliant, page, size, sort, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -412,12 +404,11 @@ export class ServiceinstanceresourceApi {
      * @param id id
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public getAllInstancesByIdUsingGETWithHttpInfo(id: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllInstancesByIdUsingGETWithHttpInfo(id: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceInstance/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
@@ -433,10 +424,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -539,9 +526,8 @@ export class ServiceinstanceresourceApi {
      * @param version version
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      */
-    public getInstanceUsingGETWithHttpInfo(id: string, version: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public getInstanceUsingGETWithHttpInfo(id: string, version: string, includeDoc?: string, includeNonCompliant?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/serviceInstance/${id}/${version}/'
                     .replace('${' + 'id' + '}', String(id))
                     .replace('${' + 'version' + '}', String(version));
@@ -562,10 +548,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         // to determine the Content-Type header
@@ -599,12 +581,11 @@ export class ServiceinstanceresourceApi {
      * @param includeDoc includeDoc
      * @param query query
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry: string, includeDoc?: string, query?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByGeometryGeojsonUsingGETWithHttpInfo(geometry: string, includeDoc?: string, query?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/_searchGeometryGeoJSON/serviceInstance';
 
         let queryParameters = new URLSearchParams();
@@ -627,10 +608,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -678,12 +655,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry: string, query?: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByGeometryWKTUsingGETWithHttpInfo(geometry: string, query?: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/_searchGeometryWKT/serviceInstance';
 
         let queryParameters = new URLSearchParams();
@@ -706,10 +682,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -756,12 +728,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByKeywordsUsingGETWithHttpInfo(query: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByKeywordsUsingGETWithHttpInfo(query: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/_searchKeywords/serviceInstance';
 
         let queryParameters = new URLSearchParams();
@@ -780,10 +751,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -832,12 +799,11 @@ export class ServiceinstanceresourceApi {
      * @param includeDoc includeDoc
      * @param query query
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByLocationUsingGETWithHttpInfo(latitude: string, longitude: string, includeDoc?: string, query?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByLocationUsingGETWithHttpInfo(latitude: string, longitude: string, includeDoc?: string, query?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/_searchLocation/serviceInstance';
 
         let queryParameters = new URLSearchParams();
@@ -868,10 +834,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -918,12 +880,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesByUnlocodeUsingGETWithHttpInfo(query: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesByUnlocodeUsingGETWithHttpInfo(query: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/_searchUnlocode/serviceInstance';
 
         let queryParameters = new URLSearchParams();
@@ -942,10 +903,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {
@@ -992,12 +949,11 @@ export class ServiceinstanceresourceApi {
      * @param query query
      * @param includeDoc includeDoc
      * @param includeNonCompliant includeNonCompliant
-     * @param displaySimulated displaySimulated
      * @param page Page number of the requested page
      * @param size Size of a page
      * @param sort Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      */
-    public searchInstancesUsingGETWithHttpInfo(query: string, includeDoc?: string, includeNonCompliant?: string, displaySimulated?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
+    public searchInstancesUsingGETWithHttpInfo(query: string, includeDoc?: string, includeNonCompliant?: string, page?: number, size?: number, sort?: Array<string>, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/_search/serviceInstance';
 
         let queryParameters = new URLSearchParams();
@@ -1016,10 +972,6 @@ export class ServiceinstanceresourceApi {
 
         if (includeNonCompliant !== undefined) {
             queryParameters.set('includeNonCompliant', <any>includeNonCompliant);
-        }
-
-        if (displaySimulated !== undefined) {
-            queryParameters.set('displaySimulated', <any>displaySimulated);
         }
 
         if (page !== undefined) {

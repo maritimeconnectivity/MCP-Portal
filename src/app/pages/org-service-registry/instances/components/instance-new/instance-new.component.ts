@@ -159,7 +159,7 @@ export class InstanceNewComponent implements OnInit {
 
 			} else {
 				this.errorText = "The ID in the XML-file is wrong. The ID is supposed to be an MRN in the following format:<BR>"
-					+ this.mrnHelper.mrnMaskForInstance() + "'ID'<BR>"
+					+ this.mrnHelper.mrnMaskTextForInstance() + "'ID'<BR>"
 					+ "'ID'=" + this.mrnHelper.mrnPatternError();
 			}
 			this.hasError = !isValid;

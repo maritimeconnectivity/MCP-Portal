@@ -131,8 +131,8 @@ export class InstancesService implements OnInit {
     );
   }
 
-	public getInstancesForMyOrg(showOnlySimulated:boolean): Observable<Array<Instance>> {
-		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null, showOnlySimulated:showOnlySimulated}
+	public getInstancesForMyOrg(): Observable<Array<Instance>> {
+		let searchRequest:ServiceRegistrySearchRequest = {keywords:'',registeredBy:this.authService.authState.orgMrn,endorsedBy:null}
 
 		return this.getInstances(searchRequest);
 	}
@@ -154,7 +154,7 @@ export class InstancesService implements OnInit {
 
 	public searchInstancesForDesign(searchRequest:ServiceRegistrySearchRequest, designId:string, designVersion:string): Observable<Array<Instance>> {
 		if (!searchRequest) {
-			return this.getInstancesForDesign(false, designId, designVersion);
+			return this.getInstancesForDesign(designId, designVersion);
 		}
 
 		let parallelObservables = [];
@@ -180,8 +180,7 @@ export class InstancesService implements OnInit {
 			}
 			// TODO FIXME Hotfix. This pagination should be done the right way
 			let sort = SortingHelper.sortingForInstances();
-			let showOnlySimulated:boolean = searchRequest.showOnlySimulated;
-			this.instancesApi.searchInstancesUsingGET(query,'false','true',McUtils.getStringValueOfBoolean(showOnlySimulated),0,PAGE_SIZE_DEFAULT,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,'false','true',0,PAGE_SIZE_DEFAULT,sort).subscribe(
 				instances => {
 					var instancesFiltered: Array<Instance> = [];
 					for (let instance of instances) {
@@ -231,8 +230,7 @@ export class InstancesService implements OnInit {
 			let query = QueryHelper.generateQueryStringForRequest(searchRequest);
 			let sort = SortingHelper.sortingForInstances();
 
-			let showOnlySimulated:boolean = searchRequest.showOnlySimulated;
-			this.instancesApi.searchInstancesUsingGET(query,'false','true',McUtils.getStringValueOfBoolean(showOnlySimulated),0,PAGE_SIZE_DEFAULT,sort).subscribe(
+			this.instancesApi.searchInstancesUsingGET(query,'false','true',0,PAGE_SIZE_DEFAULT,sort).subscribe(
 				instances => {
 					for (let instance of instances) {
 						instance.description = this.getDescription(instance);
@@ -246,12 +244,12 @@ export class InstancesService implements OnInit {
 		});
 	}
 
-  private getInstancesForDesign(showOnlySimulated:boolean, designId:string, designVersion?:string): Observable<Array<Instance>> {
+  private getInstancesForDesign(designId:string, designVersion?:string): Observable<Array<Instance>> {
     return Observable.create(observer => {
 	    // TODO FIXME Hotfix. This pagination should be done the right way
 	    let query = QueryHelper.generateQueryStringForDesign(designId);
 	    let sort = SortingHelper.sortingForInstances();
-	    this.instancesApi.searchInstancesUsingGET(query,'false','true',McUtils.getStringValueOfBoolean(showOnlySimulated),0,PAGE_SIZE_DEFAULT,sort).subscribe(
+	    this.instancesApi.searchInstancesUsingGET(query,'false','true',0,PAGE_SIZE_DEFAULT,sort).subscribe(
 		    instances => {
 			    var instancesFiltered: Array<Instance> = [];
 			    for (let instance of instances) {
