@@ -64,7 +64,7 @@ export class InstanceListComponent implements OnInit {
 	  if (searchRequest) {
 		  this.searchInstances(searchRequest);
 	  } else {
-		  this.instancesService.getInstancesForMyOrg(false).subscribe(
+		  this.instancesService.getInstancesForMyOrg().subscribe(
 			  instances => {
 				  this.instances = instances;
 				  this.isLoading = false;

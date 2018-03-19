@@ -60,27 +60,40 @@ export class MrnHelperService {
 	}
 
 	public mrnMaskForSpecification():string {
-		return this.mrnPreFix() + 'service:specification:' + this.orgShortName() + ':';
+		// TODO Temp check until mrn-service is ready
+		return "urn:mrn:[mcp|stm]:service:specification:" + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForDesign():string {
-		return this.mrnPreFix() + 'service:design:' + this.orgShortName() + ':';
+		// TODO Temp check until mrn-service is ready
+		return "urn:mrn:[mcp|stm]:service:design:" + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForInstance():string {
 		return this.mrnPreFix() + 'service:instance:' + this.orgShortName() + ':';
 	}
 
+	public mrnMaskTextForInstance():string {
+		// TODO Temp check until mrn-service is ready
+		return "urn:mrn:[mcp|stm]:service:instance:" + this.orgShortName() + ':';
+	}
+
 	public checkMrnForSpecification(specificationMrn:string) : boolean {
-		return this.checkMrn(specificationMrn, this.mrnMaskForSpecification());
+		// TODO Temp check until mrn-service is ready
+		return specificationMrn.indexOf(':service:specification:' + this.orgShortName() + ':') >= 0 && specificationMrn.startsWith('urn:mrn:');
+		//return this.checkMrn(specificationMrn, this.mrnMaskForSpecification());
 	}
 
 	public checkMrnForDesign(designMrn:string) : boolean {
-		return this.checkMrn(designMrn, this.mrnMaskForDesign());
+		// TODO Temp check until mrn-service is ready
+		return designMrn.indexOf(':service:design:' + this.orgShortName() + ':') >= 0 && designMrn.startsWith('urn:mrn:');
+	//	return this.checkMrn(designMrn, this.mrnMaskForDesign());
 	}
 
 	public checkMrnForInstance(instanceMrn:string) : boolean {
-		return this.checkMrn(instanceMrn, this.mrnMaskForInstance());
+		// TODO Temp check until mrn-service is ready
+		return instanceMrn.indexOf(':service:instance:' + this.orgShortName() + ':') >= 0 && instanceMrn.startsWith('urn:mrn:');
+		//return this.checkMrn(instanceMrn, this.mrnMaskForInstance());
 	}
 
 	public checkMrn(mrn:string, validMrnMask:string) : boolean {

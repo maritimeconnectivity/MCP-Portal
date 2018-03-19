@@ -26,7 +26,6 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 	@Input() preFilterMyOrg: boolean;
 	@Input() showEndorsement: boolean;
 	@Input() showKeywords: boolean = true;
-	@Input() showSimulatedOption: boolean = false;
 	@Output() onSearch:EventEmitter<ServiceRegistrySearchRequest> = new EventEmitter<ServiceRegistrySearchRequest>();
 	private endorsementMainSwitch = SHOW_ENDORSEMENTS;
 
@@ -38,7 +37,6 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 	public isCollapsed:boolean;
 	public collapsedClass:string;
 	public toggleClass:string;
-	public simulatedState:boolean = false;
 
   constructor(private searchRequestsService:SrSearchRequestsService, private changeDetector: ChangeDetectorRef, private authService:AuthService, formBuilder:FormBuilder, private orgsService: OrganizationsService, private notifications: MCNotificationsService) {
   	this.formGroup = formBuilder.group({});
@@ -55,11 +53,6 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
   	this.isLoading = true;
 		this.generateForm();
   	this.loadOrganizations();
-	}
-
-	public onSimulatedChange(value: any) {
-		this.simulatedState = value;
-		this.search();
 	}
 
 	public toggle() {
@@ -124,7 +117,7 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 	}
 
 	private doSearch(keywords:string, registeredBy:string, endorsedBy:string) {
-		let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy, showOnlySimulated:this.simulatedState};
+		let searchRequest: ServiceRegistrySearchRequest = {keywords:keywords, registeredBy:registeredBy, endorsedBy:endorsedBy};
 		this.searchRequestsService.addSearchRequest(this.searchKey, searchRequest);
 		this.notifications.errorLog = null; // Remove error log if it is present
 		this.onSearch.emit(searchRequest);
@@ -133,9 +126,6 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 	private generateForm() {
 		var formControl = new FormControl('');
 		this.formGroup.addControl('keywords', formControl);
-
-		formControl = new FormControl(undefined);
-		this.formGroup.addControl('showSimulated', formControl);
 
 		formControl = new FormControl(undefined);
 		this.formGroup.addControl('registeredBy', formControl);
@@ -177,9 +167,6 @@ export class ServiceRegistrySearchComponent implements OnDestroy {
 			endorsedBy = searchRequest.endorsedBy;
 			if (searchRequest.keywords) {
 				keywords = searchRequest.keywords;
-			}
-			if (searchRequest.showOnlySimulated) {
-				this.simulatedState = searchRequest.showOnlySimulated;
 			}
 		} else if (this.preFilterMyOrg){
 			registeredBy = this.authService.authState.orgMrn;
