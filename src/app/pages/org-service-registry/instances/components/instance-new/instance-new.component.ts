@@ -58,6 +58,7 @@ export class InstanceNewComponent implements OnInit {
   public fileTypeXml = FileUploadType.Xml;
   public fileTypeDoc = FileUploadType.Doc;
   public requiredTextXml = 'You need to upload XML file';
+  public requiredTextDoc = 'You need to upload a DOCX, ODT or PDF file';
   public isLoading = true;
 
   public isRegistering = false;
@@ -193,7 +194,7 @@ export class InstanceNewComponent implements OnInit {
 		// no coversArea? Then probably using unlocodes, thus we don't show map
 		if (!coversAreasElement || coversAreasElement.length == 0) {
 			this.WKTs = null;
-			return true
+			return true;
 		}
 
 		let coversAreas = coversAreasElement;

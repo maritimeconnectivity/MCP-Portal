@@ -39,6 +39,7 @@ export class DesignNewComponent implements OnInit {
   public fileTypeXml = FileUploadType.Xml;
   public fileTypeDoc = FileUploadType.Doc;
   public requiredTextXml = 'You need to upload XML file';
+  public requiredTextDoc = 'You need to upload a DOCX, ODT or PDF file';
   public isFormValid = false;
   public isLoading = true;
 

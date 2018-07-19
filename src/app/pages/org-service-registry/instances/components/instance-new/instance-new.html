@@ -9,7 +9,7 @@
       <div *ngIf="design">
         <form>
           <mc-file-uploader #uploadXml [caption]="captionXml" [fileUploadType]="fileTypeXml" [requiredText]="requiredTextXml" (onUpload)="onUploadXml($event)"></mc-file-uploader>
-          <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
+          <mc-file-uploader [caption]="captionDoc" [fileUploadType]="fileTypeDoc" [requiredText]="requiredTextDoc" (onUpload)="onUploadDoc($event)"></mc-file-uploader>
           <div *ngIf="hasError" class="error-notice" [innerHTML]="errorText | undefined | sanitizeHtml"></div>
 
           <mc-form [hideButtons]="true" [formGroup]="registerForm" [formControlModels]="formControlModels" [isLoading]="isLoading"></mc-form>

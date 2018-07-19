@@ -40,7 +40,7 @@ export class McFileUploader {
   }
 
   public ngOnInit():void {
-    this.accept = (this.fileUploadType === FileUploadType.Xml ? '.xml' : '');
+    this.accept = (this.fileUploadType === FileUploadType.Xml ? '.xml' : (this.fileUploadType === FileUploadType.Doc ? '.docx, .odt, .pdf' : ''));
     this.chosenFileValue = this.requiredText;
     if (this.multipleFiles) {
 	    this.multiple = 'multiple';
