@@ -8,6 +8,7 @@ import VesselsModule from "./vessels/vessels.module";
 import DevicesModule from "./devices/devices.module";
 import UsersModule from "./users/users.module";
 import ServicesModule from "./services/services.module";
+import RolesModule from './roles/roles.module';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import ServicesModule from "./services/services.module";
 	  DevicesModule,
 	  ServicesModule,
 	  UsersModule,
+      RolesModule,
     routing
   ],
   declarations: [

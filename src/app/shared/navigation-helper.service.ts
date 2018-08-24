@@ -134,6 +134,14 @@ export class NavigationHelperService {
 		}
 	}
 
+	public cancelCreateRole() {
+  		this.path = '/';
+  		let pagesMenu = PAGES_MENU;
+  		this.generatePath('roles', pagesMenu[0]);
+
+  		this.router.navigate([this.path]);
+	}
+
 	public gobackFromUpdateService() {
 		if (this.pathBeforeUpdateIdService) {
 			this.router.navigateByUrl(this.pathBeforeUpdateIdService);
@@ -247,6 +255,14 @@ export class NavigationHelperService {
 		this.router.navigate([this.path], {queryParams: {specificationVersion: version}});
 	}
 
+	public navigateToUpdateRole(roleId: number): void {
+  		this.path = '/update/' + roleId;
+  		let pagesMenu = PAGES_MENU;
+  		this.generatePath('roles', pagesMenu[0]);
+
+  		this.router.navigate([this.path]);
+	}
+
 	public navigateToDevice(deviceMrn:string):void {
 		this.path = '/' + deviceMrn;
 		let pagesMenu = PAGES_MENU;
@@ -277,6 +293,14 @@ export class NavigationHelperService {
 		this.generatePath('vessels', pagesMenu[0]);
 
 		this.router.navigate([this.path]);
+	}
+
+	public navigateToRole(roleId: number): void {
+  		this.path = '/' + roleId;
+  		let pagesMenu = PAGES_MENU;
+  		this.generatePath('roles', pagesMenu[0]);
+
+  		this.router.navigate([this.path]);
 	}
 
 	public navigateToCreateIdService(mrn?:string, name?:string, instanceVersion?:string) {

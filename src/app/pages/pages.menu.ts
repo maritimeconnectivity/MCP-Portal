@@ -69,7 +69,15 @@ export var PAGES_MENU_ALL = [
 				        title: 'Vessels',
 			        }
 		        }
-	        }
+	        },
+			{
+				path: 'roles',
+				data: {
+					menu: {
+						title: 'Roles'
+					}
+				}
+			}
         ]
       },
       {

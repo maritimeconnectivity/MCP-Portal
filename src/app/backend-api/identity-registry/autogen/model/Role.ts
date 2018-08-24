@@ -34,6 +34,12 @@ export namespace Role {
     export enum RoleNameEnum {
         SITEADMIN = <any> 'ROLE_SITE_ADMIN',
         ORGADMIN = <any> 'ROLE_ORG_ADMIN',
-        USER = <any> 'ROLE_USER'
+        USER = <any> 'ROLE_USER',
+        ENTITYADMIN = <any> 'ROLE_ENTITY_ADMIN',
+        USERADMIN = <any> 'ROLE_USER_ADMIN',
+        VESSELADMIN = <any> 'ROLE_VESSEL_ADMIN',
+        SERVICEADMIN = <any> 'ROLE_SERVICE_ADMIN',
+        APPROVEORG = <any> 'ROLE_APPROVE_ORG',
+        DEVICEADMIN = <any> 'ROLE_DEVICE_ADMIN'
     }
 }

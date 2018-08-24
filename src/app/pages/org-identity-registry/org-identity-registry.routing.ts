@@ -5,6 +5,7 @@ import {VesselsComponent} from "./vessels/vessels.component";
 import {DevicesComponent} from "./devices/devices.component";
 import {UsersComponent} from "./users/users.component";
 import {ServicesComponent} from "./services/services.component";
+import { RolesComponent } from './roles/roles.component';
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
 	    { path: 'devices', component: DevicesComponent },
 	    { path: 'services', component: ServicesComponent },
 	    { path: 'users', component: UsersComponent },
-	    { path: 'vessels', component: VesselsComponent }
+	    { path: 'vessels', component: VesselsComponent },
+        { path: 'roles', component: RolesComponent}
     ]
   }
 ];

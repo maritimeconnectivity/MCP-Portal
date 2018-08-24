@@ -22,6 +22,7 @@ import {XmlsService} from "../backend-api/service-registry/services/xmls.service
 import {EndorsementApiModule} from "../backend-api/endorsements/endorsement-api.module";
 import {EndorsementsService} from "../backend-api/endorsements/services/endorsements.service";
 import {VesselImageService} from "../backend-api/identity-registry/services/vessel-image.service";
+import { RolesService } from '../backend-api/identity-registry/services/roles.service';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import {VesselImageService} from "../backend-api/identity-registry/services/vess
     VesselsService,
 	  VesselImageService,
 	  LogoService,
-	  DatePipe
+	  DatePipe,
+      RolesService
   ]
 })
 export class PagesModule {
