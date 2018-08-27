@@ -1,22 +1,25 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
-import {FileHelperService} from "../../../../../shared/file-helper.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
-import {Observable} from "rxjs";
-import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
-import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
-import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
-import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
+import { Specification } from "../../../../../backend-api/service-registry/autogen/model/Specification";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { SpecificationsService } from "../../../../../backend-api/service-registry/services/specifications.service";
+import { FileHelperService } from "../../../../../shared/file-helper.service";
+import { Design } from "../../../../../backend-api/service-registry/autogen/model/Design";
+import { DesignsService } from "../../../../../backend-api/service-registry/services/designs.service";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { SrViewModelService } from "../../../shared/services/sr-view-model.service";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { EndorsementsService } from "../../../../../backend-api/endorsements/services/endorsements.service";
+import { Observable } from "rxjs";
+import { Endorsement } from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import { ServiceRegistrySearchRequest } from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import { SrSearchRequestsService } from "../../../shared/services/sr-search-requests.service";
+import { SHOW_ENDORSEMENTS } from "../../../../../shared/app.constants";
 
 const SEARCH_KEY = 'SpecificationDetailsComponent';
 
@@ -134,11 +137,11 @@ export class SpecificationDetailsComponent {
 	}
 
 	private isServiceAdminForOrg():boolean {
-		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
 	}
 
 	private isEndorseAdmin():boolean {
-		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 
 	public showUpdate():boolean {

@@ -1,5 +1,12 @@
-import {Component, ViewEncapsulation, Input, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
-import {AuthService} from "../../../authentication/services/auth.service";
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ViewEncapsulation
+} from '@angular/core';
+import { AuthPermission, AuthService } from "../../../authentication/services/auth.service";
 
 @Component({
   selector: 'mc-endorse-button',
@@ -36,7 +43,7 @@ export class McEndorseButton {
 	}
 
   public isAdmin():boolean {
-    return this.authService.authState.isAdmin();
+    return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
   }
 
   public onEndorseHandler() {

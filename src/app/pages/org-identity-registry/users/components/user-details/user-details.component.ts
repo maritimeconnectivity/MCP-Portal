@@ -1,15 +1,18 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {ActivatedRoute, Router} from "@angular/router";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
-import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { CertificateEntityType } from "../../../../shared/services/certificate-helper.service";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { ActivatedRoute, Router } from "@angular/router";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { User } from "../../../../../backend-api/identity-registry/autogen/model/User";
+import { UsersService } from "../../../../../backend-api/identity-registry/services/users.service";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
 import FederationTypeEnum = Organization.FederationTypeEnum;
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'user-details',
@@ -92,7 +95,7 @@ export class UserDetailsComponent {
 	}
 
 	private isAdmin() {
-		return this.authService.authState.isAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.UserAdmin);
 	}
 
 	private delete() {

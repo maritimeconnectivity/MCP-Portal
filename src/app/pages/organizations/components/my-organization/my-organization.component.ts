@@ -1,10 +1,13 @@
-import {Component, ViewEncapsulation, OnInit, ChangeDetectorRef} from '@angular/core';
-import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
-import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
-import {AuthService} from "../../../../authentication/services/auth.service";
-import {CertificateEntityType} from "../../../shared/services/certificate-helper.service";
-import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
+import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
+import { CertificateEntityType } from "../../../shared/services/certificate-helper.service";
+import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'my-organization',
@@ -50,7 +53,7 @@ export class MyOrganization implements OnInit {
   }
 
 	private shouldDisplayUpdate() :boolean {
-		return this.authService.authState.isAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 
 	public update() {

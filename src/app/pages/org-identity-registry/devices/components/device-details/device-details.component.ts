@@ -1,12 +1,15 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
-import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {ActivatedRoute, Router} from "@angular/router";
-import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
+import { Device } from "../../../../../backend-api/identity-registry/autogen/model/Device";
+import { CertificateEntityType } from "../../../../shared/services/certificate-helper.service";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DevicesService } from "../../../../../backend-api/identity-registry/services/devices.service";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'device-details',
@@ -67,7 +70,7 @@ export class DeviceDetailsComponent {
 	}
 
 	private isAdmin() {
-		return this.authService.authState.isAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.DeviceAdmin);
 	}
 
 	public update() {

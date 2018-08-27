@@ -7,9 +7,15 @@ import {User} from "../../backend-api/identity-registry/autogen/model/User";
 
 
 export enum AuthPermission {
-	Member    = 1 << 0,
-	Admin     = 1 << 1,
-	SiteAdmin = 1 << 2
+	User    = 1 << 0,
+	OrgAdmin = 1 << 1,
+	SiteAdmin = 1 << 2,
+	UserAdmin = 1 << 3,
+	VesselAdmin = 1 << 4,
+	ServiceAdmin = 1 << 5,
+	DeviceAdmin = 1 << 6,
+	ApproveOrg = 1 << 7,
+	EntityAdmin = 1 << 8
 }
 
 export interface AuthUser extends User {
@@ -24,8 +30,7 @@ export interface AuthState {
   orgMrn: string,
 	user: AuthUser,
   rolesLoaded: boolean,
-	isAdmin(): boolean,
-	isSiteAdmin(): boolean
+	hasPermission(permissionRole: AuthPermission): boolean;
 }
 
 interface StaticAuthInfo {
@@ -36,6 +41,41 @@ interface StaticAuthInfo {
 	user?: AuthUser
 	authz?: any
 }
+
+class PermissionResolver {
+	static isSiteAdmin(permission: AuthPermission) {
+		return (permission & AuthPermission.SiteAdmin) > 0;
+	}
+
+	static isOrgAdmin(permission: AuthPermission) {
+		return (permission & AuthPermission.OrgAdmin) > 0 || this.isSiteAdmin(permission);
+	}
+
+	static isEntityAdmin(permission: AuthPermission) {
+		 return (permission & AuthPermission.EntityAdmin) > 0 || this.isOrgAdmin(permission);
+	}
+
+    static isUserAdmin(permission: AuthPermission) {
+        return (permission & AuthPermission.UserAdmin) > 0 || this.isEntityAdmin(permission);
+    }
+
+	static isVesselAdmin(permission: AuthPermission) {
+		return (permission & AuthPermission.VesselAdmin) > 0 || this.isEntityAdmin(permission);
+	}
+
+	static isDeviceAdmin(permission: AuthPermission) {
+		return (permission & AuthPermission.DeviceAdmin) > 0 || this.isEntityAdmin(permission);
+	}
+
+	static isServiceAdmin(permission: AuthPermission) {
+		return (permission & AuthPermission.ServiceAdmin) > 0 || this.isEntityAdmin(permission);
+	}
+
+	static canApproveOrg(permission: AuthPermission) {
+		return (permission & AuthPermission.ApproveOrg) > 0 || this.isSiteAdmin(permission);
+	}
+}
+
 @Injectable()
 export class AuthService implements OnInit {
   public static staticAuthInfo: StaticAuthInfo = {}; // This is needed to save some information about user, because these informations is found before this class is initiated
@@ -57,18 +97,33 @@ export class AuthService implements OnInit {
       this.rolesService.getMyRoles(this.authState.orgMrn).subscribe(
         roles => {
           for (let roleString of roles) {
-	          if (RoleNameEnum[roleString] === RoleNameEnum[RoleNameEnum.ORGADMIN]) {
-		          this.authState.permission = this.authState.permission | AuthPermission.Admin;
-	          }
-	          if (RoleNameEnum[roleString] === RoleNameEnum[RoleNameEnum.SITEADMIN]) {
-		          this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
-	          }
+          	let role = RoleNameEnum[roleString];
+          	switch (role) {
+				case RoleNameEnum[RoleNameEnum.ORGADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.OrgAdmin;
+				case RoleNameEnum[RoleNameEnum.SITEADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
+				case RoleNameEnum[RoleNameEnum.USERADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.UserAdmin;
+				case RoleNameEnum[RoleNameEnum.DEVICEADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.DeviceAdmin;
+				case RoleNameEnum[RoleNameEnum.VESSELADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.VesselAdmin;
+				case RoleNameEnum[RoleNameEnum.SERVICEADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.ServiceAdmin;
+				case RoleNameEnum[RoleNameEnum.ENTITYADMIN]:
+					this.authState.permission = this.authState.permission | AuthPermission.EntityAdmin;
+				case RoleNameEnum[RoleNameEnum.APPROVEORG]:
+					this.authState.permission = this.authState.permission | AuthPermission.ApproveOrg;
+				default:
+					this.authState.permission = this.authState.permission | AuthPermission.User;
+            }
           }
           this.authState.rolesLoaded = true;
           this.rolesLoaded.emit('');
         },
         error => {
-          this.authState.permission = AuthPermission.Member;
+          this.authState.permission = AuthPermission.User;
           this.notificationService.generateNotification('Error', 'Error trying to fetch user permissions', MCNotificationType.Error, error);
 	        this.authState.rolesLoaded = true;
 	        this.rolesLoaded.emit('');
@@ -79,16 +134,34 @@ export class AuthService implements OnInit {
   private createAuthState(): AuthState {
     return {
       loggedIn: AuthService.staticAuthInfo.loggedIn,
-      permission: AuthPermission.Member,
+      permission: AuthPermission.User,
       orgMrn: AuthService.staticAuthInfo.orgMrn,
 	    user: AuthService.staticAuthInfo.user,
       rolesLoaded: false,
-	    isAdmin() {
-		    return (this.permission & AuthPermission.Admin || this.permission & AuthPermission.SiteAdmin) > 0;
-	    },
-	    isSiteAdmin() {
-		    return (this.permission & AuthPermission.SiteAdmin) > 0;
-	    }
+		hasPermission(permissionRole: AuthPermission): boolean {
+			switch (permissionRole) {
+				case AuthPermission.User:
+					return true;
+				case AuthPermission.SiteAdmin:
+					return PermissionResolver.isSiteAdmin(permissionRole);
+				case AuthPermission.OrgAdmin:
+					return PermissionResolver.isOrgAdmin(permissionRole);
+				case AuthPermission.ApproveOrg:
+					return PermissionResolver.canApproveOrg(permissionRole);
+				case AuthPermission.EntityAdmin:
+					return PermissionResolver.isEntityAdmin(permissionRole);
+				case AuthPermission.ServiceAdmin:
+					return PermissionResolver.isServiceAdmin(permissionRole);
+				case AuthPermission.DeviceAdmin:
+					return PermissionResolver.isDeviceAdmin(permissionRole);
+				case AuthPermission.VesselAdmin:
+					return PermissionResolver.isVesselAdmin(permissionRole);
+				case AuthPermission.UserAdmin:
+					return PermissionResolver.isUserAdmin(permissionRole);
+				default:
+					return false;
+            }
+		}
     };
   }
 

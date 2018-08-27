@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Role } from '../../../../../backend-api/identity-registry/autogen/model/Role';
 import { EntityImageModel } from '../../../../../theme/components/mcEntityImage';
 import { Organization } from '../../../../../backend-api/identity-registry/autogen/model/Organization';
-import { AuthService } from '../../../../../authentication/services/auth.service';
+import { AuthPermission, AuthService } from '../../../../../authentication/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationsService } from '../../../../../backend-api/identity-registry/services/organizations.service';
 import { RolesService } from '../../../../../backend-api/identity-registry/services/roles.service';
@@ -78,7 +78,7 @@ export class RoleListComponent implements OnInit {
                this.entityImageList.push({imageSourceObservable: this.createImgObservable(), entityId: role.id.toString(), title: role.permission});
             });
         }
-        if (this.authService.authState.isAdmin()) {
+        if (this.authService.authState.hasPermission(AuthPermission.OrgAdmin)) {
             this.entityImageList.push({imageSourceObservable: null, entityId: this.KEY_NEW, title: 'Register new Role', isAdd: true});
         }
     }

@@ -1,13 +1,16 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Router, ActivatedRoute} from "@angular/router";
-import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {Observable} from "rxjs";
-import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
-import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { EntityImageModel } from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { Observable } from "rxjs";
+import { User } from "../../../../../backend-api/identity-registry/autogen/model/User";
+import { UsersService } from "../../../../../backend-api/identity-registry/services/users.service";
 import FederationTypeEnum = Organization.FederationTypeEnum;
 
 @Component({
@@ -87,7 +90,7 @@ export class UserListComponent implements OnInit {
   }
 
   private canCreateUser():boolean {
-  	return this.authService.authState.isAdmin() && this.organization.federationType === FederationTypeEnum.TestIdp;
+  	return this.authService.authState.hasPermission(AuthPermission.UserAdmin) && this.organization.federationType === FederationTypeEnum.TestIdp;
   }
 
 	private createImgObservable(user:User):Observable<string> {

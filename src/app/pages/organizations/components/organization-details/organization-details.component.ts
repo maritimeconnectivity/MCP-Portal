@@ -1,9 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
-import {AuthService} from "../../../../authentication/services/auth.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
+import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
 
 @Component({
   selector: 'organization-details',
@@ -42,7 +45,7 @@ export class OrganizationDetailsComponent {
 	}
 
 	private setShouldDisplayDelete() {
-		this.shouldDisplayDelete = !this.authService.isMyOrg(this.organization.mrn) && this.authService.authState.isSiteAdmin();
+		this.shouldDisplayDelete = !this.authService.isMyOrg(this.organization.mrn) && this.authService.authState.hasPermission(AuthPermission.SiteAdmin);
 	}
 
 	private delete() {

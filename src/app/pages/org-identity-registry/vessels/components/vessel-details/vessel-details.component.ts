@@ -1,15 +1,18 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
-import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {VesselViewModel} from "../../view-models/VesselViewModel";
-import {CertificateEntityType} from "../../../../shared/services/certificate-helper.service";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
-import {VesselImageService} from "../../../../../backend-api/identity-registry/services/vessel-image.service";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { VesselsService } from "../../../../../backend-api/identity-registry/services/vessels.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Vessel } from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { VesselViewModel } from "../../view-models/VesselViewModel";
+import { CertificateEntityType } from "../../../../shared/services/certificate-helper.service";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { Service } from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import { VesselImageService } from "../../../../../backend-api/identity-registry/services/vessel-image.service";
 
 @Component({
   selector: 'vessel-details',
@@ -52,7 +55,7 @@ export class VesselDetailsComponent {
 	}
 
   private isAdmin() {
-	  return this.authService.authState.isAdmin();
+	  return this.authService.authState.hasPermission(AuthPermission.VesselAdmin);
   }
 
 	private loadVessel() {
@@ -98,7 +101,7 @@ export class VesselDetailsComponent {
 	}
 
 	private canChangeTheImage():boolean {
-		return ( (this.authService.authState.isAdmin()) || this.authService.authState.isSiteAdmin());
+		return this.authService.authState.hasPermission(AuthPermission.VesselAdmin);
 	}
 
 	public uploadImage(image:any) {

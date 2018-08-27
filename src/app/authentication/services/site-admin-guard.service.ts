@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from "@angular/router";
-import {AuthService} from "./auth.service";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
+import { AuthPermission, AuthService } from "./auth.service";
 
 @Injectable()
 export class SiteAdminAuthGuard implements CanActivate {
@@ -11,7 +11,7 @@ export class SiteAdminAuthGuard implements CanActivate {
   }
 
   checkState(url: string): boolean {
-	  return this.authService.authState.isSiteAdmin()
+	  return this.authService.authState.hasPermission(AuthPermission.SiteAdmin)
   }
 
   constructor(private router: Router, private authService: AuthService) {

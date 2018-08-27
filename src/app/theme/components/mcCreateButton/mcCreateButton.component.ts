@@ -1,5 +1,5 @@
-import {Component, ViewEncapsulation, Input} from '@angular/core';
-import {AuthService} from "../../../authentication/services/auth.service";
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { AuthPermission, AuthService } from "../../../authentication/services/auth.service";
 
 @Component({
   selector: 'mc-create-button',
@@ -13,7 +13,7 @@ export class McCreateButton {
   constructor(private authService: AuthService) {
   }
   private isAdmin():boolean {
-    return this.authService.authState.isAdmin();
+    return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
   }
 
   private clickHandler() {

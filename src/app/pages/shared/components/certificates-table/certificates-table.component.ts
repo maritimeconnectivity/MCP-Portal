@@ -1,19 +1,25 @@
-import {Component, ViewEncapsulation, Input, HostListener, OnChanges} from '@angular/core';
-import {Certificate} from "../../../../backend-api/identity-registry/autogen/model/Certificate";
-import {CertificateEntityType, CertificateHelperService} from "../../services/certificate-helper.service";
-import {layoutSizes, DATE_FORMAT} from "../../../../theme/theme.constants";
-import {AuthService} from "../../../../authentication/services/auth.service";
-import {CertificateViewModel} from "../../view-models/CertificateViewModel";
-import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
-import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
-import {FileHelperService} from "../../../../shared/file-helper.service";
-import {PemCertificate} from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
+import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Certificate } from "../../../../backend-api/identity-registry/autogen/model/Certificate";
 import {
-	TableHeader, TableRow, TableCell,
-	TableCellActionButtons, TableActionButton
+    CertificateEntityType,
+    CertificateHelperService
+} from "../../services/certificate-helper.service";
+import { DATE_FORMAT } from "../../../../theme/theme.constants";
+import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
+import { CertificateViewModel } from "../../view-models/CertificateViewModel";
+import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
+import { MCNotificationsService } from "../../../../shared/mc-notifications.service";
+import { FileHelperService } from "../../../../shared/file-helper.service";
+import { PemCertificate } from "../../../../backend-api/identity-registry/autogen/model/PemCertificate";
+import {
+    TableActionButton,
+    TableCell,
+    TableCellActionButtons,
+    TableHeader,
+    TableRow
 } from "../../../../theme/components/mcTable/mcTable.component";
-import {DatePipe} from "@angular/common";
-import {CertificateBundle} from "../../../../backend-api/identity-registry/autogen/model/CertificateBundle";
+import { DatePipe } from "@angular/common";
+import { CertificateBundle } from "../../../../backend-api/identity-registry/autogen/model/CertificateBundle";
 
 @Component({
   selector: 'certificates-table',
@@ -141,7 +147,7 @@ export class CertificatesTableComponent implements OnChanges{
   }
 
   public isAdmin():boolean {
-    return this.authService.authState.isAdmin();
+    return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
   }
 
   public revoke(certificate:Certificate) {

@@ -1,12 +1,12 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {SITE_ADMIN_SUB_MENU} from "../app.menu";
-import {Route} from "@angular/router";
+import { Component, ViewEncapsulation } from '@angular/core';
+import { SITE_ADMIN_SUB_MENU } from "../app.menu";
+import { Route } from "@angular/router";
 import * as _ from 'lodash';
-import {AuthService} from "../authentication/services/auth.service";
-import {OrganizationsService} from "../backend-api/identity-registry/services/organizations.service";
-import {MrnHelperService} from "../shared/mrn-helper.service";
-import {PAGES_MENU_STM, PAGES_MENU_ALL} from "./pages.menu";
-import {MCNotificationsService} from "../shared/mc-notifications.service";
+import { AuthPermission, AuthService } from "../authentication/services/auth.service";
+import { OrganizationsService } from "../backend-api/identity-registry/services/organizations.service";
+import { MrnHelperService } from "../shared/mrn-helper.service";
+import { PAGES_MENU_ALL } from "./pages.menu";
+import { MCNotificationsService } from "../shared/mc-notifications.service";
 
 export var PAGES_MENU;
 @Component({
@@ -106,7 +106,7 @@ export class Pages {
 	}
 
   private generateSiteAdminMenu() {
-	  if (this.authService.authState.isSiteAdmin()) {
+	  if (this.authService.authState.hasPermission(AuthPermission.SiteAdmin)) {
 		  this.addRouteToMenuPath(SITE_ADMIN_SUB_MENU, 0, 'pages', this.routes[0]);
 		  this.showSiteAdminMenu = true;
 	  } else {

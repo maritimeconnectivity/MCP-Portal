@@ -1,16 +1,18 @@
-import {Component, ViewEncapsulation, Input, Output, EventEmitter} from '@angular/core';
-import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {Service} from "../../../../backend-api/identity-registry/autogen/model/Service";
-import {CertificateEntityType} from "../../services/certificate-helper.service";
-import {FileHelperService} from "../../../../shared/file-helper.service";
-import {AuthService} from "../../../../authentication/services/auth.service";
-import {ServiceViewModel} from "../../../org-identity-registry/services/view-models/ServiceViewModel";
-import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
-import {IdServicesService} from "../../../../backend-api/identity-registry/services/id-services.service";
-import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
-import {TOKEN_DELIMITER} from "../../../../shared/app.constants";
-import {InstancesService} from "../../../../backend-api/service-registry/services/instances.service";
-import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { LabelValueModel } from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { Service } from "../../../../backend-api/identity-registry/autogen/model/Service";
+import { CertificateEntityType } from "../../services/certificate-helper.service";
+import { FileHelperService } from "../../../../shared/file-helper.service";
+import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
+import { ServiceViewModel } from "../../../org-identity-registry/services/view-models/ServiceViewModel";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { IdServicesService } from "../../../../backend-api/identity-registry/services/id-services.service";
+import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
+import { TOKEN_DELIMITER } from "../../../../shared/app.constants";
+import { InstancesService } from "../../../../backend-api/service-registry/services/instances.service";
 
 @Component({
   selector: 'service-details-view',
@@ -158,7 +160,7 @@ export class ServiceDetailsViewComponent {
 	}
 
 	private isAdmin() {
-		return this.authService.authState.isAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
 	}
 
 	private delete() {

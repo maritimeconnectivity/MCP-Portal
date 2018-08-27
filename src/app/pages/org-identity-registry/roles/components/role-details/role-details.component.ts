@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { AuthService } from '../../../../../authentication/services/auth.service';
+import { AuthPermission, AuthService } from '../../../../../authentication/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RolesService } from '../../../../../backend-api/identity-registry/services/roles.service';
 import {
@@ -78,7 +78,7 @@ export class RoleDetailsComponent implements OnInit{
     }
 
     private isAdmin(): boolean {
-        return this.authService.authState.isAdmin();
+        return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
     }
 
     public delete() {

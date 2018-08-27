@@ -1,10 +1,20 @@
-import {Component, ViewEncapsulation, Input, OnChanges, Output, EventEmitter} from '@angular/core';
-import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationViewModelService} from "../../services/organization-view-model.service";
-import {LogoService} from "../../../../backend-api/identity-registry/services/logo.service";
-import {AuthService} from "../../../../authentication/services/auth.service";
-import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    ViewEncapsulation
+} from '@angular/core';
+import { LabelValueModel } from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationViewModelService } from "../../services/organization-view-model.service";
+import { LogoService } from "../../../../backend-api/identity-registry/services/logo.service";
+import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../shared/mc-notifications.service";
 
 @Component({
   selector: 'organization-details-table',
@@ -70,6 +80,6 @@ export class OrganizationDetailsTableComponent implements OnChanges {
 		);
 	}
 	private canChangeTheLogo():boolean {
-		return ( (this.authService.authState.isAdmin() && this.authService.isMyOrg(this.organization.mrn)) || this.authService.authState.isSiteAdmin());
+		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 }

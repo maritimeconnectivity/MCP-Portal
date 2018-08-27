@@ -1,14 +1,17 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Router, ActivatedRoute} from "@angular/router";
-import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
-import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
-import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {Observable} from "rxjs";
-import {VesselImageService} from "../../../../../backend-api/identity-registry/services/vessel-image.service";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Vessel } from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import { VesselsService } from "../../../../../backend-api/identity-registry/services/vessels.service";
+import { EntityImageModel } from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { Observable } from "rxjs";
+import { VesselImageService } from "../../../../../backend-api/identity-registry/services/vessel-image.service";
 
 @Component({
   selector: 'vessel-list',
@@ -76,7 +79,7 @@ export class VesselListComponent implements OnInit {
 			  }
 		  );
 	  }
-	  if (this.authService.authState.isAdmin()) {
+	  if (this.authService.authState.hasPermission(AuthPermission.VesselAdmin)) {
 		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Vessel', isAdd:true});
 	  }
   }

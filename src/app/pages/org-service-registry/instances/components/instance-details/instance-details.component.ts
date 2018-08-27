@@ -1,26 +1,29 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {FileHelperService} from "../../../../../shared/file-helper.service";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
-import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
-import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
-import {DocsService} from "../../../../../backend-api/service-registry/services/docs.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {SHOW_ENDORSEMENTS} from "../../../../../shared/app.constants";
-import {Endorsement} from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
-import {EndorsementsService} from "../../../../../backend-api/endorsements/services/endorsements.service";
-import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
-import {Observable} from "rxjs/Observable";
-import {isNullOrUndefined} from "util";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { FileHelperService } from "../../../../../shared/file-helper.service";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { Instance } from "../../../../../backend-api/service-registry/autogen/model/Instance";
+import { InstancesService } from "../../../../../backend-api/service-registry/services/instances.service";
+import { Design } from "../../../../../backend-api/service-registry/autogen/model/Design";
+import { DesignsService } from "../../../../../backend-api/service-registry/services/designs.service";
+import { SrViewModelService } from "../../../shared/services/sr-view-model.service";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { Service } from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
+import { IdServicesService } from "../../../../../backend-api/identity-registry/services/id-services.service";
+import { DocsService } from "../../../../../backend-api/service-registry/services/docs.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { SHOW_ENDORSEMENTS } from "../../../../../shared/app.constants";
+import { Endorsement } from "../../../../../backend-api/endorsements/autogen/model/Endorsement";
+import { EndorsementsService } from "../../../../../backend-api/endorsements/services/endorsements.service";
+import { InstanceXmlParser } from "../../../shared/services/instance-xml-parser.service";
+import { Observable } from "rxjs/Observable";
+import { isNullOrUndefined } from "util";
 
 @Component({
   selector: 'instance-details',
@@ -127,7 +130,7 @@ export class InstanceDetailsComponent {
 	private finalizeLoading() {
 		this.generateLabelValueForDesign();
 		this.isLoadingInstance = false;
-		if (this.isMyOrg() || this.authService.authState.isSiteAdmin()) {
+		if (this.isMyOrg() || this.authService.authState.hasPermission(AuthPermission.SiteAdmin)) {
 			this.shouldDisplayIdService = true;
 			this.loadIdService(this.instance.instanceId);
 		}
@@ -186,7 +189,7 @@ export class InstanceDetailsComponent {
   }
 
 	private isServiceAdminForOrg():boolean {
-		return (this.authService.authState.isAdmin() && this.isMyOrg()) || this.authService.authState.isSiteAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
 	}
 
 	public showUpdate():boolean {
@@ -240,11 +243,11 @@ export class InstanceDetailsComponent {
 	}
 
 	private isAdmin():boolean {
-		return (this.authService.authState.isAdmin() && this.isMyOrg()) ||  this.authService.authState.isSiteAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
 	}
 
 	private isEndorseAdmin():boolean {
-		return this.authService.authState.isAdmin() || this.authService.authState.isSiteAdmin();
+		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 
 	// Endorsements

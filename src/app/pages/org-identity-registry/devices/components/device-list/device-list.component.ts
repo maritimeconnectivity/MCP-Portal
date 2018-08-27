@@ -1,13 +1,16 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Router, ActivatedRoute} from "@angular/router";
-import {EntityImageModel} from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
-import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
-import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
-import {AuthService} from "../../../../../authentication/services/auth.service";
-import {Observable} from "rxjs";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { EntityImageModel } from "../../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import { Device } from "../../../../../backend-api/identity-registry/autogen/model/Device";
+import { DevicesService } from "../../../../../backend-api/identity-registry/services/devices.service";
+import { AuthPermission, AuthService } from "../../../../../authentication/services/auth.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'device-list',
@@ -76,7 +79,7 @@ export class DeviceListComponent implements OnInit {
 			  }
 		  );
 	  }
-	  if (this.authService.authState.isAdmin()) {
+	  if (this.authService.authState.hasPermission(AuthPermission.DeviceAdmin)) {
 		  this.entityImageList.push({imageSourceObservable:null, entityId:this.KEY_NEW, title:'Register new Device', isAdd:true});
 	  }
   }
