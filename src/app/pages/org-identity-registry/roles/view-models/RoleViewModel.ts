@@ -30,15 +30,15 @@ export class RoleViewModel {
         let text = '';
         switch (roleNameEnum) {
             case RoleNameEnum.ORGADMIN: {
-                text = 'Org OrgAdmin';
+                text = 'Org Admin';
                 break;
             }
             case RoleNameEnum.ENTITYADMIN: {
-                text = 'Entity OrgAdmin';
+                text = 'Entity Admin';
                 break;
             }
             case RoleNameEnum.SERVICEADMIN: {
-                text = 'Service OrgAdmin';
+                text = 'Service Admin';
                 break;
             }
             case RoleNameEnum.USER: {
@@ -46,23 +46,23 @@ export class RoleViewModel {
                 break;
             }
             case RoleNameEnum.USERADMIN: {
-                text = 'User OrgAdmin';
+                text = 'User Admin';
                 break;
             }
             case RoleNameEnum.VESSELADMIN: {
-                text = 'Vessel OrgAdmin';
+                text = 'Vessel Admin';
                 break;
             }
             case RoleNameEnum.DEVICEADMIN: {
-                text = 'Device OrgAdmin';
+                text = 'Device Admin';
                 break;
             }
             case RoleNameEnum.APPROVEORG: {
-                text = 'Approve Org OrgAdmin';
+                text = 'Approve Admin';
                 break;
             }
             case RoleNameEnum.SITEADMIN: {
-                text = 'Site OrgAdmin';
+                text = 'Site Admin';
                 break;
             }
             default: {

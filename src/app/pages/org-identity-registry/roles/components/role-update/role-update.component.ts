@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component, OnChanges, OnDestroy,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import { Role } from '../../../../../backend-api/identity-registry/autogen/model/Role';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import {
@@ -26,7 +33,7 @@ import RoleNameEnum = Role.RoleNameEnum;
     template: require('./role-update.html'),
     styles: []
 })
-export class RoleUpdateComponent implements OnInit {
+export class RoleUpdateComponent implements OnInit, OnDestroy {
     private organization: Organization;
     private roleName: RoleNameEnum;
 
@@ -39,7 +46,7 @@ export class RoleUpdateComponent implements OnInit {
     public updateForm: FormGroup;
     public formControlModels: Array<McFormControlModel>;
 
-    constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private rolesService: RolesService, private orgService: OrganizationsService) {
+    constructor(private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private rolesService: RolesService, private orgService: OrganizationsService) {
     }
 
     ngOnInit() {
@@ -48,18 +55,27 @@ export class RoleUpdateComponent implements OnInit {
         this.loadMyOrganization();
     }
 
+    ngOnDestroy() {
+        this.cdr.detach();
+    }
+
     public cancel() {
         this.navigationService.navigateToRole(this.role.id);
     }
 
     public update() {
+        this.modalDescription = 'Are you sure you want to update this role?';
         this.showModal = true;
     }
 
     public updateForSure() {
         this.isUpdating = true;
-        this.role.roleName = this.updateForm.value.role;
+        this.role.roleName = this.updateForm.value.roleName;
         this.updateRole();
+    }
+
+    public cancelModal() {
+        this.showModal = false;
     }
 
     private updateRole() {
@@ -88,6 +104,7 @@ export class RoleUpdateComponent implements OnInit {
             this.roleName = role.roleName;
             this.generateForm();
             this.isLoading = false;
+            this.cdr.detectChanges();
         }, err => {
             this.isLoading = false;
             this.notifications.generateNotification('Error', 'Error when trying to get role', MCNotificationType.Error, err);
@@ -110,17 +127,18 @@ export class RoleUpdateComponent implements OnInit {
         this.updateForm.addControl(formControlModel.elementId, formControl);
         this.formControlModels.push(formControlModel);
 
-        // TODO something is wrong here
         let selectValues = this.selectValues();
-        let formControlModelSelect: McFormControlModelSelect = {selectValues: selectValues, formGroup: this.updateForm, elementId: 'role', controlType: McFormControlType.Select, labelName: 'Role Name', validator: SelectValidator.validate, showCheckmark: true};
+        let formControlModelSelect: McFormControlModelSelect = {selectValues: selectValues, formGroup: this.updateForm, elementId: 'roleName', controlType: McFormControlType.Select, labelName: 'Role Name', validator: SelectValidator.validate, showCheckmark: true};
         formControl = new FormControl(this.selectedValue(selectValues), formControlModelSelect.validator);
         formControl.valueChanges.subscribe(param => {
             if (param && this.roleName != param) {
                 this.roleName = param;
+                this.generateForm();
             }
         });
         this.updateForm.addControl(formControlModelSelect.elementId, formControl);
         this.formControlModels.push(formControlModelSelect);
+        this.cdr.detectChanges();
     }
 
     private selectValues(): Array<SelectModel> {
