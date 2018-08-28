@@ -22,6 +22,8 @@ export interface Role {
      */
     permission: string;
 
+    idOrganization?: number;
+
     /**
      * The role that should be mapped to the permission
      */
