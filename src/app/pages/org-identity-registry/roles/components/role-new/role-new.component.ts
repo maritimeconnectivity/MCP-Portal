@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Organization } from '../../../../../backend-api/identity-registry/autogen/model/Organization';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -26,7 +26,7 @@ import RoleNameEnum = Role.RoleNameEnum;
     template: require('./role-new.html'),
     styles: []
 })
-export class RoleNewComponent implements OnInit {
+export class RoleNewComponent implements OnInit, OnDestroy {
     private roleName: RoleNameEnum = null;
 
     public organization: Organization;
@@ -36,13 +36,17 @@ export class RoleNewComponent implements OnInit {
     public registerForm: FormGroup;
     public formControlModels: Array<McFormControlModel>;
 
-    constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private rolesService: RolesService){
+    constructor(private changeDetector: ChangeDetectorRef, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private orgService: OrganizationsService, private rolesService: RolesService){
     }
 
     ngOnInit() {
         this.isRegistering = false;
         this.isLoading = true;
         this.loadMyOrganization();
+    }
+
+    ngOnDestroy() {
+        this.changeDetector.detach();
     }
 
     public cancel() {
@@ -75,6 +79,7 @@ export class RoleNewComponent implements OnInit {
                 this.organization = organization;
                 this.generateForm();
                 this.isLoading = false;
+                this.changeDetector.detectChanges();
             },
             err => {
                 this.isLoading = false;
@@ -84,11 +89,15 @@ export class RoleNewComponent implements OnInit {
     }
 
     private generateForm() {
+        let oldForm = this.registerForm;
         this.registerForm = this.formBuilder.group({});
+        if (!oldForm) {
+            oldForm = this.registerForm;
+        }
         this.formControlModels = [];
 
         let formControlModel: McFormControlModel = {formGroup: this.registerForm, elementId: 'permission', controlType: McFormControlType.Text, labelName: 'Permission Name', placeholder: 'Enter Permission name', validator: Validators.required};
-        let formControl = new FormControl('', formControlModel.validator);
+        let formControl = new FormControl(oldForm.value.permission, formControlModel.validator);
         this.registerForm.addControl(formControlModel.elementId, formControl);
         this.formControlModels.push(formControlModel);
 
@@ -103,6 +112,7 @@ export class RoleNewComponent implements OnInit {
         });
         this.registerForm.addControl(formControlModelSelect.elementId, formControl);
         this.formControlModels.push(formControlModelSelect);
+        this.changeDetector.detectChanges();
     }
 
     private selectValues(): Array<SelectModel> {

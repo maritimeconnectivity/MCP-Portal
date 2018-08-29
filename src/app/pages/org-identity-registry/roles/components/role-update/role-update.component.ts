@@ -46,7 +46,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     public updateForm: FormGroup;
     public formControlModels: Array<McFormControlModel>;
 
-    constructor(private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private rolesService: RolesService, private orgService: OrganizationsService) {
+    constructor(private changeDetector: ChangeDetectorRef, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private navigationService: NavigationHelperService, private notifications: MCNotificationsService, private rolesService: RolesService, private orgService: OrganizationsService) {
     }
 
     ngOnInit() {
@@ -56,7 +56,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.cdr.detach();
+        this.changeDetector.detach();
     }
 
     public cancel() {
@@ -104,7 +104,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
             this.roleName = role.roleName;
             this.generateForm();
             this.isLoading = false;
-            this.cdr.detectChanges();
+            this.changeDetector.detectChanges();
         }, err => {
             this.isLoading = false;
             this.notifications.generateNotification('Error', 'Error when trying to get role', MCNotificationType.Error, err);
@@ -138,7 +138,7 @@ export class RoleUpdateComponent implements OnInit, OnDestroy {
         });
         this.updateForm.addControl(formControlModelSelect.elementId, formControl);
         this.formControlModels.push(formControlModelSelect);
-        this.cdr.detectChanges();
+        this.changeDetector.detectChanges();
     }
 
     private selectValues(): Array<SelectModel> {
