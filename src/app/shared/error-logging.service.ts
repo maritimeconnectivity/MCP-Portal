@@ -33,9 +33,9 @@ export class ErrorLoggingService {
   }
 
   public logError( error: any, showToUser:boolean ) : void {
-    this.logErrorWithMessage(null, error, showToUser);
+    this.logErrorWithMessage(null, error, showToUser, false);
   }
-	public logErrorWithMessage(message:string, err: any, showToUser:boolean ) : void {
+	public logErrorWithMessage(message:string, err: any, showToUser:boolean, getApiVersions: boolean) : void {
   	let originalError = err;
 		let isUserError = err instanceof UserError;
 		if (isUserError && err.originalError) {
@@ -57,7 +57,11 @@ export class ErrorLoggingService {
 			sendBugReport = err.sendBugReport;
 		}
 		if (this.options.makeBugReportFromError && !IS_DEV && sendBugReport) {
-			this.sendToServer(message, originalError);
+		    if (getApiVersions) {
+                this.sendToServer(message, originalError);
+            } else {
+		        this.sendToServerWithoutApiVersions(message, originalError);
+            }
 		}
 	}
 
@@ -107,6 +111,14 @@ export class ErrorLoggingService {
             this.sendToServerForSure(message, subject, autoTag, error, errorString);
         });
 	}
+
+	private sendToServerWithoutApiVersions(message: string, error: any): void {
+        let autoTag = '#AUTO';
+        let subject = autoTag +" Auto-generated error";
+        let errorString = '';
+
+        this.sendToServerForSure(message, subject, autoTag, error, errorString);
+    }
 
 	private sendToServerForSure(message: string, subject: string, autoTag: string, error: any, errorString: string) {
         if ( message ) {

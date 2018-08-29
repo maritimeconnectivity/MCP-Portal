@@ -27,7 +27,7 @@ export class MCNotificationsService {
 	  let isUserError = anyError instanceof UserError;
 
     if (anyError) {
-      this.errorLogger.logErrorWithMessage(message, anyError, false);
+      this.errorLogger.logErrorWithMessage(message, anyError, false, true);
       if (anyError instanceof ServerUnreachableError) {
       	message = anyError.message;
       } else {

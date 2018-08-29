@@ -70,7 +70,7 @@ export class ApiVersionService {
 	}
 
 	private logParseError(err:any, swaggerLocation:string) {
-		this.errorLoggingService.logErrorWithMessage("Error trying to parse Swagger JSON from: " + swaggerLocation, err, false);
+		this.errorLoggingService.logErrorWithMessage("Error trying to parse Swagger JSON from: " + swaggerLocation, err, false, false);
 	}
 
 	private getSwaggerJson(swaggerLocation:string): Observable<any> {
