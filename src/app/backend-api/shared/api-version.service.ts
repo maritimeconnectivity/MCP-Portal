@@ -1,23 +1,27 @@
+import { Injectable } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import { BugReport } from "../autogen/model/BugReport";
+import { AuthService, AuthUser } from "../../../authentication/services/auth.service";
+import { BugReportControllerApi } from "../autogen/api/BugReportControllerApi";
+import { ErrorLoggingService } from "../../shared/error-logging.service";
+import { SWAGGER_LOCATION } from "../../shared/app.constants";
 import {
-	Injectable
-} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {BugReport} from "../autogen/model/BugReport";
-import {AuthService, AuthUser} from "../../../authentication/services/auth.service";
-import {BugReportControllerApi} from "../autogen/api/BugReportControllerApi";
-import {ErrorLoggingService} from "../../shared/error-logging.service";
-import {SWAGGER_LOCATION} from "../../shared/app.constants";
-import {
-	Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response,
-	URLSearchParams
+    Headers,
+    Http,
+    RequestMethod,
+    RequestOptions,
+    RequestOptionsArgs,
+    Response,
+    URLSearchParams
 } from "@angular/http";
-import {McHttpService} from "./mc-http.service";
-import {ServerUnreachableError} from "../../shared/ServerUnreachableError";
+import { McHttpService } from "./mc-http.service";
+import { ServerUnreachableError } from "../../shared/ServerUnreachableError";
 
 @Injectable()
 export class ApiVersionService {
 
   constructor(private errorLoggingService:ErrorLoggingService, private http:Http) {
+  	this.errorLoggingService.setApiVersionService(this);
   }
 
 	public getVersionOfIdentityRegistry():Observable<string> {

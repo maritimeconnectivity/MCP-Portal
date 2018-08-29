@@ -1,12 +1,14 @@
-import {Injectable, Inject} from "@angular/core";
-import {NotificationsService} from "angular2-notifications";
-import {BugReportingService} from "../backend-api/identity-registry/services/bug-reporting.service";
-import {BugReport} from "../backend-api/identity-registry/autogen/model/BugReport";
-import {AuthService} from "../authentication/services/auth.service";
-import {BugReportAttachment} from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
-import {McHttpService} from "../backend-api/shared/mc-http.service";
-import {PortalUserError, UserError} from "./UserError";
-import {ServerUnreachableError} from "./ServerUnreachableError";
+import { Inject, Injectable } from "@angular/core";
+import { NotificationsService } from "angular2-notifications";
+import { BugReportingService } from "../backend-api/identity-registry/services/bug-reporting.service";
+import { BugReport } from "../backend-api/identity-registry/autogen/model/BugReport";
+import { AuthService } from "../authentication/services/auth.service";
+import { BugReportAttachment } from "../backend-api/identity-registry/autogen/model/BugReportAttachment";
+import { McHttpService } from "../backend-api/shared/mc-http.service";
+import { PortalUserError, UserError } from "./UserError";
+import { ServerUnreachableError } from "./ServerUnreachableError";
+import { ApiVersionService } from '../backend-api/shared/api-version.service';
+import { Observable } from 'rxjs';
 
 export interface MCErrorLoggerOptions {
 	makeBugReportFromError: boolean;
@@ -19,9 +21,15 @@ export var MC_ERROR_LOGGER_OPTIONS: MCErrorLoggerOptions = {
 @Injectable()
 export class ErrorLoggingService {
 
+	private apiVersionService: ApiVersionService;
+
 	public options: MCErrorLoggerOptions;
   constructor(private notificationService: NotificationsService, private bugreportService: BugReportingService, @Inject( MC_ERROR_LOGGER_OPTIONS ) options: MCErrorLoggerOptions) {
 	  this.options = options;
+  }
+
+  public setApiVersionService(apiVersionService: ApiVersionService): void {
+  	this.apiVersionService = apiVersionService;
   }
 
   public logError( error: any, showToUser:boolean ) : void {
@@ -42,7 +50,7 @@ export class ErrorLoggingService {
 			this.sendToUser(originalError);
 		}
 
-		var sendBugReport = true;
+		let sendBugReport = true;
 		if ( err instanceof PortalUserError) {
 			sendBugReport = false;
 		}	else if (isUserError) {
@@ -83,66 +91,79 @@ export class ErrorLoggingService {
 	}
 
 	private sendToServer(message:string,error: any): void {
-  	let autoTag = '#AUTO';
-  	let subject = autoTag +" Auto-generated error";
-  	var errorString = '';
+        let autoTag = '#AUTO';
+        let subject = autoTag +" Auto-generated error";
+        let errorString = '';
 
-		if ( message ) {
-			subject = autoTag;
-			if (error instanceof ServerUnreachableError) {
-				let serverUnreachableTag = '#UNREACHABLE';
-				subject += (' ' + serverUnreachableTag);
-			}
-			errorString += "**MESSAGE**: \n" + message + "\n\n";
-			subject += (' ' + message);
-		}
+        let parallelObservables = [];
+        parallelObservables.push(this.apiVersionService.getVersionOfIdentityRegistry().take(1));
+        parallelObservables.push(this.apiVersionService.getVersionOfServiceRegistry().take(1));
 
-		try {
-			if ( error.json() ) {
-				errorString += "**ERROR JSON**: \n" + JSON.stringify(error.json()) + "\n\n";
-			}
-		}catch (err) {} // Error occured when trying to call error.json(). This is OK, because it's then probably a system error and no action is needed
-
-		if ( error.message ) {
-			errorString += "**ORIGINAL ERROR MESSAGE**: \n" + error.message + "\n\n";
-		}
-		if ( error.stack ) {
-			errorString += "**ORIGINAL ERROR STACKTRACE**: \n" + error.stack + "\n\n";
-		}
-		if ( error ) {
-			errorString += "**ERROR STRING**: \n" + error  + "\n\n";
-		}
-
-		if (error instanceof ServerUnreachableError) {
-			errorString = "" + error.message;
-		}
-		if (errorString.length > 0) {
-			let bugReport:BugReport = {subject:subject, description:errorString};
-			bugReport.attachments = [this.createLogAttachement()];
-			this.bugreportService.reportBug(bugReport).subscribe(
-				_ => {
-					// Nothing should happen
-				},
-				err => {
-					// Error reporting error. Just log and ignore
-					console.log("Error when sending bug report: ", err);
-				}
-			);
-		}
+        Observable.forkJoin(parallelObservables).subscribe(results => {
+            errorString += '**API Versions**:\nMIR: ' + results[0] + '\nMSR: ' + results[1] + '\n\n';
+            this.sendToServerForSure(message, subject, autoTag, error, errorString);
+        }, () => {
+            this.sendToServerForSure(message, subject, autoTag, error, errorString);
+        });
 	}
 
-	private createLogAttachement() : BugReportAttachment {
-		let data = JSON.stringify(McHttpService.getHttpCallLog());
+	private sendToServerForSure(message: string, subject: string, autoTag: string, error: any, errorString: string) {
+        if ( message ) {
+            subject = autoTag;
+            if (error instanceof ServerUnreachableError) {
+                let serverUnreachableTag = '#UNREACHABLE';
+                subject += (' ' + serverUnreachableTag);
+            }
+            errorString += "**MESSAGE**: \n" + message + "\n\n";
+            subject += (' ' + message);
+        }
 
-  	return {data:window.btoa(data),mimetype:'text/json',name:'httpLog.json'};
-	}
+        try {
+            if ( error.json() ) {
+                errorString += "**ERROR JSON**: \n" + JSON.stringify(error.json()) + "\n\n";
+            }
+        }catch (err) {} // Error occured when trying to call error.json(). This is OK, because it's then probably a system error and no action is needed
+
+        if ( error.message ) {
+            errorString += "**ORIGINAL ERROR MESSAGE**: \n" + error.message + "\n\n";
+        }
+        if ( error.stack ) {
+            errorString += "**ORIGINAL ERROR STACKTRACE**: \n" + error.stack + "\n\n";
+        }
+        if ( error ) {
+            errorString += "**ERROR STRING**: \n" + error  + "\n\n";
+        }
+
+        if (error instanceof ServerUnreachableError) {
+            errorString = "" + error.message;
+        }
+        if (errorString.length > 0) {
+            let bugReport:BugReport = {subject:subject, description:errorString};
+            bugReport.attachments = [this.createLogAttachement()];
+            this.bugreportService.reportBug(bugReport).subscribe(
+                _ => {
+                    // Nothing should happen
+                },
+                err => {
+                    // Error reporting error. Just log and ignore
+                    console.log("Error when sending bug report: ", err);
+                }
+            );
+        }
+    }
+
+    private createLogAttachement() : BugReportAttachment {
+        let data = JSON.stringify(McHttpService.getHttpCallLog());
+
+        return {data:window.btoa(data),mimetype:'text/json',name:'httpLog.json'};
+    }
 
   private sendToUser(error: any): void {
-    var orgError = error.originalError;
+    let orgError = error.originalError;
     if (!orgError) {
       orgError = error;
     }
-    var message = orgError.message;
+    let message = orgError.message;
     if (!message) {
       message = '';
     }
