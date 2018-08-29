@@ -34,6 +34,11 @@ export class ApiVersionService {
 		return this.getVersionFromSwagger(jsonLocation);
 	}
 
+	public getVersionOfEndorsementService(): Observable<string> {
+  		let jsonLocation = ENDORSEMENT_BASE_PATH + SWAGGER_LOCATION;
+  		return this.getVersionFromSwagger(jsonLocation);
+	}
+
 	private getVersionFromSwagger(swaggerLocation:string): Observable<string>{
 		return Observable.create(observer => {
 			McHttpService.nextCallShouldNotAuthenticate();

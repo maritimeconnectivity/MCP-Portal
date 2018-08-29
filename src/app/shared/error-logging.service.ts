@@ -98,9 +98,10 @@ export class ErrorLoggingService {
         let parallelObservables = [];
         parallelObservables.push(this.apiVersionService.getVersionOfIdentityRegistry().take(1));
         parallelObservables.push(this.apiVersionService.getVersionOfServiceRegistry().take(1));
+        parallelObservables.push(this.apiVersionService.getVersionOfEndorsementService().take(1));
 
         Observable.forkJoin(parallelObservables).subscribe(results => {
-            errorString += '**API Versions**:\nMIR: ' + results[0] + '\nMSR: ' + results[1] + '\n\n';
+            errorString += '**API Versions**:\nMIR: ' + results[0] + '\nMSR: ' + results[1] + '\nEndorsement Service: ' + results[2] + '\n\n';
             this.sendToServerForSure(message, subject, autoTag, error, errorString);
         }, () => {
             this.sendToServerForSure(message, subject, autoTag, error, errorString);
