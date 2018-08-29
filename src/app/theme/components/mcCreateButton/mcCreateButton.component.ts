@@ -10,10 +10,8 @@ import { AuthPermission, AuthService } from "../../../authentication/services/au
 export class McCreateButton {
   @Input() title:string;
   @Input() onClick:Function;
+  @Input() isAdmin: boolean;
   constructor(private authService: AuthService) {
-  }
-  private isAdmin():boolean {
-    return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
   }
 
   private clickHandler() {

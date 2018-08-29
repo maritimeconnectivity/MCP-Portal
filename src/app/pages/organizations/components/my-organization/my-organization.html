@@ -11,7 +11,7 @@
 
     <div *ngIf="!isLoading && organization">
       <ba-card title="Certificates for {{organization.name}}" baCardClass="with-scroll table-panel">
-        <certificates-table [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="certificateTitle" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
+        <certificates-table [isAdmin]="isOrgAdmin()" [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="certificateTitle" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
       </ba-card>
     </div>
   </div>

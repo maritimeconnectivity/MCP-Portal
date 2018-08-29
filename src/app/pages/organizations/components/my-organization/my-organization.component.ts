@@ -56,6 +56,10 @@ export class MyOrganization implements OnInit {
 		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 
+	public isOrgAdmin(): boolean {
+        return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
+    }
+
 	public update() {
 		this.navigationHelper.navigateToUpdateMyOrg();
 	}

@@ -14,7 +14,7 @@
 
     <div *ngIf="device">
       <ba-card title="Certificates for {{title}}" baCardClass="with-scroll table-panel">
-        <certificates-table [entityMrn]="device.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="device.certificates"></certificates-table>
+        <certificates-table [isAdmin]="isAdmin()" [entityMrn]="device.mrn" [isLoading]="isLoading" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="device.certificates"></certificates-table>
       </ba-card>
     </div>
   </div>

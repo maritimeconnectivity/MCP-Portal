@@ -1,4 +1,4 @@
 <mc-table [tableHeaders]="tableHeaders" [tableRows]="tableRows" [isLoading]="isLoading"></mc-table>
 <div *ngIf="!isLoading">
-  <mc-create-button [title]="newCertificateTitle" [onClick]="onIssueCertificate"></mc-create-button>
+  <mc-create-button [isAdmin]="canCreate()" [title]="newCertificateTitle" [onClick]="onIssueCertificate"></mc-create-button>
 </div>

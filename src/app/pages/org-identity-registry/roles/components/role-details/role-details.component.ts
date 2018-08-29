@@ -69,11 +69,11 @@ export class RoleDetailsComponent implements OnInit{
         }
     }
 
-    private showDelete(): boolean {
+    public showDelete(): boolean {
         return this.isAdmin() && this.role != null;
     }
 
-    private showUpdate(): boolean {
+    public showUpdate(): boolean {
         return this.isAdmin() && this.role != null;
     }
 

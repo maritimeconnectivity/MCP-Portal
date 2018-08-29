@@ -23,7 +23,7 @@
 
     <div *ngIf="vessel">
         <ba-card title="Certificates for {{title}}" baCardClass="with-scroll table-panel">
-          <certificates-table [entityMrn]="vessel.mrn" [isLoading]="isLoadingVesselAndImage" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="vessel.certificates"></certificates-table>
+          <certificates-table [isAdmin]="isAdmin()" [entityMrn]="vessel.mrn" [isLoading]="isLoadingVesselAndImage" [certificateTitle]="title" [certificateEntityType]="entityType" [certificates]="vessel.certificates"></certificates-table>
         </ba-card>
     </div>
   </div>

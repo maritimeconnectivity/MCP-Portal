@@ -33,6 +33,7 @@ export class CertificatesTableComponent implements OnChanges{
   @Input() entityMrn: string;
   @Input() isLoading: boolean;
   @Input() certificateTitle: string;
+  @Input() isAdmin: boolean;
 
 	public tableHeaders: Array<TableHeader>;
 	public tableRows: Array<TableRow>;
@@ -97,7 +98,7 @@ export class CertificatesTableComponent implements OnChanges{
 				let actionButtons:Array<TableActionButton> = [];
 				let actionButton:TableActionButton = {buttonClass: 'btn btn-primary btn-raised btn-sm', name: 'Download certificate', onClick:() => {this.download(certificate)}};
 				actionButtons.push(actionButton);
-				if (this.isAdmin()) {
+				if (this.isAdmin) {
 					actionButton = {buttonClass: 'btn btn-primary btn-raised btn-sm', name: 'Revoke certificate', onClick:() => {this.revoke(certificate)}};
 					actionButtons.push(actionButton);
 				}
@@ -146,10 +147,6 @@ export class CertificatesTableComponent implements OnChanges{
     this.navigationHelper.navigateToIssueNewCertificate(this.certificateEntityType, this.entityMrn, this.certificateTitle);
   }
 
-  public isAdmin():boolean {
-    return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
-  }
-
   public revoke(certificate:Certificate) {
   	this.navigationHelper.navigateToRevokeCertificate(this.certificateEntityType, this.entityMrn, this.certificateTitle, certificate.serialNumber);
   }
@@ -158,5 +155,9 @@ export class CertificatesTableComponent implements OnChanges{
     let pemCertificate:PemCertificate = {certificate:certificate.certificate};
     let certBundle:CertificateBundle = {pemCertificate:pemCertificate};
     this.fileHelper.downloadPemCertificate(certBundle, this.certificateTitle);
+  }
+
+  public canCreate(): boolean {
+      return this.isAdmin;
   }
 }

@@ -99,22 +99,38 @@ export class AuthService implements OnInit {
           for (let roleString of roles) {
           	let role = RoleNameEnum[roleString];
           	switch (role) {
-				case RoleNameEnum[RoleNameEnum.ORGADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.OrgAdmin;
-				case RoleNameEnum[RoleNameEnum.SITEADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
-				case RoleNameEnum[RoleNameEnum.USERADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.UserAdmin;
-				case RoleNameEnum[RoleNameEnum.DEVICEADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.DeviceAdmin;
-				case RoleNameEnum[RoleNameEnum.VESSELADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.VesselAdmin;
-				case RoleNameEnum[RoleNameEnum.SERVICEADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.ServiceAdmin;
-				case RoleNameEnum[RoleNameEnum.ENTITYADMIN]:
-					this.authState.permission = this.authState.permission | AuthPermission.EntityAdmin;
-				case RoleNameEnum[RoleNameEnum.APPROVEORG]:
-					this.authState.permission = this.authState.permission | AuthPermission.ApproveOrg;
+				case RoleNameEnum[RoleNameEnum.ORGADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.OrgAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.SITEADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.SiteAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.USERADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.UserAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.DEVICEADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.DeviceAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.VESSELADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.VesselAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.SERVICEADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.ServiceAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.ENTITYADMIN]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.EntityAdmin;
+                    break;
+                }
+				case RoleNameEnum[RoleNameEnum.APPROVEORG]: {
+                    this.authState.permission = this.authState.permission | AuthPermission.ApproveOrg;
+                	break;
+				}
 				default:
 					this.authState.permission = this.authState.permission | AuthPermission.User;
             }
@@ -143,21 +159,21 @@ export class AuthService implements OnInit {
 				case AuthPermission.User:
 					return true;
 				case AuthPermission.SiteAdmin:
-					return PermissionResolver.isSiteAdmin(permissionRole);
+					return PermissionResolver.isSiteAdmin(this.permission);
 				case AuthPermission.OrgAdmin:
-					return PermissionResolver.isOrgAdmin(permissionRole);
+					return PermissionResolver.isOrgAdmin(this.permission);
 				case AuthPermission.ApproveOrg:
-					return PermissionResolver.canApproveOrg(permissionRole);
+					return PermissionResolver.canApproveOrg(this.permission);
 				case AuthPermission.EntityAdmin:
-					return PermissionResolver.isEntityAdmin(permissionRole);
+					return PermissionResolver.isEntityAdmin(this.permission);
 				case AuthPermission.ServiceAdmin:
-					return PermissionResolver.isServiceAdmin(permissionRole);
+					return PermissionResolver.isServiceAdmin(this.permission);
 				case AuthPermission.DeviceAdmin:
-					return PermissionResolver.isDeviceAdmin(permissionRole);
+					return PermissionResolver.isDeviceAdmin(this.permission);
 				case AuthPermission.VesselAdmin:
-					return PermissionResolver.isVesselAdmin(permissionRole);
+					return PermissionResolver.isVesselAdmin(this.permission);
 				case AuthPermission.UserAdmin:
-					return PermissionResolver.isUserAdmin(permissionRole);
+					return PermissionResolver.isUserAdmin(this.permission);
 				default:
 					return false;
             }

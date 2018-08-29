@@ -8,6 +8,11 @@
         </li>
       </ul>
     </ba-card>
+    <div *ngIf="!isLoading && organization">
+      <ba-card title="Certificates for {{organization.name}}" baCardClass="with-scroll table-panel">
+        <certificates-table [isAdmin]="false" [entityMrn]="organization.mrn" [isLoading]="isLoading" [certificateTitle]="organization.name" [certificateEntityType]="entityType" [certificates]="organization.certificates"></certificates-table>
+      </ba-card>
+    </div>
   </div>
 </div>
 <mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete organization'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>
