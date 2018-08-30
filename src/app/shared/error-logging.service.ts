@@ -21,10 +21,8 @@ export var MC_ERROR_LOGGER_OPTIONS: MCErrorLoggerOptions = {
 @Injectable()
 export class ErrorLoggingService {
 
-	private apiVersionService: ApiVersionService;
-
 	public options: MCErrorLoggerOptions;
-  constructor(private notificationService: NotificationsService, private bugreportService: BugReportingService, @Inject( MC_ERROR_LOGGER_OPTIONS ) options: MCErrorLoggerOptions) {
+  constructor(private apiVersionService: ApiVersionService, private notificationService: NotificationsService, private bugreportService: BugReportingService, @Inject( MC_ERROR_LOGGER_OPTIONS ) options: MCErrorLoggerOptions) {
 	  this.options = options;
   }
 

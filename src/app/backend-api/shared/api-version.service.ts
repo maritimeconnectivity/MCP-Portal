@@ -3,7 +3,6 @@ import { Observable } from "rxjs/Observable";
 import { BugReport } from "../autogen/model/BugReport";
 import { AuthService, AuthUser } from "../../../authentication/services/auth.service";
 import { BugReportControllerApi } from "../autogen/api/BugReportControllerApi";
-import { ErrorLoggingService } from "../../shared/error-logging.service";
 import { SWAGGER_LOCATION } from "../../shared/app.constants";
 import {
     Headers,
@@ -20,8 +19,7 @@ import { ServerUnreachableError } from "../../shared/ServerUnreachableError";
 @Injectable()
 export class ApiVersionService {
 
-  constructor(private errorLoggingService:ErrorLoggingService, private http:Http) {
-  	this.errorLoggingService.setApiVersionService(this);
+  constructor(private http:Http) {
   }
 
 	public getVersionOfIdentityRegistry():Observable<string> {
@@ -48,31 +46,20 @@ export class ApiVersionService {
 						let version:string = swaggerJson.info.version;
 						observer.next(version);
 					}catch (err) {
-						this.logParseError(err, swaggerLocation);
 						observer.next('?');
 					}
 				},
 				err => {
 					if (err instanceof ServerUnreachableError) {
-						this.logConnectionError(err);
 						observer.next('Unreachable');
 					} else {
-						this.logParseError(err, swaggerLocation);
 						observer.next('?');
 					}
 				}
 			);
 		})
 	}
-
-	private logConnectionError(err:any) {
-		this.errorLoggingService.logError(err, true);
-	}
-
-	private logParseError(err:any, swaggerLocation:string) {
-		this.errorLoggingService.logErrorWithMessage("Error trying to parse Swagger JSON from: " + swaggerLocation, err, false, false);
-	}
-
+	
 	private getSwaggerJson(swaggerLocation:string): Observable<any> {
 		// to determine the Content-Type header
 		let consumes: string[] = [
