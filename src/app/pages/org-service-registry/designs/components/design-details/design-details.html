@@ -32,7 +32,7 @@
         <div class="separator"></div>
       </div>
       <div class="create-loading-wrapper">
-        <mc-create-button *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
+        <mc-create-button [isAdmin]="isServiceAdminForOrg()" *ngIf="!isLoadingInstances" title="Register new Instance" [onClick]="onCreate" ></mc-create-button>
         <sk-fading-circle-small class="create-loading" [isRunning]="isSearchingInstances"></sk-fading-circle-small>
       </div>
       <instances-table [instances]="instances" [isLoading]="isLoadingInstances" [onRowClick]="onGotoInstance"></instances-table>

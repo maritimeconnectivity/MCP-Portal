@@ -1,13 +1,17 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
-import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
-import {Router, ActivatedRoute} from "@angular/router";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
-import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { SpecificationsService } from "../../../../../backend-api/service-registry/services/specifications.service";
+import { Specification } from "../../../../../backend-api/service-registry/autogen/model/Specification";
+import { ActivatedRoute, Router } from "@angular/router";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { ServiceRegistrySearchRequest } from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import { SrSearchRequestsService } from "../../../shared/services/sr-search-requests.service";
+import { AuthPermission, AuthService } from '../../../../../authentication/services/auth.service';
 
 const SEARCH_KEY = 'SpecificationListComponent';
 @Component({
@@ -26,7 +30,7 @@ export class SpecificationListComponent implements OnInit {
   public onGotoSpec: Function;
 	public cardTitle:string;
 	private initialSearchRequest: ServiceRegistrySearchRequest;
-  constructor(private searchRequestsService:SrSearchRequestsService, private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
+  constructor(private authService: AuthService, private searchRequestsService:SrSearchRequestsService, private navigationService: NavigationHelperService, private route: ActivatedRoute, private router: Router, private notifications: MCNotificationsService, private orgService: OrganizationsService, private specificationsService: SpecificationsService) {
   }
 
   ngOnInit() {
@@ -42,6 +46,10 @@ export class SpecificationListComponent implements OnInit {
   public search(searchRequest: ServiceRegistrySearchRequest) {
   	this.isSearching = true;
   	this.searchSpecifications(searchRequest);
+  }
+
+  public isAdmin(): boolean {
+  	return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
   }
 
   private searchSpecifications(searchRequest: ServiceRegistrySearchRequest) {

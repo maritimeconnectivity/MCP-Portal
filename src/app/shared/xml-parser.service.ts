@@ -28,7 +28,7 @@ export class XmlParserService {
 	    }
       return innerElement[0].childNodes[0].nodeValue;
     } catch ( error ) {
-      throw new PortalUserError("Error trying to parse required field: " + outerField + " -> " + fieldToFind);
+      throw new PortalUserError("Error trying to parse required field: " + outerField + " -> " + fieldToFind, error);
     }
   }
 
@@ -64,7 +64,11 @@ export class XmlParserService {
 			if (innerElement.length == 0) {
 				return '';
 			}
-			return innerElement[0].childNodes[0].nodeValue;
+			let value = innerElement[0].childNodes[0];
+			if (!value) {
+				return '';
+			}
+			return value.nodeValue;
 		} catch ( error ) {
 			throw new PortalUserError("Error trying to parse required field: " + field);
 		}

@@ -5,7 +5,7 @@
 
       <div class="separator"></div>
 
-      <mc-create-button *ngIf="!isLoading" title="Register new Specification" [onClick]="onCreate" ></mc-create-button>
+      <mc-create-button [isAdmin]="isAdmin()" *ngIf="!isLoading" title="Register new Specification" [onClick]="onCreate" ></mc-create-button>
       <specifications-table [specifications]="specifications" [isLoading]="isLoading" [onRowClick]="onGotoSpec"></specifications-table>
     </ba-card>
   </div>
