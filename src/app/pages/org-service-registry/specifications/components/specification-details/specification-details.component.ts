@@ -137,7 +137,7 @@ export class SpecificationDetailsComponent {
 	}
 
 	private isServiceAdminForOrg():boolean {
-		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
+		return (this.authService.authState.hasPermission(AuthPermission.ServiceAdmin) && this.isMyOrg()) || this.authService.authState.hasPermission(AuthPermission.SiteAdmin);
 	}
 
 	private isEndorseAdmin():boolean {
