@@ -10,6 +10,7 @@ import {LogocontrollerApi} from "./autogen/api/LogocontrollerApi";
 import {Http} from "@angular/http";
 import {BugReportControllerApi} from "./autogen/api/BugReportControllerApi";
 import {VesselimagecontrollerApi} from "./autogen/api/VesselimagecontrollerApi";
+import { AgentControllerService } from './autogen/api/agentController.service';
 
 @NgModule({
   imports: [
@@ -87,8 +88,14 @@ import {VesselimagecontrollerApi} from "./autogen/api/VesselimagecontrollerApi";
 			  return new VesselimagecontrollerApi(http, IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
+	  },
+	  {
+		  provide: AgentControllerService,
+		  useFactory: (http: Http) => {
+			return new AgentControllerService(http, IR_BASE_PATH, null);
+		  },
+		  deps: [Http]
 	  }
-
   ]
 })
 export class IdentityRegistryApiModule { }

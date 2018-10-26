@@ -1,3 +1,5 @@
+export * from './AgentControllerService';
+import {AgentControllerService} from './agentController.service';
 export * from './CertificatecontrollerApi';
 import { CertificatecontrollerApi } from './CertificatecontrollerApi';
 export * from './DevicecontrollerApi';
