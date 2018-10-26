@@ -9,6 +9,7 @@ import DevicesModule from "./devices/devices.module";
 import UsersModule from "./users/users.module";
 import ServicesModule from "./services/services.module";
 import RolesModule from './roles/roles.module';
+import AgentsModule from './agents/agents.module';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import RolesModule from './roles/roles.module';
 	  ServicesModule,
 	  UsersModule,
       RolesModule,
+      AgentsModule,
     routing
   ],
   declarations: [
