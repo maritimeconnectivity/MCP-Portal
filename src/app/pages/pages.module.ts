@@ -23,6 +23,7 @@ import {EndorsementApiModule} from "../backend-api/endorsements/endorsement-api.
 import {EndorsementsService} from "../backend-api/endorsements/services/endorsements.service";
 import {VesselImageService} from "../backend-api/identity-registry/services/vessel-image.service";
 import { RolesService } from '../backend-api/identity-registry/services/roles.service';
+import { AgentsService } from '../backend-api/identity-registry/services/agents.service';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { RolesService } from '../backend-api/identity-registry/services/roles.se
 	  VesselImageService,
 	  LogoService,
 	  DatePipe,
-      RolesService
+      RolesService,
+      AgentsService
   ]
 })
 export class PagesModule {

@@ -23,6 +23,7 @@ import 'rxjs/add/operator/map';
 import * as models                                           from '../model/models';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import { Organization } from '../model/models';
 
 
 @Injectable()
@@ -128,6 +129,22 @@ export class OrganizationcontrollerApi {
      */
     public deleteOrgUsingDELETE1(orgMrn: string, extraHttpRequestParams?: any): Observable<any> {
         return this.deleteOrgUsingDELETE1WithHttpInfo(orgMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     *
+     * @summary getOrganizationById
+     * @param orgId orgId
+     */
+    public getOrganizationByIdUsingGET(orgId: number, extraHttpRequestParams?: RequestOptionsArgs): Observable<Organization> {
+        return this.getOrganizationByIdUsingGETWithHttpInfo(orgId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -580,6 +597,45 @@ export class OrganizationcontrollerApi {
         }
 
         return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * getOrganizationById
+     *
+     * @param orgId orgId
+
+     */
+    public getOrganizationByIdUsingGETWithHttpInfo(orgId: number, extraHttpRequestParams?: RequestOptionsArgs): Observable<Response> {
+        if (orgId === null || orgId === undefined) {
+            throw new Error('Required parameter orgId was null or undefined when calling getOrganizationByIdUsingGET.');
+        }
+
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json;charset=UTF-8'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(`${this.basePath}/oidc/api/org/id/${encodeURIComponent(String(orgId))}`, requestOptions);
     }
 
     /**

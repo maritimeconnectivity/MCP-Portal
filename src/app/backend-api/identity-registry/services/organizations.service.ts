@@ -163,6 +163,10 @@ export class OrganizationsService implements OnInit {
     return this.organizationApi.getOrganizationUsingGET(orgMrn);
   }
 
+  public getOrganizationById(orgId: number): Observable<Organization> {
+  	return this.organizationApi.getOrganizationByIdUsingGET(orgId);
+  }
+
 	public getAllOrganizations () : Observable<Array<Organization>> {
 		if (this.organizations) {
 			return Observable.of(this.organizations);

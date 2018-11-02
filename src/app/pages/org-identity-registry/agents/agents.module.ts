@@ -4,6 +4,7 @@ import { NgaModule } from '../../../theme/nga.module';
 import { SharedModule } from '../../shared/shared.module';
 import { routing } from './agents.routing';
 import { AgentsComponent } from './agents.component';
+import { AgentListComponent } from './components/agent-list/agent-list.component';
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import { AgentsComponent } from './agents.component';
         routing
     ],
     declarations: [
-        AgentsComponent
+        AgentsComponent,
+        AgentListComponent
     ]
 })
 export default class AgentsModule {

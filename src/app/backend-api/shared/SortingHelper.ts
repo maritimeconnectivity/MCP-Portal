@@ -30,4 +30,8 @@ export class SortingHelper {
 	public static sortingForInstances() : Array<string> {
 		return ['name', 'version'];
 	}
+
+	public static  sortingForAgents() : Array<string> {
+		return ['id'];
+	}
 }
