@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-log-12">
+        <ba-card title="{{title}}" baCardClass="with-scroll table-panel">
+            <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
+            <ul *ngIf="!isLoading" class="btn-list clearfix">
+                <li *ngIf="showUpdate()">
+                    <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update Agent</button>
+                </li>
+                <li *ngIf="showDelete()">
+                    <button type="button" class="btn btn-danger btn-raised" (click)="delete()">Delete Agent</button>
+                </li>
+            </ul>
+        </ba-card>
+    </div>
+</div>
+<mc-modal (onCancel)="cancelModal()" (onOk)="deleteForSure()" [show]="showModal" [title]="'Delete Agent'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Delete'"></mc-modal>

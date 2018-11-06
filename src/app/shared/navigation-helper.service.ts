@@ -303,6 +303,14 @@ export class NavigationHelperService {
   		this.router.navigate([this.path]);
 	}
 
+	public navigateToAgent(agentId: number): void {
+  		this.path = '/' + agentId;
+  		let pagesMenu = PAGES_MENU;
+  		this.generatePath('agents', pagesMenu[0]);
+
+  		this.router.navigate([this.path]);
+	}
+
 	public navigateToCreateIdService(mrn?:string, name?:string, instanceVersion?:string) {
 		this.pathBeforeCreateIdService = this.router.url;
 		this.path = '/register-id';

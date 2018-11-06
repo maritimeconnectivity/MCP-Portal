@@ -25,6 +25,8 @@ export interface Service {
 
     createdAt?: Date;
 
+    id?: number;
+
     /**
      * The version of this service instance.
      */

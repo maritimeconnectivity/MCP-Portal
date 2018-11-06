@@ -1,5 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AgentListComponent } from './components/agent-list/agent-list.component';
+import { AgentDetailsComponent } from './components/agent-details/agent-details.component';
+import { AgentNewComponent } from './components/agent-new/agent-new.component';
 
 const routes: Routes = [
     {
@@ -9,6 +11,16 @@ const routes: Routes = [
             {
                 path: '',
                 component: AgentListComponent
+            },
+            {
+                path: ':id',
+                component: AgentDetailsComponent,
+                data: {breadcrumb: 'Details'}
+            },
+            {
+                path: 'register',
+                component: AgentNewComponent,
+                data: {breadcrumb: 'Register'}
             }
         ]
     }

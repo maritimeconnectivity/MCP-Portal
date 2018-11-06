@@ -5,6 +5,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { routing } from './agents.routing';
 import { AgentsComponent } from './agents.component';
 import { AgentListComponent } from './components/agent-list/agent-list.component';
+import { AgentDetailsComponent } from './components/agent-details/agent-details.component';
+import { AgentNewComponent } from './components/agent-new/agent-new.component';
 
 @NgModule({
     imports: [
@@ -15,7 +17,9 @@ import { AgentListComponent } from './components/agent-list/agent-list.component
     ],
     declarations: [
         AgentsComponent,
-        AgentListComponent
+        AgentListComponent,
+        AgentDetailsComponent,
+        AgentNewComponent
     ]
 })
 export default class AgentsModule {

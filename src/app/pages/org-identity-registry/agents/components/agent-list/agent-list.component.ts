@@ -55,6 +55,18 @@ export class AgentListComponent implements OnInit {
         );
     }
 
+    public gotoDetails(entityModel: EntityImageModel) {
+        if (entityModel.entityId === this.KEY_NEW) {
+            this.gotoCreate();
+        } else {
+            this.router.navigate([entityModel.entityId], {relativeTo: this.route});
+        }
+    }
+
+    public gotoCreate() {
+        this.router.navigate(['register'], {relativeTo: this.route});
+    }
+
     private generateEntityImageList() {
         this.entityImageList = [];
         if (this.agents) {
