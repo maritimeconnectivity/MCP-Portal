@@ -7,6 +7,7 @@ import {UsersComponent} from "./users/users.component";
 import {ServicesComponent} from "./services/services.component";
 import { RolesComponent } from './roles/roles.component';
 import { AgentsComponent } from './agents/agents.component';
+import { ActingComponent } from './acting/acting.component';
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
@@ -19,7 +20,8 @@ const routes: Routes = [
 	    { path: 'users', component: UsersComponent },
 	    { path: 'vessels', component: VesselsComponent },
         { path: 'roles', component: RolesComponent },
-        { path: 'agents', component: AgentsComponent }
+        { path: 'agents', component: AgentsComponent },
+        { path: 'acting', component: ActingComponent}
     ]
   }
 ];

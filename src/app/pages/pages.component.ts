@@ -84,7 +84,7 @@ export class Pages {
 				this.loggedInName = organization.name;
 				let firstName = this.authService.authState.user.firstName;
 				if (firstName) {
-					this.loggedInName = firstName + ' - ' + this.loggedInName;
+					this.loggedInName = firstName + ' for ' + this.loggedInName;
 				}
 			},
 			err => {

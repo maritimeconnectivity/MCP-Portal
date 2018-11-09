@@ -10,6 +10,7 @@ import UsersModule from "./users/users.module";
 import ServicesModule from "./services/services.module";
 import RolesModule from './roles/roles.module';
 import AgentsModule from './agents/agents.module';
+import ActingModule from './acting/acting.module';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import AgentsModule from './agents/agents.module';
 	  UsersModule,
       RolesModule,
       AgentsModule,
+      ActingModule,
     routing
   ],
   declarations: [

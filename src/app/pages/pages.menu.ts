@@ -85,6 +85,14 @@ export var PAGES_MENU_ALL = [
 						title: 'Agents'
 					}
 				}
+			},
+			{
+				path: 'acting',
+				data: {
+					menu: {
+						title: 'Acting For'
+					}
+				}
 			}
         ]
       },
