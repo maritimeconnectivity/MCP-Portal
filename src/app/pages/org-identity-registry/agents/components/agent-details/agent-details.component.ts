@@ -70,7 +70,7 @@ export class AgentDetailsComponent implements OnInit {
     }
 
     public showUpdate(): boolean {
-        return this.isAdmin() && this.agent != null;
+        return false;
     }
 
     public showDelete(): boolean {
@@ -84,6 +84,10 @@ export class AgentDetailsComponent implements OnInit {
     public delete() {
         this.modalDescription = 'Are you sure you want to delete the agent?';
         this.showModal = true;
+    }
+
+    public update() {
+        this.navigationHelper.navigateToUpdateAgent(this.agent.id);
     }
 
     public cancelModal() {

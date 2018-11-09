@@ -18,4 +18,4 @@ export * from './VesselcontrollerApi';
 import { VesselcontrollerApi } from './VesselcontrollerApi';
 export * from './VesselimagecontrollerApi';
 import { VesselimagecontrollerApi } from './VesselimagecontrollerApi';
-export const APIS = [CertificatecontrollerApi, DevicecontrollerApi, LogocontrollerApi, OrganizationcontrollerApi, RolecontrollerApi, ServicecontrollerApi, UsercontrollerApi, VesselcontrollerApi, VesselimagecontrollerApi];
+export const APIS = [CertificatecontrollerApi, DevicecontrollerApi, LogocontrollerApi, OrganizationcontrollerApi, RolecontrollerApi, ServicecontrollerApi, UsercontrollerApi, VesselcontrollerApi, VesselimagecontrollerApi, AgentControllerService];

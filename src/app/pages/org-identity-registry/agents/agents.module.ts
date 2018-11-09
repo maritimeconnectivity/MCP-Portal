@@ -7,6 +7,7 @@ import { AgentsComponent } from './agents.component';
 import { AgentListComponent } from './components/agent-list/agent-list.component';
 import { AgentDetailsComponent } from './components/agent-details/agent-details.component';
 import { AgentNewComponent } from './components/agent-new/agent-new.component';
+import { AgentUpdateComponent } from './components/agent-update/agent-update.component';
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { AgentNewComponent } from './components/agent-new/agent-new.component';
         AgentsComponent,
         AgentListComponent,
         AgentDetailsComponent,
-        AgentNewComponent
+        AgentNewComponent,
+        AgentUpdateComponent
     ]
 })
 export default class AgentsModule {

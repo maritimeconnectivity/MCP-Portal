@@ -56,9 +56,18 @@ export class AgentNewComponent implements OnInit, OnDestroy {
         this.createAgent(agent);
     }
 
+    public cancel() {
+        this.navigationService.cancelCreateAgent();
+    }
+
     private createAgent(agent: Agent) {
         this.agentsService.createAgent(agent).subscribe(agent => {
-           this.navigationService
+           this.navigationService.navigateToAgent(agent.id);
+           this.isRegistering = false;
+        },
+        err => {
+            this.isRegistering = false;
+            this.notifications.generateNotification('Error', 'Error when trying to create agent', MCNotificationType.Error, err);
         });
     }
 
