@@ -6,6 +6,9 @@
         <li *ngIf="shouldDisplayUpdate()">
           <button type="button" class="btn btn-primary btn-raised" (click)="update()">Update Organization</button>
         </li>
+        <li *ngIf="shouldDisplayStopActing()">
+          <button type="button" class="btn btn-danger btn-raised" (click)="stopActing()">Stop Acting</button>
+        </li>
       </ul>
     </ba-card>
 
@@ -16,3 +19,4 @@
     </div>
   </div>
 </div>
+<mc-modal (onCancel)="cancelModal()" (onOk)="stopActingForSure()" [show]="showModal" [title]="'Stop Acting'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Stop Acting'"></mc-modal>

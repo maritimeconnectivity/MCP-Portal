@@ -16,7 +16,7 @@ export class VesselsService {
   }
 
 	public getVessels(): Observable<PageVessel> {
-  	if (this.vesselsCache){
+  	if (this.vesselsCache && !this.authService.authState.acting){
 		  return Observable.of(this.vesselsCache);
 	  }
 
@@ -26,7 +26,9 @@ export class VesselsService {
 			// TODO: do paging properly
 			this.vesselApi.getOrganizationVesselsUsingGET(orgMrn, 0,PAGE_SIZE_DEFAULT, sort).subscribe(
 				pageVessel => {
-					this.vesselsCache = pageVessel;
+					if (!this.authService.authState.acting) {
+                        this.vesselsCache = pageVessel;
+                    }
 					observer.next(pageVessel);
 				},
 				err => {

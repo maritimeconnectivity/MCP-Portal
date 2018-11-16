@@ -12,6 +12,8 @@ import { EntityImageModel } from '../../../../theme/components/mcEntityImage';
 import { Organization } from '../../../../backend-api/identity-registry/autogen/model/Organization';
 import { Observable } from 'rxjs';
 import { LogoService } from '../../../../backend-api/identity-registry/services/logo.service';
+import { ActingService } from '../../../../shared/acting.service';
+import { NavigationHelperService } from '../../../../shared/navigation-helper.service';
 
 @Component({
     selector: 'acting-list',
@@ -29,7 +31,7 @@ export class ActingListComponent implements OnInit {
     public showModal: boolean = false;
     public modalDescription: string;
 
-    constructor(private agentsService: AgentsService, private router: Router, private authService: AuthService, private route: ActivatedRoute, private orgService: OrganizationsService, private notifications: MCNotificationsService, private logoService: LogoService) {
+    constructor(private navigationService: NavigationHelperService, private actingService: ActingService, private agentsService: AgentsService, private router: Router, private authService: AuthService, private route: ActivatedRoute, private orgService: OrganizationsService, private notifications: MCNotificationsService, private logoService: LogoService) {
     }
 
     public ngOnInit() {
@@ -64,7 +66,8 @@ export class ActingListComponent implements OnInit {
     }
 
     public actForSure() {
-
+        this.actingService.actOnBehalfOf(this.actingForOrgMrn);
+        this.navigationService.takeMeHome();
     }
 
     public cancelModal() {
