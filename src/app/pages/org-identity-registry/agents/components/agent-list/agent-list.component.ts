@@ -71,26 +71,33 @@ export class AgentListComponent implements OnInit {
     private generateEntityImageList() {
         this.entityImageList = [];
         if (this.agents) {
-            this.agents.forEach(agent => {
+            for (let i = 0; i < this.agents.length; i++) {
+                let agent: Agent = this.agents[i];
                 this.orgService.getOrganizationById(agent.idActingOrganization).subscribe(org => {
-                    this.entityImageList.push({imageSourceObservable: this.createImgObservable(org), entityId: agent.id.toString(), title: org.name});
+                    this.entityImageList.push({imageSourceObservable: this.createImgObservable(org, i === this.agents.length - 1), entityId: agent.id.toString(), title: org.name});
                 });
-            });
+            }
         }
-        if (this.authService.authState.hasPermission(AuthPermission.OrgAdmin)) {
+        if (this.authService.authState.hasPermission(AuthPermission.OrgAdmin) && this.agents.length < 1) {
             this.entityImageList.push({imageSourceObservable: null, entityId: this.KEY_NEW, title: 'Register new Agent', isAdd: true});
         }
     }
 
-    private createImgObservable(organization: Organization): Observable<string> {
+    private createImgObservable(organization: Organization, last: boolean): Observable<string> {
         let imageSrc = 'assets/img/no_organization.png';
         return Observable.create(observer => {
             this.logoService.getLogoForOrganization(organization.mrn).subscribe(
                 logo => {
                     observer.next(URL.createObjectURL(new Blob([logo])));
+                    if (this.authService.authState.hasPermission(AuthPermission.OrgAdmin) && last) {
+                        this.entityImageList.push({imageSourceObservable: null, entityId: this.KEY_NEW, title: 'Register new Agent', isAdd: true});
+                    }
                 },
                 err => {
                     observer.next(imageSrc);
+                    if (this.authService.authState.hasPermission(AuthPermission.OrgAdmin) && last) {
+                        this.entityImageList.push({imageSourceObservable: null, entityId: this.KEY_NEW, title: 'Register new Agent', isAdd: true});
+                    }
                 }
             );
         });
