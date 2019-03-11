@@ -31,6 +31,8 @@ export interface Organization {
      */
     federationType?: Organization.FederationTypeEnum;
 
+    id?: number;
+
     identityProviderAttributes?: Array<models.IdentityProviderAttribute>;
 
     /**

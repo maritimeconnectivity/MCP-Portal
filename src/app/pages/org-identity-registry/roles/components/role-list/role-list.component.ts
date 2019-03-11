@@ -42,7 +42,7 @@ export class RoleListComponent implements OnInit {
             err => {
                 this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
             }
-        )
+        );
     }
 
     private loadRoles() {

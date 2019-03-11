@@ -22,6 +22,8 @@ export interface Vessel {
 
     createdAt?: Date;
 
+    id?: number;
+
     /**
      * The Maritime Resource Name
      */

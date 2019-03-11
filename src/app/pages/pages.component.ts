@@ -7,6 +7,7 @@ import { OrganizationsService } from "../backend-api/identity-registry/services/
 import { MrnHelperService } from "../shared/mrn-helper.service";
 import { PAGES_MENU_ALL } from "./pages.menu";
 import { MCNotificationsService } from "../shared/mc-notifications.service";
+import { GlobalState } from '../global.state';
 
 export var PAGES_MENU;
 @Component({
@@ -47,7 +48,10 @@ export class Pages {
 	public loggedInName = "";
 	public version = require("../../../package.json").version;
 
-  constructor(private mrnHelper:MrnHelperService, private orgService: OrganizationsService, private authService: AuthService, private mcNotificationService: MCNotificationsService) {
+  constructor(private _state: GlobalState, private mrnHelper:MrnHelperService, private orgService: OrganizationsService, private authService: AuthService, private mcNotificationService: MCNotificationsService) {
+  	this._state.subscribe("org_name_changed", () => {
+  		this.loadOrganization();
+	});
   }
 
   ngOnInit() {
@@ -84,7 +88,7 @@ export class Pages {
 				this.loggedInName = organization.name;
 				let firstName = this.authService.authState.user.firstName;
 				if (firstName) {
-					this.loggedInName = firstName + ' - ' + this.loggedInName;
+					this.loggedInName = firstName + ' for ' + this.loggedInName;
 				}
 			},
 			err => {

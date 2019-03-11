@@ -56,7 +56,8 @@ export class McHttpService extends Http {
 				  let urlParams = url.substring(indexDotSlashSlash+3).split("/");
 				  requestUrl = urlProtocol + urlParams[0];
 				  for(let i=1; i<urlParams.length; i++) {
-					  requestUrl += "/" + encodeURIComponent(urlParams[i]);
+				  	urlParams[i] = decodeURIComponent(urlParams[i]); // in the new client code url encoding is done directly
+				  	requestUrl += "/" + encodeURIComponent(urlParams[i]);
 				  }
 			  }
 		  }

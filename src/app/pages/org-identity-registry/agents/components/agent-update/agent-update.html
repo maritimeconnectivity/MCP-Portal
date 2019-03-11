@@ -1,0 +1,8 @@
+<div class="row">
+    <div class="col-lg-12">
+        <ba-card title="Update Agent - {{agentOrgName}}" baCardClass="with-scroll table-panel">
+            <mc-form [formNeedsUpdating]="true" [formGroup]="updateForm" [formControlModels]="formControlModels" [isLoading]="isLoading" [isRegistering]="isUpdating" [registerTitle]="updateTitle" (onCancel)="cancel()" (onRegister)="update()"></mc-form>
+        </ba-card>
+    </div>
+</div>
+<mc-modal (onCancel)="cancelModal()" (onOk)="updateForSure()" [show]="showModal" [title]="'Update agent'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Update'"></mc-modal>

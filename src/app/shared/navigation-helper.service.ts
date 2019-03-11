@@ -142,6 +142,14 @@ export class NavigationHelperService {
   		this.router.navigate([this.path]);
 	}
 
+	public cancelCreateAgent() {
+  		this.path = '/';
+  		let pagesMenu = PAGES_MENU;
+  		this.generatePath('agents', pagesMenu[0]);
+
+  		this.router.navigate([this.path]);
+	}
+
 	public gobackFromUpdateService() {
 		if (this.pathBeforeUpdateIdService) {
 			this.router.navigateByUrl(this.pathBeforeUpdateIdService);
@@ -263,6 +271,14 @@ export class NavigationHelperService {
   		this.router.navigate([this.path]);
 	}
 
+	public navigateToUpdateAgent(agentId: number): void {
+		this.path = '/update/' + agentId;
+		let pagesMenu = PAGES_MENU;
+		this.generatePath('agents', pagesMenu[0]);
+
+		this.router.navigate([this.path]);
+	}
+
 	public navigateToDevice(deviceMrn:string):void {
 		this.path = '/' + deviceMrn;
 		let pagesMenu = PAGES_MENU;
@@ -299,6 +315,14 @@ export class NavigationHelperService {
   		this.path = '/' + roleId;
   		let pagesMenu = PAGES_MENU;
   		this.generatePath('roles', pagesMenu[0]);
+
+  		this.router.navigate([this.path]);
+	}
+
+	public navigateToAgent(agentId: number): void {
+  		this.path = '/' + agentId;
+  		let pagesMenu = PAGES_MENU;
+  		this.generatePath('agents', pagesMenu[0]);
 
   		this.router.navigate([this.path]);
 	}

@@ -8,6 +8,7 @@ import { OrganizationsService } from "../../../../backend-api/identity-registry/
 import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
 import { CertificateEntityType } from "../../../shared/services/certificate-helper.service";
 import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
+import { ActingService } from '../../../../shared/acting.service';
 
 @Component({
   selector: 'my-organization',
@@ -21,25 +22,41 @@ export class MyOrganization implements OnInit {
   public entityType: CertificateEntityType;
   public certificateTitle: string;
   public titleName:string;
+  public showModal: boolean = false;
+  public modalDescription: string;
 
 
-  constructor(private changeDetector: ChangeDetectorRef, private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService, private navigationHelper: NavigationHelperService) {
+  constructor(private actingService: ActingService, private changeDetector: ChangeDetectorRef, private notifications: MCNotificationsService, private orgService: OrganizationsService, private authService: AuthService, private navigationHelper: NavigationHelperService) {
     this.entityType = CertificateEntityType.Organization;
   }
 
   ngOnInit() {
     this.isLoading = true;
-    this.orgService.getMyOrganization().subscribe(
-      organization => {
-        this.organization = organization;
-        this.titleName = organization.name;
-        this.certificateTitle = organization.name;
-      },
-      err => {
-        this.isLoading = false;
-        this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
-      }
-    );
+    this.loadOrganization();
+  }
+
+  private loadOrganization() {
+      this.orgService.getMyOrganization().subscribe(
+          organization => {
+              this.organization = organization;
+              this.titleName = organization.name;
+              this.certificateTitle = organization.name;
+          },
+          err => {
+              this.isLoading = false;
+              this.notifications.generateNotification('Error', 'Error when trying to get organization', MCNotificationType.Error, err);
+          }
+      );
+  }
+
+  private reset() {
+      this.organization = null;
+      this.isLoading = true;
+      this.certificateTitle = null;
+      this.titleName = null;
+      this.showModal = false;
+      this.modalDescription = null;
+      this.loadOrganization();
   }
 
 
@@ -56,6 +73,10 @@ export class MyOrganization implements OnInit {
 		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 
+	public shouldDisplayStopActing(): boolean {
+      return this.authService.authState.acting;
+    }
+
 	public isOrgAdmin(): boolean {
         return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
     }
@@ -63,4 +84,18 @@ export class MyOrganization implements OnInit {
 	public update() {
 		this.navigationHelper.navigateToUpdateMyOrg();
 	}
+
+	public stopActing() {
+      this.modalDescription = 'Are you sure you want to stop acting on behalf of ' + this.organization.name + '?';
+      this.showModal = true;
+    }
+
+    public stopActingForSure() {
+      this.actingService.stopActing();
+      this.reset();
+    }
+
+    public cancelModal() {
+      this.showModal = false;
+    }
 }

@@ -77,6 +77,22 @@ export var PAGES_MENU_ALL = [
 						title: 'Roles'
 					}
 				}
+			},
+			{
+				path: 'agents',
+				data: {
+					menu: {
+						title: 'Agents'
+					}
+				}
+			},
+			{
+				path: 'acting',
+				data: {
+					menu: {
+						title: 'Acting For'
+					}
+				}
 			}
         ]
       },

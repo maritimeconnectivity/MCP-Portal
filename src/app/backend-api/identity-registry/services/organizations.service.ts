@@ -141,7 +141,9 @@ export class OrganizationsService implements OnInit {
   // TODO: explore the possibilities with returning cached responses. Currently there is 2 calls to myOrg before result is ready. I'm sure there is something in Observable to fix this
   public getMyOrganization(): Observable<Organization> {
     if (this.myOrganization) {
-      return Observable.of(this.myOrganization);
+    	if (this.myOrganization.mrn === this.authService.authState.orgMrn) {
+            return Observable.of(this.myOrganization);
+        }
     }
 
     // We create a new observable because we need to save the response for simple caching
@@ -161,6 +163,10 @@ export class OrganizationsService implements OnInit {
 
   public getOrganization(orgMrn: string): Observable<Organization> {
     return this.organizationApi.getOrganizationUsingGET(orgMrn);
+  }
+
+  public getOrganizationById(orgId: number): Observable<Organization> {
+  	return this.organizationApi.getOrganizationByIdUsingGET(orgId);
   }
 
 	public getAllOrganizations () : Observable<Array<Organization>> {

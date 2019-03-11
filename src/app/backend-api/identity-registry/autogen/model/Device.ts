@@ -20,6 +20,8 @@ export interface Device {
 
     createdAt?: Date;
 
+    id?: number;
+
     /**
      * The Maritime Resource Name
      */

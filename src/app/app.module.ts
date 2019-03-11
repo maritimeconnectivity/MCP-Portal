@@ -39,6 +39,7 @@ import {BugReportingService} from "./backend-api/identity-registry/services/bug-
 import {BugReportModule} from "./bug-report/bug-report.module";
 import {AboutModule} from "./about/about.module";
 import {ApiVersionService} from "./backend-api/shared/api-version.service";
+import { ActingService } from './shared/acting.service';
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
@@ -97,6 +98,7 @@ type StoreType = {
 	  },
     FileHelperService,
     XmlParserService,
+      ActingService,
     NavigationHelperService,
 	  MrnHelperService,
     MC_ERROR_HANDLER_PROVIDERS,

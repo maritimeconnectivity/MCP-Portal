@@ -30,6 +30,7 @@ export interface AuthState {
   orgMrn: string,
 	user: AuthUser,
   rolesLoaded: boolean,
+	acting: boolean,
 	hasPermission(permissionRole: AuthPermission): boolean;
 }
 
@@ -154,6 +155,7 @@ export class AuthService implements OnInit {
       orgMrn: AuthService.staticAuthInfo.orgMrn,
 	    user: AuthService.staticAuthInfo.user,
       rolesLoaded: false,
+		acting: false,
 		hasPermission(permissionRole: AuthPermission): boolean {
 			switch (permissionRole) {
 				case AuthPermission.User:

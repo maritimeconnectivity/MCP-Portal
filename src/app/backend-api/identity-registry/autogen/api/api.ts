@@ -1,3 +1,5 @@
+export * from './AgentControllerService';
+import {AgentControllerService} from './agentController.service';
 export * from './CertificatecontrollerApi';
 import { CertificatecontrollerApi } from './CertificatecontrollerApi';
 export * from './DevicecontrollerApi';
@@ -16,4 +18,4 @@ export * from './VesselcontrollerApi';
 import { VesselcontrollerApi } from './VesselcontrollerApi';
 export * from './VesselimagecontrollerApi';
 import { VesselimagecontrollerApi } from './VesselimagecontrollerApi';
-export const APIS = [CertificatecontrollerApi, DevicecontrollerApi, LogocontrollerApi, OrganizationcontrollerApi, RolecontrollerApi, ServicecontrollerApi, UsercontrollerApi, VesselcontrollerApi, VesselimagecontrollerApi];
+export const APIS = [CertificatecontrollerApi, DevicecontrollerApi, LogocontrollerApi, OrganizationcontrollerApi, RolecontrollerApi, ServicecontrollerApi, UsercontrollerApi, VesselcontrollerApi, VesselimagecontrollerApi, AgentControllerService];
