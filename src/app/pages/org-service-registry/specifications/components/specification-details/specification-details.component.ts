@@ -136,6 +136,10 @@ export class SpecificationDetailsComponent {
 		return this.specification.organizationId === this.authService.authState.orgMrn;
 	}
 
+	private isServiceAdmin():boolean {
+		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
+	}
+
 	private isServiceAdminForOrg():boolean {
 		return (this.authService.authState.hasPermission(AuthPermission.ServiceAdmin) && this.isMyOrg()) || this.authService.authState.hasPermission(AuthPermission.SiteAdmin);
 	}

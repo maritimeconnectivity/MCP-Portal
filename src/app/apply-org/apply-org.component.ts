@@ -163,10 +163,10 @@ export class ApplyOrgComponent implements OnInit {
 		this.registerForm.addControl(formControlModel.elementId, formControl);
 		this.formControlModels.push(formControlModel);
 
-		let formControlCheck:McFormControlModelCheckbox = {state: false, formGroup: this.registerForm, elementId: 'isAccept', controlType: McFormControlType.Checkbox, labelName: 'I hereby accept, that I have the legal rights to act on behalf of the organization provided above.', validator:CheckboxValidator.validate};
-		formControl = new FormControl({value: formControlCheck.state, disabled: false}, formControlCheck.validator);
-
-		this.registerForm.addControl(formControlCheck.elementId, formControl);
-		this.formControlModels.push(formControlCheck);
+		// let formControlCheck:McFormControlModelCheckbox = {state: false, formGroup: this.registerForm, elementId: 'isAccept', controlType: McFormControlType.Checkbox, labelName: 'I hereby accept, that I have the legal rights to act on behalf of the organization provided above.', validator:CheckboxValidator.validate};
+		// formControl = new FormControl({value: formControlCheck.state, disabled: false}, formControlCheck.validator);
+		//
+		// this.registerForm.addControl(formControlCheck.elementId, formControl);
+		// this.formControlModels.push(formControlCheck);
 	}
 }

@@ -199,6 +199,10 @@ export class DesignDetailsComponent {
 		return this.authService.authState.hasPermission(AuthPermission.OrgAdmin);
 	}
 
+	private isServiceAdmin():boolean {
+		return this.authService.authState.hasPermission(AuthPermission.ServiceAdmin);
+	}
+
 	private isServiceAdminForOrg():boolean {
 		return (this.authService.authState.hasPermission(AuthPermission.ServiceAdmin) && this.isMyOrg()) || this.authService.authState.hasPermission(AuthPermission.SiteAdmin);
 	}
