@@ -36,6 +36,12 @@ Then do the project install
 npm install
 ```
 
+Due to the dependency issue, you may reinstall the node-sass
+```bash
+npm uninstall node-sass
+npm install node-sass
+```
+
 And run the server locally
 ```bash
 npm start-<api-environment>
