@@ -19,7 +19,7 @@ export class BugReportControllerApi {
     constructor(protected http: Http, @Optional()@Inject(BASE_PATH) basePath: string) {
         if (basePath) {
             //TODO: when deployed to prod, change this.
-	        // this.basePath = basePath;
+            this.basePath = basePath;
         }
     }
 
