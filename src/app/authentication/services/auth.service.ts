@@ -249,7 +249,8 @@ export class AuthService implements OnInit {
   }
 
   login() {
-    AuthService.staticAuthInfo.authz.login({redirectUri:  '/'});
+  	let url = window.location;
+    AuthService.staticAuthInfo.authz.login({redirectUri:  url.protocol + "//" + url.host + "/"});
   }
 
   logout() {
