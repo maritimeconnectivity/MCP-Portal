@@ -117,6 +117,7 @@ module.exports = function(options) {
           'IS_DEV': true,
           'CAN_JOIN': false,
           'ENV': JSON.stringify(METADATA.ENV),
+          'IDP_NAMESPACE': JSON.stringify('dev'),
           'HMR': METADATA.HMR,
           'process.env': {
               'ENV': JSON.stringify(METADATA.ENV),

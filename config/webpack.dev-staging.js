@@ -117,6 +117,7 @@ module.exports = function(options) {
           'IS_DEV': true,
           'CAN_JOIN': false,
           'ENV': JSON.stringify(METADATA.ENV),
+          'IDP_NAMESPACE': JSON.stringify('mcc-staging'),
           'HMR': METADATA.HMR,
           'process.env': {
               'ENV': JSON.stringify(METADATA.ENV),
