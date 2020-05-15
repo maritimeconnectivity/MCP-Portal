@@ -11,7 +11,7 @@ export class MrnHelperService {
 	}
 
 	private orgShortNameFromMrn(orgMrn:string){
-		var orgSplit = orgMrn.split(':');
+		let orgSplit = orgMrn.split(':');
 		return orgSplit[orgSplit.length-1];
 	}
 
@@ -20,7 +20,7 @@ export class MrnHelperService {
 	}
 
 	private mrnPreFixForOrg(orgMrn:string):string {
-		var orgSplit = orgMrn.split(':org:');
+		let orgSplit = orgMrn.split(':org:');
 		return orgSplit[0] + ":";
 	}
 
@@ -33,7 +33,7 @@ export class MrnHelperService {
 	}
 
 	public mrnPattern():string {
-		return "^([a-z0-9()+,\\-.:=@;$_!*']|%[0-9a-f]{2}){3,25}$";
+		return "^urn:mrn:mcp:(device|org|user|vessel|service|mms):([a-z0-9]([a-z0-9]|-){0,20}[a-z0-9]):((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)|/)*)$";
 	}
 	public mrnPatternError():string {
 		return "It should contain at least 3 characters and only a-z 0-9 + , \\ - . : = @ ; $ _ ! * '";
