@@ -39,7 +39,7 @@ export class ApplyOrgComponent implements OnInit {
 	public formControlModels: Array<McFormControlModel>;
 
   constructor(private navigationHelper: NavigationHelperService, private formBuilder: FormBuilder, private authService: AuthService, private router:Router, private notificationService: MCNotificationsService, private mrnHelper: MrnHelperService, private organizationsService: OrganizationsService) {
-	  this.mrnMask = mrnHelper.mrnMaskForOrganization(false);
+	  this.mrnMask = mrnHelper.mrnMaskForOrganization();
 	  this.mrnPattern = mrnHelper.mrnPattern();
 	  this.mrnPatternError = mrnHelper.mrnPatternError();
 	  this.mrn = this.mrnMask;
@@ -114,7 +114,7 @@ export class ApplyOrgComponent implements OnInit {
 	}
 
 	private setMrnMask(isSTM:boolean) {
-		let mrnMask = this.mrnHelper.mrnMaskForOrganization(isSTM);
+		let mrnMask = this.mrnHelper.mrnMaskForOrganization();
 		this.mrn = this.mrn.replace(this.mrnMask, mrnMask);
 		this.mrnMask = mrnMask;
 		this.registerForm.patchValue({mrn: this.mrn});
