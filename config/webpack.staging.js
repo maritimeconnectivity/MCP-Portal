@@ -22,7 +22,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: HMR,
     BANNER_TEXT:'STAGING',
-  KEYCLOAK: 'https://staging-maritimeid.maritimecloud.net/auth/js/keycloak.js'
+  KEYCLOAK: 'https://staging-maritimeid.maritimeconnectivity.net/auth/js/keycloak.js'
 });
 
 /**
@@ -109,14 +109,15 @@ module.exports = function(options) {
        */
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-          'IR_BASE_PATH':JSON.stringify('https://staging-api.maritimecloud.net'),
-          'SR_BASE_PATH':JSON.stringify('https://sr-staging.maritimecloud.net'),
-          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://staging-endorse.maritimecloud.net'),
+          'IR_BASE_PATH':JSON.stringify('https://staging-api.maritimeconnectivity.net'),
+          'SR_BASE_PATH':JSON.stringify('https://sr-staging.maritimeconnectivity.net'),
+          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://staging-endorse.maritimeconnectivity.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/staging-keycloak.json'),
           'ENVIRONMENT_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': false,
           'CAN_JOIN': false,
           'ENV': JSON.stringify(METADATA.ENV),
+          'IDP_NAMESPACE': JSON.stringify('mcc-staging'),
           'HMR': METADATA.HMR,
           'process.env': {
               'ENV': JSON.stringify(METADATA.ENV),

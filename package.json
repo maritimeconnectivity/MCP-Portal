@@ -1,9 +1,9 @@
 {
   "name": "maritime-connectivity-platform-management-portal",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Management Portal for the Maritime Connectivity Platform",
   "author": "Danish Maritime Authority",
-  "homepage": "http://maritimeconnectivity.net",
+  "homepage": "https://maritimeconnectivity.net",
   "license": "Apache 2.0",
   "dependencies": {
     "@angular/common": "2.0.0",

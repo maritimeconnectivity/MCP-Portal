@@ -1,17 +1,17 @@
 import {Injectable} from "@angular/core";
 import {AuthService} from "../authentication/services/auth.service";
 
-const mrnSTM = "urn:mrn:stm:";
-const mrnMCL = "urn:mrn:mcl:";
 // TODO this is only a temp solution until there is a backend service to do it
 @Injectable()
 export class MrnHelperService {
+	private idpNamespace = IDP_NAMESPACE;
+	public mrnMCP: string = 'urn:mrn:mcp:';
 
 	constructor(private authService: AuthService) {
 	}
 
 	private orgShortNameFromMrn(orgMrn:string){
-		var orgSplit = orgMrn.split(':');
+		let orgSplit = orgMrn.split(':');
 		return orgSplit[orgSplit.length-1];
 	}
 
@@ -20,79 +20,89 @@ export class MrnHelperService {
 	}
 
 	private mrnPreFixForOrg(orgMrn:string):string {
-		var orgSplit = orgMrn.split(':org:');
+		let orgSplit = orgMrn.split(':org:');
 		return orgSplit[0] + ":";
-	}
-
-	public isStmOrg():boolean {
-		return this.authService.authState.orgMrn.indexOf(mrnSTM) > -1;
 	}
 
 	public orgShortName():string {
 		return this.orgShortNameFromMrn(this.authService.authState.orgMrn);
 	}
 
-	public mrnPattern():string {
-		return "^([a-z0-9()+,\\-.:=@;$_!*']|%[0-9a-f]{2}){3,25}$";
+	public mrnPattern(): string {
+		return "^((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)|\/)*)$";
 	}
 	public mrnPatternError():string {
-		return "It should contain at least 3 characters and only a-z 0-9 + , \\ - . : = @ ; $ _ ! * '";
+		return "It should contain at least 3 characters and only a-z 0-9 + , / ~ - . : = @ ; $ _ ! * '";
 	}
 
 	public mrnMaskForVessel():string {
-		return this.mrnPreFix() + 'vessel:' + this.orgShortName() + ':';
+		return this.mrnMCP + 'vessel:' + this.idpNamespace + ':' + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForDevice():string {
-		return this.mrnPreFix() + 'device:' + this.orgShortName() + ':';
+		return this.mrnMCP + 'device:' + this.idpNamespace + ':' + this.orgShortName() + ':';
 	}
 
-	public mrnMaskForOrganization(isStm:boolean):string {
-		return (isStm ? mrnSTM : mrnMCL) + 'org:';
+	public mrnMaskForOrganization():string {
+		return this.mrnMCP + 'org:' + this.idpNamespace + ':';
 	}
 
 	public mrnMaskForUserOfOrg(orgMrn:string):string {
-		return this.mrnPreFixForOrg(orgMrn) + 'user:' + this.orgShortNameFromMrn(orgMrn) + ':';
+		return this.mrnPreFixForOrg(orgMrn) + 'user:' + this.idpNamespace + ':' + this.orgShortNameFromMrn(orgMrn) + ':';
 	}
 
 	public mrnMaskForUser():string {
-		return this.mrnPreFix() + 'user:' + this.orgShortName() + ':';
+		return this.mrnMCP + 'user:' + this.idpNamespace + ':' + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForSpecification():string {
 		// TODO Temp check until mrn-service is ready
-		return "urn:mrn:[mcp|stm]:service:specification:" + this.orgShortName() + ':';
+		return this.mrnMCP + 'service:' + this.idpNamespace + ':' + this.orgShortName() + ':specification:';
+		//return "urn:mrn:[mcp|stm]:service:specification:" + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForDesign():string {
 		// TODO Temp check until mrn-service is ready
-		return "urn:mrn:[mcp|stm]:service:design:" + this.orgShortName() + ':';
+		return this.mrnMCP + 'service:' + this.idpNamespace + ':' + this.orgShortName() + ':design:';
+		//return "urn:mrn:[mcp|stm]:service:design:" + this.orgShortName() + ':';
 	}
 
 	public mrnMaskForInstance():string {
-		return this.mrnPreFix() + 'service:instance:' + this.orgShortName() + ':';
+		return this.mrnMCP + 'service:' + this.idpNamespace + ':' + this.orgShortName() + ':instance:';
+		//return this.mrnPreFix() + 'service:instance:' + this.orgShortName() + ':';
 	}
 
 	public mrnMaskTextForInstance():string {
 		// TODO Temp check until mrn-service is ready
-		return "urn:mrn:[mcp|stm]:service:instance:" + this.orgShortName() + ':';
+		return this.mrnMCP + 'service:' + this.idpNamespace + ':' + this.orgShortName() + ':instance:';
+		//return "urn:mrn:[mcp|stm]:service:instance:" + this.orgShortName() + ':';
 	}
 
 	public checkMrnForSpecification(specificationMrn:string) : boolean {
 		// TODO Temp check until mrn-service is ready
-		return specificationMrn.indexOf(':service:specification:' + this.orgShortName() + ':') >= 0 && specificationMrn.startsWith('urn:mrn:');
+		let rawRegex = `^${this.mrnMaskForSpecification()}((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)|\/)*)$`;
+		console.log(rawRegex);
+		let regex = new RegExp(rawRegex);
+		return regex.test(specificationMrn);
+		//return specificationMrn.indexOf(':service:specification:' + this.orgShortName() + ':') >= 0 && specificationMrn.startsWith('urn:mrn:');
 		//return this.checkMrn(specificationMrn, this.mrnMaskForSpecification());
 	}
 
 	public checkMrnForDesign(designMrn:string) : boolean {
 		// TODO Temp check until mrn-service is ready
-		return designMrn.indexOf(':service:design:' + this.orgShortName() + ':') >= 0 && designMrn.startsWith('urn:mrn:');
+		let rawRegex = `^${this.mrnMaskForDesign()}((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)|\/)*)$`;
+		let regex = new RegExp(rawRegex);
+		return regex.test(designMrn);
+		//return designMrn.indexOf(':service:design:' + this.orgShortName() + ':') >= 0 && designMrn.startsWith('urn:mrn:');
 	//	return this.checkMrn(designMrn, this.mrnMaskForDesign());
 	}
 
 	public checkMrnForInstance(instanceMrn:string) : boolean {
 		// TODO Temp check until mrn-service is ready
-		return instanceMrn.indexOf(':service:instance:' + this.orgShortName() + ':') >= 0 && instanceMrn.startsWith('urn:mrn:');
+		let rawRegex = `^${this.mrnMaskForInstance()}((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)((([-._a-z0-9]|~)|%[0-9a-f][0-9a-f]|([!$&'()*+,;=])|:|@)|\/)*)$`;
+		let regex = new RegExp(rawRegex, 'g');
+		return regex.test(instanceMrn);
+		//return instanceMrn.indexOf(':service:instance:' + this.orgShortName() + ':') >= 0 && instanceMrn.startsWith('urn:mrn:');
 		//return this.checkMrn(instanceMrn, this.mrnMaskForInstance());
 	}
 

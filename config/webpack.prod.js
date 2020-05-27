@@ -128,6 +128,7 @@ module.exports = function(env) {
         'HMR': METADATA.HMR,
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
+          'IDP_NAMESPACE': JSON.stringify('mcc-prod'),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
         }
