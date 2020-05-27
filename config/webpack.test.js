@@ -22,7 +22,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: HMR,
     BANNER_TEXT:'TEST',
-  KEYCLOAK: 'https://test-maritimeid.maritimecloud.net/auth/js/keycloak.js'
+  KEYCLOAK: 'https://test-maritimeid.maritimeconnectivity.net/auth/js/keycloak.js'
 });
 
 /**
@@ -109,9 +109,9 @@ module.exports = function(options) {
        */
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-          'IR_BASE_PATH':JSON.stringify('https://test-api.maritimecloud.net'),
-          'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimecloud.net'),
-          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://test-endorse.maritimecloud.net'),
+          'IR_BASE_PATH':JSON.stringify('https://test-api.maritimeconnectivity.net'),
+          'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimeconnectivity.net'),
+          'ENDORSEMENT_BASE_PATH':JSON.stringify('https://test-endorse.maritimeconnectivity.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/test-keycloak.json'),
           'ENVIRONMENT_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': false,
