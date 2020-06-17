@@ -3,8 +3,9 @@
     <div class="login-img-wrapper">
       <img src="{{ ( 'mcp_fullcolor.svg' | baAppPicture ) }}" alt="" title=""/>
     </div>
-    <h1>Maritime Connectivity Platform <BR> Management Portal</h1>
-    <div class="auth-sep"><span>A tool for managing the <a href="http://maritimeconnectivity.net/" target="_blank">Maritime Connectivity Platform</a> Identity Registry and Service Registry.</span></div>
+    <h1>The MCC MCP Testbed</h1>
+    <div class="auth-sep"><span>Welcome to the <a href="http://maritimeconnectivity.net/" target="_blank">Maritime Connectivity Platform</a> (MCP) testbed<br>
+      operated by <a href="https://www.kriso.re.kr/" target="_blank">KRISO</a> and <a href="https://www.frequentis.com/" target="_blank">Frequentis</a> on behalf of the Maritime Connectivity platform Consortium (MCC).</span></div>
 
     <div *ngIf="!isIe()">
       <div class="animated fadeIn button-wrapper">
@@ -15,6 +16,11 @@
         <span><a href="/#/apply">Join</a> my organization to the Maritime Connectivity Platform.</span>
         <br>
       </div>
+      <div class="auth-sep"><span><b>Terms of Use</b>: By applying for access to the MCP testbed, you agree not to store any personal information on the platform<br>
+        such as names and email addresses. Please use generic names, such as 'John Doe' and generic email addresses<br>
+        such as 'info@company.com'. It does need to be a working email address though, since access will be granted through this email address.<br>
+        Furthermore, if anyone chooses to federate an identity registry into the MCP testbed, this should only contain test data - not actual personal information.<br>
+        This is due to the European Union General Data Protection Regulation (GDPR). For more information, contact the MCC secretariat.</span></div><br>
       <div class="auth-sep"><span><b>Disclaimer</b>: This is currently a beta release and it should be expected to contain minor bugs.<br>
       If you encounter any bugs please create a <a href="/#/report">Bug Report</a>.</span></div>
       <br>
