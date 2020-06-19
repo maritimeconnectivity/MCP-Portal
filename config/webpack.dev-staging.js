@@ -115,7 +115,7 @@ module.exports = function(options) {
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-staging-keycloak.json'),
           'ENVIRONMENT_TEXT':JSON.stringify(METADATA.BANNER_TEXT),
           'IS_DEV': true,
-          'CAN_JOIN': false,
+          'CAN_JOIN': true,
           'ENV': JSON.stringify(METADATA.ENV),
           'IDP_NAMESPACE': JSON.stringify('mcc-staging'),
           'HMR': METADATA.HMR,
