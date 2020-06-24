@@ -1,7 +1,7 @@
 {
-  "realm": "MaritimeCloud",
-  "auth-server-url": "https://test-maritimeid.maritimecloud.net/auth",
+  "realm": "MCP",
+  "auth-server-url": "https://test-maritimeid.maritimeconnectivity.net/auth",
   "ssl-required": "none",
-  "resource": "MaritimeCloudPortal",
+  "resource": "MCP-Portal",
   "public-client": true
 }
