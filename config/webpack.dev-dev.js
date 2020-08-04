@@ -22,7 +22,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: HMR,
     BANNER_TEXT:'DEV',
-  KEYCLOAK: 'http://localhost:8080/auth/js/keycloak.js'
+  KEYCLOAK: '/assets/js/keycloak.min.js'
 });
 
 /**
@@ -109,7 +109,7 @@ module.exports = function(options) {
        */
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-          'IR_BASE_PATH':JSON.stringify('http://localhost:8443'),
+          'IR_BASE_PATH':JSON.stringify('http://localhost:8444'),
           'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimeconnectivity.net'),
           'ENDORSEMENT_BASE_PATH':JSON.stringify('https://test-endorse.maritimeconnectivity.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-dev-keycloak.json'),
@@ -117,7 +117,7 @@ module.exports = function(options) {
           'IS_DEV': true,
           'CAN_JOIN': false,
           'ENV': JSON.stringify(METADATA.ENV),
-          'IDP_NAMESPACE': JSON.stringify('dev'),
+          'IDP_NAMESPACE': JSON.stringify('idp1'),
           'HMR': METADATA.HMR,
           'process.env': {
               'ENV': JSON.stringify(METADATA.ENV),

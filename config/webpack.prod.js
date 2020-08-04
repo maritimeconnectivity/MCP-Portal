@@ -25,7 +25,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: false,
   BANNER_TEXT:'BETA',
-  KEYCLOAK: 'https://maritimeid.maritimecloud.net/auth/js/keycloak.js'
+  KEYCLOAK: '/assets/js/keycloak.min.js'
 });
 
 module.exports = function(env) {

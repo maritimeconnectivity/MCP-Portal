@@ -274,9 +274,13 @@ module.exports = function (options) {
        * See: https://www.npmjs.com/package/copy-webpack-plugin
        */
       new CopyWebpackPlugin([{
-        from: 'src/assets',
-        to: 'assets'
-      }]),
+          from: 'src/assets',
+          to: 'assets'
+        },
+        {
+          from: 'node_modules/keycloak-js/dist/keycloak.min.js',
+          to: 'assets/js/'
+        }]),
 
       /*
        * Plugin: HtmlWebpackPlugin
