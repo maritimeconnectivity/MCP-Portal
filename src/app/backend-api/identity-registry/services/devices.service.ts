@@ -45,9 +45,9 @@ export class DevicesService implements OnInit {
 		return this.deviceApi.updateDeviceUsingPUT(orgMrn, device.mrn, device);
 	}
 
-	public issueNewCertificate(deviceMrn:string) : Observable<PemCertificate> {
+	public issueNewCertificate(csr: string, deviceMrn:string) : Observable<string> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
+		return this.deviceApi.newDeviceCertFromCsrUsingPOST(csr, deviceMrn, orgMrn);
 	}
 
 	public revokeCertificate(deviceMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {

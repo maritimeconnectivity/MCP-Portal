@@ -61,10 +61,10 @@ export class VesselsService {
 		return this.vesselApi.updateVesselUsingPUT(orgMrn, vessel.mrn, vessel);
 	}
 
-  public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {
+  public issueNewCertificate(csr: string, vesselMrn:string) : Observable<string> {
 	  this.vesselsCache = null;
 	  let orgMrn = this.authService.authState.orgMrn;
-    return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);
+	  return this.vesselApi.newVesselCertFromCsrUsingPOST(csr, orgMrn, vesselMrn);
   }
 
 	public revokeCertificate(vesselMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {

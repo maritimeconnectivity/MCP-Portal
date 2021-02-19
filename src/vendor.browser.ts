@@ -24,6 +24,8 @@ import 'jquery';
 import 'bootstrap-loader';
 import 'font-awesome-sass-loader';
 import 'lodash';
+import 'pkijs';
+import 'pvtsutils';
 
 if ('production' === ENV) {
   // Production

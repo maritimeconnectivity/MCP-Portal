@@ -108,10 +108,10 @@ export class OrganizationsService implements OnInit {
 		});
 	}
 
-	public issueNewCertificate() : Observable<PemCertificate> {
+	public issueNewCertificate(csr: string) : Observable<string> {
 		return Observable.create(observer => {
 			let orgMrn = this.authService.authState.orgMrn;
-			this.organizationApi.newOrgCertUsingGET(orgMrn).subscribe(
+			this.organizationApi.newOrgCertFromCsrUsingPOST(csr, orgMrn).subscribe(
 				pemCertificate => {
 					this.myOrganization = null; // We need to reload the org now we have a new certificate
 					observer.next(pemCertificate);

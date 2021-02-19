@@ -49,9 +49,9 @@ export class UsersService implements OnInit {
 		return this.createUserForOrg(orgMrn, user);
 	}
 
-  public issueNewCertificate(userMrn:string) : Observable<PemCertificate> {
+  public issueNewCertificate(csr: string, userMrn:string) : Observable<string> {
 	  let orgMrn = this.authService.authState.orgMrn;
-    return this.userApi.newUserCertUsingGET(orgMrn, userMrn);
+	  return this.userApi.newUserCertFromCsrUsingPOST(csr, orgMrn, userMrn);
   }
 
 	public revokeCertificate(userMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {

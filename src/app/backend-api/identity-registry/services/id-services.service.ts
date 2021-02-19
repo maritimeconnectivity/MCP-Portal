@@ -45,9 +45,9 @@ export class IdServicesService implements OnInit {
 		return this.servicesApi.getOrganizationServicesUsingGET(orgMrn, 0, PAGE_SIZE_DEFAULT);
 	}
 
-	public issueNewCertificate(serviceMrn:string, serviceVersion:string) : Observable<PemCertificate> {
+	public issueNewCertificate(csr: string, serviceMrn:string, serviceVersion:string) : Observable<string> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn, serviceVersion);
+		return this.servicesApi.newServiceCertFromCsrUsingPOST(csr, orgMrn, serviceMrn, serviceVersion);
 	}
 
 	public revokeCertificate(serviceMrn:string, serviceVersion:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {

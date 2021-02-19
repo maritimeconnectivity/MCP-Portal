@@ -110,7 +110,7 @@ module.exports = function(options) {
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
           'IR_BASE_PATH':JSON.stringify('https://test-api.maritimeconnectivity.net'),
-          'SR_BASE_PATH':JSON.stringify('https://sr-test-replica.maritimeconnectivity.net'),
+          'SR_BASE_PATH':JSON.stringify('https://sr-test.maritimeconnectivity.net'),
           'ENDORSEMENT_BASE_PATH':JSON.stringify('https://test-endorse.maritimeconnectivity.net'),
           'KEYCLOAK_JSON':JSON.stringify('assets/dev-test-keycloak.json'),
           'ENVIRONMENT_TEXT':JSON.stringify(METADATA.BANNER_TEXT),

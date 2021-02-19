@@ -21,30 +21,30 @@ export class CertificatesService implements OnInit {
 
   }
 
-	public issueNewCertificate(entityType: CertificateEntityType, entityMrn:string) : Observable<PemCertificate> {
+	public issueNewCertificate(csr: string, entityType: CertificateEntityType, entityMrn:string) : Observable<string> {
 		if (entityType == null || !entityMrn) { // We lost our state data somehow???
 			throw new Error('Internal state lost');
 		}
 		return Observable.create(observer => {
 			switch (entityType) {
 				case CertificateEntityType.Device: {
-					this.issueNewCertificateForDevice(entityMrn, observer);
+					this.issueNewCertificateForDevice(csr, entityMrn, observer);
 					break;
 				}
 				case CertificateEntityType.Organization: {
-					this.issueNewCertificateForOrganization(observer);
+					this.issueNewCertificateForOrganization(csr, observer);
 					break;
 				}
 				case CertificateEntityType.Service: {
-					this.issueNewCertificateForService(entityMrn, observer);
+					this.issueNewCertificateForService(csr, entityMrn, observer);
 					break;
 				}
 				case CertificateEntityType.User: {
-					this.issueNewCertificateForUser(entityMrn, observer);
+					this.issueNewCertificateForUser(csr, entityMrn, observer);
 					break;
 				}
 				case CertificateEntityType.Vessel: {
-					this.issueNewCertificateForVessel(entityMrn, observer);
+					this.issueNewCertificateForVessel(csr, entityMrn, observer);
 					break;
 				}
 			}
@@ -82,8 +82,8 @@ export class CertificatesService implements OnInit {
 		});
 	}
 
-  private issueNewCertificateForOrganization(observer: Observer<any>) {
-    this.organizationsService.issueNewCertificate().subscribe(
+  private issueNewCertificateForOrganization(csr: string, observer: Observer<any>) {
+    this.organizationsService.issueNewCertificate(csr).subscribe(
       pemCertificate => {
         observer.next(pemCertificate);
       },
@@ -104,8 +104,8 @@ export class CertificatesService implements OnInit {
 		);
 	}
 
-  private issueNewCertificateForDevice(deviceMrn: string, observer: Observer<any>) {
-    this.devicesService.issueNewCertificate(deviceMrn).subscribe(
+  private issueNewCertificateForDevice(csr: string, deviceMrn: string, observer: Observer<any>) {
+    this.devicesService.issueNewCertificate(csr, deviceMrn).subscribe(
       pemCertificate => {
         observer.next(pemCertificate);
       },
@@ -126,20 +126,20 @@ export class CertificatesService implements OnInit {
 		);
 	}
 
-  private issueNewCertificateForService(serviceMrn: string, observer: Observer<any>) {
-	  let serviceMrnAndVersion = serviceMrn.split(TOKEN_DELIMITER);
-    this.servicesService.issueNewCertificate(serviceMrnAndVersion[0], serviceMrnAndVersion[1]).subscribe(
-      pemCertificate => {
-        observer.next(pemCertificate);
-      },
-      err => {
-        observer.error(err);
-      }
-    );
+  private issueNewCertificateForService(csr: string, serviceMrn: string, observer: Observer<any>) {
+	let serviceMrnAndVersion = serviceMrn.split(TOKEN_DELIMITER);
+	this.servicesService.issueNewCertificate(csr, serviceMrnAndVersion[0], serviceMrnAndVersion[1]).subscribe(
+	  pemCertificate => {
+		observer.next(pemCertificate);
+	  },
+	  err => {
+		observer.error(err);
+	  }
+	);
   }
 
 	private revokeCertificateForService(serviceMrn: string, certificateId:string, certicateRevocation:CertificateRevocation, observer: Observer<any>) {
-  	let serviceMrnAndVersion = serviceMrn.split(TOKEN_DELIMITER);
+  		let serviceMrnAndVersion = serviceMrn.split(TOKEN_DELIMITER);
 		this.servicesService.revokeCertificate(serviceMrnAndVersion[0], serviceMrnAndVersion[1], certificateId, certicateRevocation).subscribe(
 			res => {
 				observer.next(res);
@@ -150,8 +150,8 @@ export class CertificatesService implements OnInit {
 		);
 	}
 
-  private issueNewCertificateForUser(userMrn: string, observer: Observer<any>) {
-    this.usersService.issueNewCertificate(userMrn).subscribe(
+  private issueNewCertificateForUser(csr: string, userMrn: string, observer: Observer<string>) {
+    this.usersService.issueNewCertificate(csr, userMrn).subscribe(
       pemCertificate => {
         observer.next(pemCertificate);
       },
@@ -172,8 +172,8 @@ export class CertificatesService implements OnInit {
 		);
 	}
 
-  private issueNewCertificateForVessel(vesselMrn: string, observer: Observer<any>) {
-    this.vesselsService.issueNewCertificate(vesselMrn).subscribe(
+  private issueNewCertificateForVessel(csr: string, vesselMrn: string, observer: Observer<any>) {
+    this.vesselsService.issueNewCertificate(csr, vesselMrn).subscribe(
       pemCertificate => {
         observer.next(pemCertificate);
       },

@@ -337,6 +337,25 @@ export class ServicecontrollerApi {
     }
 
     /**
+     *
+     * @summary newServiceCertFromCsr
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param serviceMrn serviceMrn
+     * @param version version
+     */
+    public newServiceCertFromCsrUsingPOST(csr: string, orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<string> {
+        return this.newServiceCertFromCsrUsingPOSTWithHttpInfo(csr, orgMrn, serviceMrn, version, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.text() || "";
+                }
+            });
+    }
+
+    /**
      * 
      * @summary revokeServiceCert
      * @param orgMrn orgMrn
@@ -1253,6 +1272,64 @@ export class ServicecontrollerApi {
         }
 
         return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * newServiceCertFromCsr
+     *
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param serviceMrn serviceMrn
+     * @param version version
+
+     */
+    public newServiceCertFromCsrUsingPOSTWithHttpInfo(csr: string, orgMrn: string, serviceMrn: string, version: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<Response> {
+        if (csr === null || csr === undefined) {
+            throw new Error('Required parameter csr was null or undefined when calling newServiceCertFromCsrUsingPOST.');
+        }
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling newServiceCertFromCsrUsingPOST.');
+        }
+        if (serviceMrn === null || serviceMrn === undefined) {
+            throw new Error('Required parameter serviceMrn was null or undefined when calling newServiceCertFromCsrUsingPOST.');
+        }
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling newServiceCertFromCsrUsingPOST.');
+        }
+
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json;charset=UTF-8',
+            'application/pem-certificate-chain'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'text/plain'
+        ];
+        let httpContentTypeSelected:string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: csr, // https://github.com/angular/angular/issues/10612
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(`${this.basePath}/oidc/api/org/${encodeURIComponent(String(orgMrn))}/service/${encodeURIComponent(String(serviceMrn))}/${encodeURIComponent(String(version))}/certificate/issue-new/csr`, requestOptions);
     }
 
     /**

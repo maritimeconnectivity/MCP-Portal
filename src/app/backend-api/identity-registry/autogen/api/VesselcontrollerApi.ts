@@ -23,6 +23,7 @@ import 'rxjs/add/operator/map';
 import * as models                                           from '../model/models';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import { DONT_OVERWRITE_CONTENT_TYPE } from '../../../../shared/app.constants';
 
 
 @Injectable()
@@ -245,6 +246,24 @@ export class VesselcontrollerApi {
                     return undefined;
                 } else {
                     return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     *
+     * @summary newVesselCertFromCsr
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param vesselMrn vesselMrn
+     */
+    public newVesselCertFromCsrUsingPOST(csr: string, orgMrn: string, vesselMrn: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<string> {
+        return this.newVesselCertFromCsrUsingPOSTWithHttpInfo(csr, orgMrn, vesselMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.text() || "";
                 }
             });
     }
@@ -888,6 +907,60 @@ export class VesselcontrollerApi {
         }
 
         return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * newVesselCertFromCsr
+     *
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param vesselMrn vesselMrn
+
+     */
+    public newVesselCertFromCsrUsingPOSTWithHttpInfo(csr: string, orgMrn: string, vesselMrn: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<Response> {
+        if (csr === null || csr === undefined) {
+            throw new Error('Required parameter csr was null or undefined when calling newVesselCertFromCsrUsingPOST.');
+        }
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling newVesselCertFromCsrUsingPOST.');
+        }
+        if (vesselMrn === null || vesselMrn === undefined) {
+            throw new Error('Required parameter vesselMrn was null or undefined when calling newVesselCertFromCsrUsingPOST.');
+        }
+
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json;charset=UTF-8',
+            'application/pem-certificate-chain'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'text/plain'
+        ];
+        let httpContentTypeSelected:string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: csr, // https://github.com/angular/angular/issues/10612
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(`${this.basePath}/oidc/api/org/${encodeURIComponent(String(orgMrn))}/vessel/${encodeURIComponent(String(vesselMrn))}/certificate/issue-new/csr`, requestOptions);
     }
 
     /**

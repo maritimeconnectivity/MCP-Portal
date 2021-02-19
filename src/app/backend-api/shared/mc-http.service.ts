@@ -75,8 +75,6 @@ export class McHttpService extends Http {
     return Observable.create(observer => {
 	    if (options.headers.get(DONT_OVERWRITE_CONTENT_TYPE)){
 		    options.headers.delete(DONT_OVERWRITE_CONTENT_TYPE);
-	    } else {
-		    options.headers.set('Content-Type', 'application/json; charset=utf-8' );
 	    }
       if (McHttpService.shouldAuthenticate) {
         AuthService.getToken()
