@@ -77,8 +77,14 @@ export class CertificateIssueNewComponent implements OnInit {
                       publicKey: this.toPem(rawPubKey, "PUBLIC KEY")
                     };
                     this.isLoading = false;
-                  }, err => console.error("Public key could not be exported", err));
-                }, err => console.error("Private key could not be exported", err));
+                  }, err => {
+                    console.error("Public key could not be exported", err);
+                    this.isLoading = false;
+                  });
+                }, err => {
+                  console.error("Private key could not be exported", err);
+                  this.isLoading = false;
+                });
               },
               err => {
                 this.isLoading = false;
