@@ -1,22 +1,28 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from "@angular/core";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
-import {Doc} from "../../../../../backend-api/service-registry/autogen/model/Doc";
-import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {XmlParserService} from "../../../../../shared/xml-parser.service";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
-import {ActivatedRoute} from "@angular/router";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
-import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
-import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
-import {IdServicesService} from "../../../../../backend-api/identity-registry/services/id-services.service";
-import {InstanceXmlParser} from "../../../shared/services/instance-xml-parser.service";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import {
+	FileUploadType,
+	McFileUploader
+} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
+import { Doc } from "../../../../../backend-api/service-registry/autogen/model/Doc";
+import { Xml } from "../../../../../backend-api/service-registry/autogen/model/Xml";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { XmlParserService } from "../../../../../shared/xml-parser.service";
+import { DesignsService } from "../../../../../backend-api/service-registry/services/designs.service";
+import { Design } from "../../../../../backend-api/service-registry/autogen/model/Design";
+import { ActivatedRoute } from "@angular/router";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { SrViewModelService } from "../../../shared/services/sr-view-model.service";
+import { InstancesService } from "../../../../../backend-api/service-registry/services/instances.service";
+import { Instance } from "../../../../../backend-api/service-registry/autogen/model/Instance";
+import { IdServicesService } from "../../../../../backend-api/identity-registry/services/id-services.service";
+import { InstanceXmlParser } from "../../../shared/services/instance-xml-parser.service";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
 import {
 	McFormControlModel,
 	McFormControlModelCheckbox,
@@ -24,16 +30,14 @@ import {
 	McFormControlType,
 	SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {ServiceViewModel} from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
-import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
-import {SelectValidator} from "../../../../../theme/validators/select.validator";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ServiceViewModel } from "../../../../org-identity-registry/services/view-models/ServiceViewModel";
+import { Service } from "../../../../../backend-api/identity-registry/autogen/model/Service";
+import { SelectValidator } from "../../../../../theme/validators/select.validator";
+import { VesselsService } from "../../../../../backend-api/identity-registry/services/vessels.service";
+import { Vessel } from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
+import { VesselHelper } from "../../../../shared/services/vessel-helper";
 import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
-import {VesselsService} from "../../../../../backend-api/identity-registry/services/vessels.service";
-import {Vessel} from "../../../../../backend-api/identity-registry/autogen/model/Vessel";
-import {VesselAttribute} from "../../../../../backend-api/identity-registry/autogen/model/VesselAttribute";
-import AttributeNameEnum = VesselAttribute.AttributeNameEnum;
-import {VesselHelper} from "../../../../shared/services/vessel-helper";
 
 @Component({
   selector: 'instance-new',

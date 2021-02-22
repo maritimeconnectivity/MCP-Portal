@@ -1,10 +1,10 @@
 import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    ViewEncapsulation
+	Component,
+	EventEmitter,
+	Input,
+	OnChanges,
+	Output,
+	ViewEncapsulation
 } from '@angular/core';
 import { LabelValueModel } from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
@@ -12,8 +12,8 @@ import { OrganizationViewModelService } from "../../services/organization-view-m
 import { LogoService } from "../../../../backend-api/identity-registry/services/logo.service";
 import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../shared/mc-notifications.service";
 
 @Component({

@@ -1,13 +1,12 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {AuthService} from "../../../authentication/services/auth.service";
-import {PemCertificate} from "../autogen/model/PemCertificate";
-import {Device} from "../autogen/model/Device";
-import {DevicecontrollerApi} from "../autogen/api/DevicecontrollerApi";
-import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
-import {PageDevice} from "../autogen/model/PageDevice";
-import {SortingHelper} from "../../shared/SortingHelper";
-import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
+import { Injectable, OnInit } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import { AuthService } from "../../../authentication/services/auth.service";
+import { Device } from "../autogen/model/Device";
+import { DevicecontrollerApi } from "../autogen/api/DevicecontrollerApi";
+import { CertificateRevocation } from "../autogen/model/CertificateRevocation";
+import { PageDevice } from "../autogen/model/PageDevice";
+import { SortingHelper } from "../../shared/SortingHelper";
+import { PAGE_SIZE_DEFAULT } from "../../../shared/app.constants";
 
 @Injectable()
 export class DevicesService implements OnInit {

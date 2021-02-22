@@ -1,6 +1,6 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Organization} from "../../../backend-api/identity-registry/autogen/model/Organization";
-import {LabelValueModel} from "../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { Injectable, OnInit } from '@angular/core';
+import { Organization } from "../../../backend-api/identity-registry/autogen/model/Organization";
+import { LabelValueModel } from "../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 
 @Injectable()
 export class OrganizationViewModelService implements OnInit {

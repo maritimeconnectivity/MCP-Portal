@@ -1,14 +1,20 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Device} from "../../../../../backend-api/identity-registry/autogen/model/Device";
-import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
-import {DevicesService} from "../../../../../backend-api/identity-registry/services/devices.service";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
-import {McFormControlModel, McFormControlType} from "../../../../../theme/components/mcForm/mcFormControlModel";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { Device } from "../../../../../backend-api/identity-registry/autogen/model/Device";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { DevicesService } from "../../../../../backend-api/identity-registry/services/devices.service";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
+import {
+    McFormControlModel,
+    McFormControlType
+} from "../../../../../theme/components/mcForm/mcFormControlModel";
 
 
 @Component({

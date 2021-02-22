@@ -6,8 +6,8 @@ import { FileHelperService } from "../../../../shared/file-helper.service";
 import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
 import { ServiceViewModel } from "../../../org-identity-registry/services/view-models/ServiceViewModel";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../shared/mc-notifications.service";
 import { IdServicesService } from "../../../../backend-api/identity-registry/services/id-services.service";
 import { NavigationHelperService } from "../../../../shared/navigation-helper.service";

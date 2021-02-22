@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../../shared/mc-notifications.service";
 import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
 import { SpecificationsService } from "../../../../../backend-api/service-registry/services/specifications.service";

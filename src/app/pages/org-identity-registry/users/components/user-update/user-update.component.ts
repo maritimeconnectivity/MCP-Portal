@@ -1,15 +1,17 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
 import {
-	McFormControlModel, McFormControlType
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+	McFormControlModel,
+	McFormControlType
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
-import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
-import {McUtils} from "../../../../../shared/mc-utils";
-import {EmailValidator} from "../../../../../theme/validators/email.validator";
+import { User } from "../../../../../backend-api/identity-registry/autogen/model/User";
+import { UsersService } from "../../../../../backend-api/identity-registry/services/users.service";
 
 
 @Component({

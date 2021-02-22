@@ -1,9 +1,9 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Certificate} from "../../../backend-api/identity-registry/autogen/model/Certificate";
-import {CertificateViewModel} from "../view-models/CertificateViewModel";
-import {CertificateRevocation} from "../../../backend-api/identity-registry/autogen/model/CertificateRevocation";
+import { Injectable, OnInit } from '@angular/core';
+import { Certificate } from "../../../backend-api/identity-registry/autogen/model/Certificate";
+import { CertificateViewModel } from "../view-models/CertificateViewModel";
+import { CertificateRevocation } from "../../../backend-api/identity-registry/autogen/model/CertificateRevocation";
+import { EnumsHelper } from "../../../shared/enums-helper";
 import RevokationReasonEnum = CertificateRevocation.RevokationReasonEnum;
-import {EnumsHelper} from "../../../shared/enums-helper";
 
 export enum CertificateEntityType {
   Device,

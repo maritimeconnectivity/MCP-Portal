@@ -2,8 +2,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Specification } from "../../../../../backend-api/service-registry/autogen/model/Specification";
 import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../../shared/mc-notifications.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpecificationsService } from "../../../../../backend-api/service-registry/services/specifications.service";

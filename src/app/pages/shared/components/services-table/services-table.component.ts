@@ -1,12 +1,19 @@
-import {Component, Input, OnChanges, ViewEncapsulation} from '@angular/core';
-import {TableCell, TableHeader, TableRow} from "../../../../theme/components/mcTable/mcTable.component";
-import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
-import {InstancesService} from "../../../../backend-api/service-registry/services/instances.service";
-import {BugReportingService} from "../../../../backend-api/identity-registry/services/bug-reporting.service";
-import {BugReport} from "../../../../backend-api/identity-registry/autogen/model/BugReport";
-import {Service} from "../../../../backend-api/identity-registry/autogen/model/Service";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
-import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
+import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import {
+	TableCell,
+	TableHeader,
+	TableRow
+} from "../../../../theme/components/mcTable/mcTable.component";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { InstancesService } from "../../../../backend-api/service-registry/services/instances.service";
+import { BugReportingService } from "../../../../backend-api/identity-registry/services/bug-reporting.service";
+import { BugReport } from "../../../../backend-api/identity-registry/autogen/model/BugReport";
+import { Service } from "../../../../backend-api/identity-registry/autogen/model/Service";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
+import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
 
 @Component({
   selector: 'services-table',

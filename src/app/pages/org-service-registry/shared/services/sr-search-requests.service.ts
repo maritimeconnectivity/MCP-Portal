@@ -1,9 +1,5 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Specification} from "../../../../backend-api/service-registry/autogen/model/Specification";
-import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {Design} from "../../../../backend-api/service-registry/autogen/model/Design";
-import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
-import {ServiceRegistrySearchRequest} from "../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import { Injectable } from '@angular/core';
+import { ServiceRegistrySearchRequest } from "../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
 
 @Injectable()
 export class SrSearchRequestsService {

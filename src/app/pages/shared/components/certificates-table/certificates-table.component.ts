@@ -5,7 +5,7 @@ import {
     CertificateHelperService
 } from "../../services/certificate-helper.service";
 import { DATE_FORMAT } from "../../../../theme/theme.constants";
-import { AuthPermission, AuthService } from "../../../../authentication/services/auth.service";
+import { AuthService } from "../../../../authentication/services/auth.service";
 import { CertificateViewModel } from "../../view-models/CertificateViewModel";
 import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
 import { MCNotificationsService } from "../../../../shared/mc-notifications.service";

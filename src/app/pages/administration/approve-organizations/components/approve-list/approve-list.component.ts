@@ -1,11 +1,17 @@
-import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
 import {
-	TableHeader, TableRow, TableCell,
-	TableActionButton, TableCellActionButtons
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import {
+	TableActionButton,
+	TableCell,
+	TableCellActionButtons,
+	TableHeader,
+	TableRow
 } from "../../../../../theme/components/mcTable/mcTable.component";
 
 @Component({

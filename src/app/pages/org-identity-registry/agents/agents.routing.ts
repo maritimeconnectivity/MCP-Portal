@@ -2,7 +2,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AgentListComponent } from './components/agent-list/agent-list.component';
 import { AgentDetailsComponent } from './components/agent-details/agent-details.component';
 import { AgentNewComponent } from './components/agent-new/agent-new.component';
-import { AgentUpdateComponent } from './components/agent-update/agent-update.component';
 
 const routes: Routes = [
     {

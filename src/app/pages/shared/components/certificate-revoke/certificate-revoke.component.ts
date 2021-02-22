@@ -1,17 +1,26 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
-import {NavigationHelperService, queryKeys} from "../../../../shared/navigation-helper.service";
-import {ActivatedRoute} from "@angular/router";
-import {CertificateEntityType, CertificateHelperService} from "../../services/certificate-helper.service";
-import {CertificatesService} from "../../../../backend-api/identity-registry/services/certificates.service";
-import {LabelValueModel} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
-	McFormControlModel, McFormControlType,
-	McFormControlModelSelect, McFormControlModelDatepicker, SelectModel
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { NavigationHelperService, queryKeys } from "../../../../shared/navigation-helper.service";
+import { ActivatedRoute } from "@angular/router";
+import {
+    CertificateEntityType,
+    CertificateHelperService
+} from "../../services/certificate-helper.service";
+import { CertificatesService } from "../../../../backend-api/identity-registry/services/certificates.service";
+import { LabelValueModel } from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+    McFormControlModel,
+    McFormControlModelDatepicker,
+    McFormControlModelSelect,
+    McFormControlType,
+    SelectModel
 } from "../../../../theme/components/mcForm/mcFormControlModel";
-import {SelectValidator} from "../../../../theme/validators/select.validator";
-import {CertificateRevocation} from "../../../../backend-api/identity-registry/autogen/model/CertificateRevocation";
+import { SelectValidator } from "../../../../theme/validators/select.validator";
+import { CertificateRevocation } from "../../../../backend-api/identity-registry/autogen/model/CertificateRevocation";
 import RevokationReasonEnum = CertificateRevocation.RevokationReasonEnum;
 
 

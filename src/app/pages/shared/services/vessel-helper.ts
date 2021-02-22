@@ -1,5 +1,5 @@
-import {Vessel} from "../../../backend-api/identity-registry/autogen/model/Vessel";
-import {VesselAttribute} from "../../../backend-api/identity-registry/autogen/model/VesselAttribute";
+import { Vessel } from "../../../backend-api/identity-registry/autogen/model/Vessel";
+import { VesselAttribute } from "../../../backend-api/identity-registry/autogen/model/VesselAttribute";
 import AttributeNameEnum = VesselAttribute.AttributeNameEnum;
 
 export class VesselHelper {

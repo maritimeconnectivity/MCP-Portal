@@ -1,12 +1,15 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
-import {EntityImageModel} from "../../../../theme/components/mcEntityImage/mcEntityImage.component";
-import {ActivatedRoute, Router} from "@angular/router";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
-import {AuthService} from "../../../../authentication/services/auth.service";
-import {Observable} from "rxjs";
-import {LogoService} from "../../../../backend-api/identity-registry/services/logo.service";
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
+import { EntityImageModel } from "../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import { ActivatedRoute, Router } from "@angular/router";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { AuthService } from "../../../../authentication/services/auth.service";
+import { Observable } from "rxjs";
+import { LogoService } from "../../../../backend-api/identity-registry/services/logo.service";
 
 @Component({
   selector: 'organization-list',

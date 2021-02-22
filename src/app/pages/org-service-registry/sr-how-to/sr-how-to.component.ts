@@ -1,8 +1,11 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {Xsd} from "../../../backend-api/service-registry/autogen/model/Xsd";
-import {FileHelperService} from "../../../shared/file-helper.service";
-import {XsdsService} from "../../../backend-api/service-registry/services/xsds.service";
-import {MCNotificationType, MCNotificationsService} from "../../../shared/mc-notifications.service";
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Xsd } from "../../../backend-api/service-registry/autogen/model/Xsd";
+import { FileHelperService } from "../../../shared/file-helper.service";
+import { XsdsService } from "../../../backend-api/service-registry/services/xsds.service";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../shared/mc-notifications.service";
 
 @Component({
   selector: 'sr-how-to',

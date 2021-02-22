@@ -1,5 +1,5 @@
-import { Routes, RouterModule }  from '@angular/router';
-import {SrHowToComponent} from "./sr-how-to.component";
+import { RouterModule, Routes } from '@angular/router';
+import { SrHowToComponent } from "./sr-how-to.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [

@@ -1,8 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../../shared/mc-notifications.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FileHelperService } from "../../../../../shared/file-helper.service";
