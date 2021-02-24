@@ -1,15 +1,21 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
-import {McFormControlModel, McFormControlType} from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
-import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
-import {McUtils} from "../../../../../shared/mc-utils";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
+import {
+	McFormControlModel,
+	McFormControlType
+} from "../../../../../theme/components/mcForm/mcFormControlModel";
+import { UsersService } from "../../../../../backend-api/identity-registry/services/users.service";
+import { User } from "../../../../../backend-api/identity-registry/autogen/model/User";
+import { McUtils } from "../../../../../shared/mc-utils";
 
 
 @Component({

@@ -1,13 +1,12 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {AuthService} from "../../../authentication/services/auth.service";
-import {PemCertificate} from "../autogen/model/PemCertificate";
-import {Device} from "../autogen/model/Device";
-import {DevicecontrollerApi} from "../autogen/api/DevicecontrollerApi";
-import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
-import {PageDevice} from "../autogen/model/PageDevice";
-import {SortingHelper} from "../../shared/SortingHelper";
-import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
+import { Injectable, OnInit } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import { AuthService } from "../../../authentication/services/auth.service";
+import { Device } from "../autogen/model/Device";
+import { DevicecontrollerApi } from "../autogen/api/DevicecontrollerApi";
+import { CertificateRevocation } from "../autogen/model/CertificateRevocation";
+import { PageDevice } from "../autogen/model/PageDevice";
+import { SortingHelper } from "../../shared/SortingHelper";
+import { PAGE_SIZE_DEFAULT } from "../../../shared/app.constants";
 
 @Injectable()
 export class DevicesService implements OnInit {
@@ -45,9 +44,9 @@ export class DevicesService implements OnInit {
 		return this.deviceApi.updateDeviceUsingPUT(orgMrn, device.mrn, device);
 	}
 
-	public issueNewCertificate(deviceMrn:string) : Observable<PemCertificate> {
+	public issueNewCertificate(csr: string, deviceMrn:string) : Observable<string> {
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
+		return this.deviceApi.newDeviceCertFromCsrUsingPOST(csr, deviceMrn, orgMrn);
 	}
 
 	public revokeCertificate(deviceMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {

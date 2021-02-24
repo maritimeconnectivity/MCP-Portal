@@ -1,13 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {AuthService} from "../../../authentication/services/auth.service";
-import {PemCertificate} from "../autogen/model/PemCertificate";
-import {Vessel} from "../autogen/model/Vessel";
-import {VesselcontrollerApi} from "../autogen/api/VesselcontrollerApi";
-import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
-import {PageVessel} from "../autogen/model/PageVessel";
-import {SortingHelper} from "../../shared/SortingHelper";
-import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
+import { Injectable } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import { AuthService } from "../../../authentication/services/auth.service";
+import { Vessel } from "../autogen/model/Vessel";
+import { VesselcontrollerApi } from "../autogen/api/VesselcontrollerApi";
+import { CertificateRevocation } from "../autogen/model/CertificateRevocation";
+import { PageVessel } from "../autogen/model/PageVessel";
+import { SortingHelper } from "../../shared/SortingHelper";
+import { PAGE_SIZE_DEFAULT } from "../../../shared/app.constants";
 
 @Injectable()
 export class VesselsService {
@@ -61,10 +60,10 @@ export class VesselsService {
 		return this.vesselApi.updateVesselUsingPUT(orgMrn, vessel.mrn, vessel);
 	}
 
-  public issueNewCertificate(vesselMrn:string) : Observable<PemCertificate> {
+  public issueNewCertificate(csr: string, vesselMrn:string) : Observable<string> {
 	  this.vesselsCache = null;
 	  let orgMrn = this.authService.authState.orgMrn;
-    return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);
+	  return this.vesselApi.newVesselCertFromCsrUsingPOST(csr, orgMrn, vesselMrn);
   }
 
 	public revokeCertificate(vesselMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {

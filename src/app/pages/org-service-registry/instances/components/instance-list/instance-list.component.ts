@@ -1,12 +1,15 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {Router, ActivatedRoute} from "@angular/router";
-import {Instance} from "../../../../../backend-api/service-registry/autogen/model/Instance";
-import {InstancesService} from "../../../../../backend-api/service-registry/services/instances.service";
-import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
-import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Instance } from "../../../../../backend-api/service-registry/autogen/model/Instance";
+import { InstancesService } from "../../../../../backend-api/service-registry/services/instances.service";
+import { SrSearchRequestsService } from "../../../shared/services/sr-search-requests.service";
+import { ServiceRegistrySearchRequest } from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
 
 const SEARCH_KEY = 'InstanceListComponent';
 @Component({

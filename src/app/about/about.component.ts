@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {NavigationHelperService} from "../shared/navigation-helper.service";
+import { Component, OnInit } from '@angular/core';
+import { NavigationHelperService } from "../shared/navigation-helper.service";
 
 @Component({
   selector: 'about',

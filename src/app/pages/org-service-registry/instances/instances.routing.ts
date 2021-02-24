@@ -1,13 +1,13 @@
-import { Routes, RouterModule }  from '@angular/router';
-import {InstancesComponent} from "./instances.component";
-import {InstanceListComponent} from "./components/instance-list/instance-list.component";
-import {InstanceDetailsComponent} from "./components/instance-details/instance-details.component";
-import {InstanceNewComponent} from "./components/instance-new/instance-new.component";
-import {ServiceNewComponent} from "../../org-identity-registry/services/components/service-new/service-new.component";
-import {CertificateIssueNewComponent} from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
-import {ServiceUpdateComponent} from "../../org-identity-registry/services/components/service-update/service-update.component";
-import {CertificateRevokeComponent} from "../../shared/components/certificate-revoke/certificate-revoke.component";
-import {InstanceUpdateComponent} from "./components/instance-update/instance-update.component";
+import { RouterModule, Routes } from '@angular/router';
+import { InstancesComponent } from "./instances.component";
+import { InstanceListComponent } from "./components/instance-list/instance-list.component";
+import { InstanceDetailsComponent } from "./components/instance-details/instance-details.component";
+import { InstanceNewComponent } from "./components/instance-new/instance-new.component";
+import { ServiceNewComponent } from "../../org-identity-registry/services/components/service-new/service-new.component";
+import { CertificateIssueNewComponent } from "../../shared/components/certificate-issue-new/certificate-issue-new.component";
+import { ServiceUpdateComponent } from "../../org-identity-registry/services/components/service-update/service-update.component";
+import { CertificateRevokeComponent } from "../../shared/components/certificate-revoke/certificate-revoke.component";
+import { InstanceUpdateComponent } from "./components/instance-update/instance-update.component";
 
 // noinspection TypeScriptValidateTypes
 export const routes: Routes = [

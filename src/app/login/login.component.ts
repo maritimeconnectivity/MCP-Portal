@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../authentication/services/auth.service";
-import {MCNotificationsService, MCNotificationType} from "../shared/mc-notifications.service";
-import {ActivatedRoute} from "@angular/router";
+import { AuthService } from "../authentication/services/auth.service";
+import { MCNotificationsService, MCNotificationType } from "../shared/mc-notifications.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-login',

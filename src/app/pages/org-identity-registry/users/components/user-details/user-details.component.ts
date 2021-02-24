@@ -3,8 +3,8 @@ import { CertificateEntityType } from "../../../../shared/services/certificate-h
 import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../../shared/mc-notifications.service";
 import { User } from "../../../../../backend-api/identity-registry/autogen/model/User";
 import { UsersService } from "../../../../../backend-api/identity-registry/services/users.service";

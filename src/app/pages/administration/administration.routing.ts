@@ -1,8 +1,8 @@
-import { Routes, RouterModule }  from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { AdministrationComponent } from './administration.component';
-import {ApproveOrganizationComponent} from "./approve-organizations/approve-organization.component";
-import {SiteAdminAuthGuard} from "../../authentication/services/site-admin-guard.service";
+import { ApproveOrganizationComponent } from "./approve-organizations/approve-organization.component";
+import { SiteAdminAuthGuard } from "../../authentication/services/site-admin-guard.service";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [

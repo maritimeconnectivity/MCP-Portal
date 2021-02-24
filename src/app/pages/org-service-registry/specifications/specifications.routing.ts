@@ -1,9 +1,9 @@
-import { Routes, RouterModule }  from '@angular/router';
-import {SpecificationsComponent} from "./specifications.component";
-import {SpecificationListComponent} from "./components/specification-list/specification-list.component";
-import {SpecificationDetailsComponent} from "./components/specification-details/specification-details.component";
-import {SpecificationNewComponent} from "./components/specification-new/specification-new.component";
-import {SpecificationUpdateComponent} from "./components/specification-update/specification-update.component";
+import { RouterModule, Routes } from '@angular/router';
+import { SpecificationsComponent } from "./specifications.component";
+import { SpecificationListComponent } from "./components/specification-list/specification-list.component";
+import { SpecificationDetailsComponent } from "./components/specification-details/specification-details.component";
+import { SpecificationNewComponent } from "./components/specification-new/specification-new.component";
+import { SpecificationUpdateComponent } from "./components/specification-update/specification-update.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [

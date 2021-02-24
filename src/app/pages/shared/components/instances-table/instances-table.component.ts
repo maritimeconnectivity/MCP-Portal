@@ -1,9 +1,16 @@
-import {Component, ViewEncapsulation, Input, OnChanges} from '@angular/core';
-import {TableHeader, TableRow, TableCell} from "../../../../theme/components/mcTable/mcTable.component";
-import {Instance} from "../../../../backend-api/service-registry/autogen/model/Instance";
-import {MCNotificationType, MCNotificationsService} from "../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
-import {McUtils} from "../../../../shared/mc-utils";
+import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import {
+    TableCell,
+    TableHeader,
+    TableRow
+} from "../../../../theme/components/mcTable/mcTable.component";
+import { Instance } from "../../../../backend-api/service-registry/autogen/model/Instance";
+import {
+    MCNotificationsService,
+    MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
+import { McUtils } from "../../../../shared/mc-utils";
 
 @Component({
   selector: 'instances-table',

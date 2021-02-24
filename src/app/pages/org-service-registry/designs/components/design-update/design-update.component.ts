@@ -1,26 +1,32 @@
-import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
-import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
-import {Doc} from "../../../../../backend-api/service-registry/autogen/model/Doc";
-import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
-    McFormControlModel, McFormControlModelSelect,
-    McFormControlType, SelectModel
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import {
+	FileUploadType,
+	McFileUploader
+} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
+import { Doc } from "../../../../../backend-api/service-registry/autogen/model/Doc";
+import { Xml } from "../../../../../backend-api/service-registry/autogen/model/Xml";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
+import {
+	McFormControlModel,
+	McFormControlModelSelect,
+	McFormControlType,
+	SelectModel
 } from "../../../../../theme/components/mcForm/mcFormControlModel";
-import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
-import {Service} from "../../../../../backend-api/identity-registry/autogen/model/Service";
-import OidcAccessTypeEnum = Service.OidcAccessTypeEnum;
-import {Observable} from "rxjs";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
-import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
-import {DesignXmlParser} from "../../../shared/services/design-xml-parser.service";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
+import { DesignsService } from "../../../../../backend-api/service-registry/services/designs.service";
+import { Design } from "../../../../../backend-api/service-registry/autogen/model/Design";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { SrViewModelService } from "../../../shared/services/sr-view-model.service";
+import { SpecificationsService } from "../../../../../backend-api/service-registry/services/specifications.service";
+import { DesignXmlParser } from "../../../shared/services/design-xml-parser.service";
 
 @Component({
   selector: 'design-update',

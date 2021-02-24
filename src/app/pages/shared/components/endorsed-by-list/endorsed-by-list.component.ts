@@ -1,11 +1,11 @@
-import {Component, ViewEncapsulation, Input} from '@angular/core';
-import {EntityImageModel} from "../../../../theme/components/mcEntityImage/mcEntityImage.component";
-import {AuthService} from "../../../../authentication/services/auth.service";
-import {Observable} from "rxjs";
-import {LogoService} from "../../../../backend-api/identity-registry/services/logo.service";
-import {Endorsement} from "../../../../backend-api/endorsements/autogen/model/Endorsement";
-import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { EntityImageModel } from "../../../../theme/components/mcEntityImage/mcEntityImage.component";
+import { AuthService } from "../../../../authentication/services/auth.service";
+import { Observable } from "rxjs";
+import { LogoService } from "../../../../backend-api/identity-registry/services/logo.service";
+import { Endorsement } from "../../../../backend-api/endorsements/autogen/model/Endorsement";
+import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
 
 @Component({
   selector: 'endorsed-by-list',

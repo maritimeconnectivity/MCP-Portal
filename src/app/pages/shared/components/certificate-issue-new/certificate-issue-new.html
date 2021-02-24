@@ -2,7 +2,7 @@
   <div class="col-lg-12">
     <ba-card title="Issue new certificate" baCardClass="with-scroll table-panel">
       <!-- Before issue -->
-      <div *ngIf="entityType != null && !certificate && !isLoading">
+      <div *ngIf="entityType != null && !pemCertificate && !isLoading">
         <h5>Issuing a new certificate for:</h5>
         <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
         <ul *ngIf="entityType != null" class="btn-list clearfix">
@@ -18,7 +18,7 @@
       <sk-fading-circle [isRunning]="isLoading" ></sk-fading-circle>
 
       <!-- After issue and success -->
-      <div *ngIf="certificate">
+      <div *ngIf="pemCertificate">
         Certificate issued with success
         <ul *ngIf="entityType != null" class="btn-list clearfix">
           <li>

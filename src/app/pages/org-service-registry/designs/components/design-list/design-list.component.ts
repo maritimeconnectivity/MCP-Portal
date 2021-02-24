@@ -1,12 +1,15 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {Router, ActivatedRoute} from "@angular/router";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
-import {ServiceRegistrySearchRequest} from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
-import {SrSearchRequestsService} from "../../../shared/services/sr-search-requests.service";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DesignsService } from "../../../../../backend-api/service-registry/services/designs.service";
+import { Design } from "../../../../../backend-api/service-registry/autogen/model/Design";
+import { ServiceRegistrySearchRequest } from "../../../../shared/components/service-registry-search/ServiceRegistrySearchRequest";
+import { SrSearchRequestsService } from "../../../shared/services/sr-search-requests.service";
 
 const SEARCH_KEY = 'DesignListComponent';
 

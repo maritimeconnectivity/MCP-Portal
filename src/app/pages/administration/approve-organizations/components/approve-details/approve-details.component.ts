@@ -1,18 +1,24 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {MCNotificationsService, MCNotificationType} from "../../../../../shared/mc-notifications.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
-import {McUtils} from "../../../../../shared/mc-utils";
-import {User} from "../../../../../backend-api/identity-registry/autogen/model/User";
-import {MC_ADMIN} from "../../../../../shared/app.constants";
-import {UsersService} from "../../../../../backend-api/identity-registry/services/users.service";
-import {RolesService} from "../../../../../backend-api/identity-registry/services/roles.service";
-import {Role} from "../../../../../backend-api/identity-registry/autogen/model/Role";
+import { ActivatedRoute, Router } from "@angular/router";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
+import { McUtils } from "../../../../../shared/mc-utils";
+import { User } from "../../../../../backend-api/identity-registry/autogen/model/User";
+import { MC_ADMIN } from "../../../../../shared/app.constants";
+import { UsersService } from "../../../../../backend-api/identity-registry/services/users.service";
+import { RolesService } from "../../../../../backend-api/identity-registry/services/roles.service";
+import { Role } from "../../../../../backend-api/identity-registry/autogen/model/Role";
+import {
+	McFormControlModel,
+	McFormControlType
+} from "../../../../../theme/components/mcForm/mcFormControlModel";
 import RoleNameEnum = Role.RoleNameEnum;
-import {McFormControlModel, McFormControlType} from "../../../../../theme/components/mcForm/mcFormControlModel";
 
 @Component({
   selector: 'approve-details',

@@ -93,6 +93,8 @@ type IdleCallbacks = Es6PromiseLoader |
   FactoryEs6PromiseLoader |
   FactoryPromise ;
 
+type ArrayBufferLike = ArrayBuffer;
+
 interface WebpackModule {
   hot: {
     data?: any,

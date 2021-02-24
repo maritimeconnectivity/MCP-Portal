@@ -1,7 +1,7 @@
-import { Routes, RouterModule }  from '@angular/router';
-import {OrganizationsComponent} from "./organizations.component";
-import {OrganizationListComponent} from "./components/organization-list/organization-list.component";
-import {OrganizationDetailsComponent} from "./components/organization-details/organization-details.component";
+import { RouterModule, Routes } from '@angular/router';
+import { OrganizationsComponent } from "./organizations.component";
+import { OrganizationListComponent } from "./components/organization-list/organization-list.component";
+import { OrganizationDetailsComponent } from "./components/organization-details/organization-details.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [

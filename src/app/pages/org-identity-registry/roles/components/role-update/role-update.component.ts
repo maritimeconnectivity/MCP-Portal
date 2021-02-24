@@ -1,11 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component, OnChanges, OnDestroy,
-    OnInit,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Role } from '../../../../../backend-api/identity-registry/autogen/model/Role';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import {

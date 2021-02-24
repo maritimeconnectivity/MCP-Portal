@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AgentsService } from '../../../../backend-api/identity-registry/services/agents.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthPermission, AuthService } from '../../../../authentication/services/auth.service';
+import { AuthService } from '../../../../authentication/services/auth.service';
 import { OrganizationsService } from '../../../../backend-api/identity-registry/services/organizations.service';
 import {
     MCNotificationsService,

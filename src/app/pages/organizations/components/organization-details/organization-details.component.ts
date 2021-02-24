@@ -1,8 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import {
-    MCNotificationsService,
-    MCNotificationType
+	MCNotificationsService,
+	MCNotificationType
 } from "../../../../shared/mc-notifications.service";
 import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";

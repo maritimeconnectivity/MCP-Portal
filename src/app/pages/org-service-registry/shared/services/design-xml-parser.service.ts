@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {XmlParserService} from "../../../../shared/xml-parser.service";
-import {ServiceRegistryXmlParser} from "./service-registry-xml-parser.service";
-import {Xml} from "../../../../backend-api/service-registry/autogen/model/Xml";
+import { Injectable } from '@angular/core';
+import { XmlParserService } from "../../../../shared/xml-parser.service";
+import { ServiceRegistryXmlParser } from "./service-registry-xml-parser.service";
+import { Xml } from "../../../../backend-api/service-registry/autogen/model/Xml";
 
 @Injectable()
 export class DesignXmlParser extends ServiceRegistryXmlParser {

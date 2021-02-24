@@ -1,7 +1,7 @@
-import { Routes, RouterModule }  from '@angular/router';
-import {ApproveOrganizationComponent} from "./approve-organization.component";
-import {ApproveListComponent} from "./components/approve-list/approve-list.component";
-import {ApproveDetailsComponent} from "./components/approve-details/approve-details.component";
+import { RouterModule, Routes } from '@angular/router';
+import { ApproveOrganizationComponent } from "./approve-organization.component";
+import { ApproveListComponent } from "./components/approve-list/approve-list.component";
+import { ApproveDetailsComponent } from "./components/approve-details/approve-details.component";
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [

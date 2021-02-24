@@ -1,21 +1,27 @@
-import {Component, ViewEncapsulation, OnInit, ViewChild} from '@angular/core';
-import {MCNotificationType, MCNotificationsService} from "../../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../../backend-api/identity-registry/services/organizations.service";
-import {Organization} from "../../../../../backend-api/identity-registry/autogen/model/Organization";
-import {FileUploadType, McFileUploader} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
-import {Doc} from "../../../../../backend-api/service-registry/autogen/model/Doc";
-import {Xml} from "../../../../../backend-api/service-registry/autogen/model/Xml";
-import {NavigationHelperService} from "../../../../../shared/navigation-helper.service";
-import {XmlParserService} from "../../../../../shared/xml-parser.service";
-import {DesignsService} from "../../../../../backend-api/service-registry/services/designs.service";
-import {Design} from "../../../../../backend-api/service-registry/autogen/model/Design";
-import {Specification} from "../../../../../backend-api/service-registry/autogen/model/Specification";
-import {ActivatedRoute} from "@angular/router";
-import {SpecificationsService} from "../../../../../backend-api/service-registry/services/specifications.service";
-import {LabelValueModel} from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
-import {SrViewModelService} from "../../../shared/services/sr-view-model.service";
-import {MrnHelperService} from "../../../../../shared/mrn-helper.service";
-import {DesignXmlParser} from "../../../shared/services/design-xml-parser.service";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../../backend-api/identity-registry/services/organizations.service";
+import { Organization } from "../../../../../backend-api/identity-registry/autogen/model/Organization";
+import {
+	FileUploadType,
+	McFileUploader
+} from "../../../../../theme/components/mcFileUploader/mcFileUploader.component";
+import { Doc } from "../../../../../backend-api/service-registry/autogen/model/Doc";
+import { Xml } from "../../../../../backend-api/service-registry/autogen/model/Xml";
+import { NavigationHelperService } from "../../../../../shared/navigation-helper.service";
+import { XmlParserService } from "../../../../../shared/xml-parser.service";
+import { DesignsService } from "../../../../../backend-api/service-registry/services/designs.service";
+import { Design } from "../../../../../backend-api/service-registry/autogen/model/Design";
+import { Specification } from "../../../../../backend-api/service-registry/autogen/model/Specification";
+import { ActivatedRoute } from "@angular/router";
+import { SpecificationsService } from "../../../../../backend-api/service-registry/services/specifications.service";
+import { LabelValueModel } from "../../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import { SrViewModelService } from "../../../shared/services/sr-view-model.service";
+import { MrnHelperService } from "../../../../../shared/mrn-helper.service";
+import { DesignXmlParser } from "../../../shared/services/design-xml-parser.service";
 
 @Component({
   selector: 'design-new',

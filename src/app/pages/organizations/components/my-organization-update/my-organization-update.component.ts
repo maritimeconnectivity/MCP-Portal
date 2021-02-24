@@ -1,12 +1,18 @@
-import {Component, ViewEncapsulation, OnInit} from '@angular/core';
-import {Organization} from "../../../../backend-api/identity-registry/autogen/model/Organization";
-import {FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
-import {McFormControlModel, McFormControlType} from "../../../../theme/components/mcForm/mcFormControlModel";
-import {NavigationHelperService} from "../../../../shared/navigation-helper.service";
-import {MCNotificationsService, MCNotificationType} from "../../../../shared/mc-notifications.service";
-import {OrganizationsService} from "../../../../backend-api/identity-registry/services/organizations.service";
-import {McUtils} from "../../../../shared/mc-utils";
-import {UrlValidator} from "../../../../theme/validators/url.validator";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+	McFormControlModel,
+	McFormControlType
+} from "../../../../theme/components/mcForm/mcFormControlModel";
+import { NavigationHelperService } from "../../../../shared/navigation-helper.service";
+import {
+	MCNotificationsService,
+	MCNotificationType
+} from "../../../../shared/mc-notifications.service";
+import { OrganizationsService } from "../../../../backend-api/identity-registry/services/organizations.service";
+import { McUtils } from "../../../../shared/mc-utils";
+import { UrlValidator } from "../../../../theme/validators/url.validator";
 
 
 @Component({

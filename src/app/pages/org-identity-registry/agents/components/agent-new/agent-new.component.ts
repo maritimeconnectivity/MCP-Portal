@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } fr
 import { Organization } from '../../../../../backend-api/identity-registry/autogen/model/Organization';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import {
-    McFormControlModel, McFormControlModelSelect,
+    McFormControlModel,
+    McFormControlModelSelect,
     McFormControlType,
     SelectModel
 } from '../../../../../theme/components/mcForm/mcFormControlModel';

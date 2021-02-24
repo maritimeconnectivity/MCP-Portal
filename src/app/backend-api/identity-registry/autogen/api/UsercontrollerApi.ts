@@ -182,6 +182,42 @@ export class UsercontrollerApi {
     }
 
     /**
+     *
+     * @summary newUserCertFromCsr
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param userMrn userMrn
+     */
+    public newUserCertFromCsrUsingPOST(csr: string, orgMrn: string, userMrn: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<string> {
+        return this.newUserCertFromCsrUsingPOSTWithHttpInfo(csr, orgMrn, userMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.text() || "";
+                }
+            });
+    }
+
+    /**
+     *
+     * @summary newUserCertFromCsr
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param userMrn userMrn
+     */
+    public newUserCertFromCsrUsingPOST1(csr: string, orgMrn: string, userMrn: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<string> {
+        return this.newUserCertFromCsrUsingPOST1WithHttpInfo(csr, orgMrn, userMrn, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
      * 
      * @summary newUserCert
      * @param orgMrn orgMrn
@@ -674,6 +710,104 @@ export class UsercontrollerApi {
         }
 
         return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * newUserCertFromCsr
+     *
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param userMrn userMrn
+     */
+    public newUserCertFromCsrUsingPOSTWithHttpInfo(csr: string, orgMrn: string, userMrn: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<Response> {
+        if (csr === null || csr === undefined) {
+            throw new Error('Required parameter csr was null or undefined when calling newUserCertFromCsrUsingPOST.');
+        }
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling newUserCertFromCsrUsingPOST.');
+        }
+        if (userMrn === null || userMrn === undefined) {
+            throw new Error('Required parameter userMrn was null or undefined when calling newUserCertFromCsrUsingPOST.');
+        }
+
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json;charset=UTF-8',
+            'application/pem-certificate-chain'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers.set("Accept", httpHeaderAcceptSelected);
+        }
+        headers.set('Content-Type', 'text/plain');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: csr, // https://github.com/angular/angular/issues/10612
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(`${this.basePath}/oidc/api/org/${encodeURIComponent(String(orgMrn))}/user/${encodeURIComponent(String(userMrn))}/certificate/issue-new/csr`, requestOptions);
+    }
+
+    /**
+     * newUserCertFromCsr
+     *
+     * @param csr A PEM encoded PKCS#10 CSR
+     * @param orgMrn orgMrn
+     * @param userMrn userMrn
+     */
+    public newUserCertFromCsrUsingPOST1WithHttpInfo(csr: string, orgMrn: string, userMrn: string, extraHttpRequestParams?: RequestOptionsArgs): Observable<Response> {
+        if (csr === null || csr === undefined) {
+            throw new Error('Required parameter csr was null or undefined when calling newUserCertFromCsrUsingPOST1.');
+        }
+        if (orgMrn === null || orgMrn === undefined) {
+            throw new Error('Required parameter orgMrn was null or undefined when calling newUserCertFromCsrUsingPOST1.');
+        }
+        if (userMrn === null || userMrn === undefined) {
+            throw new Error('Required parameter userMrn was null or undefined when calling newUserCertFromCsrUsingPOST1.');
+        }
+
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json;charset=UTF-8',
+            'application/pem-certificate-chain'
+        ];
+        let httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers.set("Accept", httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'text/plain'
+        ];
+        let httpContentTypeSelected:string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: csr == null ? '' : JSON.stringify(csr), // https://github.com/angular/angular/issues/10612
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(`${this.basePath}/x509/api/org/${encodeURIComponent(String(orgMrn))}/user/${encodeURIComponent(String(userMrn))}/certificate/issue-new/csr`, requestOptions);
     }
 
     /**

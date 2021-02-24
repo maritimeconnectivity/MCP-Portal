@@ -5,6 +5,7 @@ import * as JSZip from "jszip";
 import {Xml} from "../backend-api/service-registry/autogen/model/Xml";
 import {Doc} from "../backend-api/service-registry/autogen/model/Doc";
 import {CertificateBundle} from "../backend-api/identity-registry/autogen/model/CertificateBundle";
+import { PemCertificate } from '../backend-api/identity-registry/autogen/model/PemCertificate';
 
 @Injectable()
 export class FileHelperService {
@@ -12,31 +13,17 @@ export class FileHelperService {
 
   }
 
-  public downloadPemCertificate(certificateBundle:CertificateBundle, entityName:string) {
+  public downloadPemCertificate(certificateBundle:PemCertificate, entityName:string) {
     try {
       let nameNoSpaces = entityName.split(' ').join('_');
       let zip = new JSZip();
-      let pemCertificate = certificateBundle.pemCertificate;
-      zip.file("Certificate_" + nameNoSpaces + ".pem", this.replaceNewLines(pemCertificate.certificate));
-      if (pemCertificate.privateKey) {
-        zip.file("PrivateKey_" + nameNoSpaces + ".pem", this.replaceNewLines(pemCertificate.privateKey));
+      zip.file("Certificate_" + nameNoSpaces + ".pem", certificateBundle.certificate);
+      if (certificateBundle.privateKey) {
+        zip.file("PrivateKey_" + nameNoSpaces + ".pem", certificateBundle.privateKey);
       }
-      if (pemCertificate.publicKey) {
-        zip.file("PublicKey_" + nameNoSpaces + ".pem", this.replaceNewLines(pemCertificate.publicKey));
+      if (certificateBundle.publicKey) {
+        zip.file("PublicKey_" + nameNoSpaces + ".pem", certificateBundle.publicKey);
       }
-      if (certificateBundle.keystorePassword) {
-        zip.file("KeystorePassword.txt", this.replaceNewLines(certificateBundle.keystorePassword));
-      }
-      if (certificateBundle.jksKeystore) {
-        let jksByteArray = this.convertBase64ToByteArray(certificateBundle.jksKeystore);
-        let blob = new Blob([jksByteArray]);
-        zip.file("Keystore_" + nameNoSpaces + ".jks", blob);
-      }
-        if (certificateBundle.pkcs12Keystore) {
-            let pkcs12ByteArray = this.convertBase64ToByteArray(certificateBundle.pkcs12Keystore);
-            let blob = new Blob([pkcs12ByteArray]);
-            zip.file("Keystore_" + nameNoSpaces + ".p12", blob);
-        }
       zip.generateAsync({type:"blob"}).then(function (content) {
         fileSaver.saveAs(content, "Certificate_" + nameNoSpaces + ".zip");
       });
