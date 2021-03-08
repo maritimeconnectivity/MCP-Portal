@@ -62,6 +62,28 @@ declare var IDP_NAMESPACE: string;
 declare var HMR: boolean;
 declare var System: SystemJS;
 
+declare module "pkijs/src/PFX" {
+  import ContentInfo from 'pkijs/src/ContentInfo';
+  import MacData from 'pkijs/src/MacData';
+  export default class PFX {
+    version: number;
+    authSafe: ContentInfo;
+    macData: MacData;
+    parsedValue: any;
+
+    constructor(parameters?: any);
+
+    static defaultValues(memberName: string): any;
+    static compareWithDefault(memberName: string, memberValue: any): any;
+    static schema(parameters?: any): any;
+    fromSchema(schema: any): void;
+    toSchema(): any;
+    toJSON(): any;
+    makeIntervalValues(parameters?: any): any;
+    parseInternalValues(parameters: any): any;
+  }
+}
+
 interface SystemJS {
   import: (path?: string) => Promise<any>;
 }
