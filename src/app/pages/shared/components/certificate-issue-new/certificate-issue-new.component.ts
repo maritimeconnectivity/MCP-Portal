@@ -39,6 +39,8 @@ export class CertificateIssueNewComponent implements OnInit {
   public entityTitle: string;
   public isLoading: boolean;
   public certificateBundle: CertificateBundle;
+  public showModal: boolean = false;
+  public modalDescription: string;
 
   public labelValues: Array<LabelValueModel>;
 
@@ -64,7 +66,15 @@ export class CertificateIssueNewComponent implements OnInit {
     this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle);
   }
 
-  public issueNew() {
+  public showGenerationModal() {
+    this.modalDescription = 'Do you want to generate a PKCS#12 keystore from the issued certificate?' +
+        '<br/>Note that if you choose yes the generation might take a while and also that the resulting ' +
+        'PKCS#12 keystore CANNOT be imported by Windows.';
+    this.showModal = true;
+  }
+
+  public issueNew(generatePkcs12: boolean) {
+    this.showModal = false;
     this.isLoading = true;
     let ecKeyGenParams = {name: 'ECDSA', namedCurve: 'P-384', typedCurve: ''};
     let keyResult = crypto.subtle.generateKey(ecKeyGenParams, true, ['sign', 'verify']);
@@ -84,25 +94,36 @@ export class CertificateIssueNewComponent implements OnInit {
                   crypto.subtle.exportKey('spki', keyPair.publicKey).then(rawPubKey => {
                     let privateKey = new PrivateKeyInfo({schema: fromBER(rawPrivKey).result});
 
-                    let rawCerts = this.convertCertChain(certificate);
-                    let certs = rawCerts.map(cert => new Certificate({schema: fromBER(cert).result}));
-                    let password = this.generatePassword();
+                    if (generatePkcs12) {
+                      let rawCerts = this.convertCertChain(certificate);
+                      let certs = rawCerts.map(cert => new Certificate({schema: fromBER(cert).result}));
+                      let password = this.generatePassword();
 
-                    Promise.resolve().then(() => this.generatePKCS12(privateKey, certs, password)).then(result => {
+                      Promise.resolve().then(() => this.generatePKCS12(privateKey, certs, password)).then(result => {
+                        this.certificateBundle = {
+                          pemCertificate: {
+                            privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
+                            publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
+                            certificate: certificate
+                          },
+                          pkcs12Keystore: result,
+                          keystorePassword: password
+                        };
+                        this.isLoading = false;
+                      }, err => {
+                        console.error('PKCS12 keystore could not be generated', err);
+                        this.isLoading = false;
+                      });
+                    } else {
                       this.certificateBundle = {
                         pemCertificate: {
                           privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
                           publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
                           certificate: certificate
-                        },
-                        pkcs12Keystore: result,
-                        keystorePassword: password
+                        }
                       };
                       this.isLoading = false;
-                    }, err => {
-                      console.error('PKCS12 keystore could not be generated', err);
-                      this.isLoading = false;
-                    });
+                    }
                   }, err => {
                     console.error('Public key could not be exported', err);
                     this.isLoading = false;

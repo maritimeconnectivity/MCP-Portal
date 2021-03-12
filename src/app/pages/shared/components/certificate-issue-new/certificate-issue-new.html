@@ -7,7 +7,7 @@
         <mc-label-value-table [isLoading]="isLoading" [labelValues]="labelValues"></mc-label-value-table>
         <ul *ngIf="entityType != null" class="btn-list clearfix">
           <li>
-            <button type="button" class="btn btn-danger btn-raised" (click)="issueNew()">Issue Certificate</button>
+            <button type="button" class="btn btn-danger btn-raised" (click)="showGenerationModal()">Issue Certificate</button>
           </li>
           <li>
             <button type="button" class="btn btn-default btn-raised" (click)="cancel()">Cancel</button>
@@ -32,3 +32,4 @@
     </ba-card>
   </div>
 </div>
+<mc-modal (onCancel)="issueNew(false)" (onOk)="issueNew(true)" [show]="showModal" [title]="'Generate PKCS#12 Keystore?'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'No'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Yes'"></mc-modal>
