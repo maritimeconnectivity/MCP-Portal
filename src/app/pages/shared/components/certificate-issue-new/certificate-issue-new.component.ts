@@ -10,13 +10,22 @@ import { CertificatesService } from "../../../../backend-api/identity-registry/s
 import { LabelValueModel } from "../../../../theme/components";
 import { FileHelperService } from "../../../../shared/file-helper.service";
 import { TOKEN_DELIMITER } from "../../../../shared/app.constants";
-import { PemCertificate } from '../../../../backend-api/identity-registry/autogen/model/PemCertificate';
-import CertificationRequest from 'pkijs/src/CertificationRequest';
-import AttributeTypeAndValue from 'pkijs/src/AttributeTypeAndValue';
-import { fromBER, PrintableString } from 'asn1js';
+import { BitString, BmpString, fromBER, OctetString, PrintableString } from 'asn1js';
 import { Convert } from 'pvtsutils';
-import PrivateKeyInfo from 'pkijs/src/PrivateKeyInfo';
-import PFX from 'pkijs/src/PFX';
+import PrivateKeyInfo from 'pkijs/build/PrivateKeyInfo';
+import Certificate from 'pkijs/build/Certificate';
+import PFX from 'pkijs/build/PFX';
+import SafeBag from 'pkijs/build/SafeBag';
+import AuthenticatedSafe from 'pkijs/build/AuthenticatedSafe';
+import CertBag from 'pkijs/build/CertBag';
+import CertificationRequest from 'pkijs/build/CertificationRequest';
+import AttributeTypeAndValue from 'pkijs/build/AttributeTypeAndValue';
+import { CertificateBundle } from '../../../../backend-api/identity-registry/autogen/model/CertificateBundle';
+import { stringToArrayBuffer } from 'pvutils';
+import SafeContents from 'pkijs/build/SafeContents';
+import PKCS8ShroudedKeyBag from 'pkijs/build/PKCS8ShroudedKeyBag';
+import Attribute from 'pkijs/build/Attribute';
+import { getRandomValues } from 'pkijs/build/common';
 
 @Component({
   selector: 'certificate-issue-new',
@@ -29,18 +38,18 @@ export class CertificateIssueNewComponent implements OnInit {
   public entityMrn: string;
   public entityTitle: string;
   public isLoading: boolean;
-  public pemCertificate: PemCertificate;
+  public certificateBundle: CertificateBundle;
 
-  public labelValues:Array<LabelValueModel>;
+  public labelValues: Array<LabelValueModel>;
 
-  constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService, private route:ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
+  constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService, private route: ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
   }
 
   ngOnInit() {
     this.isLoading = false;
     let entityType = this.route.snapshot.queryParams[queryKeys.ENTITY_TYPE];
     let entityMrn = this.route.snapshot.queryParams[queryKeys.ENTITY_MRN];
-    let entityTitle= this.route.snapshot.queryParams[queryKeys.ENTITY_TITLE];
+    let entityTitle = this.route.snapshot.queryParams[queryKeys.ENTITY_TITLE];
     if (entityType == null || !entityMrn || !entityTitle) {
       this.notificationService.generateNotification("Error", "Unresolved state when trying to issue new certificate", MCNotificationType.Error);
       this.navigationHelper.takeMeHome();
@@ -52,7 +61,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public zipAndDownload() {
-    this.fileHelper.downloadPemCertificate(this.pemCertificate, this.entityTitle);
+    this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle);
   }
 
   public issueNew() {
@@ -70,18 +79,30 @@ export class CertificateIssueNewComponent implements OnInit {
           let csrBytes = csr.toSchema().toBER(false);
           let pemCsr = this.toPem(csrBytes, 'CERTIFICATE REQUEST');
           this.certificateService.issueNewCertificate(pemCsr, this.entityType, this.entityMrn)
-              .subscribe(certificateBundle => {
+              .subscribe(certificate => {
                 crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(rawPrivKey => {
                   crypto.subtle.exportKey('spki', keyPair.publicKey).then(rawPubKey => {
-                    let privKey = new PrivateKeyInfo({schema: fromBER(rawPrivKey).result});
-                    let certs = this.convertCertChain(certificateBundle);
-                    let p12 = new PFX();
-                    this.pemCertificate = {
-                      certificate: certificateBundle,
-                      privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
-                      publicKey: this.toPem(rawPubKey, 'PUBLIC KEY')
-                    };
-                    this.isLoading = false;
+                    let privateKey = new PrivateKeyInfo({schema: fromBER(rawPrivKey).result});
+
+                    let rawCerts = this.convertCertChain(certificate);
+                    let certs = rawCerts.map(cert => new Certificate({schema: fromBER(cert).result}));
+                    let password = this.generatePassword();
+
+                    Promise.resolve().then(() => this.generatePKCS12(privateKey, certs, password)).then(result => {
+                      this.certificateBundle = {
+                        pemCertificate: {
+                          privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
+                          publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
+                          certificate: certificate
+                        },
+                        pkcs12Keystore: result,
+                        keystorePassword: password
+                      };
+                      this.isLoading = false;
+                    }, err => {
+                      console.error('PKCS12 keystore could not be generated', err);
+                      this.isLoading = false;
+                    });
                   }, err => {
                     console.error('Public key could not be exported', err);
                     this.isLoading = false;
@@ -124,15 +145,220 @@ export class CertificateIssueNewComponent implements OnInit {
     return `-----BEGIN ${type}-----\n${finalString}-----END ${type}-----\n`;
   }
 
-  private fromPem(pemString: string): ArrayBuffer {
-    let split = pemString.split('\n');
-    let tmp = split.slice(1, split.length);
-    let base64 = tmp.join('');
-    return Convert.FromBase64(base64);
+  private convertCertChain(pemCertChain: string): Array<ArrayBuffer> {
+    let certs = pemCertChain.split(/-----END CERTIFICATE-----/);
+    certs = certs.slice(0, certs.length - 1);
+    let tmp = certs.map(c => c.split(/-----BEGIN CERTIFICATE-----/)[1].replace(/\n/mg, ''));
+    return tmp.map(c => Convert.FromBase64(c));
   }
 
-  private convertCertChain(pemCertChain: string): Array<ArrayBuffer> {
-    let certs = pemCertChain.match(/-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----/mg);
-    return certs.map(this.fromPem);
+  private generatePassword(): string {
+    let charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_^';
+    let values = new Uint32Array(26);
+    crypto.getRandomValues(values);
+    let result = '';
+    for (let i = 0; i < values.length; i++) {
+      result += charset[values[i] % charset.length];
+    }
+    return result;
+  }
+
+  private generatePKCS12(privateKey: PrivateKeyInfo, certs: Array<Certificate>, password: string): Promise<ArrayBuffer> {
+    const keyLocalIDBuffer = new ArrayBuffer(4);
+    const keyLocalIDView = new Uint8Array(keyLocalIDBuffer);
+    getRandomValues(keyLocalIDView);
+
+    const certLocalIDBuffer = new ArrayBuffer(4);
+    const certLocalIDView = new Uint8Array(certLocalIDBuffer);
+    getRandomValues(certLocalIDView);
+
+    const caCertLocalIDBuffer = new ArrayBuffer(4);
+    const caCertLocalIDView = new Uint8Array(caCertLocalIDBuffer);
+    getRandomValues(caCertLocalIDView);
+
+    const bitArray = new ArrayBuffer(1);
+    const bitView = new Uint8Array(bitArray);
+
+    // tslint:disable-next-line:no-bitwise
+    bitView[0] |= 0x80;
+
+    const keyUsage = new BitString({
+      valueHex: bitArray,
+      unusedBits: 7
+    });
+
+    privateKey.attributes = [
+      new Attribute({
+        type: '2.5.29.15',
+        values: [
+          keyUsage
+        ]
+      })
+    ];
+
+    let certCn = '';
+    certs[0].subject.typesAndValues.forEach(t => {
+      if (t.type === '2.5.4.3') {
+        certCn = t.value.valueBlock.value;
+      }
+    });
+
+    let caCn = '';
+    certs[1].subject.typesAndValues.forEach(t => {
+      if (t.type === '2.5.4.3') {
+        caCn = t.value.valueBlock.value;
+      }
+    });
+
+    const pfx = new PFX({
+      parsedValue: {
+        integrityMode: 0,
+        authenticatedSafe: new AuthenticatedSafe({
+          parsedValue: {
+            safeContents: [
+              {
+                privacyMode: 0,
+                value: new SafeContents({
+                  safeBags: [
+                      new SafeBag({
+                        bagId: '1.2.840.113549.1.12.10.1.2',
+                        bagValue: new PKCS8ShroudedKeyBag({
+                          parsedValue: privateKey
+                        }),
+                        bagAttributes: [
+                            new Attribute({
+                              type: '1.2.840.113549.1.9.20', // friendlyName
+                              values: [
+                                  new BmpString({ value: 'PKCS8ShroudedKeyBag from PKIjs' })
+                              ]
+                            }),
+                            new Attribute({
+                              type: '1.2.840.113549.1.9.21', // localKeyID
+                              values: [
+                                  new OctetString({ valueHex: keyLocalIDBuffer })
+                              ]
+                            }),
+                            new Attribute({
+                              type: '1.3.6.1.4.1.311.17.1', // pkcs12KeyProviderNameAttr
+                              values: [
+                                  new BmpString({ value: 'MCP using https://pkijs.org/' })
+                              ]
+                            })
+                        ]
+                      })
+                  ]
+                })
+              },
+              {
+                privacyMode: 1,
+                value: new SafeContents({
+                  safeBags: [
+                      new SafeBag({
+                        bagId: '1.2.840.113549.1.12.10.1.3',
+                        bagValue: new CertBag({
+                          parsedValue: certs[0]
+                        }),
+                        bagAttributes: [
+                            new Attribute({
+                              type: '1.2.840.113549.1.9.20', // friendlyName
+                              values: [
+                                  new BmpString({ value: certCn })
+                              ]
+                            }),
+                            new Attribute({
+                              type: '1.2.840.113549.1.9.21', // localKeyID
+                              values: [
+                                  new OctetString({ valueHex: certLocalIDBuffer })
+                              ]
+                            }),
+                            new Attribute({
+                              type: '1.3.6.1.4.1.311.17.1', // pkcs12KeyProviderNameAttr
+                              values: [
+                                  new BmpString({ value: 'MCP using https://pkijs.org/' })
+                              ]
+                            })
+                        ]
+                      }),
+                      new SafeBag({
+                        bagId: '1.2.840.113549.1.12.10.1.3',
+                        bagValue: new CertBag({
+                          parsedValue: certs[1]
+                        }),
+                        bagAttributes: [
+                          new Attribute({
+                            type: '1.2.840.113549.1.9.20', // friendlyName
+                            values: [
+                              new BmpString({ value: caCn })
+                            ]
+                          }),
+                          new Attribute({
+                            type: '1.2.840.113549.1.9.21', // localKeyID
+                            values: [
+                              new OctetString({ valueHex: caCertLocalIDBuffer })
+                            ]
+                          }),
+                          new Attribute({
+                            type: '1.3.6.1.4.1.311.17.1', // pkcs12KeyProviderNameAttr
+                            values: [
+                              new BmpString({ value: 'MCP using https://pkijs.org/' })
+                            ]
+                          })
+                        ]
+                      })
+                  ]
+                })
+              }
+            ]
+          }
+        })
+      }
+    });
+
+    let passwordConverted = stringToArrayBuffer(password);
+    let sequence = Promise.resolve();
+
+    sequence = sequence.then(
+        () => pfx.parsedValue.authenticatedSafe.parsedValue.safeContents[0].value.safeBags[0].bagValue.makeInternalValues({
+          password: passwordConverted,
+          contentEncryptionAlgorithm: {
+            name: 'AES-CBC', // OpenSSL can handle AES-CBC only
+            length: 128
+          },
+          hmacHashAlgorithm: 'SHA-256',
+          iterationCount: 100000
+        })
+    );
+
+    sequence = sequence.then(
+        () => pfx.parsedValue.authenticatedSafe.makeInternalValues({
+          safeContents: [
+            {
+              // Empty parameters for first SafeContent since "No Privacy" protection mode there
+            },
+            {
+              password: passwordConverted,
+              contentEncryptionAlgorithm: {
+                name: 'AES-CBC', // OpenSSL can handle AES-CBC only
+                length: 128
+              },
+              hmacHashAlgorithm: 'SHA-256',
+              iterationCount: 100000
+            }
+          ]
+        })
+    );
+
+    sequence = sequence.then(
+        () => pfx.makeInternalValues({
+          password: passwordConverted,
+          iterations: 100000,
+          pbkdf2HashAlgorithm: 'SHA-256',
+          hmacHashAlgorithm: 'SHA-256'
+        })
+    );
+
+    sequence = sequence.then(() => pfx.toSchema().toBER(false));
+
+    return sequence;
   }
 }

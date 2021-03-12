@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES6",
     "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -15,12 +15,14 @@
       "dom",
       "es6"
     ],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": [
       "hammerjs",
       "node",
       "source-map",
       "uglify-js",
-      "webpack"
+      "webpack",
+      "pkijs"
     ]
   },
   "exclude": [

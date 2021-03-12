@@ -1,11 +1,10 @@
-import {Injectable} from "@angular/core";
-import {MCNotificationsService, MCNotificationType} from "./mc-notifications.service";
+import { Injectable } from "@angular/core";
+import { MCNotificationsService, MCNotificationType } from "./mc-notifications.service";
 import * as fileSaver from "file-saver";
 import * as JSZip from "jszip";
-import {Xml} from "../backend-api/service-registry/autogen/model/Xml";
-import {Doc} from "../backend-api/service-registry/autogen/model/Doc";
-import {CertificateBundle} from "../backend-api/identity-registry/autogen/model/CertificateBundle";
-import { PemCertificate } from '../backend-api/identity-registry/autogen/model/PemCertificate';
+import { Xml } from "../backend-api/service-registry/autogen/model/Xml";
+import { Doc } from "../backend-api/service-registry/autogen/model/Doc";
+import { CertificateBundle } from "../backend-api/identity-registry/autogen/model/CertificateBundle";
 
 @Injectable()
 export class FileHelperService {
@@ -13,16 +12,24 @@ export class FileHelperService {
 
   }
 
-  public downloadPemCertificate(certificateBundle:PemCertificate, entityName:string) {
+  public downloadPemCertificate(certificateBundle: CertificateBundle, entityName: string) {
     try {
       let nameNoSpaces = entityName.split(' ').join('_');
       let zip = new JSZip();
-      zip.file("Certificate_" + nameNoSpaces + ".pem", certificateBundle.certificate);
-      if (certificateBundle.privateKey) {
-        zip.file("PrivateKey_" + nameNoSpaces + ".pem", certificateBundle.privateKey);
+      zip.file("Certificate_" + nameNoSpaces + ".pem", certificateBundle.pemCertificate.certificate);
+      if (certificateBundle.pemCertificate.privateKey) {
+        zip.file("PrivateKey_" + nameNoSpaces + ".pem", certificateBundle.pemCertificate.privateKey);
       }
-      if (certificateBundle.publicKey) {
-        zip.file("PublicKey_" + nameNoSpaces + ".pem", certificateBundle.publicKey);
+      if (certificateBundle.pemCertificate.publicKey) {
+        zip.file("PublicKey_" + nameNoSpaces + ".pem", certificateBundle.pemCertificate.publicKey);
+      }
+      if (certificateBundle.keystorePassword) {
+        zip.file("KeystorePassword.txt", this.replaceNewLines(certificateBundle.keystorePassword));
+      }
+      if (certificateBundle.pkcs12Keystore) {
+        let p12ByteArray = certificateBundle.pkcs12Keystore;
+        let blob = new Blob([p12ByteArray]);
+        zip.file("Keystore_" + nameNoSpaces + ".p12", blob);
       }
       zip.generateAsync({type:"blob"}).then(function (content) {
         fileSaver.saveAs(content, "Certificate_" + nameNoSpaces + ".zip");
