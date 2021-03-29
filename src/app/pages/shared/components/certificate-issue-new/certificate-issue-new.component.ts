@@ -40,7 +40,9 @@ export class CertificateIssueNewComponent implements OnInit {
   public isLoading: boolean;
   public certificateBundle: CertificateBundle;
   public showModal: boolean = false;
+  public showIssueModal: boolean = false;
   public modalDescription: string;
+  public choiceModalDescription: string;
 
   public labelValues: Array<LabelValueModel>;
 
@@ -66,14 +68,39 @@ export class CertificateIssueNewComponent implements OnInit {
     this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle);
   }
 
+  public showChoiceModal() {
+    this.choiceModalDescription = `You are about to get a new certificate issued. Do you want to 
+        generate the key pair for the certificate locally in your browser or do you want to let the 
+        MIR API server generate it for you? NOTE that it is strongly recommended 
+        to NOT let the server generate the key pair for you due to that in case of a breach of the 
+        MIR API server, a malicious third party can potentially take control over your identity 
+        by stealing your private key when it is generated.
+        <br/>A third option is to generate the key pair and a CSR yourself - an example on how to 
+        do this can be found at 
+        <a href="https://github.com/maritimeconnectivity/IdentityRegistry#certificate-issuing-by-certificate-signing-request" target="_blank">GitHub</a>`;
+    this.showIssueModal = true;
+  }
+
   public showGenerationModal() {
-    this.modalDescription = 'Do you want to generate a PKCS#12 keystore from the issued certificate?' +
-        '<br/>Note that if you choose yes the generation might take a while and also that the resulting ' +
-        'PKCS#12 keystore CANNOT be imported by Windows.';
+    this.showIssueModal = false;
+    let nameNoSpaces = this.entityTitle.split(' ').join('_');
+    this.modalDescription = `Do you want to generate a PKCS#12 keystore from the issued certificate?
+        <br/>Note that if you choose 'Yes' the generation might take a while and also that the 
+        resulting PKCS#12 keystore is NOT compatible with any major operating system or browsers.
+        <br/>If you want to have a PKCS#12 keystore that is compatible with most operating systems 
+        and browser, you can click 'No' for now and then generate it using OpenSSL with the 
+        following command:
+        <br/>openssl pkcs12 -export -out keystore.p12 -in Certificate_${nameNoSpaces}.pem -inkey PrivateKey_${nameNoSpaces}`;
     this.showModal = true;
   }
 
-  public issueNew(generatePkcs12: boolean) {
+  public issueNewServer() {
+    this.showIssueModal = false;
+    this.isLoading = true;
+
+  }
+
+  public issueNewLocal(generatePkcs12: boolean) {
     this.showModal = false;
     this.isLoading = true;
     let ecKeyGenParams = {name: 'ECDSA', namedCurve: 'P-384', typedCurve: ''};
