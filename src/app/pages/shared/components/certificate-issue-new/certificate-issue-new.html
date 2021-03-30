@@ -32,5 +32,5 @@
     </ba-card>
   </div>
 </div>
-<mc-modal (onCancel)="issueNewServer()" (onOk)="showGenerationModal()" [show]="showIssueModal" [title]="'How do you want to generate your certificate key pair?'" [description]="choiceModalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Server'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Local'"></mc-modal>
+<mc-modal (onCancel)="issueNewServer()" (onOk)="showGenerationModal()" [show]="showIssueModal" [title]="'How do you want to generate your certificate key pair?'" [description]="choiceModalDescription" [cancelClass]="'btn btn-danger btn-raised'" [cancelTitle]="'Server'" [okClass]="'btn btn-success btn-raised'" [okTitle]="'Local'"></mc-modal>
 <mc-modal (onCancel)="issueNewLocal(false)" (onOk)="issueNewLocal(true)" [show]="showModal" [title]="'Generate PKCS#12 Keystore?'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'No'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Yes'"></mc-modal>

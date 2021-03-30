@@ -8,6 +8,7 @@ import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 import {PageUser} from "../autogen/model/PageUser";
 import {SortingHelper} from "../../shared/SortingHelper";
 import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
+import { CertificateBundle } from '../autogen/model/CertificateBundle';
 
 @Injectable()
 export class UsersService implements OnInit {
@@ -49,8 +50,11 @@ export class UsersService implements OnInit {
 		return this.createUserForOrg(orgMrn, user);
 	}
 
-  public issueNewCertificate(csr: string, userMrn:string) : Observable<string> {
+  public issueNewCertificate(csr: string, userMrn:string, useServerGeneratedKeys: boolean) : Observable<string | CertificateBundle> {
 	  let orgMrn = this.authService.authState.orgMrn;
+	  if (useServerGeneratedKeys) {
+	  	return this.userApi.newUserCertUsingGET(orgMrn, userMrn);
+	  }
 	  return this.userApi.newUserCertFromCsrUsingPOST(csr, orgMrn, userMrn);
   }
 

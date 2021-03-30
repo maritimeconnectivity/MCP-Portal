@@ -97,7 +97,14 @@ export class CertificateIssueNewComponent implements OnInit {
   public issueNewServer() {
     this.showIssueModal = false;
     this.isLoading = true;
-
+    this.certificateService.issueNewCertificate(null, this.entityType, this.entityMrn, true)
+        .subscribe((certificateBundle: CertificateBundle) => {
+          this.certificateBundle = certificateBundle;
+          this.isLoading = false;
+        }, err => {
+          this.isLoading = false;
+          this.notificationService.generateNotification('Error', 'Error when trying to issue new certificate', MCNotificationType.Error, err);
+        });
   }
 
   public issueNewLocal(generatePkcs12: boolean) {
@@ -115,11 +122,11 @@ export class CertificateIssueNewComponent implements OnInit {
         csr.sign(keyPair.privateKey, 'SHA-384').then(() => {
           let csrBytes = csr.toSchema().toBER(false);
           let pemCsr = this.toPem(csrBytes, 'CERTIFICATE REQUEST');
-          this.certificateService.issueNewCertificate(pemCsr, this.entityType, this.entityMrn)
-              .subscribe(certificate => {
-                crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(rawPrivKey => {
-                  crypto.subtle.exportKey('spki', keyPair.publicKey).then(rawPubKey => {
-                    let privateKey = new PrivateKeyInfo({schema: fromBER(rawPrivKey).result});
+          this.certificateService.issueNewCertificate(pemCsr, this.entityType, this.entityMrn, false)
+              .subscribe((certificate: string) => {
+                crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(rawPrivateKey => {
+                  crypto.subtle.exportKey('spki', keyPair.publicKey).then(rawPublicKey => {
+                    let privateKey = new PrivateKeyInfo({schema: fromBER(rawPrivateKey).result});
 
                     if (generatePkcs12) {
                       let rawCerts = this.convertCertChain(certificate);
@@ -129,8 +136,8 @@ export class CertificateIssueNewComponent implements OnInit {
                       Promise.resolve().then(() => this.generatePKCS12(privateKey, certs, password)).then(result => {
                         this.certificateBundle = {
                           pemCertificate: {
-                            privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
-                            publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
+                            privateKey: this.toPem(rawPrivateKey, 'PRIVATE KEY'),
+                            publicKey: this.toPem(rawPublicKey, 'PUBLIC KEY'),
                             certificate: certificate
                           },
                           pkcs12Keystore: result,
@@ -138,26 +145,26 @@ export class CertificateIssueNewComponent implements OnInit {
                         };
                         this.isLoading = false;
                       }, err => {
-                        console.error('PKCS12 keystore could not be generated', err);
                         this.isLoading = false;
+                        this.notificationService.generateNotification('Error', 'PKCS#12 keystore could not be generated', MCNotificationType.Error, err);
                       });
                     } else {
                       this.certificateBundle = {
                         pemCertificate: {
-                          privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
-                          publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
+                          privateKey: this.toPem(rawPrivateKey, 'PRIVATE KEY'),
+                          publicKey: this.toPem(rawPublicKey, 'PUBLIC KEY'),
                           certificate: certificate
                         }
                       };
                       this.isLoading = false;
                     }
                   }, err => {
-                    console.error('Public key could not be exported', err);
                     this.isLoading = false;
+                    this.notificationService.generateNotification('Error', 'Public key could not be exported', MCNotificationType.Error, err);
                   });
                 }, err => {
-                  console.error('Private key could not be exported', err);
                   this.isLoading = false;
+                  this.notificationService.generateNotification('Error', 'Private key could not be exported', MCNotificationType.Error, err);
                 });
               },
               err => {
@@ -201,7 +208,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   private generatePassword(): string {
-    let charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_^';
+    let charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_^$#&!%';
     let values = new Uint32Array(26);
     crypto.getRandomValues(values);
     let result = '';

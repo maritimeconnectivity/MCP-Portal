@@ -7,6 +7,7 @@ import { CertificateRevocation } from "../autogen/model/CertificateRevocation";
 import { PageVessel } from "../autogen/model/PageVessel";
 import { SortingHelper } from "../../shared/SortingHelper";
 import { PAGE_SIZE_DEFAULT } from "../../../shared/app.constants";
+import { CertificateBundle } from '../autogen/model/CertificateBundle';
 
 @Injectable()
 export class VesselsService {
@@ -48,31 +49,34 @@ export class VesselsService {
 		return this.vesselApi.getVesselUsingGET(orgMrn, vesselMrn);
 	}
 
-	public createVessel(vessel:Vessel) :Observable<Vessel> {
+	public createVessel(vessel:Vessel): Observable<Vessel> {
 		this.vesselsCache = null;
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.vesselApi.createVesselUsingPOST(orgMrn, vessel);
 	}
 
-	public updateVessel(vessel:Vessel) :Observable<Vessel> {
+	public updateVessel(vessel:Vessel): Observable<Vessel> {
 		this.vesselsCache = null;
 		let orgMrn = this.authService.authState.orgMrn;
 		return this.vesselApi.updateVesselUsingPUT(orgMrn, vessel.mrn, vessel);
 	}
 
-  public issueNewCertificate(csr: string, vesselMrn:string) : Observable<string> {
+  public issueNewCertificate(csr: string, vesselMrn:string, useServerGeneratedKeys: boolean): Observable<string | CertificateBundle> {
 	  this.vesselsCache = null;
 	  let orgMrn = this.authService.authState.orgMrn;
+	  if (useServerGeneratedKeys) {
+	  	return this.vesselApi.newVesselCertUsingGET(orgMrn, vesselMrn);
+	  }
 	  return this.vesselApi.newVesselCertFromCsrUsingPOST(csr, orgMrn, vesselMrn);
   }
 
-	public revokeCertificate(vesselMrn:string, certificateId:string, certicateRevocation:CertificateRevocation) : Observable<any> {
+	public revokeCertificate(vesselMrn:string, certificateId:string, certificateRevocation:CertificateRevocation) : Observable<any> {
 		this.vesselsCache = null;
 		let orgMrn = this.authService.authState.orgMrn;
-		return this.vesselApi.revokeVesselCertUsingPOST(orgMrn, vesselMrn, certificateId, certicateRevocation);
+		return this.vesselApi.revokeVesselCertUsingPOST(orgMrn, vesselMrn, certificateId, certificateRevocation);
 	}
 
-	public getVesselServices(vesselMrn:string) : Observable<any> {
+	public getVesselServices(vesselMrn:string): Observable<any> {
   		let orgMrn = this.authService.authState.orgMrn;
   		return this.vesselApi.getVesselServicesUsingGET(orgMrn, vesselMrn);
 	}

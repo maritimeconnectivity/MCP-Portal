@@ -114,6 +114,7 @@ export class ServiceDetailsViewComponent {
 		if (this.service) {
 			this.labelValues.push({label: 'MRN', valueHtml: this.service.mrn});
 			this.labelValues.push({label: 'Name', valueHtml: this.service.name});
+			this.labelValues.push({label: 'Version', valueHtml: this.service.instanceVersion});
 			this.labelValues.push({label: 'Permissions', valueHtml: this.service.permissions});
 			this.labelValues.push({label: 'Certificate domain name', valueHtml: this.service.certDomainName});
 			if (this.service.oidcRedirectUri) {
