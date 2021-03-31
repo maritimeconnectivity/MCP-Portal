@@ -46,6 +46,8 @@ export class CertificateIssueNewComponent implements OnInit {
 
   public labelValues: Array<LabelValueModel>;
 
+  private serverGeneratedKeys: boolean = false;
+
   constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService, private route: ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
   }
 
@@ -65,7 +67,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public zipAndDownload() {
-    this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle);
+    this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle, this.serverGeneratedKeys);
   }
 
   public showChoiceModal() {
@@ -94,12 +96,13 @@ export class CertificateIssueNewComponent implements OnInit {
     this.showModal = true;
   }
 
-  public issueNewServer() {
+  public issueNewWithServerKeys() {
     this.showIssueModal = false;
     this.isLoading = true;
     this.certificateService.issueNewCertificate(null, this.entityType, this.entityMrn, true)
         .subscribe((certificateBundle: CertificateBundle) => {
           this.certificateBundle = certificateBundle;
+          this.serverGeneratedKeys = true;
           this.isLoading = false;
         }, err => {
           this.isLoading = false;
@@ -107,7 +110,7 @@ export class CertificateIssueNewComponent implements OnInit {
         });
   }
 
-  public issueNewLocal(generatePkcs12: boolean) {
+  public issueNewWithLocalKeys(generatePkcs12: boolean) {
     this.showModal = false;
     this.isLoading = true;
     let ecKeyGenParams = {name: 'ECDSA', namedCurve: 'P-384', typedCurve: ''};

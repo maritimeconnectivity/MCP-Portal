@@ -22,7 +22,7 @@ export class CertificatesService implements OnInit {
   }
 
 	public issueNewCertificate(csr: string, entityType: CertificateEntityType, entityMrn: string,
-							   useServerGeneratedKeys: boolean) : Observable<string | CertificateBundle> {
+							   useServerGeneratedKeys: boolean): Observable<string | CertificateBundle> {
 		if (entityType == null || !entityMrn) { // We lost our state data somehow???
 			throw new Error('Internal state lost');
 		}

@@ -12,9 +12,19 @@ export class FileHelperService {
 
   }
 
-  public downloadPemCertificate(certificateBundle: CertificateBundle, entityName: string) {
+  public downloadPemCertificate(certificateBundle: CertificateBundle, entityName: string,
+                                serverGeneratedKeys: boolean) {
     try {
       let nameNoSpaces = entityName.split(' ').join('_');
+      if (serverGeneratedKeys) {
+        certificateBundle.pemCertificate.certificate = this.replaceNewLines(certificateBundle.pemCertificate.certificate);
+        if (certificateBundle.pemCertificate.publicKey)
+          certificateBundle.pemCertificate.publicKey = this.replaceNewLines(certificateBundle.pemCertificate.publicKey);
+        if (certificateBundle.pemCertificate.privateKey)
+          certificateBundle.pemCertificate.privateKey = this.replaceNewLines(certificateBundle.pemCertificate.privateKey);
+        if (certificateBundle.pkcs12Keystore)
+          certificateBundle.pkcs12Keystore = this.convertBase64ToByteArray(certificateBundle.pkcs12Keystore as string).buffer;
+      }
       let zip = new JSZip();
       zip.file("Certificate_" + nameNoSpaces + ".pem", certificateBundle.pemCertificate.certificate);
       if (certificateBundle.pemCertificate.privateKey) {
@@ -25,6 +35,11 @@ export class FileHelperService {
       }
       if (certificateBundle.keystorePassword) {
         zip.file("KeystorePassword.txt", this.replaceNewLines(certificateBundle.keystorePassword));
+      }
+      if (certificateBundle.jksKeystore) {
+        let jksByteArray = this.convertBase64ToByteArray(certificateBundle.jksKeystore);
+        let blob = new Blob([jksByteArray]);
+        zip.file("Keystore_" + nameNoSpaces + ".jks", blob);
       }
       if (certificateBundle.pkcs12Keystore) {
         let p12ByteArray = certificateBundle.pkcs12Keystore;
@@ -88,25 +103,25 @@ export class FileHelperService {
     }
   }
 
-  private convertBase64ToByteArray(bas64Content:string):Uint8Array {
-    let byteCharacters  = window.atob(bas64Content);
-    var byteNumbers = new Array(byteCharacters.length);
-    for (var i = 0; i < byteCharacters.length; i++) {
+  private convertBase64ToByteArray(base64Content: string): Uint8Array {
+    let byteCharacters  = window.atob(base64Content);
+    let byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     return new Uint8Array(byteNumbers);
   }
 
-  private generateError(error:any):void {
+  private generateError(error: any): void {
     this.notificationService.generateNotification('Error', 'Error when trying to download file', MCNotificationType.Error, error);
   }
 
-  private replaceNewLines(stringToReplace:string) {
-    var replaceString = "\n";
+  private replaceNewLines(stringToReplace: string) {
+    let replaceString = "\n";
     if (navigator.appVersion.indexOf("Win")!=-1){
       replaceString = "\r\n";
     }
-    return (!stringToReplace) ? '' : stringToReplace.replace(/(\r\n|\n|\r)/gm, "").replace(/(\\n)/gm, replaceString);
+    return (!stringToReplace) ? '' : stringToReplace.replace(/(\\n)/gm, replaceString);
   }
 
 }
