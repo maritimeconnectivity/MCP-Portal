@@ -10,7 +10,7 @@ import {ModalDirective} from 'ng2-bootstrap/ng2-bootstrap';
 export class McModal {
 	@ViewChild('confirmModal') public confirmModal:ModalDirective;
 	@Input() show:boolean;
-  @Input() title:string;
+  	@Input() title:string;
 	@Input() description:string;
 	@Input() okTitle:string;
 	@Input() okClass:string;
@@ -20,8 +20,9 @@ export class McModal {
 	@Output() onOk:EventEmitter<any> = new EventEmitter<any>();
 
 	private isShowing:boolean = false;
-  constructor() {
-  }
+
+  	constructor() {
+  	}
 
 	ngOnChanges() {
 		if (this.show && !this.isShowing) {
