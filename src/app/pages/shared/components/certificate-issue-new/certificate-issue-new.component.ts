@@ -86,15 +86,19 @@ export class CertificateIssueNewComponent implements OnInit {
   public showGenerationModal() {
     this.showIssueModal = false;
     let nameNoSpaces = this.entityTitle.split(' ').join('_');
-    this.modalDescription = `Do you want to generate a PKCS#12 keystore from the issued certificate?
-        <br/>Note that if you choose 'Yes' the generation might take a while and also that the 
-        resulting PKCS#12 keystore is NOT compatible with any major operating systems or browsers.
-        <br/>If you want to have a PKCS#12 keystore that is compatible with most operating systems 
-        and browsers, you can click 'No', download the resulting zip file, unzip it and then generate 
-        the keystore using OpenSSL with the following command:
-        <br/><pre>openssl pkcs12 -export -out keystore.p12 -in Certificate_${nameNoSpaces}.pem -inkey PrivateKey_${nameNoSpaces}.pem</pre>
-        This will prompt you for a passphrase which is very important that you remember.
-        <br/>This will result in a PKCS#12 keystore file called 'keystore.p12'`;
+    this.modalDescription = `Many operating systems and browsers require that certificates are 
+        imported as a password protected PKCS#12 keystore. This can be generated either manually 
+        using OpenSSL or by letting the browser generate it for you. 
+        If you want to manually generate the keystore, which is the recommended approach, you should click 'Manual', download the 
+        resulting zip file, unzip it and then use OpenSSL to generate the keystore using the following 
+        command:
+        <br><pre>openssl pkcs12 -export -out keystore.p12 -in Certificate_${nameNoSpaces}.pem -inkey PrivateKey_${nameNoSpaces}.pem</pre>
+        This will prompt you for a passphrase to protect the keystore. If successful the command will 
+        result in a PKCS#12 keystore file called 'keystore.p12'.
+        <br>If you don't want to generate a keystore at all you can just skip executing the OpenSSL command.
+        <br>As an alternative you can also let your browser generate a keystore for you by clicking 
+        'Browser'. NOTE that this action will take a little while and the resulting keystore will 
+        NOT be compatible with most major operating systems and browsers.`;
     this.showModal = true;
   }
 
