@@ -80,7 +80,9 @@ export class CertificateIssueNewComponent implements OnInit {
         MIR API server generate it for you? NOTE that it is strongly recommended 
         to NOT let the server generate the key pair for you as in case of a breach of the 
         MIR API server, a malicious third party can potentially take control over your identity 
-        by stealing your private key when it is generated.
+        by stealing your private key when it is generated. Also note that the possibility of 
+        getting server generated key pairs will be removed completely in the future, and that MCP 
+        ID service providers can already choose to disable it now.
         <br/>A third option is to generate the key pair and a CSR yourself - an example on how to 
         do this can be found 
         <a href="https://github.com/maritimeconnectivity/IdentityRegistry#certificate-issuing-by-certificate-signing-request" target="_blank">here</a>`;
