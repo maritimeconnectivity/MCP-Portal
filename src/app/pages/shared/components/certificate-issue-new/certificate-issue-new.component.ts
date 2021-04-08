@@ -71,6 +71,10 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public showChoiceModal() {
+    if (this.showIssueModal) {
+      this.showIssueModal = false;
+    }
+    this.showModal = false;
     this.choiceModalDescription = `You are about to get a new certificate issued. Do you want to 
         generate the key pair for the certificate locally in your browser or do you want to let the 
         MIR API server generate it for you? NOTE that it is strongly recommended 
@@ -89,9 +93,9 @@ export class CertificateIssueNewComponent implements OnInit {
     this.modalDescription = `Many operating systems and browsers require that certificates are 
         imported as a password protected PKCS#12 keystore. This can be generated either manually 
         using OpenSSL or by letting the browser generate it for you. 
-        If you want to manually generate the keystore, which is the recommended approach, you should click 'Manual', download the 
-        resulting zip file, unzip it and then use OpenSSL to generate the keystore using the following 
-        command:
+        If you want to manually generate the keystore, which is the recommended approach, 
+        you should click 'Manual', download the resulting zip file, unzip it and then use OpenSSL 
+        to generate the keystore using the following command:
         <br><pre>openssl pkcs12 -export -out keystore.p12 -in Certificate_${nameNoSpaces}.pem -inkey PrivateKey_${nameNoSpaces}.pem</pre>
         This will prompt you for a passphrase to protect the keystore. If successful the command will 
         result in a PKCS#12 keystore file called 'keystore.p12'.
