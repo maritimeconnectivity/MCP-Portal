@@ -26,6 +26,7 @@ import SafeContents from 'pkijs/build/SafeContents';
 import PKCS8ShroudedKeyBag from 'pkijs/build/PKCS8ShroudedKeyBag';
 import Attribute from 'pkijs/build/Attribute';
 import { getRandomValues } from 'pkijs/build/common';
+import { UserError } from '../../../../shared/UserError';
 
 @Component({
   selector: 'certificate-issue-new',
@@ -118,6 +119,12 @@ export class CertificateIssueNewComponent implements OnInit {
           this.isLoading = false;
         }, err => {
           this.isLoading = false;
+          if (err.status === 410) {
+            let userErr = new UserError('Operation not supported', err);
+            this.notificationService.generateNotification('Operation not supported',
+                'Generating certificates with server generated keys is not supported by this ID provider', MCNotificationType.Alert, userErr);
+            return;
+          }
           this.notificationService.generateNotification('Error', 'Error when trying to issue new certificate', MCNotificationType.Error, err);
         });
   }
