@@ -1,12 +1,12 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {ServicecontrollerApi} from "../autogen/api/ServicecontrollerApi";
-import {AuthService} from "../../../authentication/services/auth.service";
-import {Service} from "../autogen/model/Service";
-import {PemCertificate} from "../autogen/model/PemCertificate";
-import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
-import {PageService} from "../autogen/model/PageService";
-import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
+import { Injectable, OnInit } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import { ServicecontrollerApi } from "../autogen/api/ServicecontrollerApi";
+import { AuthService } from "../../../authentication/services/auth.service";
+import { Service } from "../autogen/model/Service";
+import { CertificateRevocation } from "../autogen/model/CertificateRevocation";
+import { PageService } from "../autogen/model/PageService";
+import { PAGE_SIZE_DEFAULT } from "../../../shared/app.constants";
+import { CertificateBundle } from '../autogen/model/CertificateBundle';
 
 @Injectable()
 export class IdServicesService implements OnInit {
@@ -45,8 +45,12 @@ export class IdServicesService implements OnInit {
 		return this.servicesApi.getOrganizationServicesUsingGET(orgMrn, 0, PAGE_SIZE_DEFAULT);
 	}
 
-	public issueNewCertificate(csr: string, serviceMrn:string, serviceVersion:string) : Observable<string> {
+	public issueNewCertificate(csr: string, serviceMrn:string, serviceVersion:string,
+							   useServerGeneratedKeys: boolean) : Observable<string | CertificateBundle> {
 		let orgMrn = this.authService.authState.orgMrn;
+		if (useServerGeneratedKeys) {
+			return this.servicesApi.newServiceCertUsingGET(orgMrn, serviceMrn, serviceVersion);
+		}
 		return this.servicesApi.newServiceCertFromCsrUsingPOST(csr, orgMrn, serviceMrn, serviceVersion);
 	}
 

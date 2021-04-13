@@ -26,6 +26,7 @@ import SafeContents from 'pkijs/build/SafeContents';
 import PKCS8ShroudedKeyBag from 'pkijs/build/PKCS8ShroudedKeyBag';
 import Attribute from 'pkijs/build/Attribute';
 import { getRandomValues } from 'pkijs/build/common';
+import { UserError } from '../../../../shared/UserError';
 
 @Component({
   selector: 'certificate-issue-new',
@@ -40,9 +41,13 @@ export class CertificateIssueNewComponent implements OnInit {
   public isLoading: boolean;
   public certificateBundle: CertificateBundle;
   public showModal: boolean = false;
+  public showIssueModal: boolean = false;
   public modalDescription: string;
+  public choiceModalDescription: string;
 
   public labelValues: Array<LabelValueModel>;
+
+  private serverGeneratedKeys: boolean = false;
 
   constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService, private route: ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
   }
@@ -63,17 +68,68 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public zipAndDownload() {
-    this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle);
+    this.fileHelper.downloadPemCertificate(this.certificateBundle, this.entityTitle, this.serverGeneratedKeys);
+  }
+
+  public showChoiceModal() {
+    if (this.showIssueModal) {
+      this.showIssueModal = false;
+    }
+    this.showModal = false;
+    this.choiceModalDescription = `You are about to get a new certificate issued. Do you want to 
+        generate the key pair for the certificate locally in your browser or do you want to let the 
+        MIR API server generate it for you? NOTE that it is strongly recommended 
+        to NOT let the server generate the key pair for you as in case of a breach of the 
+        MIR API server, a malicious third party can potentially take control over your identity 
+        by stealing your private key when it is generated. Also note that the possibility of 
+        getting server generated key pairs will be removed completely in the future, and that MCP 
+        ID service providers can already choose to disable it now.
+        <br/>A third option is to generate the key pair and a CSR yourself - an example on how to 
+        do this can be found 
+        <a href="https://github.com/maritimeconnectivity/IdentityRegistry#certificate-issuing-by-certificate-signing-request" target="_blank">here</a>`;
+    this.showIssueModal = true;
   }
 
   public showGenerationModal() {
-    this.modalDescription = 'Do you want to generate a PKCS#12 keystore from the issued certificate?' +
-        '<br/>Note that if you choose yes the generation might take a while and also that the resulting ' +
-        'PKCS#12 keystore CANNOT be imported by Windows.';
+    this.showIssueModal = false;
+    let nameNoSpaces = this.entityTitle.split(' ').join('_');
+    this.modalDescription = `Many operating systems and browsers require that certificates are 
+        imported as a password protected PKCS#12 keystore. This can be generated either manually 
+        using OpenSSL or by letting the browser generate it for you. 
+        If you want to manually generate the keystore, which is the recommended approach, 
+        you should click 'Manual', download the resulting zip file, unzip it and then use OpenSSL 
+        to generate the keystore using the following command:
+        <br><pre>openssl pkcs12 -export -out keystore.p12 -in Certificate_${nameNoSpaces}.pem -inkey PrivateKey_${nameNoSpaces}.pem</pre>
+        This will prompt you for a passphrase to protect the keystore. If successful the command will 
+        result in a PKCS#12 keystore file called 'keystore.p12'.
+        <br>If you don't want to generate a keystore at all you can just skip executing the OpenSSL command.
+        <br>As an alternative you can also let your browser generate a keystore for you by clicking 
+        'Browser'. NOTE that this action will take a little while and the resulting keystore will 
+        NOT be compatible with most major operating systems and browsers.`;
     this.showModal = true;
   }
 
-  public issueNew(generatePkcs12: boolean) {
+  public issueNewWithServerKeys() {
+    this.showIssueModal = false;
+    this.isLoading = true;
+    this.certificateService.issueNewCertificate(null, this.entityType, this.entityMrn, true)
+        .subscribe((certificateBundle: CertificateBundle) => {
+          this.certificateBundle = certificateBundle;
+          this.serverGeneratedKeys = true;
+          this.isLoading = false;
+        }, err => {
+          this.isLoading = false;
+          if (err.status === 410) {
+            let userErr = new UserError('Operation not supported', err);
+            this.notificationService.generateNotification('Operation not supported',
+                'Generating certificates with server generated keys is not supported by this ID provider', MCNotificationType.Alert, userErr);
+            return;
+          }
+          this.notificationService.generateNotification('Error', 'Error when trying to issue new certificate', MCNotificationType.Error, err);
+        });
+  }
+
+  public issueNewWithLocalKeys(generatePkcs12: boolean) {
     this.showModal = false;
     this.isLoading = true;
     let ecKeyGenParams = {name: 'ECDSA', namedCurve: 'P-384', typedCurve: ''};
@@ -88,11 +144,11 @@ export class CertificateIssueNewComponent implements OnInit {
         csr.sign(keyPair.privateKey, 'SHA-384').then(() => {
           let csrBytes = csr.toSchema().toBER(false);
           let pemCsr = this.toPem(csrBytes, 'CERTIFICATE REQUEST');
-          this.certificateService.issueNewCertificate(pemCsr, this.entityType, this.entityMrn)
-              .subscribe(certificate => {
-                crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(rawPrivKey => {
-                  crypto.subtle.exportKey('spki', keyPair.publicKey).then(rawPubKey => {
-                    let privateKey = new PrivateKeyInfo({schema: fromBER(rawPrivKey).result});
+          this.certificateService.issueNewCertificate(pemCsr, this.entityType, this.entityMrn, false)
+              .subscribe((certificate: string) => {
+                crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(rawPrivateKey => {
+                  crypto.subtle.exportKey('spki', keyPair.publicKey).then(rawPublicKey => {
+                    let privateKey = new PrivateKeyInfo({schema: fromBER(rawPrivateKey).result});
 
                     if (generatePkcs12) {
                       let rawCerts = this.convertCertChain(certificate);
@@ -102,8 +158,8 @@ export class CertificateIssueNewComponent implements OnInit {
                       Promise.resolve().then(() => this.generatePKCS12(privateKey, certs, password)).then(result => {
                         this.certificateBundle = {
                           pemCertificate: {
-                            privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
-                            publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
+                            privateKey: this.toPem(rawPrivateKey, 'PRIVATE KEY'),
+                            publicKey: this.toPem(rawPublicKey, 'PUBLIC KEY'),
                             certificate: certificate
                           },
                           pkcs12Keystore: result,
@@ -111,26 +167,26 @@ export class CertificateIssueNewComponent implements OnInit {
                         };
                         this.isLoading = false;
                       }, err => {
-                        console.error('PKCS12 keystore could not be generated', err);
                         this.isLoading = false;
+                        this.notificationService.generateNotification('Error', 'PKCS#12 keystore could not be generated', MCNotificationType.Error, err);
                       });
                     } else {
                       this.certificateBundle = {
                         pemCertificate: {
-                          privateKey: this.toPem(rawPrivKey, 'PRIVATE KEY'),
-                          publicKey: this.toPem(rawPubKey, 'PUBLIC KEY'),
+                          privateKey: this.toPem(rawPrivateKey, 'PRIVATE KEY'),
+                          publicKey: this.toPem(rawPublicKey, 'PUBLIC KEY'),
                           certificate: certificate
                         }
                       };
                       this.isLoading = false;
                     }
                   }, err => {
-                    console.error('Public key could not be exported', err);
                     this.isLoading = false;
+                    this.notificationService.generateNotification('Error', 'Public key could not be exported', MCNotificationType.Error, err);
                   });
                 }, err => {
-                  console.error('Private key could not be exported', err);
                   this.isLoading = false;
+                  this.notificationService.generateNotification('Error', 'Private key could not be exported', MCNotificationType.Error, err);
                 });
               },
               err => {
@@ -174,7 +230,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   private generatePassword(): string {
-    let charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_^';
+    let charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_^$#&!%';
     let values = new Uint32Array(26);
     crypto.getRandomValues(values);
     let result = '';

@@ -19,6 +19,6 @@ export interface CertificateBundle {
 
     pemCertificate?: models.PemCertificate;
 
-    pkcs12Keystore?: ArrayBuffer;
+    pkcs12Keystore?: ArrayBuffer | string;
 
 }

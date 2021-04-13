@@ -7,6 +7,7 @@ import { CertificateRevocation } from "../autogen/model/CertificateRevocation";
 import { PageDevice } from "../autogen/model/PageDevice";
 import { SortingHelper } from "../../shared/SortingHelper";
 import { PAGE_SIZE_DEFAULT } from "../../../shared/app.constants";
+import { CertificateBundle } from '../autogen/model/CertificateBundle';
 
 @Injectable()
 export class DevicesService implements OnInit {
@@ -44,8 +45,11 @@ export class DevicesService implements OnInit {
 		return this.deviceApi.updateDeviceUsingPUT(orgMrn, device.mrn, device);
 	}
 
-	public issueNewCertificate(csr: string, deviceMrn:string) : Observable<string> {
+	public issueNewCertificate(csr: string, deviceMrn:string, useServerGeneratedKeys: boolean) : Observable<string | CertificateBundle> {
 		let orgMrn = this.authService.authState.orgMrn;
+		if (useServerGeneratedKeys) {
+			return this.deviceApi.newDeviceCertUsingGET(orgMrn, deviceMrn);
+		}
 		return this.deviceApi.newDeviceCertFromCsrUsingPOST(csr, deviceMrn, orgMrn);
 	}
 

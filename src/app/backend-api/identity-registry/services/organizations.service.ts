@@ -7,6 +7,7 @@ import {PemCertificate} from "../autogen/model/PemCertificate";
 import {CertificateRevocation} from "../autogen/model/CertificateRevocation";
 import {SortingHelper} from "../../shared/SortingHelper";
 import {PAGE_SIZE_DEFAULT} from "../../../shared/app.constants";
+import { CertificateBundle } from '../autogen/model/CertificateBundle';
 
 @Injectable()
 export class OrganizationsService implements OnInit {
@@ -108,18 +109,28 @@ export class OrganizationsService implements OnInit {
 		});
 	}
 
-	public issueNewCertificate(csr: string) : Observable<string> {
+	public issueNewCertificate(csr: string, useServerGeneratedKeys: boolean): Observable<string | CertificateBundle> {
 		return Observable.create(observer => {
 			let orgMrn = this.authService.authState.orgMrn;
-			this.organizationApi.newOrgCertFromCsrUsingPOST(csr, orgMrn).subscribe(
-				pemCertificate => {
-					this.myOrganization = null; // We need to reload the org now we have a new certificate
-					observer.next(pemCertificate);
-				},
-				err => {
-					observer.error(err);
-				}
-			);
+			if (useServerGeneratedKeys) {
+				this.organizationApi.newOrgCertUsingGET(orgMrn).subscribe(
+					certBundle => {
+						this.myOrganization = null;
+						observer.next(certBundle);
+					},
+					err => observer.error(err)
+				);
+			} else {
+				this.organizationApi.newOrgCertFromCsrUsingPOST(csr, orgMrn).subscribe(
+					pemCertificate => {
+						this.myOrganization = null; // We need to reload the org now we have a new certificate
+						observer.next(pemCertificate);
+					},
+					err => {
+						observer.error(err);
+					}
+				);
+			}
 		});
 	}
 

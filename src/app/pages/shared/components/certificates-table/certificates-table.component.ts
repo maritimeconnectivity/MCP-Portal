@@ -154,7 +154,7 @@ export class CertificatesTableComponent implements OnChanges{
   public download(certificate:Certificate) {
     let pemCertificate:PemCertificate = {certificate:certificate.certificate};
     let certBundle:CertificateBundle = {pemCertificate:pemCertificate};
-    this.fileHelper.downloadPemCertificate(certBundle, this.certificateTitle);
+    this.fileHelper.downloadPemCertificate(certBundle, this.certificateTitle, true);
   }
 
   public canCreate(): boolean {
