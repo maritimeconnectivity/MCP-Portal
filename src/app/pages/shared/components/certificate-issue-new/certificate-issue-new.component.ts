@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   MCNotificationsService,
   MCNotificationType
@@ -7,7 +7,7 @@ import { NavigationHelperService, queryKeys } from "../../../../shared/navigatio
 import { ActivatedRoute } from "@angular/router";
 import { CertificateEntityType } from "../../services/certificate-helper.service";
 import { CertificatesService } from "../../../../backend-api/identity-registry/services/certificates.service";
-import { LabelValueModel, McModal } from "../../../../theme/components";
+import { LabelValueModel } from "../../../../theme/components";
 import { FileHelperService } from "../../../../shared/file-helper.service";
 import { TOKEN_DELIMITER } from "../../../../shared/app.constants";
 import { BitString, BmpString, fromBER, OctetString, PrintableString } from 'asn1js';
@@ -27,7 +27,6 @@ import PKCS8ShroudedKeyBag from 'pkijs/build/PKCS8ShroudedKeyBag';
 import Attribute from 'pkijs/build/Attribute';
 import { getRandomValues } from 'pkijs/build/common';
 import { UserError } from '../../../../shared/UserError';
-import { View } from 'openlayers';
 
 @Component({
   selector: 'certificate-issue-new',
@@ -50,7 +49,9 @@ export class CertificateIssueNewComponent implements OnInit {
 
   private serverGeneratedKeys: boolean = false;
 
-  constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService, private route: ActivatedRoute, private navigationHelper: NavigationHelperService, private notificationService: MCNotificationsService) {
+  constructor(private fileHelper: FileHelperService, private certificateService: CertificatesService,
+              private route: ActivatedRoute, private navigationHelper: NavigationHelperService,
+              private notificationService: MCNotificationsService) {
   }
 
   ngOnInit() {
@@ -59,7 +60,8 @@ export class CertificateIssueNewComponent implements OnInit {
     let entityMrn = this.route.snapshot.queryParams[queryKeys.ENTITY_MRN];
     let entityTitle = this.route.snapshot.queryParams[queryKeys.ENTITY_TITLE];
     if (entityType == null || !entityMrn || !entityTitle) {
-      this.notificationService.generateNotification("Error", "Unresolved state when trying to issue new certificate", MCNotificationType.Error);
+      this.notificationService.generateNotification('Error',
+          'Unresolved state when trying to issue new certificate', MCNotificationType.Error);
       this.navigationHelper.takeMeHome();
     }
     this.entityMrn = entityMrn;
@@ -123,10 +125,12 @@ export class CertificateIssueNewComponent implements OnInit {
           if (err.status === 410) {
             let userErr = new UserError('Operation not supported', err);
             this.notificationService.generateNotification('Operation not supported',
-                'Generating certificates with server generated keys is not supported by this ID provider', MCNotificationType.Alert, userErr);
+                'Generating certificates with server generated keys is not supported by ' +
+                'this ID provider', MCNotificationType.Alert, userErr);
             return;
           }
-          this.notificationService.generateNotification('Error', 'Error when trying to issue new certificate', MCNotificationType.Error, err);
+          this.notificationService.generateNotification('Error',
+              'Error when trying to issue new certificate', MCNotificationType.Error, err);
         });
   }
 
@@ -153,10 +157,12 @@ export class CertificateIssueNewComponent implements OnInit {
 
                     if (generatePkcs12) {
                       let rawCerts = this.convertCertChain(certificate);
-                      let certs = rawCerts.map(cert => new Certificate({schema: fromBER(cert).result}));
+                      let certs = rawCerts.map(cert =>
+                          new Certificate({schema: fromBER(cert).result}));
                       let password = this.generatePassword();
 
-                      Promise.resolve().then(() => this.generatePKCS12(privateKey, certs, password)).then(result => {
+                      Promise.resolve().then(() =>
+                          this.generatePKCS12(privateKey, certs, password)).then(result => {
                         this.certificateBundle = {
                           pemCertificate: {
                             privateKey: this.toPem(rawPrivateKey, 'PRIVATE KEY'),
@@ -169,7 +175,9 @@ export class CertificateIssueNewComponent implements OnInit {
                         this.isLoading = false;
                       }, err => {
                         this.isLoading = false;
-                        this.notificationService.generateNotification('Error', 'PKCS#12 keystore could not be generated', MCNotificationType.Error, err);
+                        this.notificationService.generateNotification('Error',
+                            'PKCS#12 keystore could not be generated',
+                            MCNotificationType.Error, err);
                       });
                     } else {
                       this.certificateBundle = {
@@ -183,23 +191,27 @@ export class CertificateIssueNewComponent implements OnInit {
                     }
                   }, err => {
                     this.isLoading = false;
-                    this.notificationService.generateNotification('Error', 'Public key could not be exported', MCNotificationType.Error, err);
+                    this.notificationService.generateNotification('Error',
+                        'Public key could not be exported', MCNotificationType.Error, err);
                   });
                 }, err => {
                   this.isLoading = false;
-                  this.notificationService.generateNotification('Error', 'Private key could not be exported', MCNotificationType.Error, err);
+                  this.notificationService.generateNotification('Error',
+                      'Private key could not be exported', MCNotificationType.Error, err);
                 });
               },
               err => {
                 this.isLoading = false;
-                this.notificationService.generateNotification('Error', 'Error when trying to issue new certificate', MCNotificationType.Error, err);
+                this.notificationService.generateNotification('Error',
+                    'Error when trying to issue new certificate', MCNotificationType.Error, err);
               }
           );
         });
       });
     }, err => {
       this.isLoading = false;
-      this.notificationService.generateNotification('Error', 'Error when trying to issue new certificate', MCNotificationType.Error, err);
+      this.notificationService.generateNotification('Error',
+          'Error when trying to issue new certificate', MCNotificationType.Error, err);
     });
   }
 
@@ -396,7 +408,8 @@ export class CertificateIssueNewComponent implements OnInit {
     let sequence = Promise.resolve();
 
     sequence = sequence.then(
-        () => pfx.parsedValue.authenticatedSafe.parsedValue.safeContents[0].value.safeBags[0].bagValue.makeInternalValues({
+        () => pfx.parsedValue.authenticatedSafe.parsedValue.safeContents[0].value
+            .safeBags[0].bagValue.makeInternalValues({
           password: passwordConverted,
           contentEncryptionAlgorithm: {
             name: 'AES-CBC', // OpenSSL can handle AES-CBC only

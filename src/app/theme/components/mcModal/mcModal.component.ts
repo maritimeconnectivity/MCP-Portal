@@ -30,6 +30,14 @@ export class McModal {
     constructor() {
     }
 
+    ngOnInit() {
+        this.confirmModal.onHide.subscribe(() => {
+            if (this.show) {
+                this.onClose.emit('');
+            }
+        });
+    }
+
     ngOnChanges() {
         if (this.show) {
             this.confirmModal.show();
