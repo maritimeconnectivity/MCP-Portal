@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
   MCNotificationsService,
   MCNotificationType
@@ -7,7 +7,7 @@ import { NavigationHelperService, queryKeys } from "../../../../shared/navigatio
 import { ActivatedRoute } from "@angular/router";
 import { CertificateEntityType } from "../../services/certificate-helper.service";
 import { CertificatesService } from "../../../../backend-api/identity-registry/services/certificates.service";
-import { LabelValueModel } from "../../../../theme/components";
+import { LabelValueModel, McModal } from "../../../../theme/components";
 import { FileHelperService } from "../../../../shared/file-helper.service";
 import { TOKEN_DELIMITER } from "../../../../shared/app.constants";
 import { BitString, BmpString, fromBER, OctetString, PrintableString } from 'asn1js';
@@ -27,6 +27,7 @@ import PKCS8ShroudedKeyBag from 'pkijs/build/PKCS8ShroudedKeyBag';
 import Attribute from 'pkijs/build/Attribute';
 import { getRandomValues } from 'pkijs/build/common';
 import { UserError } from '../../../../shared/UserError';
+import { View } from 'openlayers';
 
 @Component({
   selector: 'certificate-issue-new',
@@ -40,8 +41,8 @@ export class CertificateIssueNewComponent implements OnInit {
   public entityTitle: string;
   public isLoading: boolean;
   public certificateBundle: CertificateBundle;
-  public showModal: boolean = false;
-  public showIssueModal: boolean = false;
+  public showLocalIssueModal: boolean = false;
+  public showsChoiceModal: boolean = false;
   public modalDescription: string;
   public choiceModalDescription: string;
 
@@ -72,10 +73,10 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public showChoiceModal() {
-    if (this.showIssueModal) {
-      this.showIssueModal = false;
+    if (this.showsChoiceModal) {
+      this.showsChoiceModal = false;
     }
-    this.showModal = false;
+    this.showLocalIssueModal = false;
     this.choiceModalDescription = `You are about to get a new certificate issued. Do you want to 
         generate the key pair for the certificate locally in your browser or do you want to let the 
         MIR API server generate it for you? NOTE that it is strongly recommended 
@@ -87,11 +88,11 @@ export class CertificateIssueNewComponent implements OnInit {
         <br/>A third option is to generate the key pair and a CSR yourself - an example on how to 
         do this can be found 
         <a href="https://github.com/maritimeconnectivity/IdentityRegistry#certificate-issuing-by-certificate-signing-request" target="_blank">here</a>`;
-    this.showIssueModal = true;
+    this.showsChoiceModal = true;
   }
 
   public showGenerationModal() {
-    this.showIssueModal = false;
+    this.showsChoiceModal = false;
     let nameNoSpaces = this.entityTitle.split(' ').join('_');
     this.modalDescription = `Many operating systems and browsers require that certificates are 
         imported as a password protected PKCS#12 keystore. This can be generated either manually 
@@ -106,11 +107,11 @@ export class CertificateIssueNewComponent implements OnInit {
         <br>As an alternative you can also let your browser generate a keystore for you by clicking 
         'Browser'. NOTE that this action will take a little while and the resulting keystore will 
         NOT be compatible with most major operating systems and browsers.`;
-    this.showModal = true;
+    this.showLocalIssueModal = true;
   }
 
   public issueNewWithServerKeys() {
-    this.showIssueModal = false;
+    this.showsChoiceModal = false;
     this.isLoading = true;
     this.certificateService.issueNewCertificate(null, this.entityType, this.entityMrn, true)
         .subscribe((certificateBundle: CertificateBundle) => {
@@ -130,7 +131,7 @@ export class CertificateIssueNewComponent implements OnInit {
   }
 
   public issueNewWithLocalKeys(generatePkcs12: boolean) {
-    this.showModal = false;
+    this.showLocalIssueModal = false;
     this.isLoading = true;
     let ecKeyGenParams = {name: 'ECDSA', namedCurve: 'P-384', typedCurve: ''};
     let keyResult = crypto.subtle.generateKey(ecKeyGenParams, true, ['sign', 'verify']);

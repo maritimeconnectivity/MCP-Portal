@@ -25,21 +25,19 @@ export class McModal {
     @Input() cancelClass?: string;
     @Output() onCancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() onOk: EventEmitter<any> = new EventEmitter<any>();
-
-    private isShowing: boolean = false;
+    @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
     constructor() {
     }
 
     ngOnChanges() {
-        if (this.show && !this.isShowing) {
+        if (this.show) {
             this.confirmModal.show();
         }
     }
 
     public hideConfirmModal(): void {
         this.confirmModal.hide();
-        this.isShowing = false;
     }
 
     public ok() {
@@ -49,6 +47,11 @@ export class McModal {
 
     public cancel() {
         this.onCancel.emit('');
+        this.hideConfirmModal();
+    }
+
+    public close() {
+        this.onClose.emit('');
         this.hideConfirmModal();
     }
 }

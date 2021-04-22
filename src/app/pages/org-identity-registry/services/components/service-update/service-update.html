@@ -5,5 +5,5 @@
     </ba-card>
   </div>
 </div>
-<mc-modal (onCancel)="cancelModal()" (onOk)="showVesselAttWarning()" [show]="showModal" [title]="'Update service'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Update'"></mc-modal>
-<mc-modal (onCancel)="cancelModal()" (onOk)="updateForSure()" [show]="showModalVesselAtt" [title]="'Update service'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Update'"></mc-modal>
+<mc-modal (onCancel)="cancelModal()" (onOk)="showVesselAttWarning()" (onClose)="cancelModal()" [show]="showModal" [title]="'Update service'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Update'"></mc-modal>
+<mc-modal (onCancel)="cancelModal()" (onOk)="updateForSure()" (onClose)="cancelModal()" [show]="showModalVesselAtt" [title]="'Update service'" [description]="modalDescription" [cancelClass]="'btn btn-default btn-raised'" [cancelTitle]="'Cancel'" [okClass]="'btn btn-danger btn-raised'" [okTitle]="'Update'"></mc-modal>
