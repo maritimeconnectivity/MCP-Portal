@@ -27,12 +27,15 @@ export class McModal {
     @Output() onOk: EventEmitter<any> = new EventEmitter<any>();
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
+    // is set to true when we are still doing something to make sure that we don't shut down
+    private transitioning: boolean;
+
     constructor() {
     }
 
     ngOnInit() {
         this.confirmModal.onHide.subscribe(() => {
-            if (this.show) {
+            if (this.show && !this.transitioning) {
                 this.onClose.emit('');
             }
         });
@@ -50,11 +53,13 @@ export class McModal {
 
     public ok() {
         this.onOk.emit('');
+        this.transitioning = true;
         this.hideConfirmModal();
     }
 
     public cancel() {
         this.onCancel.emit('');
+        this.transitioning = true;
         this.hideConfirmModal();
     }
 
