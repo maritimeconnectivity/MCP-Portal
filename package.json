@@ -48,7 +48,7 @@
     "keycloak-js": "9.0.0",
     "leaflet": "0.7.7",
     "leaflet-map": "0.2.1",
-    "lodash": "4.17.19",
+    "lodash": "4.17.21",
     "lodash.merge": "4.6.2",
     "minimist": ">=0.2.1",
     "ng2-bootstrap": "1.1.5",
