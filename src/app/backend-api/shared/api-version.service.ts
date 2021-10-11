@@ -1,17 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
-import { BugReport } from "../autogen/model/BugReport";
-import { AuthService, AuthUser } from "../../../authentication/services/auth.service";
-import { BugReportControllerApi } from "../autogen/api/BugReportControllerApi";
-import { SWAGGER_LOCATION } from "../../shared/app.constants";
+import { MIR_SWAGGER_LOCATION, SWAGGER_LOCATION } from "../../shared/app.constants";
 import {
-    Headers,
-    Http,
-    RequestMethod,
-    RequestOptions,
-    RequestOptionsArgs,
-    Response,
-    URLSearchParams
+	Headers,
+	Http,
+	RequestMethod,
+	RequestOptions,
+	RequestOptionsArgs,
+	Response,
+	URLSearchParams
 } from "@angular/http";
 import { McHttpService } from "./mc-http.service";
 import { ServerUnreachableError } from "../../shared/ServerUnreachableError";
@@ -23,7 +20,7 @@ export class ApiVersionService {
   }
 
 	public getVersionOfIdentityRegistry():Observable<string> {
-		let jsonLocation =  IR_BASE_PATH + SWAGGER_LOCATION;
+		let jsonLocation =  IR_BASE_PATH + MIR_SWAGGER_LOCATION;
 		return this.getVersionFromSwagger(jsonLocation);
 	}
 
@@ -61,16 +58,6 @@ export class ApiVersionService {
 	}
 	
 	private getSwaggerJson(swaggerLocation:string): Observable<any> {
-		// to determine the Content-Type header
-		let consumes: string[] = [
-			'application/json'
-		];
-
-		// to determine the Accept header
-		let produces: string[] = [
-			'application/json;charset=UTF-8'
-		];
-
 		let requestOptions: RequestOptionsArgs = new RequestOptions({
 			method: RequestMethod.Get,
 			headers: new Headers(),

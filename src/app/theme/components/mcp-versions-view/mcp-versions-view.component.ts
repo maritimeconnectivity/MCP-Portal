@@ -1,7 +1,7 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {LabelValueModel} from "../mcLabelValueTable/index";
-import {ApiVersionService} from "../../../backend-api/shared/api-version.service";
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import { LabelValueModel } from "../mcLabelValueTable";
+import { ApiVersionService } from "../../../backend-api/shared/api-version.service";
 
 @Component({
   selector: 'mcp-versions-view',
