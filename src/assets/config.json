@@ -1,8 +1,0 @@
-{
-    "irBasePath": "https://api.navelink.local",
-    "srBasePath": "https://serviceregistry.navelink.local",
-    "endorsementBasePath": "https://endorse.navelink.local",
-    "keycloakJson": "assets/keycloak.json",
-    "environmentText": "LOCAL",
-    "idpNamespace": "navelink-local"
-}
