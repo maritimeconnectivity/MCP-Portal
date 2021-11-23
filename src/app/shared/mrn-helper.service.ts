@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import {AuthService} from "../authentication/services/auth.service";
+import { AppConfig } from '../app.config';
 
 // TODO this is only a temp solution until there is a backend service to do it
 @Injectable()
 export class MrnHelperService {
-	private idpNamespace = IDP_NAMESPACE;
+	private idpNamespace = AppConfig.IDP_NAMESPACE;
 	public mrnMCP: string = 'urn:mrn:mcp:';
 
 	constructor(private authService: AuthService) {

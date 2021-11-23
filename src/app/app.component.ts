@@ -6,6 +6,7 @@ import { layoutPaths } from './theme/theme.constants';
 import {MCNotificationsService, NotificationModel, MCNotificationType} from "./shared/mc-notifications.service";
 import {NotificationsService} from "angular2-notifications";
 import {NavigationStart, Router} from "@angular/router";
+import { AppConfig } from './app.config';
 
 /*
  * App Component
@@ -59,6 +60,11 @@ export class App {
     BaThemePreloader.load().then((values) => {
       this._spinner.hide();
     });
+    
+    if (AppConfig.ENVIRONMENT_TEXT != '') {
+      document.body.classList.add('test-banner');
+      document.body.setAttribute('data-title', AppConfig.ENVIRONMENT_TEXT);
+    }
   }
 
   private _loadImages(): void {

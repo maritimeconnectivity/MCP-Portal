@@ -16,6 +16,7 @@ import {
 	McFormControlType, McFormControlModelCheckbox
 } from "../theme/components/mcForm/mcFormControlModel";
 import {CheckboxValidator} from "../theme/validators/checkbox.validator";
+import { AppConfig } from '../app.config';
 
 @Component({
   selector: 'apply-org',
@@ -47,8 +48,8 @@ export class ApplyOrgComponent implements OnInit {
 
   ngOnInit() {
   	if (!CAN_JOIN) {
-		  this.notificationService.generateNotification('Apply', 'You can only apply in production. This is ' + ENVIRONMENT_TEXT, MCNotificationType.Alert);
-		  this.navigationHelper.takeMeHome();
+		this.notificationService.generateNotification('Apply', 'You can only apply in production. This is ' + AppConfig.ENVIRONMENT_TEXT, MCNotificationType.Alert);
+		this.navigationHelper.takeMeHome();
   		return;
 	  }
 	  this.calculateClass();

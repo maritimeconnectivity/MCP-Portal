@@ -12,6 +12,7 @@ import {
 } from "@angular/http";
 import { McHttpService } from "./mc-http.service";
 import { ServerUnreachableError } from "../../shared/ServerUnreachableError";
+import { AppConfig } from '../../app.config';
 
 @Injectable()
 export class ApiVersionService {
@@ -20,17 +21,17 @@ export class ApiVersionService {
   }
 
 	public getVersionOfIdentityRegistry():Observable<string> {
-		let jsonLocation =  IR_BASE_PATH + MIR_SWAGGER_LOCATION;
+		let jsonLocation =  AppConfig.IR_BASE_PATH + MIR_SWAGGER_LOCATION;
 		return this.getVersionFromSwagger(jsonLocation);
 	}
 
 	public getVersionOfServiceRegistry():Observable<string> {
-		let jsonLocation =  SR_BASE_PATH + SWAGGER_LOCATION;
+		let jsonLocation =  AppConfig.SR_BASE_PATH + SWAGGER_LOCATION;
 		return this.getVersionFromSwagger(jsonLocation);
 	}
 
 	public getVersionOfEndorsementService(): Observable<string> {
-  		let jsonLocation = ENDORSEMENT_BASE_PATH + SWAGGER_LOCATION;
+  		let jsonLocation = AppConfig.ENDORSEMENT_BASE_PATH + SWAGGER_LOCATION;
   		return this.getVersionFromSwagger(jsonLocation);
 	}
 
