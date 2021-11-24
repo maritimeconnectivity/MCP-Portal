@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Http} from "@angular/http";
 import {EndorsecontrollerApi} from "./autogen/api/EndorsecontrollerApi";
+import { AppConfig } from '../../app.config';
+
 
 @NgModule({
   imports: [
@@ -13,7 +15,7 @@ import {EndorsecontrollerApi} from "./autogen/api/EndorsecontrollerApi";
 	  {
 		  provide: EndorsecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new EndorsecontrollerApi(http, ENDORSEMENT_BASE_PATH, null);
+			  return new EndorsecontrollerApi(http, AppConfig.ENDORSEMENT_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  }

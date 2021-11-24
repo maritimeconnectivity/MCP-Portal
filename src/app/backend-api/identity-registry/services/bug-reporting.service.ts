@@ -6,6 +6,7 @@ import {BugReport} from "../autogen/model/BugReport";
 import {McHttpService} from "../../shared/mc-http.service";
 import {AuthService, AuthUser} from "../../../authentication/services/auth.service";
 import {BugReportControllerApi} from "../autogen/api/BugReportControllerApi";
+import { AppConfig } from '../../../app.config';
 
 @Injectable()
 export class BugReportingService {
@@ -15,8 +16,8 @@ export class BugReportingService {
   }
 
   public reportBug(bugReport:BugReport) : Observable<any> {
-		bugReport.subject = "#"+ ENVIRONMENT_TEXT + ' v.' + this.version + ': ' + bugReport.subject;
-  	if (AuthService.staticAuthInfo && AuthService.staticAuthInfo.loggedIn) {
+	bugReport.subject = "#"+ AppConfig.ENVIRONMENT_TEXT + ' v.' + this.version + ': ' + bugReport.subject;
+	if (AuthService.staticAuthInfo && AuthService.staticAuthInfo.loggedIn) {
   		this.addUserToReport(bugReport, AuthService.staticAuthInfo.user);
 	  }
 	  McHttpService.nextCallShouldNotAuthenticate();

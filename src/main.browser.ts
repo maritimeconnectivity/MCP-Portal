@@ -10,12 +10,15 @@ import { bootloader } from '@angularclass/hmr';
  */
 import { AppModule } from './app';
 import {AuthService} from "./app/authentication/services/auth.service";
+import { AppConfig } from './app/app.config';
 
 /*
  * Bootstrap our Angular app with a top level NgModule
  */
 export function main(): Promise<any> {
-  return AuthService.init()
+
+  return AppConfig._initialize()
+    .then(() => AuthService.init())
     .then(() => {
       const platform = platformBrowserDynamic();
       platform.bootstrapModule(AppModule);

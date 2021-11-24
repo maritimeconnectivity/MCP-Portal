@@ -11,6 +11,7 @@ import {Http} from "@angular/http";
 import {BugReportControllerApi} from "./autogen/api/BugReportControllerApi";
 import {VesselimagecontrollerApi} from "./autogen/api/VesselimagecontrollerApi";
 import { AgentControllerService } from './autogen/api/agentController.service';
+import { AppConfig } from '../../app.config';
 
 @NgModule({
   imports: [
@@ -22,77 +23,77 @@ import { AgentControllerService } from './autogen/api/agentController.service';
 	  {
 		  provide: BugReportControllerApi,
 		  useFactory: (http: Http) => {
-			  return new BugReportControllerApi(http, IR_BASE_PATH);
-		  },
+			return new BugReportControllerApi(http, AppConfig.IR_BASE_PATH);
+		},
 		  deps: [Http]
 	  },
 	  {
 		  provide: RolecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new RolecontrollerApi(http, IR_BASE_PATH, null);
+			  return new RolecontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: ServicecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new ServicecontrollerApi(http, IR_BASE_PATH, null);
+			  return new ServicecontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: OrganizationcontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new OrganizationcontrollerApi(http, IR_BASE_PATH, null);
+			  return new OrganizationcontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: LogocontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new LogocontrollerApi(http, IR_BASE_PATH, null);
+			  return new LogocontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: VesselcontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new VesselcontrollerApi(http, IR_BASE_PATH, null);
+			  return new VesselcontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: UsercontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new UsercontrollerApi(http, IR_BASE_PATH, null);
+			  return new UsercontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: ServicecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new ServicecontrollerApi(http, IR_BASE_PATH, null);
+			  return new ServicecontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: DevicecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new DevicecontrollerApi(http, IR_BASE_PATH, null);
+			  return new DevicecontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: VesselimagecontrollerApi,
 		  useFactory: (http: Http) => {
-			  return new VesselimagecontrollerApi(http, IR_BASE_PATH, null);
+			  return new VesselimagecontrollerApi(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  },
 	  {
 		  provide: AgentControllerService,
 		  useFactory: (http: Http) => {
-			return new AgentControllerService(http, IR_BASE_PATH, null);
+			return new AgentControllerService(http, AppConfig.IR_BASE_PATH, null);
 		  },
 		  deps: [Http]
 	  }

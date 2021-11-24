@@ -1,0 +1,8 @@
+{
+    "irBasePath": "https://test-api.maritimeconnectivity.net",
+    "srBasePath": "https://sr-test.maritimeconnectivity.net",
+    "endorsementBasePath": "https://test-endorse.maritimeconnectivity.net",
+    "keycloakJson": "assets/test-keycloak.json",
+    "environmentText": "TEST",
+    "idpNamespace": "mcc-test"
+}

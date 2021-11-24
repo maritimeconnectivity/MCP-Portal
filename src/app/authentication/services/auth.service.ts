@@ -4,7 +4,7 @@ import {MCNotificationsService, MCNotificationType} from "../../shared/mc-notifi
 import {Role} from "../../backend-api/identity-registry/autogen/model/Role";
 import RoleNameEnum = Role.RoleNameEnum;
 import {User} from "../../backend-api/identity-registry/autogen/model/User";
-
+import { AppConfig } from '../../app.config';
 
 export enum AuthPermission {
 	User    = 1 << 0,
@@ -184,7 +184,7 @@ export class AuthService implements OnInit {
   }
 
   static init(): Promise<any> {
-    let keycloakAuth: any = new Keycloak(KEYCLOAK_JSON);
+    let keycloakAuth: any = new Keycloak(AppConfig.KEYCLOAK_JSON);
     AuthService.staticAuthInfo.loggedIn = false;
 
     return new Promise((resolve, reject) => {

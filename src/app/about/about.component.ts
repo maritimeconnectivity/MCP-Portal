@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationHelperService } from "../shared/navigation-helper.service";
+import { AppConfig } from '../app.config';
 
 @Component({
   selector: 'about',
@@ -8,7 +9,7 @@ import { NavigationHelperService } from "../shared/navigation-helper.service";
 })
 
 export class AboutComponent implements OnInit {
-	public environment = ENVIRONMENT_TEXT;
+	public environment = AppConfig.ENVIRONMENT_TEXT;
   constructor(private navigationHelper: NavigationHelperService) {
   }
 
