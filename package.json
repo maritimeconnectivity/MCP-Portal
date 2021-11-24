@@ -56,7 +56,7 @@
     "ng2-smart-table": "0.3.2",
     "ng2-tree": "0.0.2-7",
     "ng2-uploader": "1.1.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^6.0.1",
     "normalize.css": "4.2.0",
     "openlayers": "4.2.0",
     "pkijs": "^2.1.93",
