@@ -5,5 +5,5 @@
   </div>
   <i class="ion-ios-close-outline" (click)="removePicture();" *ngIf="logo && canDelete"></i>
   <a *ngIf="!uploadingLogo" href (click)="bringFileSelector()" class="change-picture">Change Logo</a>
-  <input *ngIf="!uploadingLogo" #fileUpload type="file" hidden="true" id="uploadFile" (change)="onFiles()">
+  <input *ngIf="!uploadingLogo" #fileUpload type="file" hidden="true" id="uploadFile" accept="image/jpeg,image/png" (change)="onFiles()">
 </div>

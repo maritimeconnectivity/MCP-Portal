@@ -81,9 +81,10 @@ export class LogocontrollerApi {
      * @summary createLogoPut
      * @param orgMrn orgMrn
      * @param logo logo
+     * @param mediaType mediaType
      */
-    public createLogoPutUsingPUT(orgMrn: string, logo: string, extraHttpRequestParams?: any): Observable<any> {
-        return this.createLogoPutUsingPUTWithHttpInfo(orgMrn, logo, extraHttpRequestParams)
+    public createLogoPutUsingPUT(orgMrn: string, logo: string, mediaType: string, extraHttpRequestParams?: any): Observable<any> {
+        return this.createLogoPutUsingPUTWithHttpInfo(orgMrn, logo, mediaType, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -287,8 +288,9 @@ export class LogocontrollerApi {
      * 
      * @param orgMrn orgMrn
      * @param logo logo
+     * @param mediaType mediaType
      */
-    public createLogoPutUsingPUTWithHttpInfo(orgMrn: string, logo: string, extraHttpRequestParams?: any): Observable<Response> {
+    public createLogoPutUsingPUTWithHttpInfo(orgMrn: string, logo: string, mediaType: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/oidc/api/org/${orgMrn}/logo'
                     .replace('${' + 'orgMrn' + '}', String(orgMrn));
 
@@ -312,12 +314,11 @@ export class LogocontrollerApi {
             '*/*'
         ];
 
-        headers.set('Content-Type', 'application/json');
+        headers.set('Content-Type', mediaType);
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
             headers: headers,
-            body: logo == null ? '' : JSON.stringify(logo), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });

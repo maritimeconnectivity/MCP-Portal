@@ -6,7 +6,9 @@ import {
 	Output,
 	ViewEncapsulation
 } from '@angular/core';
-import { LabelValueModel } from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
+import {
+	LabelValueModel
+} from "../../../../theme/components/mcLabelValueTable/mcLabelValueTable.component";
 import { Organization } from "../../../../backend-api/identity-registry/autogen/model/Organization";
 import { OrganizationViewModelService } from "../../services/organization-view-model.service";
 import { LogoService } from "../../../../backend-api/identity-registry/services/logo.service";
@@ -44,7 +46,15 @@ export class OrganizationDetailsTableComponent implements OnChanges {
   public uploadLogo(logo:any) {
 	  let oldLogo = this.logo;
 	  this.uploadingLogo = true;
-	  this.logoService.uploadLogo(this.organization.mrn, logo).subscribe(
+	  let logoBlob: Blob = logo;
+	  let mediaType = logoBlob.type;
+	  if ((mediaType !== "image/png") && (mediaType !== "image/jpeg")) {
+		  this.logo = oldLogo;
+		  this.uploadingLogo = false;
+		  this.notifications.generateNotification('Wrong image type', 'Uploaded logo must be of type PNG or JPEG', MCNotificationType.Alert);
+		  return;
+	  }
+	  this.logoService.uploadLogo(this.organization.mrn, logo, mediaType).subscribe(
 		  logo => {
 			  this.loadLogo();
 		  },
