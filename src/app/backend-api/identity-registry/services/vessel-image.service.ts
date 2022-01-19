@@ -14,10 +14,10 @@ export class VesselImageService implements OnInit {
   ngOnInit() {
   }
 
-  public uploadImage(vesselMrn:string, image:any): Observable<any> {
+  public uploadImage(vesselMrn:string, image:any, mediaType: string): Observable<any> {
 	  return Observable.create(observer => {
 		  let orgMrn = this.authService.authState.orgMrn;
-		  this.vesselImageApi.createVesselImagePutUsingPUT(orgMrn, vesselMrn, image).subscribe(
+		  this.vesselImageApi.createVesselImagePutUsingPUT(orgMrn, vesselMrn, image, mediaType).subscribe(
 			  image => {
 				  this.putImageInCache(vesselMrn, null);
 				  observer.next(image);

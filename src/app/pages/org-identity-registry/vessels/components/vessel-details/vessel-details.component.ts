@@ -107,7 +107,15 @@ export class VesselDetailsComponent {
 	public uploadImage(image:any) {
 		let oldImage = this.image;
 		this.uploadingImage = true;
-		this.vesselImageService.uploadImage(this.vessel.mrn, image).subscribe(
+		let imageBlob: Blob = image;
+		let mediaType = imageBlob.type;
+		if ((mediaType !== "image/jpeg") && (mediaType !== "image/png")) {
+			this.image = oldImage;
+			this.uploadingImage = false;
+			this.notifications.generateNotification('Wrong image type', 'Uploaded image must be of type PNG or JPEG', MCNotificationType.Alert);
+			return;
+		}
+		this.vesselImageService.uploadImage(this.vessel.mrn, image, mediaType).subscribe(
 			image => {
 				this.loadImage();
 			},

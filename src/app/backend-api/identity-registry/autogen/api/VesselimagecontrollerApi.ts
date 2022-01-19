@@ -84,9 +84,10 @@ export class VesselimagecontrollerApi {
      * @param orgMrn orgMrn
      * @param vesselMrn vesselMrn
      * @param image image
+     * @param mediaType mediaType
      */
-    public createVesselImagePutUsingPUT(orgMrn: string, vesselMrn: string, image: string, extraHttpRequestParams?: any): Observable<any> {
-        return this.createVesselImagePutUsingPUTWithHttpInfo(orgMrn, vesselMrn, image, extraHttpRequestParams)
+    public createVesselImagePutUsingPUT(orgMrn: string, vesselMrn: string, image: string, mediaType: string, extraHttpRequestParams?: any): Observable<any> {
+        return this.createVesselImagePutUsingPUTWithHttpInfo(orgMrn, vesselMrn, image, mediaType, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -308,8 +309,9 @@ export class VesselimagecontrollerApi {
      * @param orgMrn orgMrn
      * @param vesselMrn vesselMrn
      * @param image image
+     * @param mediaType mediaType
      */
-    public createVesselImagePutUsingPUTWithHttpInfo(orgMrn: string, vesselMrn: string, image: string, extraHttpRequestParams?: any): Observable<Response> {
+    public createVesselImagePutUsingPUTWithHttpInfo(orgMrn: string, vesselMrn: string, image: string, mediaType: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/oidc/api/org/${orgMrn}/vessel/${vesselMrn}/vesselImage'
                     .replace('${' + 'orgMrn' + '}', String(orgMrn))
                     .replace('${' + 'vesselMrn' + '}', String(vesselMrn));
@@ -338,12 +340,11 @@ export class VesselimagecontrollerApi {
             '*/*'
         ];
 
-        headers.set('Content-Type', 'application/json');
+        headers.set('Content-Type', mediaType);
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Put,
             headers: headers,
-            body: image == null ? '' : JSON.stringify(image), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
