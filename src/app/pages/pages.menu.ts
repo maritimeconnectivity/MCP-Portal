@@ -96,52 +96,52 @@ export var PAGES_MENU_ALL = [
 			}
         ]
       },
-      {
-        path: 'sr',
-        data: {
-          menu: {
-            title: 'Service Registry',
-            icon: 'ion-social-buffer',
-            selected: false,
-            expanded: true,
-            order: 100,
-          }
-        },
-        children: [
-	        {
-		        path: 'howto',
-		        data: {
-			        menu: {
-				        title: 'How To?',
-			        }
-		        }
-	        },
-	        {
-		        path: 'specifications',
-		        data: {
-			        menu: {
-				        title: 'Specifications',
-			        }
-		        }
-	        },
-          {
-            path: 'designs',
-            data: {
-              menu: {
-                title: 'Designs',
-              }
-            }
-          },
-          {
-            path: 'instances',
-            data: {
-              menu: {
-                title: 'Instances',
-              }
-            }
-          }
-        ]
-      },
+      // {
+      //   path: 'sr',
+      //   data: {
+      //     menu: {
+      //       title: 'Service Registry',
+      //       icon: 'ion-social-buffer',
+      //       selected: false,
+      //       expanded: true,
+      //       order: 100,
+      //     }
+      //   },
+      //   children: [
+	  //       {
+		//         path: 'howto',
+		//         data: {
+		// 	        menu: {
+		// 		        title: 'How To?',
+		// 	        }
+		//         }
+	  //       },
+	  //       {
+		//         path: 'specifications',
+		//         data: {
+		// 	        menu: {
+		// 		        title: 'Specifications',
+		// 	        }
+		//         }
+	  //       },
+      //     {
+      //       path: 'designs',
+      //       data: {
+      //         menu: {
+      //           title: 'Designs',
+      //         }
+      //       }
+      //     },
+      //     {
+      //       path: 'instances',
+      //       data: {
+      //         menu: {
+      //           title: 'Instances',
+      //         }
+      //       }
+      //     }
+      //   ]
+      // },
 	    {
 		    path: '',
 		    data: {
