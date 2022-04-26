@@ -11,7 +11,7 @@ import { ApiVersionService } from "../../../backend-api/shared/api-version.servi
 })
 export class McpVersionsViewComponent {
 	private irVersion:string;
-	private srVersion:string;
+	//private srVersion:string;
 	private portalVersion = require("../../../../../package.json").version;
 	public isLoading:boolean;
 	public labelValues:Array<LabelValueModel>;
@@ -27,12 +27,12 @@ export class McpVersionsViewComponent {
 		let parallelObservables = [];
 
 		parallelObservables.push(this.apiVersionService.getVersionOfIdentityRegistry().take(1));
-		parallelObservables.push(this.apiVersionService.getVersionOfServiceRegistry().take(1));
+		//parallelObservables.push(this.apiVersionService.getVersionOfServiceRegistry().take(1));
 
 		Observable.forkJoin(parallelObservables).subscribe(
 			resultArray => {
 				this.irVersion = ''+resultArray[0];
-				this.srVersion = ''+resultArray[1];
+				//this.srVersion = ''+resultArray[1];
 				this.generateLabelValues();
 				return Observable.of('');
 			});
@@ -41,7 +41,7 @@ export class McpVersionsViewComponent {
 		this.labelValues = [];
 		this.labelValues.push({label: 'Management Portal', valueHtml: this.portalVersion});
 		this.labelValues.push({label: 'Identity Registry', valueHtml: this.irVersion});
-		this.labelValues.push({label: 'Service Registry', valueHtml: this.srVersion});
+		//this.labelValues.push({label: 'Service Registry', valueHtml: this.srVersion});
 		this.isLoading = false;
 	}
 }
